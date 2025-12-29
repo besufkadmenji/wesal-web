@@ -1,0 +1,96 @@
+{
+  "brand": {
+    "title": "AURORA"
+  },
+  "welcome": {
+    "title": "Discover everything that matters to you in one place, bringing you the latest ads from various fields.",
+    "subtitle": "Browse carefully selected ads from jobs, fashion, services, real estate, products, and more."
+  },
+  "home": {
+    "sections": "Service Sections",
+    "popular": "Popular Sections",
+    "nearby": "Nearby You",
+    "latest": "Latest",
+    "viewAll": "View All",
+    "search": "Search for services"
+  },
+  "auth": {
+    "choose": {
+      "title": "Choose account type",
+      "subtitle": "Select the account type that best describes how you will use the platform.",
+      "user": "User",
+      "provider": "Service Provider",
+      "next": "Next"
+    },
+    "login": {
+      "title": "Welcome back!",
+      "subtitle": "Restore your profile, and we hope you have a rewarding experience with benefits and inspiration.",
+      "signInWithPhone": "Sign in with phone number",
+      "signInWithEmail": "Sign in with email",
+      "phone": "Phone Number",
+      "email": "Email",
+      "password": "Password",
+      "forgotPassword": "Forgot your password?",
+      "submit": "Sign In",
+      "noAccount": "Don't have an account?",
+      "createAccount": "Create a new account"
+    },
+    "signup": {
+      "title": "Join us and create your account",
+      "subtitle": "Create your account now to benefit from our features",
+      "name": "Name",
+      "phone": "Phone Number",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "bankName": "Bank Name",
+      "ibanNumber": "IBAN Number",
+      "verificationLink": "Absher Verification Link",
+      "termsLink": "Terms and Conditions",
+      "submit": "Register",
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign In",
+      "documentLink": "Verification Link",
+      "documentLinkText": "Absher",
+      "termsAndConditions": "Confirm Policy",
+      "termsAndConditionsLink": "Terms and Conditions"
+    },
+    "resetPassword": {
+      "method": {
+        "title": "Recover Password",
+        "subtitle": "You can recover your password using email or phone number",
+        "withPhone": "With phone number",
+        "withEmail": "With email",
+        "submit": "Send Verification Code"
+      },
+      "verify": {
+        "title": "Verification Code to Reset Password",
+        "subtitlePhone": "Enter the code sent to {phone} from your phone and safely reset your password",
+        "subtitleEmail": "Enter the code sent to {email} from your email and safely reset your password",
+        "codeNotArrived": "Code not received?",
+        "verifyButton": "Verify Code",
+        "resendButton": "Resend Verification Code"
+      },
+      "setNewPassword": {
+        "title": "Set New Password",
+        "subtitle": "Enter your new password to secure your account and restore it",
+        "newPassword": "New Password",
+        "confirmPassword": "Confirm Password",
+        "submit": "Change"
+      }
+    },
+    "signIn": "Sign In",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone Number",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "haveAccount": "Already have an account?",
+    "forgotPassword": "Forgot your password?",
+    "searchCountry": "Search for your country"
+  },
+  "common": {
+    "continue": "Continue",
+    "skip": "Skip"
+  }
+}
