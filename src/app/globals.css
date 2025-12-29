@@ -147,6 +147,22 @@
   );
 }
 
+[dir="rtl"] .top-bar-gradient {
+  background: linear-gradient(90deg, #131620 0%, #39456f 100%);
+}
+
+[dir="ltr"] .top-bar-gradient {
+  background: linear-gradient(270deg, #131620 0%, #39456f 100%);
+}
+
+[dir="rtl"] .footer-gradient {
+  background: linear-gradient(90deg, #131620 0%, #39456f 100%);
+}
+
+[dir="ltr"] .footer-gradient {
+  background: linear-gradient(270deg, #131620 0%, #39456f 100%);
+}
+
 .Toastify__toast--success {
   border-radius: 14px !important;
   overflow: hidden;
