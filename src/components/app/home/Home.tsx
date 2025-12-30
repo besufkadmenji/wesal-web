@@ -5,6 +5,7 @@ import { Trusted } from "@/components/app/home/Trusted";
 import { useDict } from "@/hooks/useDict";
 import { AdsCarousel } from "./AdsCarousel";
 import { Join } from "@/components/app/home/Join";
+import { TopListing } from "@/components/app/home/TopListing";
 
 export const Home = () => {
   const dict = useDict();
@@ -24,6 +25,7 @@ export const Home = () => {
           items={dict.home.bestSelling.categories}
         />
         <Join />
+        <TopListing />
       </div>
     </AppWrapper>
   );

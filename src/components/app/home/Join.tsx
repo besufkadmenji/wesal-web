@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 export const Join = () => {
   const dict = useDict();
   return (
-    <div className="grid h-134.5 grid-cols-2 grid-rows-1 gap-6 bg-[#EFF1F6]">
+    <div className="grid grid-cols-2 grid-rows-1 gap-6 bg-[#EFF1F6]">
       <div className="grid auto-rows-max grid-cols-1 items-start gap-6 py-10 ltr:pl-[7vw] rtl:pr-[7vw]">
         <div className="grid grid-cols-1 gap-4">
           <div className="flex gap-4">

@@ -9,19 +9,10 @@ import { useEffect, useState } from "react";
 import type { Swiper as SwiperType } from "swiper";
 import { FreeMode, Mousewheel } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-
-export const AdsCarousel = ({
-  title,
-  subtitle,
-  items,
-}: {
-  title: string;
-  subtitle: string;
-  items: Array<{
-    name: string;
-    description: string;
-  }>;
-}) => {
+import RatingIcon from "@/assets/icons/rating.svg";
+import { twMerge } from "tailwind-merge";
+import { sar } from "@/assets/fonts/sar";
+export const TopListing = () => {
   const dict = useDict();
   const [swiper, setSwiper] = useState<SwiperType | null>(null);
   const [canPrev, setCanPrev] = useState(false);
@@ -55,12 +46,12 @@ export const AdsCarousel = ({
         <div className="grid grid-cols-1 gap-4">
           <div className="flex items-center gap-4">
             <p className="text-lg leading-5.25 font-semibold text-[#389441]">
-              {subtitle}
+              {dict.home.topListing.subtitle}
               <DotLine className="mx-4 inline-block h-5 w-14.5" />
             </p>
           </div>
           <p className="text-primary text-2xl leading-7.75 font-bold">
-            {title}
+            {dict.home.topListing.title}
           </p>
         </div>
         <div className="flex gap-4">
@@ -86,7 +77,7 @@ export const AdsCarousel = ({
         </div>
       </div>
 
-      <div className="block h-100 w-full ltr:pl-[7vw] rtl:pr-[7vw]">
+      <div className="relative w-full ltr:pl-[7vw] rtl:pr-[7vw]">
         {mounted && (
           <Swiper
             spaceBetween={32}
@@ -95,7 +86,7 @@ export const AdsCarousel = ({
             freeMode={{
               enabled: true,
               momentum: true,
-              momentumBounce: false,
+              momentumBounce: false, // IMPORTANT: disables stretch
             }}
             mousewheel={{ forceToAxis: true }}
             onSlideChange={() => console.log("slide change")}
@@ -106,11 +97,14 @@ export const AdsCarousel = ({
             }}
             slidesOffsetAfter={window.innerWidth * 0.07}
           >
-            {items.map((category, index) => (
+            {[
+              ...dict.home.topListing.listings,
+              ...dict.home.topListing.listings,
+            ].map((category, index) => (
               <SwiperSlide key={index}>
-                <CategoryCard
+                <ListingCard
                   title={category.name}
-                  image={`/images/category.${(index % dict.home.popularCategories.categories.length) + 1}.jpg`}
+                  image={`/images/iphone.jpg`}
                   desc={category.description}
                 />
               </SwiperSlide>
@@ -122,7 +116,7 @@ export const AdsCarousel = ({
   );
 };
 
-const CategoryCard = ({
+const ListingCard = ({
   title,
   image,
   desc,
@@ -133,25 +127,36 @@ const CategoryCard = ({
 }) => {
   const dict = useDict();
   return (
-    <div className="group mb-2 grid grid-cols-1 gap-4 rounded-[20px] bg-white select-none">
+    <div className="group grid grid-cols-1 rounded-[20px] bg-white pb-2 select-none">
       <div className="relative aspect-284/180 w-full overflow-hidden rounded-[20px]">
         <Image src={image} alt={title} fill className="object-cover" />
       </div>
-      <div className="grid gap-6">
-        <div className="grid grid-cols-1 gap-2 px-3">
-          <p className="text-lg font-semibold text-black">{title}</p>
+      <div className="grid gap-6 px-3 py-4">
+        <div className="grid grid-cols-1 gap-2 border-b border-b-[#F2F2F2] pb-3">
+          <div className="grid grid-cols-[1fr_auto]">
+            <p className="text-lg font-semibold text-black">{title}</p>
+            <div className="flex items-center gap-0.5">
+              <RatingIcon className="size-4" />
+              <p className="grow text-sm leading-6 font-medium text-black">
+                4.5
+              </p>
+            </div>
+          </div>
           <div className="w-full overflow-hidden">
             <p className="text-gray line-clamp-2 text-sm text-ellipsis">
               {desc}
             </p>
           </div>
         </div>
-        <div className="flex items-end">
-          <Button className="bg-secondary group-hover:bg-primary h-12.5 shrink-0 justify-self-start rounded-[20px] px-6 text-base font-semibold text-[#4D4D4D] transition-colors duration-300 ease-out group-hover:text-white ltr:rounded-br-none group-hover:ltr:rounded-br-[20px] rtl:rounded-bl-none group-hover:rtl:rounded-bl-[20px]">
-            {dict.home.popularCategories.viewDetails}
-          </Button>
-          <div className="relative h-4 grow">
-            <ScrollArrow className="text-primary absolute -bottom-[6.5px] z-20 aspect-170/15 h-3.75 grow opacity-0 duration-300 ease-out group-hover:opacity-100 ltr:-left-5 ltr:rotate-180" />
+        <div className="flex items-center justify-between">
+          <p className="text-gray text-sm font-medium">{dict.products.price}</p>
+          <div className="flex items-center gap-1">
+            <p className="text-primary text-xl leading-8 font-semibold">
+              500.00
+            </p>
+            <p className={twMerge(sar.className, "text-[20px] text-[#389441]")}>
+              A
+            </p>
           </div>
         </div>
       </div>
