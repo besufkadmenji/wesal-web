@@ -3,6 +3,7 @@ import { AppProvider } from "@/config/app.provider";
 import { dir } from "i18next";
 import type { Metadata } from "next";
 import { ToastContainer } from "react-toastify";
+import "swiper/css";
 import "../globals.css";
 import { CloseButton } from "@/utils/show.messages";
 

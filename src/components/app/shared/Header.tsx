@@ -12,7 +12,7 @@ export const Header = () => {
   const dict = useDict();
   return (
     <header className="flex h-25.5 items-center justify-between border-b border-b-[#F2F2F2] bg-white px-[7vw]">
-      <div className="flex h-full gap-11">
+      <div className="flex h-full gap-11 items-center">
         <Logo />
         <nav className="flex h-full gap-6">
           <NavItem label={dict.home.nav.home} href={"/"} />

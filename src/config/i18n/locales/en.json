@@ -53,7 +53,119 @@
     },
     "title": "Certified Mediator for Contractors, Workers, and International Search",
     "subtitle": "Discover reliable services from certified contractors and workers throughout the region",
-    "cta": "Start Searching"
+    "cta": "Start Searching",
+    "hero": {
+      "title": "Certified intermediary between advertiser and client for",
+      "subtitle": "From handicrafts to jobs, real estate, and various products… we provide you with a unified space that brings together all the ads that may interest you, so you can compare, choose, and apply for what suits you best with ease and clarity.",
+      "search": "Search",
+      "selectCategories": "Select Category",
+      "tags": [
+        "Handicrafts",
+        "Home Furniture",
+        "Educational Courses",
+        "Job Ads",
+        "Selling Products in Various Ways"
+      ],
+
+      "heroOptionOne": "Explore thousands of diverse ads in one place, from jobs to products and services. Easily search for everything you need without hassle and start applying quickly.",
+      "heroOptionTwo": "Through a massive library containing thousands of ads from various fields, we provide you with a smooth browsing experience that helps you find what you're looking for—whether it's a product, service, or job opportunity—all in one platform that brings together all your needs.",
+      "scrollDown": "Scroll Down"
+    },
+    "popularCategories": {
+      "title": "Discover the most active and engaging sections now",
+      "subtitle": "Electronic Sections",
+      "categories": [
+        {
+          "id": 1,
+          "name": "Handicrafts",
+          "description": "Unique handmade products crafted with precision distinctive pieces that add a special touch to your life."
+        },
+        {
+          "id": 2,
+          "name": "Educational Courses",
+          "description": "Comprehensive educational courses that help you develop your skills and gain new experiences easily."
+        },
+        {
+          "id": 3,
+          "name": "Home Furniture",
+          "description": "High-quality home furniture pieces with unique designs to suit all tastes and spaces."
+        },
+        {
+          "id": 4,
+          "name": "Job Ads",
+          "description": "Various job opportunities from trusted sources, find the right job and follow the featured ones."
+        },
+        {
+          "id": 5,
+          "name": "Products",
+          "description": "A diverse collection of products"
+        }
+      ],
+      "viewDetails": "Section Details"
+    },
+    "trusted": {
+      "subtitle": "Start your success with thousands of advertisers",
+      "title": "Your trusted partner to find the right ad",
+      "description": "We provide you with a smooth and reliable search experience that helps you explore ads suitable for your needs, whether you are looking for products, services, jobs, or real estate, with a simple interface and advanced options that make finding what you want faster and easier than ever before.",
+      "stats": [
+        {
+          "number": "500",
+          "label": "Number of successful deals"
+        },
+        {
+          "number": "200",
+          "label": "Total number of advertisers"
+        },
+        {
+          "number": "350",
+          "label": "Total number of clients"
+        }
+      ]
+    },
+    "bestSelling": {
+      "title": "Top Sections in Sales and Revenue",
+      "subtitle": "Best Selling Sections",
+      "categories": [
+        {
+          "id": 1,
+          "name": "Handicrafts",
+          "description": "Unique handmade products crafted with precision... distinctive pieces that add a special touch to your life."
+        },
+        {
+          "id": 2,
+          "name": "Educational Courses",
+          "description": "Comprehensive educational courses that help you develop your skills and gain new experiences easily."
+        },
+        {
+          "id": 3,
+          "name": "Home Furniture",
+          "description": "High-quality home furniture pieces with unique designs to suit all tastes and spaces."
+        },
+        {
+          "id": 4,
+          "name": "Job Ads",
+          "description": "Various job opportunities from trusted sources... find the right job and follow the featured ones."
+        },
+        {
+          "id": 5,
+          "name": "Products",
+          "description": "A diverse collection of products..."
+        }
+      ],
+      "viewDetails": "Section Details"
+    },
+    "join": {
+      "subtitle": "Start your success with thousands of advertisers",
+      "title": "Join thousands of successful advertisers",
+      "description": "Start selling your products and services today and get your first ad for free, with access to thousands of interested clients and advanced tools to help you market your offers easily and professionally. Join now and start growing your business in minutes!",
+      "benefits": [
+        "Showcase your products to the world and benefit from a special package that makes your start easier.",
+        "Your chance to try our platform for free and attract clients from day one.",
+        "Start strong with a free ad that helps you reach a wide audience.",
+        "Attract your first clients easily and start your journey to success."
+      ],
+      "cta": "Add your ad now"
+    }
   },
   "mainCategories": {
     "title": "Main Categories and Current Listings",
