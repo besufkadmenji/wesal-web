@@ -18,7 +18,7 @@ export const Hero = () => {
   const dict = useDict();
   const lng = useLang();
   return (
-    <div className="grid grid-cols-1 justify-items-center gap-11 mb-20">
+    <div className="mt-10 mb-20 grid grid-cols-1 justify-items-center gap-11">
       <div className="grid grid-cols-1 gap-3">
         <div className="flex flex-wrap items-center gap-3 px-[16vw]">
           <h1
@@ -97,7 +97,15 @@ const HeroAssets = () => {
           <source src="/videos/hero.mp4" type="video/mp4" />
         </video>
         <div className="grid justify-items-center gap-3">
-          <button className="border-primary grid size-14 items-center justify-items-center rounded-full border">
+          <button
+            className="border-primary grid size-14 cursor-pointer items-center justify-items-center rounded-full border"
+            onClick={() => {
+              window.scrollBy({
+                top:( window.innerHeight * 0.8),
+                behavior: "smooth",
+              });
+            }}
+          >
             <ArrowDownIcon className="size-6" />
           </button>
           <p>{dict.home.hero.scrollDown}</p>

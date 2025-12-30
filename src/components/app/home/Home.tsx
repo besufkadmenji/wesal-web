@@ -6,12 +6,13 @@ import { useDict } from "@/hooks/useDict";
 import { AdsCarousel } from "./AdsCarousel";
 import { Join } from "@/components/app/home/Join";
 import { TopListing } from "@/components/app/home/TopListing";
+import { ContactUs } from "@/components/app/home/ContactUs";
 
 export const Home = () => {
   const dict = useDict();
   return (
     <AppWrapper>
-      <div className="grid grid-cols-1 py-10">
+      <div className="grid grid-cols-1">
         <Hero />
         <AdsCarousel
           title={dict.home.popularCategories.title}
@@ -26,6 +27,7 @@ export const Home = () => {
         />
         <Join />
         <TopListing />
+        <ContactUs />
       </div>
     </AppWrapper>
   );

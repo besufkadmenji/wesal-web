@@ -33,7 +33,7 @@ export const Join = () => {
         <Button className="mt-0.75 h-12 items-center justify-self-start rounded-[20px] ltr:pr-1! ltr:pl-3! rtl:pr-3! rtl:pl-1!">
           {dict.home.join.cta}
           <span className="text-primary grid size-10 items-center justify-items-center rounded-[16px] bg-[#EFF1F6]">
-            <OpenIcon className="size-6" />
+            <OpenIcon className="size-6 ltr:rotate-90" />
           </span>
         </Button>
       </div>

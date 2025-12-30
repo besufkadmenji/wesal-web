@@ -1,7 +1,8 @@
+import { sar } from "@/assets/fonts/sar";
 import ArrowLeft from "@/assets/icons/arrow.left.svg";
 import ArrowRight from "@/assets/icons/arrow.right.svg";
 import DotLine from "@/assets/icons/dot.line.svg";
-import ScrollArrow from "@/assets/icons/scroll.arrow.svg";
+import RatingIcon from "@/assets/icons/rating.svg";
 import { Button } from "@/components/ui/button";
 import { useDict } from "@/hooks/useDict";
 import Image from "next/image";
@@ -9,9 +10,7 @@ import { useEffect, useState } from "react";
 import type { Swiper as SwiperType } from "swiper";
 import { FreeMode, Mousewheel } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import RatingIcon from "@/assets/icons/rating.svg";
 import { twMerge } from "tailwind-merge";
-import { sar } from "@/assets/fonts/sar";
 export const TopListing = () => {
   const dict = useDict();
   const [swiper, setSwiper] = useState<SwiperType | null>(null);
@@ -149,12 +148,14 @@ const ListingCard = ({
           </div>
         </div>
         <div className="flex items-center justify-between">
-          <p className="text-gray text-sm font-medium">{dict.products.price}</p>
+          <p className="text-gray text-sm font-medium">
+            {dict.home.products.price}
+          </p>
           <div className="flex items-center gap-1">
             <p className="text-primary text-xl leading-8 font-semibold">
               500.00
             </p>
-            <p className={twMerge(sar.className, "text-[20px] text-[#389441]")}>
+            <p className={twMerge(sar.className, "text-app-green text-[20px]")}>
               A
             </p>
           </div>

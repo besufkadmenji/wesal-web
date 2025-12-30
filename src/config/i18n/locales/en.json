@@ -199,41 +199,50 @@
           "description": "Unique handmade products crafted with precision... distinctive pieces that add a special touch to your life."
         }
       ]
+    },
+    "contactUs": {
+      "subtitle": "We are here to help",
+      "title": "Do you have any inquiry?",
+      "description": "Our team is ready to assist you around the clock. Contact us now and we will be happy to serve you, ensuring you get the best experience and quick response to all your inquiries.",
+
+      "contactButton": "Contact Us",
+      "callButton": "Call Us"
+    },
+    "mainCategories": {
+      "title": "Main Categories and Current Listings",
+      "viewDetails": "View Details"
+    },
+    "partnerships": {
+      "title": "Trusted Partnerships to Focus on Project Advertisements",
+      "subtitle": "Choose the right plan to publish your ads and reach more customers",
+      "basic": "Basic Plan",
+      "standard": "Standard Plan",
+      "premium": "Premium Plan",
+      "price": "Price",
+      "duration": "Duration",
+      "features": "Features"
+    },
+    "categories": {
+      "title": "Browse Categories and Sections",
+      "furniture": "Home Furniture",
+      "fashionAccessories": "Clothing and Accessories",
+      "vegetables": "Vegetables and Fruits",
+      "vehicles": "Vehicles",
+      "viewMore": "View More"
+    },
+
+    "products": {
+      "title": "Latest Products",
+      "price": "Price",
+      "rating": "Rating",
+      "addToCart": "Add to Cart"
+    },
+    "faq": {
+      "title": "Do you have questions?",
+      "subtitle": "We are here to answer all your questions and help you get the best services",
+      "contactUs": "Contact Us",
+      "noThanks": "No Thanks"
     }
-  },
-  "mainCategories": {
-    "title": "Main Categories and Current Listings",
-    "viewDetails": "View Details"
-  },
-  "partnerships": {
-    "title": "Trusted Partnerships to Focus on Project Advertisements",
-    "subtitle": "Choose the right plan to publish your ads and reach more customers",
-    "basic": "Basic Plan",
-    "standard": "Standard Plan",
-    "premium": "Premium Plan",
-    "price": "Price",
-    "duration": "Duration",
-    "features": "Features"
-  },
-  "categories": {
-    "title": "Browse Categories and Sections",
-    "furniture": "Home Furniture",
-    "fashionAccessories": "Clothing and Accessories",
-    "vegetables": "Vegetables and Fruits",
-    "vehicles": "Vehicles",
-    "viewMore": "View More"
-  },
-  "products": {
-    "title": "Latest Products",
-    "price": "Price",
-    "rating": "Rating",
-    "addToCart": "Add to Cart"
-  },
-  "faq": {
-    "title": "Do you have questions?",
-    "subtitle": "We are here to answer all your questions and help you get the best services",
-    "contactUs": "Contact Us",
-    "noThanks": "No Thanks"
   },
 
   "auth": {
