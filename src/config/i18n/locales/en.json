@@ -360,7 +360,38 @@
     },
     "faq": {
       "title": "FAQ",
-      "breadcrumb": "FAQ"
+      "breadcrumb": "FAQ",
+      "subtitle": "We are here to answer your questions and help you at any time",
+      "faqs": [
+        {
+          "question": "What services does the website provide?",
+          "answer": "The website provides a set of electronic services aimed at simplifying procedures and improving user experience, with the ability to manage and track requests electronically in full."
+        },
+        {
+          "question": "How can I create a new account?",
+          "answer": "You can easily create a new account by going to the registration page and filling in the required information such as email, phone number, and password."
+        },
+        {
+          "question": "Can I use the website without registration?",
+          "answer": "You can browse some basic services without registration, but to access all features and services, you need to create an account."
+        },
+        {
+          "question": "How can I send a contract request?",
+          "answer": "You can send a contract request by filling out the dedicated form in the designated section and attaching all required documents and information."
+        },
+        {
+          "question": "How long does it take to review the contract?",
+          "answer": "Contract review typically takes 3 to 5 business days depending on the number of requests and requirements."
+        },
+        {
+          "question": "What should I do if my contract is rejected?",
+          "answer": "If your contract is rejected, you can contact our team to inquire about the reasons and submit a new request with the required modifications."
+        },
+        {
+          "question": "Can I modify the request after sending it?",
+          "answer": "Yes, you can modify the request during the review period, but after approval, you may need additional procedures to make changes."
+        }
+      ]
     },
     "terms": {
       "title": "Terms and Conditions",
