@@ -22,7 +22,7 @@ export const Header = () => {
             label={dict.home.nav.goodConnections}
             href={"/good-connections"}
           />
-          <NavItem label={dict.home.nav.contactUs} href={"/contact-us"} />
+          <NavItem label={dict.home.nav.contactUs} href={"/support/contact-us"} />
         </nav>
       </div>
       <div className="flex items-center gap-6">

@@ -39,15 +39,15 @@ export const Footer = () => {
           links={[
             {
               label: dict.footer.faq,
-              href: "/faq",
+              href: "/support/faq",
             },
             {
               label: dict.footer.contactUs,
-              href: "/contact-us",
+              href: "/support/contact-us",
             },
             {
               label: dict.footer.aboutPlatform,
-              href: "/about",
+              href: "/support/about-us",
             },
           ]}
         />
@@ -88,10 +88,10 @@ export const Footer = () => {
         </p>
         <ul className="flex list-disc gap-10">
           <li className="text-sm leading-6 font-medium text-white">
-            <Link href="/terms">{dict.footer.terms}</Link>
+            <Link href="/support/terms">{dict.footer.terms}</Link>
           </li>
           <li className="text-sm leading-6 font-medium text-white">
-            <Link href="/privacy">{dict.footer.privacy}</Link>
+            <Link href="/support/privacy-policy">{dict.footer.privacy}</Link>
           </li>
         </ul>
       </div>
@@ -115,7 +115,7 @@ const FooterLinks = ({
     <div className="grid grid-cols-1 gap-5">
       <div className="grid gap-2">
         <p className="text-base leading-8 font-medium text-white">{title}</p>
-        <div className="h-0.5 w-14 bg-[#389441]" />
+        <div className="bg-app-green h-0.5 w-14" />
       </div>
       {links && (
         <ul className="mr-auto ml-4 grid list-disc gap-2 rtl:mr-4 rtl:ml-auto">
@@ -188,7 +188,7 @@ const SocialLink = ({
       aria-label={title}
       target="_blank"
       rel="noopener noreferrer"
-      className="grid size-9.5 items-center justify-items-center rounded-[12px] bg-white/5"
+      className="grid size-9.5 items-center justify-items-center rounded-[12px] bg-white/5 text-white"
     >
       {icon}
     </Link>
@@ -210,7 +210,7 @@ const ContactMethod = ({
 }) => {
   return (
     <div className="flex items-center gap-2">
-      <div className="grid size-9.5 items-center justify-items-center rounded-[12px] bg-white/5">
+      <div className="grid size-9.5 items-center justify-items-center rounded-[12px] bg-white/5 text-white">
         {icon}
       </div>
       <div className="grid grid-cols-1 gap-2">

@@ -1,13 +1,13 @@
 "use client";
-import { PasswordInput } from "@/components/app/auth/inputs/PasswordInput";
-import { PhoneInput } from "@/components/app/auth/inputs/PhoneInput";
+import { PasswordInput } from "@/components/app/shared/inputs/PasswordInput";
+import { PhoneInput } from "@/components/app/shared/inputs/PhoneInput";
 import { Wrapper } from "@/components/app/auth/Wrapper";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useDict } from "@/hooks/useDict";
 import Link from "next/link";
 import { useQueryState } from "nuqs";
-import { TextInput } from "./inputs/EmailInput";
+import { TextInput } from "../shared/inputs/TextInput";
 import EmailIcon from "@/assets/icons/auth/email.svg";
 export const Login = () => {
   const dict = useDict();

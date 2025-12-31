@@ -148,6 +148,10 @@
   );
 }
 
+.contact-gradient {
+  background: linear-gradient(90deg, #131620 0%, #39456f 100%);
+}
+
 [dir="rtl"] .top-bar-gradient {
   background: linear-gradient(90deg, #131620 0%, #39456f 100%);
 }

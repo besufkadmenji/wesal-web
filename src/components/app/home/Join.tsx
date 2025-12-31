@@ -25,7 +25,7 @@ export const Join = () => {
           </p>
         </div>
         <div className="relative grid grid-cols-1 gap-4">
-          <JoinLine className="absolute top-3 bottom-3 w-px ltr:left-3.25 rtl:right-3.25" />
+          <JoinLine className="absolute h-[calc(100%-1.5rem)] top-3 ltr:left-3.25 rtl:right-3.25" />
           {dict.home.join.benefits.map((item, index) => (
             <JoinItem key={index} text={item} />
           ))}
@@ -46,8 +46,10 @@ export const Join = () => {
 
 const JoinItem = ({ text }: { text: string }) => {
   return (
-    <div className="flex items-center gap-3">
-      <CircleIcon className="z-10 size-6.5 shrink-0" />
+    <div className="flex items-start gap-3">
+      <div className="grid h-9 shrink-0 items-center justify-items-center">
+        <CircleIcon className="z-10 size-6.5" />
+      </div>
       <p className="text-lg leading-9 text-black">{text}</p>
     </div>
   );

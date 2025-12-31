@@ -1,6 +1,6 @@
 "use client";
-import { TextInput } from "@/components/app/auth/inputs/EmailInput";
-import { PhoneInput } from "@/components/app/auth/inputs/PhoneInput";
+import { TextInput } from "@/components/app/shared/inputs/TextInput";
+import { PhoneInput } from "@/components/app/shared/inputs/PhoneInput";
 import { Wrapper } from "@/components/app/auth/Wrapper";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";

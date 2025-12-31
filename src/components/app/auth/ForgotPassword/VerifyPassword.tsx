@@ -1,5 +1,5 @@
 "use client";
-import { OtpInput } from "@/components/app/auth/inputs/OtpInput";
+import { OtpInput } from "@/components/app/shared/inputs/OtpInput";
 import { Wrapper } from "@/components/app/auth/Wrapper";
 import { useDict } from "@/hooks/useDict";
 import { useCountdownTimer } from "@/hooks/useCountdownTimer";

@@ -1,3 +1,4 @@
+"use client";
 import { TopBar } from "./TopBar";
 import { Header } from "@/components/app/shared/Header";
 import { Footer } from "@/components/app/shared/Footer";

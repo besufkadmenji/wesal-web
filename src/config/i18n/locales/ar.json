@@ -317,5 +317,42 @@
   "common": {
     "continue": "متابعة",
     "skip": "تخطي"
+  },
+
+  "support":{
+    "contactUs":{
+      "title": "تواصل معنا",
+      "breadcrumb": "تواصل معنا",
+      "subtitle": "لا تردد في التواصل معنا",
+      "description": "يسعدنا الرد على جميع استفساراتك",
+      "phone": "+966 1234566789",
+      "email": "wesal@gmail.com",
+      "whatsapp": "+966 1234566789",
+      "form": {
+        "name": "الاسم",
+        "phoneNumber": "رقم الجوال",
+        "email": "البريد الإلكتروني",
+        "messageType": "نوع الرسالة",
+        "messageContent": "نص الرسالة",
+        "image": "صورة الشكوى",
+        "submit": "إرسال الرسالة"
+      }
+    },
+    "about":{
+      "title": "عن المنصة",
+      "breadcrumb": "عن المنصة"
+    },
+    "faq":{
+      "title": "الأسئلة الشائعة",
+      "breadcrumb": "الأسئلة الشائعة"
+    },
+    "terms":{
+      "title": "الشروط والأحكام",
+      "breadcrumb": "الشروط والأحكام"
+    },
+    "privacy":{
+      "title": "سياسة الخصوصية",
+      "breadcrumb": "سياسة الخصوصية"
+    }
   }
 }

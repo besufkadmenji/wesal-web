@@ -5,7 +5,7 @@ import { useDict } from "@/hooks/useDict";
 import { showSuccessMessage } from "@/utils/show.messages";
 import { usePathname, useRouter } from "next/navigation";
 import { useQueryState } from "nuqs";
-import { PasswordInput } from "../inputs/PasswordInput";
+import { PasswordInput } from "../../shared/inputs/PasswordInput";
 export const NewPassword = () => {
   const dict = useDict();
   const [type, setType] = useQueryState("type");

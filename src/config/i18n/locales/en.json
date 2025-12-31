@@ -323,5 +323,41 @@
   "common": {
     "continue": "Continue",
     "skip": "Skip"
+  },
+  "support": {
+    "contactUs": {
+      "title": "Contact Us",
+      "breadcrumb": "Contact Us",
+      "subtitle": "Don't hesitate to contact us",
+      "description": "We're happy to answer all your questions",
+      "phone": "+966 1234566789",
+      "email": "wesal@gmail.com",
+      "whatsapp": "+966 1234566789",
+      "form": {
+        "name": "Name",
+        "phoneNumber": "Phone Number",
+        "email": "Email",
+        "messageType": "Message Type",
+        "messageContent": "Message Content",
+        "image": "Complaint Image",
+        "submit": "Send Message"
+      }
+    },
+    "about": {
+      "title": "About Platform",
+      "breadcrumb": "About Platform"
+    },
+    "faq": {
+      "title": "FAQ",
+      "breadcrumb": "FAQ"
+    },
+    "terms": {
+      "title": "Terms and Conditions",
+      "breadcrumb": "Terms and Conditions"
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "breadcrumb": "Privacy Policy"
+    }
   }
 }

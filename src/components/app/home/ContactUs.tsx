@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import ContactDot from "@/assets/icons/contact.dot.svg";
 import { useDict } from "@/hooks/useDict";
