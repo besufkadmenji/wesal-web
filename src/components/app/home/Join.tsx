@@ -44,7 +44,7 @@ export const Join = () => {
   );
 };
 
-const JoinItem = ({ text }: { text: string }) => {
+export const JoinItem = ({ text }: { text: string }) => {
   return (
     <div className="flex items-start gap-3">
       <div className="grid h-9 shrink-0 items-center justify-items-center">
