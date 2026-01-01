@@ -2,6 +2,7 @@ import Image from "next/image";
 import { ReactNode } from "react";
 import LogoIcon from "@/assets/icons/logo.svg";
 import { useDict } from "@/hooks/useDict";
+import Link from "next/link";
 export const Wrapper = ({ children }: { children: ReactNode }) => {
   const dict = useDict();
   return (
@@ -10,7 +11,9 @@ export const Wrapper = ({ children }: { children: ReactNode }) => {
       <div className="auth-background absolute top-0 left-0 h-full w-full"></div>
       <div className="glass-gradient absolute top-0 left-0 grid h-full w-full grid-cols-[60fr_40fr]">
         <div className="flex h-full flex-col justify-between p-18">
-          <LogoIcon className="size-18 text-[#EFF9F0]" />
+          <Link href={"/"}>
+            <LogoIcon className="size-18 text-[#EFF9F0]" />
+          </Link>
           <div className="grid grid-cols-1 justify-items-center gap-4">
             <h1 className="px-16 text-center text-3xl leading-13 font-bold text-white">
               {dict.welcome.title}

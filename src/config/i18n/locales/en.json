@@ -318,7 +318,9 @@
     "confirmPassword": "Confirm Password",
     "haveAccount": "Already have an account?",
     "forgotPassword": "Forgot your password?",
-    "searchCountry": "Search for your country"
+    "searchCountry": "Search for your country",
+    "loginSuccess": "Login successful",
+    "loginFailed": "Login failed. Please check your credentials"
   },
   "common": {
     "continue": "Continue",

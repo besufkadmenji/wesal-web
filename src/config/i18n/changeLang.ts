@@ -10,7 +10,13 @@ export async function changeLang(
 ) {
   const cookieStore = await cookies();
 
-  cookieStore.set("lng", lng);
+  cookieStore.set("lang", lng, {
+    maxAge: 60 * 60 * 24 * 365, // 1 year
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+  });
   if (!noRedirect) {
     redirect(`/${lng}${pathname}`, RedirectType.replace);
   }

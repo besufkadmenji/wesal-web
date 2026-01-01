@@ -1,7 +1,9 @@
 "use client";
-import SuccessIcon from "@/assets/icons/success.check.svg";
 import CloseIcon from "@/assets/icons/close.svg";
+import SuccessIcon from "@/assets/icons/success.check.svg";
 import { toast } from "react-toastify";
+import { toast as sonnerToast } from "sonner";
+
 export const showSuccessMessage = (message: string) => {
   toast.success(message, {
     icon: <SuccessIcon className="size-5" />,
@@ -9,6 +11,10 @@ export const showSuccessMessage = (message: string) => {
     pauseOnHover: false,
     pauseOnFocusLoss: false,
   });
+};
+
+export const showErrorMessage = (message: string) => {
+  sonnerToast.error(message);
 };
 
 export const CloseButton = ({ closeToast }: { closeToast: () => void }) => {

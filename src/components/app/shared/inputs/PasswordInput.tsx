@@ -20,7 +20,7 @@ export const PasswordInput = ({
       <Input
         type={showPassword ? "text" : "password"}
         placeholder={placeholder}
-        className="focus-visible:border-primary peer border-border h-full rounded-[20px] pl-10.5 shadow-none ring-0!"
+        className="focus-visible:border-primary peer border-border h-full rounded-[20px] shadow-none ring-0! ltr:pl-10.5 rtl:pr-10.5"
         value={value}
         onChange={(e) => onChange?.(e.target.value)}
       />

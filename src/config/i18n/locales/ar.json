@@ -312,7 +312,9 @@
     "confirmPassword": "تأكيد كلمة المرور",
     "haveAccount": "هل لديك حساب بالفعل؟",
     "forgotPassword": "هل نسيت كلمة المرور؟",
-    "searchCountry": "ابحث عن دولتك"
+    "searchCountry": "ابحث عن دولتك",
+    "loginSuccess": "تم تسجيل الدخول بنجاح",
+    "loginFailed": "فشل تسجيل الدخول. يرجى التحقق من بيانات الدخول"
   },
   "common": {
     "continue": "متابعة",
