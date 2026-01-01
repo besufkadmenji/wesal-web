@@ -1,8 +1,8 @@
 import acceptLanguage from "accept-language";
 import { NextRequest, NextResponse } from "next/server";
 import { fallbackLng, languages } from "./config/i18n/settings";
-import client from "./utils/apollo.client";
 import { ME_QUERY } from "./graphql/user/me";
+import client from "./utils/apollo.client";
 acceptLanguage.languages(languages);
 
 export const config = {
@@ -63,6 +63,7 @@ export async function proxy(request: NextRequest) {
   );
 
   const isLoggedIn = await getUser(request);
+  console.log("isLoggedIn", isLoggedIn);
   if (!isLoggedIn) {
     if (!isPreAuthPath) {
       return NextResponse.redirect(
@@ -70,25 +71,22 @@ export async function proxy(request: NextRequest) {
       );
     }
   }
-  if (isPreAuthPath && isLoggedIn) {
-    return NextResponse.redirect(
-      new URL(`/${currentLocale}/dashboard`, request.url),
-    );
-  }
 
   return NextResponse.next();
 }
 
 const getUser = async (req: NextRequest) => {
-  const token = req.cookies.get("accessToken")?.value;
+  const token = req.cookies.get("token")?.value;
   if (!token) return null;
   try {
-    const meResult = await client(token).query({
+    const meResult = await client(
+      token,
+      `${process.env.API_BASE_URL}/graphql`,
+    ).query({
       query: ME_QUERY,
     });
+
     return meResult.data?.me ?? null;
-  } catch (e) {
-    console.error("meResult", e);
-  }
+  } catch (e) {}
   return null;
 };

@@ -48,7 +48,10 @@ const LoggedUser = () => {
   const { me } = useMe();
 
   return (
-    <div className="flex items-center gap-3 justify-self-end">
+    <Link
+      href={"/profile"}
+      className="flex items-center gap-3 justify-self-end"
+    >
       <div className="relative size-12.5 shrink-0 overflow-hidden rounded-full">
         <Image
           src={"/images/no.avatar.png"}
@@ -58,6 +61,6 @@ const LoggedUser = () => {
         />
       </div>
       <p className="text-base font-semibold text-[#EFF9F0]">{me?.name}</p>
-    </div>
+    </Link>
   );
 };

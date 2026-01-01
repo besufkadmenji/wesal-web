@@ -10,9 +10,9 @@ import { getMainDefinition } from "@apollo/client/utilities";
 import { createClient } from "graphql-ws";
 import Cookies from "js-cookie";
 
-const client = (token?: string) => {
+const client = (token?: string, url?: string) => {
   const httpLink = new HttpLink({
-    uri: "/api/proxy/graphql",
+    uri: url ?? "/api/proxy/graphql",
   });
 
   const authLink = new SetContextLink(({ headers }) => {
