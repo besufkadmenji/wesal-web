@@ -1,0 +1,1184 @@
+"""
+Indicates exactly one field must be supplied and this field must not be `null`.
+"""
+directive @oneOf on INPUT_OBJECT
+
+"""Exposes a URL that specifies the behavior of this scalar."""
+directive @specifiedBy(
+  """The URL that specifies the behavior of this scalar."""
+  url: String!
+) on SCALAR
+
+type Advertisement {
+  attributes: [AdvertisementAttributes!]
+  category: Category!
+  categoryId: String!
+  city: City!
+  cityId: String!
+  createdAt: DateTime!
+  description: String!
+  id: ID!
+  media: [AdvertisementMedia!]
+  price: Float!
+  status: AdvertisementStatus!
+  title: String!
+  updatedAt: DateTime!
+  user: User!
+  userId: String!
+}
+
+type AdvertisementAttributes {
+  advertisement: Advertisement!
+  advertisementId: String!
+  id: ID!
+  key: String!
+  value: String!
+}
+
+input AdvertisementAttributesInput {
+  key: String!
+  value: String!
+}
+
+type AdvertisementMedia {
+  advertisement: Advertisement!
+  advertisementId: String!
+  id: ID!
+  sortOrder: Int!
+  url: String!
+}
+
+input AdvertisementMediaInput {
+  sortOrder: Int!
+  url: String!
+}
+
+input AdvertisementPaginationInput {
+  categoryId: String
+  cityId: String
+
+  """Number of items per page"""
+  limit: Int! = 10
+
+  """Page number (1-based)"""
+  page: Int! = 1
+
+  """Sort field name"""
+  sortBy: AdvertisementSortField
+
+  """Sort order: ASC or DESC"""
+  sortOrder: SortOrder = ASC
+  status: AdvertisementStatus
+  userId: String
+}
+
+"""Available fields to sort advertisements by"""
+enum AdvertisementSortField {
+  createdAt
+  id
+  price
+  status
+  title
+  updatedAt
+}
+
+"""Advertisement status"""
+enum AdvertisementStatus {
+  DRAFT
+  EXPIRED
+  PUBLISHED
+  SUSPENDED
+}
+
+type AuthResponse {
+  accessToken: String!
+  user: User!
+}
+
+type Category {
+  children: [Category!]
+  createdAt: DateTime!
+  descriptionAr: String!
+  descriptionEn: String!
+  id: ID!
+  nameAr: String!
+  nameEn: String!
+  parent: Category
+  parentId: String
+  updatedAt: DateTime!
+}
+
+input CategoryPaginationInput {
+  """Number of items per page"""
+  limit: Int! = 10
+
+  """Page number (1-based)"""
+  page: Int! = 1
+  parentId: String
+
+  """Sort order: ASC or DESC"""
+  sortOrder: SortOrder = ASC
+}
+
+type City {
+  country: Country!
+  countryId: String!
+  createdAt: DateTime!
+  id: ID!
+  name: String!
+  updatedAt: DateTime!
+}
+
+input CityPaginationInput {
+  """Number of items per page"""
+  limit: Int! = 10
+
+  """Page number (1-based)"""
+  page: Int! = 1
+
+  """Sort field name"""
+  sortBy: CitySortField
+
+  """Sort order: ASC or DESC"""
+  sortOrder: SortOrder = ASC
+}
+
+"""Available fields to sort cities by"""
+enum CitySortField {
+  countryId
+  createdAt
+  id
+  name
+  updatedAt
+}
+
+type Complaint {
+  adminResponse: String
+  advertisement: Advertisement!
+  advertisementId: String!
+  createdAt: DateTime!
+  description: String!
+  id: ID!
+  reason: ComplaintReason!
+  reviewedAt: DateTime
+  reviewedBy: String
+  reviewer: User
+  status: ComplaintStatus!
+  updatedAt: DateTime!
+  user: User!
+  userId: String!
+}
+
+input ComplaintPaginationInput {
+  advertisementId: String
+
+  """Number of items per page"""
+  limit: Int! = 10
+
+  """Page number (1-based)"""
+  page: Int! = 1
+  reason: ComplaintReason
+  reviewedBy: String
+
+  """Sort field name"""
+  sortBy: ComplaintSortField
+
+  """Sort order: ASC or DESC"""
+  sortOrder: SortOrder = ASC
+  status: ComplaintStatus
+  userId: String
+}
+
+"""Reason for complaint"""
+enum ComplaintReason {
+  COPYRIGHT_VIOLATION
+  FRAUD
+  INAPPROPRIATE_CONTENT
+  MISLEADING_INFORMATION
+  OFFENSIVE
+  OTHER
+  SPAM
+}
+
+"""Available fields to sort complaints by"""
+enum ComplaintSortField {
+  createdAt
+  id
+  reason
+  status
+  updatedAt
+}
+
+"""Complaint status"""
+enum ComplaintStatus {
+  CLOSED
+  PENDING
+  REJECTED
+  RESOLVED
+  UNDER_REVIEW
+}
+
+type Contract {
+  agreedPrice: Float!
+  client: User!
+  clientId: String!
+  conversation: Conversation!
+  conversationId: String!
+  createdAt: DateTime!
+  downPayment: Float!
+  id: ID!
+  provider: User!
+  providerId: String!
+  signatures: [ContractSignature!]
+  status: ContractStatus!
+  updatedAt: DateTime!
+}
+
+input ContractPaginationInput {
+  clientId: String
+  conversationId: String
+
+  """Number of items per page"""
+  limit: Int! = 10
+
+  """Page number (1-based)"""
+  page: Int! = 1
+  providerId: String
+
+  """Sort field name"""
+  sortBy: ContractSortField
+
+  """Sort order: ASC or DESC"""
+  sortOrder: SortOrder = ASC
+  status: ContractStatus
+}
+
+type ContractSignature {
+  contract: Contract!
+  contractId: String!
+  id: ID!
+  signatureData: String!
+  signedAt: DateTime!
+  user: User!
+  userId: String!
+}
+
+input ContractSignatureInput {
+  signatureData: String!
+  userId: String!
+}
+
+"""Available fields to sort contracts by"""
+enum ContractSortField {
+  agreedPrice
+  createdAt
+  downPayment
+  id
+  status
+  updatedAt
+}
+
+"""Contract status"""
+enum ContractStatus {
+  ACCEPTED
+  CANCELLED
+  COMPLETED
+  IN_PROGRESS
+  PENDING
+  REJECTED
+}
+
+type Conversation {
+  advertisement: Advertisement!
+  advertisementId: String!
+  createdAt: DateTime!
+  id: ID!
+  isPaid: Boolean!
+  messages: [Message!]
+  provider: User!
+  providerId: String!
+  updatedAt: DateTime!
+  user: User!
+  userId: String!
+}
+
+input ConversationPaginationInput {
+  advertisementId: String
+  isPaid: Boolean
+
+  """Number of items per page"""
+  limit: Int! = 10
+
+  """Page number (1-based)"""
+  page: Int! = 1
+  providerId: String
+
+  """Sort field name"""
+  sortBy: ConversationSortField
+
+  """Sort order: ASC or DESC"""
+  sortOrder: SortOrder = ASC
+  userId: String
+}
+
+"""Available fields to sort conversations by"""
+enum ConversationSortField {
+  createdAt
+  id
+  isPaid
+  updatedAt
+}
+
+type Country {
+  code: String!
+  createdAt: DateTime!
+  dialCode: String
+  id: ID!
+  name: String!
+  updatedAt: DateTime!
+}
+
+input CountryPaginationInput {
+  """Number of items per page"""
+  limit: Int! = 10
+
+  """Page number (1-based)"""
+  page: Int! = 1
+
+  """Sort field name"""
+  sortBy: CountrySortField
+
+  """Sort order: ASC or DESC"""
+  sortOrder: SortOrder = ASC
+}
+
+"""Available fields to sort countries by"""
+enum CountrySortField {
+  code
+  createdAt
+  id
+  name
+  updatedAt
+}
+
+input CreateAdvertisementInput {
+  attributes: [AdvertisementAttributesInput!]
+  categoryId: String!
+  cityId: String!
+  description: String!
+  media: [AdvertisementMediaInput!]
+  price: Float!
+  status: AdvertisementStatus
+  title: String!
+  userId: String!
+}
+
+input CreateCategoryInput {
+  descriptionAr: String!
+  descriptionEn: String!
+  nameAr: String!
+  nameEn: String!
+  parentId: String
+}
+
+input CreateCityInput {
+  countryId: ID!
+  name: String!
+}
+
+input CreateComplaintInput {
+  advertisementId: String!
+  description: String!
+  reason: ComplaintReason!
+  status: ComplaintStatus
+  userId: String!
+}
+
+input CreateContractInput {
+  agreedPrice: Float!
+  clientId: String!
+  conversationId: String!
+  downPayment: Float!
+  providerId: String!
+  signatures: [ContractSignatureInput!]
+  status: ContractStatus
+}
+
+input CreateConversationInput {
+  advertisementId: String!
+  isPaid: Boolean
+  providerId: String!
+  userId: String!
+}
+
+input CreateCountryInput {
+  code: String!
+  name: String!
+}
+
+input CreateFavoriteInput {
+  advertisementId: String!
+  userId: String!
+}
+
+input CreateMessageInput {
+  content: String!
+  conversationId: String!
+  senderId: String!
+}
+
+input CreateNotificationInput {
+  isRead: Boolean
+  message: String!
+  relatedEntityId: String
+  relatedEntityType: String
+  title: String!
+  type: NotificationType!
+  userId: String!
+}
+
+input CreatePaymentInput {
+  amount: Float!
+  contractId: String!
+  notes: String
+  paymentMethod: PaymentMethod!
+  status: PaymentStatus
+  transactionReference: String
+  userId: String!
+}
+
+input CreateRatingInput {
+  advertisementId: String!
+  comment: String
+  rating: Int!
+  userId: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Favorite {
+  advertisement: Advertisement!
+  advertisementId: String!
+  createdAt: DateTime!
+  id: ID!
+  user: User!
+  userId: String!
+}
+
+input FavoritePaginationInput {
+  advertisementId: String
+
+  """Number of items per page"""
+  limit: Int! = 10
+
+  """Page number (1-based)"""
+  page: Int! = 1
+
+  """Sort field name"""
+  sortBy: FavoriteSortField
+
+  """Sort order: ASC or DESC"""
+  sortOrder: SortOrder = ASC
+  userId: String
+}
+
+"""Available fields to sort favorites by"""
+enum FavoriteSortField {
+  createdAt
+  id
+}
+
+input ForgotPasswordInput {
+  emailOrPhone: String!
+}
+
+input LoginInput {
+  emailOrPhone: String!
+  password: String!
+}
+
+type Message {
+  content: String!
+  conversation: Conversation!
+  conversationId: String!
+  createdAt: DateTime!
+  id: ID!
+  sender: User!
+  senderId: String!
+  updatedAt: DateTime!
+}
+
+input MessagePaginationInput {
+  conversationId: String
+
+  """Number of items per page"""
+  limit: Int! = 10
+
+  """Page number (1-based)"""
+  page: Int! = 1
+  senderId: String
+
+  """Sort field name"""
+  sortBy: MessageSortField
+
+  """Sort order: ASC or DESC"""
+  sortOrder: SortOrder = ASC
+}
+
+"""Available fields to sort messages by"""
+enum MessageSortField {
+  createdAt
+  id
+  updatedAt
+}
+
+type Mutation {
+  createAdvertisement(input: CreateAdvertisementInput!): Advertisement!
+  createCategory(input: CreateCategoryInput!): Category!
+  createCity(input: CreateCityInput!): City!
+  createComplaint(input: CreateComplaintInput!): Complaint!
+  createContract(input: CreateContractInput!): Contract!
+  createConversation(input: CreateConversationInput!): Conversation!
+  createCountry(input: CreateCountryInput!): Country!
+  createFavorite(input: CreateFavoriteInput!): Favorite!
+  createMessage(input: CreateMessageInput!): Message!
+  createNotification(input: CreateNotificationInput!): Notification!
+  createPayment(input: CreatePaymentInput!): Payment!
+  createRating(input: CreateRatingInput!): Rating!
+
+  """Delete all notifications for a user"""
+  deleteAllNotificationsForUser(userId: String!): Boolean!
+
+  """Request password reset OTP"""
+  forgotPassword(input: ForgotPasswordInput!): Boolean!
+
+  """Login with email and password"""
+  login(input: LoginInput!): AuthResponse!
+
+  """Mark all notifications as read for a user"""
+  markAllNotificationsAsRead(userId: String!): Boolean!
+
+  """Mark multiple notifications as read"""
+  markMultipleNotificationsAsRead(ids: [String!]!): Boolean!
+
+  """Mark a notification as read"""
+  markNotificationAsRead(id: String!): Notification!
+
+  """Mark a notification as unread"""
+  markNotificationAsUnread(id: String!): Notification!
+
+  """Process a refund for a completed payment"""
+  refundPayment(id: String!): Payment!
+
+  """Register a new user and send verification OTPs"""
+  register(input: RegisterInput!): User!
+
+  """Reject a complaint"""
+  rejectComplaint(complaintId: String!, reason: String!, reviewerId: String!): Complaint!
+  removeAdvertisement(id: String!): Advertisement!
+  removeCategory(id: String!): Category!
+  removeCity(id: ID!): City!
+  removeComplaint(id: String!): Complaint!
+  removeContract(id: String!): Contract!
+  removeConversation(id: String!): Conversation!
+  removeCountry(id: ID!): Country!
+  removeFavorite(id: String!): Favorite!
+
+  """Remove favorite by user and advertisement IDs"""
+  removeFavoriteByUserAndAdvertisement(advertisementId: String!, userId: String!): Favorite!
+  removeMessage(id: String!): Message!
+  removeNotification(id: String!): Notification!
+  removePayment(id: String!): Payment!
+  removeRating(id: String!): Rating!
+
+  """Delete user by ID"""
+  removeUser(id: ID!): User!
+
+  """Resend OTP for email or phone verification"""
+  resendOtp(input: ResendOtpInput!): Boolean!
+
+  """Reset password using OTP"""
+  resetPassword(input: ResetPasswordInput!): Boolean!
+
+  """Review and resolve a complaint"""
+  reviewComplaint(input: ReviewComplaintInput!): Complaint!
+  updateAdvertisement(input: UpdateAdvertisementInput!): Advertisement!
+  updateCategory(input: UpdateCategoryInput!): Category!
+  updateCity(input: UpdateCityInput!): City!
+  updateComplaint(input: UpdateComplaintInput!): Complaint!
+  updateContract(input: UpdateContractInput!): Contract!
+  updateConversation(input: UpdateConversationInput!): Conversation!
+  updateCountry(input: UpdateCountryInput!): Country!
+  updateMessage(input: UpdateMessageInput!): Message!
+  updatePayment(input: UpdatePaymentInput!): Payment!
+  updateRating(input: UpdateRatingInput!): Rating!
+
+  """Update user"""
+  updateUser(updateUserInput: UpdateUserInput!): User!
+
+  """Verify email or phone with OTP"""
+  verifyOtp(input: VerifyOtpInput!): Boolean!
+}
+
+type Notification {
+  createdAt: DateTime!
+  id: ID!
+  isRead: Boolean!
+  message: String!
+  readAt: DateTime
+  relatedEntityId: String
+  relatedEntityType: String
+  title: String!
+  type: NotificationType!
+  user: User!
+  userId: String!
+}
+
+input NotificationPaginationInput {
+  isRead: Boolean
+
+  """Number of items per page"""
+  limit: Int! = 10
+
+  """Page number (1-based)"""
+  page: Int! = 1
+
+  """Sort field name"""
+  sortBy: NotificationSortField
+
+  """Sort order: ASC or DESC"""
+  sortOrder: SortOrder = ASC
+  type: NotificationType
+  userId: String
+}
+
+"""Available fields to sort notifications by"""
+enum NotificationSortField {
+  createdAt
+  id
+  isRead
+  type
+}
+
+type NotificationStats {
+  readCount: Int!
+  totalNotifications: Int!
+  unreadCount: Int!
+}
+
+"""Type of notification"""
+enum NotificationType {
+  ADVERTISEMENT_APPROVED
+  ADVERTISEMENT_REJECTED
+  COMPLAINT_RESOLVED
+  COMPLAINT_SUBMITTED
+  CONTRACT_CREATED
+  CONTRACT_SIGNED
+  NEW_MESSAGE
+  NEW_RATING
+  PAYMENT_COMPLETED
+  PAYMENT_RECEIVED
+  SYSTEM_ANNOUNCEMENT
+}
+
+"""Type of OTP"""
+enum OtpType {
+  EMAIL_VERIFICATION
+  PASSWORD_RESET
+  PHONE_VERIFICATION
+}
+
+type PaginatedAdvertisementResponse {
+  """List of items"""
+  items: [Advertisement!]!
+
+  """Pagination metadata"""
+  meta: PaginationMeta!
+}
+
+type PaginatedCategoryResponse {
+  """List of items"""
+  items: [Category!]!
+
+  """Pagination metadata"""
+  meta: PaginationMeta!
+}
+
+type PaginatedCityResponse {
+  """List of items"""
+  items: [City!]!
+
+  """Pagination metadata"""
+  meta: PaginationMeta!
+}
+
+type PaginatedComplaintResponse {
+  """List of items"""
+  items: [Complaint!]!
+
+  """Pagination metadata"""
+  meta: PaginationMeta!
+}
+
+type PaginatedContractResponse {
+  """List of items"""
+  items: [Contract!]!
+
+  """Pagination metadata"""
+  meta: PaginationMeta!
+}
+
+type PaginatedConversationResponse {
+  """List of items"""
+  items: [Conversation!]!
+
+  """Pagination metadata"""
+  meta: PaginationMeta!
+}
+
+type PaginatedCountryResponse {
+  """List of items"""
+  items: [Country!]!
+
+  """Pagination metadata"""
+  meta: PaginationMeta!
+}
+
+type PaginatedFavoriteResponse {
+  """List of items"""
+  items: [Favorite!]!
+
+  """Pagination metadata"""
+  meta: PaginationMeta!
+}
+
+type PaginatedMessageResponse {
+  """List of items"""
+  items: [Message!]!
+
+  """Pagination metadata"""
+  meta: PaginationMeta!
+}
+
+type PaginatedNotificationResponse {
+  """List of items"""
+  items: [Notification!]!
+
+  """Pagination metadata"""
+  meta: PaginationMeta!
+}
+
+type PaginatedPaymentResponse {
+  """List of items"""
+  items: [Payment!]!
+
+  """Pagination metadata"""
+  meta: PaginationMeta!
+}
+
+type PaginatedRatingResponse {
+  """List of items"""
+  items: [Rating!]!
+
+  """Pagination metadata"""
+  meta: PaginationMeta!
+}
+
+type PaginatedUserResponse {
+  """List of items"""
+  items: [User!]!
+
+  """Pagination metadata"""
+  meta: PaginationMeta!
+}
+
+type PaginationMeta {
+  """Whether there is a next page"""
+  hasNext: Boolean!
+
+  """Whether there is a previous page"""
+  hasPrevious: Boolean!
+
+  """Number of items per page"""
+  limit: Int!
+
+  """Current page number"""
+  page: Int!
+
+  """Total number of items"""
+  total: Int!
+
+  """Total number of pages"""
+  totalPages: Int!
+}
+
+type Payment {
+  amount: Float!
+  contract: Contract!
+  contractId: String!
+  createdAt: DateTime!
+  gatewayResponse: String
+  id: ID!
+  notes: String
+  paymentMethod: PaymentMethod!
+  status: PaymentStatus!
+  transactionReference: String
+  updatedAt: DateTime!
+  user: User!
+  userId: String!
+}
+
+"""Payment method"""
+enum PaymentMethod {
+  BANK_TRANSFER
+  CASH
+  CREDIT_CARD
+  DEBIT_CARD
+  WALLET
+}
+
+input PaymentPaginationInput {
+  contractId: String
+
+  """Number of items per page"""
+  limit: Int! = 10
+
+  """Page number (1-based)"""
+  page: Int! = 1
+  paymentMethod: PaymentMethod
+
+  """Sort field name"""
+  sortBy: PaymentSortField
+
+  """Sort order: ASC or DESC"""
+  sortOrder: SortOrder = ASC
+  status: PaymentStatus
+  userId: String
+}
+
+"""Available fields to sort payments by"""
+enum PaymentSortField {
+  amount
+  createdAt
+  id
+  paymentMethod
+  status
+  updatedAt
+}
+
+"""Payment status"""
+enum PaymentStatus {
+  CANCELLED
+  COMPLETED
+  FAILED
+  PENDING
+  PROCESSING
+  REFUNDED
+}
+
+type Query {
+  advertisement(id: String!): Advertisement!
+  advertisements(input: AdvertisementPaginationInput): PaginatedAdvertisementResponse!
+  categories(input: CategoryPaginationInput): PaginatedCategoryResponse!
+  category(id: String!): Category!
+
+  """Get all cities with pagination"""
+  cities(pagination: CityPaginationInput): PaginatedCityResponse!
+
+  """Get cities by country with pagination"""
+  citiesByCountry(countryId: ID!, pagination: CityPaginationInput): PaginatedCityResponse!
+  city(id: ID!): City!
+  complaint(id: String!): Complaint!
+  complaints(input: ComplaintPaginationInput): PaginatedComplaintResponse!
+  contract(id: String!): Contract!
+  contracts(input: ContractPaginationInput): PaginatedContractResponse!
+  conversation(id: String!): Conversation!
+  conversations(input: ConversationPaginationInput): PaginatedConversationResponse!
+
+  """Get all countries with pagination"""
+  countries(pagination: CountryPaginationInput): PaginatedCountryResponse!
+  country(id: ID!): Country!
+  favorite(id: String!): Favorite!
+  favorites(input: FavoritePaginationInput): PaginatedFavoriteResponse!
+
+  """Check if advertisement is favorited by user"""
+  isFavorite(advertisementId: String!, userId: String!): Boolean!
+
+  """Get current authenticated user"""
+  me: User!
+  message(id: String!): Message!
+  messages(input: MessagePaginationInput): PaginatedMessageResponse!
+  notification(id: String!): Notification!
+
+  """Get notification statistics for a user"""
+  notificationStats(userId: String!): NotificationStats!
+  notifications(input: NotificationPaginationInput): PaginatedNotificationResponse!
+  payment(id: String!): Payment!
+  payments(input: PaymentPaginationInput): PaginatedPaymentResponse!
+  rating(id: String!): Rating!
+
+  """Get rating statistics for an advertisement"""
+  ratingStatistics(advertisementId: String!): RatingStatistics!
+  ratings(input: RatingPaginationInput): PaginatedRatingResponse!
+
+  """Get user by ID"""
+  user(id: ID!): User!
+
+  """Get all users with pagination"""
+  users(pagination: UserPaginationInput): PaginatedUserResponse!
+}
+
+type Rating {
+  advertisement: Advertisement!
+  advertisementId: String!
+  comment: String
+  createdAt: DateTime!
+  id: ID!
+  rating: Int!
+  updatedAt: DateTime!
+  user: User!
+  userId: String!
+}
+
+input RatingPaginationInput {
+  advertisementId: String
+
+  """Number of items per page"""
+  limit: Int! = 10
+  maxRating: Int
+  minRating: Int
+
+  """Page number (1-based)"""
+  page: Int! = 1
+
+  """Sort field name"""
+  sortBy: RatingSortField
+
+  """Sort order: ASC or DESC"""
+  sortOrder: SortOrder = ASC
+  userId: String
+}
+
+"""Available fields to sort ratings by"""
+enum RatingSortField {
+  createdAt
+  id
+  rating
+  updatedAt
+}
+
+type RatingStatistics {
+  averageRating: Float!
+  fiveStars: Int!
+  fourStars: Int!
+  oneStar: Int!
+  threeStars: Int!
+  totalRatings: Int!
+  twoStars: Int!
+}
+
+input RegisterInput {
+  address: String
+  categoryIds: [String!]
+  cityId: String
+  dialCode: String
+  email: String!
+  latitude: Float
+  longitude: Float
+  name: String!
+  password: String!
+  phone: String!
+  role: UserRole
+}
+
+input ResendOtpInput {
+  target: String!
+  type: OtpType!
+}
+
+input ResetPasswordInput {
+  code: String!
+  newPassword: String!
+  target: String!
+}
+
+input ReviewComplaintInput {
+  action: String
+  adminResponse: String!
+  complaintId: String!
+  reviewerId: String!
+}
+
+"""Sort order direction"""
+enum SortOrder {
+  ASC
+  DESC
+}
+
+input UpdateAdvertisementInput {
+  attributes: [AdvertisementAttributesInput!]
+  categoryId: String
+  cityId: String
+  description: String
+  id: String!
+  media: [AdvertisementMediaInput!]
+  price: Float
+  status: AdvertisementStatus
+  title: String
+  userId: String
+}
+
+input UpdateCategoryInput {
+  descriptionAr: String
+  descriptionEn: String
+  id: String!
+  nameAr: String
+  nameEn: String
+  parentId: String
+}
+
+input UpdateCityInput {
+  countryId: ID
+  id: ID!
+  name: String
+}
+
+input UpdateComplaintInput {
+  advertisementId: String
+  description: String
+  id: String!
+  reason: ComplaintReason
+  status: ComplaintStatus
+  userId: String
+}
+
+input UpdateContractInput {
+  agreedPrice: Float
+  clientId: String
+  conversationId: String
+  downPayment: Float
+  id: String!
+  providerId: String
+  signatures: [ContractSignatureInput!]
+  status: ContractStatus
+}
+
+input UpdateConversationInput {
+  advertisementId: String
+  id: String!
+  isPaid: Boolean
+  providerId: String
+  userId: String
+}
+
+input UpdateCountryInput {
+  code: String
+  id: ID!
+  name: String
+}
+
+input UpdateMessageInput {
+  content: String
+  conversationId: String
+  id: String!
+  senderId: String
+}
+
+input UpdatePaymentInput {
+  amount: Float
+  contractId: String
+  id: String!
+  notes: String
+  paymentMethod: PaymentMethod
+  status: PaymentStatus
+  transactionReference: String
+  userId: String
+}
+
+input UpdateRatingInput {
+  advertisementId: String
+  comment: String
+  id: String!
+  rating: Int
+  userId: String
+}
+
+input UpdateUserInput {
+  address: String
+  avatarUrl: String
+  categoryIds: [String!]
+  cityId: String
+  countryId: String
+  dialCode: String
+  email: String
+  id: ID!
+  languageCode: String
+  latitude: Float
+  longitude: Float
+  name: String
+  password: String
+  phone: String
+}
+
+type User {
+  address: String
+  avatarUrl: String
+  categories: [Category!]
+  cityId: String
+  countryId: String
+  createdAt: DateTime!
+  dialCode: String
+  email: String!
+  emailVerified: Boolean!
+  id: ID!
+  isActive: Boolean!
+  languageCode: String
+  latitude: Float
+  longitude: Float
+  name: String
+  phone: String!
+  phoneVerified: Boolean!
+  role: UserRole!
+  updatedAt: DateTime!
+}
+
+input UserPaginationInput {
+  """Number of items per page"""
+  limit: Int! = 10
+
+  """Page number (1-based)"""
+  page: Int! = 1
+
+  """Sort field name"""
+  sortBy: UserSortField
+
+  """Sort order: ASC or DESC"""
+  sortOrder: SortOrder = ASC
+}
+
+"""User role enumeration"""
+enum UserRole {
+  PROVIDER
+  USER
+}
+
+"""Available fields to sort users by"""
+enum UserSortField {
+  createdAt
+  email
+  fullName
+  id
+  isActive
+  phone
+  updatedAt
+}
+
+input VerifyOtpInput {
+  code: String!
+  target: String!
+  type: OtpType!
+}
+

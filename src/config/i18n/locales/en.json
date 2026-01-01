@@ -1,0 +1,407 @@
+{
+  "brand": {
+    "title": "AURORA"
+  },
+  "welcome": {
+    "title": "Discover everything that matters to you in one place, bringing you the latest ads from various fields.",
+    "subtitle": "Browse carefully selected ads from jobs, fashion, services, real estate, products, and more."
+  },
+  "header": {
+    "notifications": "Notifications",
+    "messages": "Messages",
+    "addAd": "Add Your Ad"
+  },
+  "footer": {
+    "aboutUs": "A digital platform that acts as an intermediary between sellers and buyers, aiming to facilitate the process of supply and demand through a smooth and secure user experience.",
+    "services": "Services",
+    "pricing": "Pricing",
+    "contact": "Contact Us",
+    "terms": "Terms and Conditions",
+    "privacy": "Privacy Policy",
+    "rights": "All Rights Reserved",
+    "contactMethods": "Contact Methods",
+    "mobileNumber": "Mobile Number",
+    "email": "Email",
+    "whatsapp": "WhatsApp",
+    "quickLinks": "Quick Links",
+    "faq": "FAQ",
+    "aboutPlatform": "About Platform",
+    "secondaryPages": "Secondary Pages",
+    "home": "Home",
+    "categories": "Categories",
+    "myContracts": "My Contracts",
+    "copyrightText": "All Rights Reserved for Wesal Website",
+    "staticPages": "Static pages",
+    "contactUs": "Contact Us"
+  },
+  "home": {
+    "sections": "Service Sections",
+    "popular": "Popular Sections",
+    "nearby": "Nearby You",
+    "latest": "Latest",
+    "viewAll": "View All",
+    "search": "Search for services",
+    "tagline": "Thousands of ads... everything you need in one place",
+    "login": "Login",
+    "signup": "Sign Up",
+    "nav": {
+      "home": "Home",
+      "categories": "Categories",
+      "contracts": "My Contracts",
+      "goodConnections": "Good Connections",
+      "contactUs": "Contact Us"
+    },
+    "title": "Certified Mediator for Contractors, Workers, and International Search",
+    "subtitle": "Discover reliable services from certified contractors and workers throughout the region",
+    "cta": "Start Searching",
+    "hero": {
+      "title": "Certified intermediary between advertiser and client for",
+      "subtitle": "From handicrafts to jobs, real estate, and various products… we provide you with a unified space that brings together all the ads that may interest you, so you can compare, choose, and apply for what suits you best with ease and clarity.",
+      "search": "Search",
+      "selectCategories": "Select Category",
+      "tags": [
+        "Handicrafts",
+        "Home Furniture",
+        "Educational Courses",
+        "Job Ads",
+        "Selling Products in Various Ways"
+      ],
+
+      "heroOptionOne": "Explore thousands of diverse ads in one place, from jobs to products and services. Easily search for everything you need without hassle and start applying quickly.",
+      "heroOptionTwo": "Through a massive library containing thousands of ads from various fields, we provide you with a smooth browsing experience that helps you find what you're looking for—whether it's a product, service, or job opportunity—all in one platform that brings together all your needs.",
+      "scrollDown": "Scroll Down"
+    },
+    "popularCategories": {
+      "title": "Discover the most active and engaging sections now",
+      "subtitle": "Electronic Sections",
+      "categories": [
+        {
+          "id": 1,
+          "name": "Handicrafts",
+          "description": "Unique handmade products crafted with precision distinctive pieces that add a special touch to your life."
+        },
+        {
+          "id": 2,
+          "name": "Educational Courses",
+          "description": "Comprehensive educational courses that help you develop your skills and gain new experiences easily."
+        },
+        {
+          "id": 3,
+          "name": "Home Furniture",
+          "description": "High-quality home furniture pieces with unique designs to suit all tastes and spaces."
+        },
+        {
+          "id": 4,
+          "name": "Job Ads",
+          "description": "Various job opportunities from trusted sources, find the right job and follow the featured ones."
+        },
+        {
+          "id": 5,
+          "name": "Products",
+          "description": "A diverse collection of products"
+        }
+      ],
+      "viewDetails": "Section Details"
+    },
+    "trusted": {
+      "subtitle": "Start your success with thousands of advertisers",
+      "title": "Your trusted partner to find the right ad",
+      "description": "We provide you with a smooth and reliable search experience that helps you explore ads suitable for your needs, whether you are looking for products, services, jobs, or real estate, with a simple interface and advanced options that make finding what you want faster and easier than ever before.",
+      "stats": [
+        {
+          "number": "500",
+          "label": "Number of successful deals"
+        },
+        {
+          "number": "200",
+          "label": "Total number of advertisers"
+        },
+        {
+          "number": "350",
+          "label": "Total number of clients"
+        }
+      ]
+    },
+    "bestSelling": {
+      "title": "Top Sections in Sales and Revenue",
+      "subtitle": "Best Selling Sections",
+      "categories": [
+        {
+          "id": 1,
+          "name": "Handicrafts",
+          "description": "Unique handmade products crafted with precision... distinctive pieces that add a special touch to your life."
+        },
+        {
+          "id": 2,
+          "name": "Educational Courses",
+          "description": "Comprehensive educational courses that help you develop your skills and gain new experiences easily."
+        },
+        {
+          "id": 3,
+          "name": "Home Furniture",
+          "description": "High-quality home furniture pieces with unique designs to suit all tastes and spaces."
+        },
+        {
+          "id": 4,
+          "name": "Job Ads",
+          "description": "Various job opportunities from trusted sources... find the right job and follow the featured ones."
+        },
+        {
+          "id": 5,
+          "name": "Products",
+          "description": "A diverse collection of products..."
+        }
+      ],
+      "viewDetails": "Section Details"
+    },
+    "join": {
+      "subtitle": "Start your success with thousands of advertisers",
+      "title": "Join thousands of successful advertisers",
+      "description": "Start selling your products and services today and get your first ad for free, with access to thousands of interested clients and advanced tools to help you market your offers easily and professionally. Join now and start growing your business in minutes!",
+      "benefits": [
+        "Showcase your products to the world and benefit from a special package that makes your start easier.",
+        "Your chance to try our platform for free and attract clients from day one.",
+        "Start strong with a free ad that helps you reach a wide audience.",
+        "Attract your first clients easily and start your journey to success."
+      ],
+      "cta": "Add your ad now"
+    },
+    "topListing": {
+      "subtitle": "Trusted Advertisers",
+      "title": "Ads from trusted sellers with a 5-star rating",
+      "listings": [
+        {
+          "id": 1,
+          "name": "iPhone 15 Pro Max",
+          "rating": 4.5,
+          "price": 500.0,
+          "description": "Unique handmade products crafted with precision... distinctive pieces that add a special touch to your life."
+        },
+        {
+          "id": 2,
+          "name": "iPhone 15 Pro Max",
+          "rating": 4.5,
+          "price": 500.0,
+          "description": "Unique handmade products crafted with precision... distinctive pieces that add a special touch to your life."
+        },
+        {
+          "id": 3,
+          "name": "iPhone 15 Pro Max",
+          "rating": 4.5,
+          "price": 500.0,
+          "description": "Unique handmade products crafted with precision... distinctive pieces that add a special touch to your life."
+        },
+        {
+          "id": 4,
+          "name": "iPhone 15 Pro Max",
+          "rating": 4.5,
+          "price": 500.0,
+          "description": "Unique handmade products crafted with precision... distinctive pieces that add a special touch to your life."
+        }
+      ]
+    },
+    "contactUs": {
+      "subtitle": "We are here to help",
+      "title": "Do you have any inquiry?",
+      "description": "Our team is ready to assist you around the clock. Contact us now and we will be happy to serve you, ensuring you get the best experience and quick response to all your inquiries.",
+
+      "contactButton": "Contact Us",
+      "callButton": "Call Us"
+    },
+    "mainCategories": {
+      "title": "Main Categories and Current Listings",
+      "viewDetails": "View Details"
+    },
+    "partnerships": {
+      "title": "Trusted Partnerships to Focus on Project Advertisements",
+      "subtitle": "Choose the right plan to publish your ads and reach more customers",
+      "basic": "Basic Plan",
+      "standard": "Standard Plan",
+      "premium": "Premium Plan",
+      "price": "Price",
+      "duration": "Duration",
+      "features": "Features"
+    },
+    "categories": {
+      "title": "Browse Categories and Sections",
+      "furniture": "Home Furniture",
+      "fashionAccessories": "Clothing and Accessories",
+      "vegetables": "Vegetables and Fruits",
+      "vehicles": "Vehicles",
+      "viewMore": "View More"
+    },
+
+    "products": {
+      "title": "Latest Products",
+      "price": "Price",
+      "rating": "Rating",
+      "addToCart": "Add to Cart"
+    },
+    "faq": {
+      "title": "Do you have questions?",
+      "subtitle": "We are here to answer all your questions and help you get the best services",
+      "contactUs": "Contact Us",
+      "noThanks": "No Thanks"
+    }
+  },
+
+  "auth": {
+    "choose": {
+      "title": "Choose account type",
+      "subtitle": "Select the account type that best describes how you will use the platform.",
+      "user": "User",
+      "provider": "Service Provider",
+      "next": "Next"
+    },
+    "login": {
+      "title": "Welcome back!",
+      "subtitle": "Restore your profile, and we hope you have a rewarding experience with benefits and inspiration.",
+      "signInWithPhone": "Sign in with phone number",
+      "signInWithEmail": "Sign in with email",
+      "phone": "Phone Number",
+      "email": "Email",
+      "password": "Password",
+      "forgotPassword": "Forgot your password?",
+      "submit": "Sign In",
+      "noAccount": "Don't have an account?",
+      "createAccount": "Create a new account"
+    },
+    "signup": {
+      "title": "Join us and create your account",
+      "subtitle": "Create your account now to benefit from our features",
+      "name": "Name",
+      "phone": "Phone Number",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "bankName": "Bank Name",
+      "ibanNumber": "IBAN Number",
+      "verificationLink": "Absher Verification Link",
+      "termsLink": "Terms and Conditions",
+      "submit": "Register",
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign In",
+      "documentLink": "Verification Link",
+      "documentLinkText": "Absher",
+      "termsAndConditions": "Confirm Policy",
+      "termsAndConditionsLink": "Terms and Conditions"
+    },
+    "resetPassword": {
+      "method": {
+        "title": "Recover Password",
+        "subtitle": "You can recover your password using email or phone number",
+        "withPhone": "With phone number",
+        "withEmail": "With email",
+        "submit": "Send Verification Code"
+      },
+      "verify": {
+        "title": "Verification Code to Reset Password",
+        "subtitlePhone": "Enter the code sent to {phone} from your phone and safely reset your password",
+        "subtitleEmail": "Enter the code sent to {email} from your email and safely reset your password",
+        "codeNotArrived": "Code not received?",
+        "verifyButton": "Verify Code",
+        "resendButton": "Resend Verification Code"
+      },
+      "setNewPassword": {
+        "title": "Set New Password",
+        "subtitle": "Enter your new password to secure your account and restore it",
+        "newPassword": "New Password",
+        "confirmPassword": "Confirm Password",
+        "submit": "Change"
+      }
+    },
+    "signIn": "Sign In",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone Number",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "haveAccount": "Already have an account?",
+    "forgotPassword": "Forgot your password?",
+    "searchCountry": "Search for your country",
+    "loginSuccess": "Login successful",
+    "loginFailed": "Login failed. Please check your credentials"
+  },
+  "common": {
+    "continue": "Continue",
+    "skip": "Skip"
+  },
+  "support": {
+    "contactUs": {
+      "title": "Contact Us",
+      "breadcrumb": "Contact Us",
+      "subtitle": "Don't hesitate to contact us",
+      "description": "We're happy to answer all your questions",
+      "phone": "+966 1234566789",
+      "email": "wesal@gmail.com",
+      "whatsapp": "+966 1234566789",
+      "form": {
+        "name": "Name",
+        "phoneNumber": "Phone Number",
+        "email": "Email",
+        "messageType": "Message Type",
+        "messageContent": "Message Content",
+        "image": "Complaint Image",
+        "submit": "Send Message"
+      }
+    },
+    "about": {
+      "title": "About Platform",
+      "breadcrumb": "About Platform",
+
+      "aboutSubtitle": "About Wesal Platform",
+      "aboutTitle": "An integrated digital advertising platform that helps you easily buy and sell products and services.",
+      "descriptionOne": "This text is an example text that can be replaced in the same space. This text was generated from an Arabic text generator, where you can generate similar text or many other texts in addition to increasing the number of characters generated by the application. If you need more paragraphs, the Arabic text generator allows you to increase the number of paragraphs as desired. The text will not appear divided nor contain language errors. The Arabic text generator is useful for website designers in particular, as the client often needs to see a real image of the website design. Therefore, it is the designer's responsibility to place temporary texts on the design to show the client the complete form. The role of the Arabic text generator is to save the designer the trouble of searching for an alternative text unrelated to the topic that the design is about, so it appears in a fitting way.",
+      "descriptionTwo": "Hence, the designer must place temporary texts on the design to show the client the complete form. The role of the Arabic text generator is to save the designer the trouble of searching for alternative text unrelated to the topic that the design is about, so it appears in a fitting way.",
+      "benefits": [
+        "Display your products to the world and benefit from a special package that makes your start easier.",
+        "Your chance to try our platform for free and attract customers from day one.",
+        "Start strong with a free ad that helps you reach a wide audience.",
+        "Attract your first clients easily and start your journey to success."
+      ]
+    },
+    "faq": {
+      "title": "FAQ",
+      "breadcrumb": "FAQ",
+      "subtitle": "We are here to answer your questions and help you at any time",
+      "faqs": [
+        {
+          "question": "What services does the website provide?",
+          "answer": "The website provides a set of electronic services aimed at simplifying procedures and improving user experience, with the ability to manage and track requests electronically in full."
+        },
+        {
+          "question": "How can I create a new account?",
+          "answer": "You can easily create a new account by going to the registration page and filling in the required information such as email, phone number, and password."
+        },
+        {
+          "question": "Can I use the website without registration?",
+          "answer": "You can browse some basic services without registration, but to access all features and services, you need to create an account."
+        },
+        {
+          "question": "How can I send a contract request?",
+          "answer": "You can send a contract request by filling out the dedicated form in the designated section and attaching all required documents and information."
+        },
+        {
+          "question": "How long does it take to review the contract?",
+          "answer": "Contract review typically takes 3 to 5 business days depending on the number of requests and requirements."
+        },
+        {
+          "question": "What should I do if my contract is rejected?",
+          "answer": "If your contract is rejected, you can contact our team to inquire about the reasons and submit a new request with the required modifications."
+        },
+        {
+          "question": "Can I modify the request after sending it?",
+          "answer": "Yes, you can modify the request during the review period, but after approval, you may need additional procedures to make changes."
+        }
+      ]
+    },
+    "terms": {
+      "title": "Terms and Conditions",
+      "breadcrumb": "Terms and Conditions"
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "breadcrumb": "Privacy Policy"
+    }
+  }
+}

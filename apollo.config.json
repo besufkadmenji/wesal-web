@@ -1,0 +1,8 @@
+{
+  "client": {
+    "service": {
+      "name": "wesal",
+      "url": "https://wesal-api.onrender.com/graphql"
+    }
+  }
+}
