@@ -23,8 +23,11 @@ const preAuthPaths = (locale: string) => [
   `/${locale}/auth`,
   `/${locale}/auth/choose-type`,
   `/${locale}/auth/forgot-password`,
+  `/${locale}/auth/forgot-password/verify`,
+  `/${locale}/auth/reset-password`,
   `/${locale}/auth/login`,
   `/${locale}/auth/register`,
+  `/${locale}/auth/register/verify`,
   `/${locale}`,
 ];
 

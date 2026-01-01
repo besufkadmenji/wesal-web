@@ -1,20 +1,17 @@
 "use client";
+import { useForgotPassword } from "@/components/app/auth/ForgotPassword/useForgotPassword";
 import { Wrapper } from "@/components/app/auth/Wrapper";
 import { Button } from "@/components/ui/button";
 import { useDict } from "@/hooks/useDict";
-import { showSuccessMessage } from "@/utils/show.messages";
-import { usePathname, useRouter } from "next/navigation";
+import { showErrorMessage } from "@/utils/show.messages";
 import { useQueryState } from "nuqs";
+import { useState } from "react";
 import { PasswordInput } from "../../shared/inputs/PasswordInput";
-export const NewPassword = () => {
+export const ResetPassword = () => {
   const dict = useDict();
-  const [type, setType] = useQueryState("type");
-  const [method, setMethod] = useQueryState("method", {
-    defaultValue: "phone",
-  });
-  const pathname = usePathname();
-  const router = useRouter();
-
+  const [token] = useQueryState("token");
+  const { resetPassword, busy } = useForgotPassword();
+  const [form, setForm] = useState({ password: "", confirmPassword: "" });
   return (
     <Wrapper>
       <div className="grid grid-cols-1 gap-10 px-15 py-27">
@@ -29,15 +26,33 @@ export const NewPassword = () => {
         <div className="grid grid-cols-1 gap-5">
           <PasswordInput
             placeholder={dict.auth.resetPassword.setNewPassword.newPassword}
+            value={form.password}
+            onChange={(value) => {
+              setForm((prev) => ({ ...prev, password: value }));
+            }}
           />
           <PasswordInput
             placeholder={dict.auth.resetPassword.setNewPassword.confirmPassword}
+            value={form.confirmPassword}
+            onChange={(value) => {
+              setForm((prev) => ({ ...prev, confirmPassword: value }));
+            }}
           />
           <Button
             className="mt-40 h-12.5 rounded-[20px] text-base font-semibold"
-            onClick={() =>
-              showSuccessMessage("Password has been reset successfully!")
-            }
+            onClick={() => {
+              if (form.password !== form.confirmPassword) {
+                showErrorMessage(
+                  dict.auth.resetPassword.setNewPassword.passwordMismatch,
+                );
+                return;
+              }
+              resetPassword({
+                resetToken: token!,
+                newPassword: form.password,
+              });
+            }}
+            disabled={busy}
           >
             {dict.auth.resetPassword.setNewPassword.submit}
           </Button>

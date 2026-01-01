@@ -286,6 +286,17 @@
       "termsAndConditions": "Confirm Policy",
       "termsAndConditionsLink": "Terms and Conditions"
     },
+    "register": {
+      "verify": {
+        "title": "Verification Code",
+        "subtitlePhone": "Enter the code sent to {phone} to verify your identity and complete registration safely",
+        "subtitleEmail": "Enter the code sent to {email} to verify your identity and complete registration safely",
+        "codeNotArrived": "Code not received?",
+        "verifyButton": "Verify Code",
+        "resendButton": "Resend Verification Code"
+      },
+      "successMessage": "Registration completed successfully"
+    },
     "resetPassword": {
       "method": {
         "title": "Recover Password",
@@ -307,6 +318,7 @@
         "subtitle": "Enter your new password to secure your account and restore it",
         "newPassword": "New Password",
         "confirmPassword": "Confirm Password",
+        "passwordMismatch": "Passwords do not match",
         "submit": "Change"
       }
     },
@@ -320,7 +332,60 @@
     "forgotPassword": "Forgot your password?",
     "searchCountry": "Search for your country",
     "loginSuccess": "Login successful",
-    "loginFailed": "Login failed. Please check your credentials"
+    "loginFailed": "Login failed. Please check your credentials",
+    "registerFailed": "Registration failed. Please try again",
+    "forgotPasswordFailed": "Failed to process forgot password. Please try again",
+    "personalProfile": "Personal Profile",
+    "favorites": "Favorites",
+    "logout": "Logout",
+    "validation": {
+      "name": {
+        "required": "Name is required",
+        "minLength": "Name must be at least 2 characters",
+        "maxLength": "Name must not exceed 50 characters"
+      },
+      "email": {
+        "required": "Email is required",
+        "invalid": "Please enter a valid email address"
+      },
+      "phone": {
+        "required": "Phone number is required",
+        "invalid": "Please enter a valid phone number"
+      },
+      "password": {
+        "required": "Password is required",
+        "minLength": "Password must be at least 8 characters",
+        "weak": "Password must contain uppercase, lowercase, numbers, and special characters"
+      },
+      "confirmPassword": {
+        "required": "Please confirm your password",
+        "noMatch": "Passwords do not match"
+      },
+      "bankName": {
+        "required": "Bank name is required",
+        "minLength": "Bank name must be at least 2 characters"
+      },
+      "ibanNumber": {
+        "required": "IBAN number is required",
+        "invalid": "Please enter a valid IBAN number"
+      },
+      "address": {
+        "required": "Address is required",
+        "minLength": "Address must be at least 5 characters"
+      },
+      "cityId": {
+        "required": "City is required"
+      },
+      "categoryIds": {
+        "required": "Please select at least one category"
+      },
+      "terms": {
+        "required": "You must accept the terms and conditions"
+      },
+      "document": {
+        "required": "You must accept the verification link"
+      }
+    }
   },
   "common": {
     "continue": "Continue",

@@ -5,28 +5,32 @@ export const TextInput = ({
   value,
   onChange,
   icon,
-
   placeholder,
   type,
+  error,
 }: {
   value?: string;
   onChange?: (value: string) => void;
   icon: ReactNode;
   placeholder: string;
   type?: HTMLInputTypeAttribute;
+  error?: string;
 }) => {
   return (
-    <div className="relative grid h-14 grow grid-cols-1 items-center">
-      <Input
-        type={type}
-        placeholder={placeholder}
-        className="focus-visible:border-primary peer border-border h-full rounded-[20px] shadow-none ring-0! ltr:pl-10.5 rtl:pr-10.5"
-        value={value}
-        onChange={(e) => onChange?.(e.target.value)}
-      />
-      <div className="peer-focus-visible:text-primary absolute right-auto left-4 size-4.5 text-[#999999] rtl:right-4 rtl:left-auto">
-        {icon}
+    <div className="grid grid-cols-1">
+      <div className="relative grid h-14 grow grid-cols-1 items-center">
+        <Input
+          type={type}
+          placeholder={placeholder}
+          className="focus-visible:border-primary peer border-border h-full rounded-[20px] shadow-none ring-0! ltr:pl-10.5 rtl:pr-10.5"
+          value={value}
+          onChange={(e) => onChange?.(e.target.value)}
+        />
+        <div className="peer-focus-visible:text-primary absolute right-auto left-4 size-4.5 text-[#999999] rtl:right-4 rtl:left-auto">
+          {icon}
+        </div>
       </div>
+      {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
     </div>
   );
 };

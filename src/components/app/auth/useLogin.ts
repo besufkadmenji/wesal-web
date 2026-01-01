@@ -4,13 +4,13 @@ import { showErrorMessage, showSuccessMessage } from "@/utils/show.messages";
 import Cookie from "js-cookie";
 import { useState } from "react";
 
-export const useAuth = () => {
+export const useLogin = () => {
   const [busy, setBusy] = useState(false);
   const dict = useDict();
   const login = async (emailOrPhone: string, password: string) => {
     setBusy(true);
     try {
-      const result = await AuthService.loginAdmin({
+      const result = await AuthService.login({
         emailOrPhone,
         password,
       });

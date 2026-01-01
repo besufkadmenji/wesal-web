@@ -8,6 +8,8 @@ import { useDict } from "@/hooks/useDict";
 import { usePathname, useRouter } from "next/navigation";
 import { useQueryState } from "nuqs";
 import EmailIcon from "@/assets/icons/auth/email.svg";
+import { useState } from "react";
+import { useForgotPassword } from "./useForgotPassword";
 export const ForgotPassword = () => {
   const dict = useDict();
   const [type, setType] = useQueryState("type");
@@ -58,21 +60,28 @@ export const ForgotPassword = () => {
 
 const ResetWithEmail = () => {
   const dict = useDict();
-  const pathname = usePathname();
-  const router = useRouter();
-
+  const [email, setEmail] = useState("");
+  const { forgotPassword, busy } = useForgotPassword();
   return (
     <div className="grid grid-cols-1 gap-60">
       <TextInput
         icon={<EmailIcon />}
         placeholder={dict.auth.login.email}
         type="email"
+        value={email}
+        onChange={(value) => setEmail(value)}
       />
       <Button
         className="h-12.5 rounded-[20px] text-base font-semibold"
         onClick={() => {
-          router.push(`${pathname}/verify`);
+          forgotPassword(
+            {
+              emailOrPhone: email,
+            },
+            "email",
+          );
         }}
+        disabled={busy}
       >
         {dict.auth.resetPassword.method.submit}
       </Button>
@@ -82,16 +91,22 @@ const ResetWithEmail = () => {
 
 const ResetWithPhone = () => {
   const dict = useDict();
-  const pathname = usePathname();
-  const router = useRouter();
+  const { forgotPassword, busy } = useForgotPassword();
+  const [phone, setPhone] = useState("");
+  const [country] = useQueryState("country", {
+    defaultValue: "+966",
+  });
   return (
     <div className="grid grid-cols-1 gap-60">
-      <PhoneInput />
+      <PhoneInput value={phone} onChange={(value) => setPhone(value)} />
       <Button
         className="h-12.5 rounded-[20px] text-base font-semibold"
         onClick={() => {
-          router.push(`${pathname}/verify`);
+          forgotPassword({
+            emailOrPhone: `${country}${phone}`,
+          },"phone");
         }}
+        disabled={busy}
       >
         {dict.auth.resetPassword.method.submit}
       </Button>
