@@ -29,7 +29,11 @@ export default async function RootLayout({
       <body className={`${norsal.className}`}>
         <AppProvider>{children}</AppProvider>
         <ToastContainer position="top-right" closeButton={CloseButton} />
-        <Toaster richColors position="top-right" />
+        <Toaster
+          richColors
+          position={lang === "en" ? "top-right" : "top-left"}
+          dir={dir(lang)}
+        />
       </body>
     </html>
   );

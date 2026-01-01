@@ -600,8 +600,8 @@ type Mutation {
   """Resend OTP for email or phone verification"""
   resendOtp(input: ResendOtpInput!): Boolean!
 
-  """Reset password using OTP"""
-  resetPassword(input: ResetPasswordInput!): Boolean!
+  """Reset password using reset token"""
+  resetPassword(input: ResetPasswordWithTokenInput!): Boolean!
 
   """Review and resolve a complaint"""
   reviewComplaint(input: ReviewComplaintInput!): Complaint!
@@ -621,6 +621,9 @@ type Mutation {
 
   """Verify email or phone with OTP"""
   verifyOtp(input: VerifyOtpInput!): Boolean!
+
+  """Verify password reset OTP and get reset token"""
+  verifyPasswordResetOtp(input: VerifyPasswordResetOtpInput!): VerifyPasswordResetOtpResponse!
 }
 
 type Notification {
@@ -982,10 +985,12 @@ type RatingStatistics {
 
 input RegisterInput {
   address: String
+  bankName: String!
   categoryIds: [String!]
   cityId: String
   dialCode: String
   email: String!
+  ibanNumber: String!
   latitude: Float
   longitude: Float
   name: String!
@@ -999,10 +1004,9 @@ input ResendOtpInput {
   type: OtpType!
 }
 
-input ResetPasswordInput {
-  code: String!
+input ResetPasswordWithTokenInput {
   newPassword: String!
-  target: String!
+  resetToken: String!
 }
 
 input ReviewComplaintInput {
@@ -1109,11 +1113,13 @@ input UpdateRatingInput {
 input UpdateUserInput {
   address: String
   avatarUrl: String
+  bankName: String
   categoryIds: [String!]
   cityId: String
   countryId: String
   dialCode: String
   email: String
+  ibanNumber: String
   id: ID!
   languageCode: String
   latitude: Float
@@ -1126,6 +1132,7 @@ input UpdateUserInput {
 type User {
   address: String
   avatarUrl: String
+  bankName: String
   categories: [Category!]
   cityId: String
   countryId: String
@@ -1133,6 +1140,7 @@ type User {
   dialCode: String
   email: String!
   emailVerified: Boolean!
+  ibanNumber: String
   id: ID!
   isActive: Boolean!
   languageCode: String
@@ -1180,5 +1188,14 @@ input VerifyOtpInput {
   code: String!
   target: String!
   type: OtpType!
+}
+
+input VerifyPasswordResetOtpInput {
+  code: String!
+  target: String!
+}
+
+type VerifyPasswordResetOtpResponse {
+  resetToken: String!
 }
 

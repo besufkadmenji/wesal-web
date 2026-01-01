@@ -15,24 +15,29 @@ import { useLang } from "@/hooks/useLang";
 export const PhoneInput = ({
   value,
   onChange,
+  error,
 }: {
   value?: string;
   onChange?: (value: string) => void;
+  error?: string;
 }) => {
   const dict = useDict();
   return (
-    <div className="flex items-center gap-3">
-      <div className="relative grid h-14 grow grid-cols-1 items-center">
-        <Input
-          type="tel"
-          placeholder={dict.auth.login.phone}
-          className="focus-visible:border-primary peer border-border h-full rounded-[20px] shadow-none ring-0! ltr:pl-10.5 ltr:placeholder:text-left rtl:pr-10.5 rtl:placeholder:text-right"
-          value={value}
-          onChange={(e) => onChange?.(e.target.value)}
-        />
-        <PhoneIcon className="peer-focus-visible:text-primary absolute right-auto left-4 size-4.5 text-[#999999] rtl:right-4 rtl:left-auto" />
+    <div className="grid grid-cols-1">
+      <div className="flex items-center gap-3">
+        <div className="relative grid h-14 grow grid-cols-1 items-center">
+          <Input
+            type="tel"
+            placeholder={dict.auth.login.phone}
+            className="focus-visible:border-primary peer border-border h-full rounded-[20px] shadow-none ring-0! ltr:pl-10.5 ltr:placeholder:text-left rtl:pr-10.5 rtl:placeholder:text-right"
+            value={value}
+            onChange={(e) => onChange?.(e.target.value)}
+          />
+          <PhoneIcon className="peer-focus-visible:text-primary absolute right-auto left-4 size-4.5 text-[#999999] rtl:right-4 rtl:left-auto" />
+        </div>
+        <CountrySelect />
       </div>
-      <CountrySelect />
+      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
     </div>
   );
 };

@@ -5,6 +5,7 @@ interface GraphQLError {
     originalError?: {
       statusCode?: number;
       message?: string;
+      errors?: (string | { message?: string })[];
     };
   };
   path?: (string | number)[];
@@ -39,6 +40,19 @@ export const parseGraphQLError = (
   if (err.graphQLErrors && err.graphQLErrors.length > 0) {
     const firstError = err.graphQLErrors[0];
 
+    // Check for nested validation errors in originalError.errors
+    if (firstError?.extensions?.originalError?.errors) {
+      const validationErrors = firstError.extensions.originalError.errors;
+      if (Array.isArray(validationErrors) && validationErrors.length > 0) {
+        const firstValidationError = validationErrors[0];
+        if (typeof firstValidationError === 'string') {
+          return firstValidationError;
+        } else if (firstValidationError?.message) {
+          return firstValidationError.message;
+        }
+      }
+    }
+
     // Try to get message from originalError first (more detailed)
     if (firstError?.extensions?.originalError?.message) {
       return firstError.extensions.originalError.message;
@@ -58,6 +72,19 @@ export const parseGraphQLError = (
   // Handle errors array directly (for non-Apollo errors)
   if (Array.isArray(err.errors) && err.errors.length > 0) {
     const firstError = err.errors[0];
+
+    // Check for nested validation errors in originalError.errors
+    if (firstError?.extensions?.originalError?.errors) {
+      const validationErrors = firstError.extensions.originalError.errors;
+      if (Array.isArray(validationErrors) && validationErrors.length > 0) {
+        const firstValidationError = validationErrors[0];
+        if (typeof firstValidationError === 'string') {
+          return firstValidationError;
+        } else if (firstValidationError?.message) {
+          return firstValidationError.message;
+        }
+      }
+    }
 
     if (firstError?.extensions?.originalError?.message) {
       return firstError.extensions.originalError.message;
@@ -84,7 +111,19 @@ export const parseAllGraphQLErrors = (error: unknown): string[] => {
   // Handle GraphQL errors array
   if (err.graphQLErrors && Array.isArray(err.graphQLErrors)) {
     err.graphQLErrors.forEach((gqlErr: GraphQLError) => {
-      if (gqlErr?.extensions?.originalError?.message) {
+      // Check for nested validation errors in originalError.errors
+      if (gqlErr?.extensions?.originalError?.errors) {
+        const validationErrors = gqlErr.extensions.originalError.errors;
+        if (Array.isArray(validationErrors)) {
+          validationErrors.forEach((validationError) => {
+            if (typeof validationError === 'string') {
+              messages.push(validationError);
+            } else if (validationError?.message) {
+              messages.push(validationError.message);
+            }
+          });
+        }
+      } else if (gqlErr?.extensions?.originalError?.message) {
         messages.push(gqlErr.extensions.originalError.message);
       } else if (gqlErr?.message) {
         messages.push(gqlErr.message);
@@ -95,7 +134,19 @@ export const parseAllGraphQLErrors = (error: unknown): string[] => {
   // Handle direct errors array
   if (Array.isArray(err.errors)) {
     err.errors.forEach((gqlErr: GraphQLError) => {
-      if (gqlErr?.extensions?.originalError?.message) {
+      // Check for nested validation errors in originalError.errors
+      if (gqlErr?.extensions?.originalError?.errors) {
+        const validationErrors = gqlErr.extensions.originalError.errors;
+        if (Array.isArray(validationErrors)) {
+          validationErrors.forEach((validationError) => {
+            if (typeof validationError === 'string') {
+              messages.push(validationError);
+            } else if (validationError?.message) {
+              messages.push(validationError.message);
+            }
+          });
+        }
+      } else if (gqlErr?.extensions?.originalError?.message) {
         messages.push(gqlErr.extensions.originalError.message);
       } else if (gqlErr?.message) {
         messages.push(gqlErr.message);

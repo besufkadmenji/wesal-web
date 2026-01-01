@@ -4,10 +4,16 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 
-export const OtpInput = () => {
+export const OtpInput = ({
+  value,
+  onChange,
+}: {
+  value?: string;
+  onChange?: (value: string) => void;
+}) => {
   return (
     <div dir="ltr">
-      <InputOTP maxLength={4}>
+      <InputOTP maxLength={4} value={value} onChange={onChange}>
         <InputOTPGroup>
           <SlotItem index={0} />
         </InputOTPGroup>

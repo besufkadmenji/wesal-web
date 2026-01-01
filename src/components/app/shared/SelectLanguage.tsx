@@ -27,7 +27,7 @@ export const SelectLanguage = () => {
   const { label, flag } = langMap[lang] || langMap["en"];
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-center gap-2 outline-none!">
+      <DropdownMenuTrigger className="flex items-center justify-self-start gap-2 outline-none!">
         <div className="relative size-7 overflow-hidden rounded-full">
           <Image src={flag} alt={label} fill className="object-cover" />
         </div>

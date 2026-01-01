@@ -7,6 +7,7 @@ export const AppCheckbox = ({
   link,
   onChange,
   id,
+  error,
 }: {
   label: string;
   link: {
@@ -15,31 +16,35 @@ export const AppCheckbox = ({
   };
   onChange?: (checked: boolean) => void;
   id?: string;
+  error?: string;
 }) => {
   return (
-    <div>
-      <div className="flex items-center gap-x-1">
-        <div className="flex items-center gap-3">
-          <Checkbox
-            id={id}
-            onCheckedChange={onChange}
-            className="size-4.5 border-2 border-[#999999] shadow-none ring-0!"
-          />
-          <Label
-            htmlFor={id}
-            className="text-gray text-sm font-medium"
+    <div className="grid grid-cols-1">
+      <div>
+        <div className="flex items-center gap-x-1">
+          <div className="flex items-center gap-3">
+            <Checkbox
+              id={id}
+              onCheckedChange={onChange}
+              className="size-4.5 border-2 border-[#999999] shadow-none ring-0!"
+            />
+            <Label
+              htmlFor={id}
+              className="text-gray text-sm font-medium"
+            >
+              {label}
+            </Label>
+          </div>
+          <Link
+            href={link.url}
+            target="_blank"
+            className="text-primary text-sm font-bold underline"
           >
-            {label}
-          </Label>
+            {link.text}
+          </Link>
         </div>
-        <Link
-          href={link.url}
-          target="_blank"
-          className="text-primary text-sm font-bold underline"
-        >
-          {link.text}
-        </Link>
       </div>
+      {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
     </div>
   );
 };
