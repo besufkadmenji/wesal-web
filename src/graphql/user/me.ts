@@ -9,7 +9,7 @@ export const ME_QUERY: TypedDocumentNode<MeQuery> = gql`
       isActive
       languageCode
       address
-      avatarUrl
+      avatarFilename
       cityId
       countryId
       createdAt

@@ -278,7 +278,22 @@
       "documentLink": "رابط التوثيق",
       "documentLinkText": "أبشر",
       "termsAndConditions": "تأكيد سياسة ",
-      "termsAndConditionsLink": "الشروط و الأحكام"
+      "termsAndConditionsLink": "الشروط و الأحكام",
+      "provider": {
+        "title": "انضم إلينا وأنشئ حسابك كمقدم خدمة",
+        "subtitle": "قم بإنشاء حسابك الآن لتتمكن من الاستفادة من المميزات",
+        "commercialName": "الاسم التجاري",
+        "profileImage": "الصورة الشخصية / التجارية",
+        "imageFormat": "png,jpeg",
+        "step": "الخطوة {current} من {total}",
+        "city": "المدينة",
+        "address": "العنوان",
+        "verifyWithAbsher": "التوثيق مع أبشر (اختياري)",
+        "verifyWithAbsherDescription": "التوثيق مع أبشر يسهّل عملية التحقق ويغنيك عن رفع المستندات",
+        "acceptTerms": "تأكيد سياسة الشروط و الأحكام",
+        "step1": "الخطوة 1 من 2",
+        "step2": "الخطوة 2 من 2"
+      }
     },
     "register": {
       "verify": {
@@ -289,7 +304,10 @@
         "verifyButton": "التحقق من الكود",
         "resendButton": "إعادة إرسال رمز التحقق"
       },
-      "successMessage": "تم إكمال التسجيل بنجاح"
+      "successMessage": "تم إكمال التسجيل بنجاح",
+      "provider": {
+        "successMessage": "تم إكمال تسجيل مقدم الخدمة بنجاح"
+      }
     },
     "resetPassword": {
       "method": {

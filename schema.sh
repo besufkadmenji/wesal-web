@@ -1,2 +1,2 @@
-get-graphql-schema https://wesal-api.onrender.com/graphql >schema.graphql
+get-graphql-schema https://wesal-api.testing3000.cloud/graphql >schema.graphql
 pnpm run codegen

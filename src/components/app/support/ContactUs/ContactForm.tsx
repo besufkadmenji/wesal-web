@@ -6,7 +6,7 @@ import { useDict } from "@/hooks/useDict";
 import { PhoneInput } from "../../shared/inputs/PhoneInput";
 import { TextInput } from "../../shared/inputs/TextInput";
 import { AppTextarea } from "@/components/app/shared/inputs/TextInput";
-import { UploadImage } from "@/components/app/support/ContactUs/UploadImage";
+import { UploadImage } from "@/components/app/shared/UploadImage";
 import { Button } from "@/components/ui/button";
 export const ContactForm = () => {
   const dict = useDict();

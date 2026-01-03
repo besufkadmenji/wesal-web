@@ -9,6 +9,7 @@ import { useQueryState } from "nuqs";
 export const ChooseType = () => {
   const dict = useDict();
   const [type, setType] = useQueryState("type");
+  const [action] = useQueryState("action");
   const router = useRouter();
   return (
     <Wrapper>
@@ -43,9 +44,9 @@ export const ChooseType = () => {
         </div>
         <Button
           className="h-12.5 rounded-[20px] text-base font-semibold"
-          disabled={!type}
+          disabled={!action || !type}
           onClick={() => {
-            router.push(`/auth/login?type=${type}`);
+            router.push(`/auth/${action}?type=${type}`);
           }}
         >
           {dict.auth.choose.next}

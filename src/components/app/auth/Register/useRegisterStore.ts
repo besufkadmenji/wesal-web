@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { RegisterInput } from "@/gql/graphql";
 export type FormType = Partial<RegisterInput> & {
   confirmPassword?: string;
+  avatarFile?: File | null;
 };
 interface RegisterState {
   formData: FormType;

@@ -985,12 +985,13 @@ type RatingStatistics {
 
 input RegisterInput {
   address: String
-  bankName: String!
+  avatarFilename: String
+  bankName: String
   categoryIds: [String!]
   cityId: String
   dialCode: String
   email: String!
-  ibanNumber: String!
+  ibanNumber: String
   latitude: Float
   longitude: Float
   name: String!
@@ -1112,7 +1113,7 @@ input UpdateRatingInput {
 
 input UpdateUserInput {
   address: String
-  avatarUrl: String
+  avatarFilename: String
   bankName: String
   categoryIds: [String!]
   cityId: String
@@ -1131,7 +1132,7 @@ input UpdateUserInput {
 
 type User {
   address: String
-  avatarUrl: String
+  avatarFilename: String
   bankName: String
   categories: [Category!]
   cityId: String

@@ -2,7 +2,7 @@ import type { CodegenConfig } from "@graphql-codegen/cli";
 
 const config: CodegenConfig = {
   overwrite: true,
-  schema: "https://wesal-api.onrender.com/graphql",
+  schema: "https://wesal-api.testing3000.cloud/graphql",
   documents: "src/**/*.ts",
   generates: {
     "src/gql/": {

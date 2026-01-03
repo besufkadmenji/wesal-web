@@ -21,7 +21,7 @@ export const REGISTER_MUTATION: TypedDocumentNode<
       email
       dialCode
       address
-      avatarUrl
+      avatarFilename
       cityId
       countryId
       createdAt

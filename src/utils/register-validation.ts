@@ -23,30 +23,44 @@ export interface RegisterValidationData {
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phoneRegex = /^\d{9}$/;
 const ibanRegex = /^[A-Z]{2}[0-9]{2}[A-Z0-9]{1,30}$/;
-const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/;
+const passwordRegex =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/;
 
 // Validation functions
-const validateName = (value: string, t: (key: string) => string): string | null => {
+const validateName = (
+  value: string,
+  t: (key: string) => string,
+): string | null => {
   if (!value || value.trim() === "") return t("auth.validation.name.required");
   if (value.length < 2) return t("auth.validation.name.minLength");
   if (value.length > 50) return t("auth.validation.name.maxLength");
   return null;
 };
 
-const validateEmail = (value: string, t: (key: string) => string): string | null => {
+const validateEmail = (
+  value: string,
+  t: (key: string) => string,
+): string | null => {
   if (!value || value.trim() === "") return t("auth.validation.email.required");
   if (!emailRegex.test(value)) return t("auth.validation.email.invalid");
   return null;
 };
 
-const validatePhone = (value: string, t: (key: string) => string): string | null => {
+const validatePhone = (
+  value: string,
+  t: (key: string) => string,
+): string | null => {
   if (!value || value.trim() === "") return t("auth.validation.phone.required");
   if (!phoneRegex.test(value)) return t("auth.validation.phone.invalid");
   return null;
 };
 
-const validatePassword = (value: string, t: (key: string) => string): string | null => {
-  if (!value || value.trim() === "") return t("auth.validation.password.required");
+const validatePassword = (
+  value: string,
+  t: (key: string) => string,
+): string | null => {
+  if (!value || value.trim() === "")
+    return t("auth.validation.password.required");
   if (value.length < 8) return t("auth.validation.password.minLength");
   if (!passwordRegex.test(value)) return t("auth.validation.password.weak");
   return null;
@@ -55,7 +69,7 @@ const validatePassword = (value: string, t: (key: string) => string): string | n
 const validateConfirmPassword = (
   password: string,
   confirmPassword: string,
-  t: (key: string) => string
+  t: (key: string) => string,
 ): string | null => {
   if (!confirmPassword || confirmPassword.trim() === "") {
     return t("auth.validation.confirmPassword.required");
@@ -66,43 +80,65 @@ const validateConfirmPassword = (
   return null;
 };
 
-const validateBankName = (value: string, t: (key: string) => string): string | null => {
-  if (!value || value.trim() === "") return t("auth.validation.bankName.required");
+const validateBankName = (
+  value: string,
+  t: (key: string) => string,
+): string | null => {
+  if (!value || value.trim() === "")
+    return t("auth.validation.bankName.required");
   if (value.length < 2) return t("auth.validation.bankName.minLength");
   return null;
 };
 
-const validateIbanNumber = (value: string, t: (key: string) => string): string | null => {
-  if (!value || value.trim() === "") return t("auth.validation.ibanNumber.required");
+const validateIbanNumber = (
+  value: string,
+  t: (key: string) => string,
+): string | null => {
+  if (!value || value.trim() === "")
+    return t("auth.validation.ibanNumber.required");
   if (!ibanRegex.test(value)) return t("auth.validation.ibanNumber.invalid");
   return null;
 };
 
-const validateAddress = (value: string, t: (key: string) => string): string | null => {
-  if (!value || value.trim() === "") return t("auth.validation.address.required");
+const validateAddress = (
+  value: string,
+  t: (key: string) => string,
+): string | null => {
+  if (!value || value.trim() === "")
+    return t("auth.validation.address.required");
   if (value.length < 5) return t("auth.validation.address.minLength");
   return null;
 };
 
-const validateCityId = (value: string | undefined, t: (key: string) => string): string | null => {
+const validateCityId = (
+  value: string | undefined,
+  t: (key: string) => string,
+): string | null => {
   if (!value) return t("auth.validation.cityId.required");
   return null;
 };
 
 const validateCategoryIds = (
   value: string[] | undefined,
-  t: (key: string) => string
+  t: (key: string) => string,
 ): string | null => {
-  if (!value || value.length === 0) return t("auth.validation.categoryIds.required");
+  if (!value || value.length === 0)
+    return t("auth.validation.categoryIds.required");
   return null;
 };
 
-const validateTerms = (value: boolean | undefined, t: (key: string) => string): string | null => {
+const validateTerms = (
+  value: boolean | undefined,
+  t: (key: string) => string,
+): string | null => {
   if (!value) return t("auth.validation.terms.required");
   return null;
 };
 
-const validateDocument = (value: boolean | undefined, t: (key: string) => string): string | null => {
+const validateDocument = (
+  value: boolean | undefined,
+  t: (key: string) => string,
+): string | null => {
   if (!value) return t("auth.validation.document.required");
   return null;
 };
@@ -115,7 +151,8 @@ const validateDocument = (value: boolean | undefined, t: (key: string) => string
  */
 export const validateRegisterForm = (
   data: RegisterValidationData,
-  t: (key: string) => string
+  type: string,
+  t: (key: string) => string,
 ): ValidationErrors => {
   const errors: ValidationErrors = {};
 
@@ -141,16 +178,20 @@ export const validateRegisterForm = (
   }
 
   if (data.confirmPassword !== undefined && data.password !== undefined) {
-    const confirmError = validateConfirmPassword(data.password, data.confirmPassword, t);
+    const confirmError = validateConfirmPassword(
+      data.password,
+      data.confirmPassword,
+      t,
+    );
     if (confirmError) errors.confirmPassword = confirmError;
   }
 
-  if (data.bankName !== undefined) {
+  if (type === "user" && data.bankName !== undefined) {
     const bankError = validateBankName(data.bankName, t);
     if (bankError) errors.bankName = bankError;
   }
 
-  if (data.ibanNumber !== undefined) {
+  if (type === "user" && data.ibanNumber !== undefined) {
     const ibanError = validateIbanNumber(data.ibanNumber, t);
     if (ibanError) errors.ibanNumber = ibanError;
   }
@@ -188,7 +229,7 @@ export const validateField = (
   field: string,
   value: unknown,
   formData: RegisterValidationData,
-  t: (key: string) => string
+  t: (key: string) => string,
 ): string | null => {
   const isProvider = formData.role === "provider";
 
@@ -202,7 +243,11 @@ export const validateField = (
     case "password":
       return validatePassword(value as string, t);
     case "confirmPassword":
-      return validateConfirmPassword(formData.password || "", value as string, t);
+      return validateConfirmPassword(
+        formData.password || "",
+        value as string,
+        t,
+      );
     case "bankName":
       return validateBankName(value as string, t);
     case "ibanNumber":
@@ -221,4 +266,3 @@ export const validateField = (
       return null;
   }
 };
-
