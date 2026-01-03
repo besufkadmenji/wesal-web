@@ -5,6 +5,7 @@ import {
   validateRegisterForm,
   ValidationErrors,
 } from "@/utils/register-validation";
+import { useQueryState } from "nuqs";
 
 interface UseRegisterFormProps<T extends Record<string, unknown>> {
   form: T;
@@ -19,6 +20,7 @@ export const useRegisterForm = <T extends Record<string, unknown>>({
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [accepted, setAccepted] = useState({ terms: false, document: false });
+  const [type] = useQueryState("type");
 
   // Translation function helper
   const t = useCallback(
@@ -106,6 +108,7 @@ export const useRegisterForm = <T extends Record<string, unknown>>({
     // Validate all fields
     const allErrors = validateRegisterForm(
       form as unknown as Record<string, unknown>,
+      type || "",
       t,
     );
 

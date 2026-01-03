@@ -2,7 +2,7 @@
   "client": {
     "service": {
       "name": "wesal",
-      "url": "https://wesal-api.onrender.com/graphql"
+      "url": "https://wesal-api.testing3000.cloud/graphql"
     }
   }
 }

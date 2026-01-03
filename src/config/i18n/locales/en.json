@@ -284,7 +284,22 @@
       "documentLink": "Verification Link",
       "documentLinkText": "Absher",
       "termsAndConditions": "Confirm Policy",
-      "termsAndConditionsLink": "Terms and Conditions"
+      "termsAndConditionsLink": "Terms and Conditions",
+      "provider": {
+        "title": "Join us and create your account as a service provider",
+        "subtitle": "Create your account now to benefit from our features",
+        "commercialName": "Business Name",
+        "profileImage": "Personal/Commercial Image",
+        "imageFormat": "png,jpeg",
+        "step": "Step {current} of {total}",
+        "city": "City",
+        "address": "Address",
+        "verifyWithAbsher": "Verification with Absher (Optional)",
+        "verifyWithAbsherDescription": "Absher verification simplifies the verification process and eliminates the need to upload documents",
+        "acceptTerms": "Confirm Terms and Conditions Policy",
+        "step1": "Step 1 of 2",
+        "step2": "Step 2 of 2"
+      }
     },
     "register": {
       "verify": {
@@ -295,7 +310,10 @@
         "verifyButton": "Verify Code",
         "resendButton": "Resend Verification Code"
       },
-      "successMessage": "Registration completed successfully"
+      "successMessage": "Registration completed successfully",
+      "provider": {
+        "successMessage": "Provider registration completed successfully"
+      }
     },
     "resetPassword": {
       "method": {

@@ -38,7 +38,7 @@ export const TopBar = () => {
           <div className="flex items-center gap-1">
             <AccountIcon className="size-5" />
             <Link
-              href="/auth/login"
+              href="/auth/choose-type?action=login"
               className="text-base font-medium text-[#EFF9F0]"
             >
               {dict.home.login}
@@ -46,7 +46,7 @@ export const TopBar = () => {
           </div>
           <div className="h-5 w-px bg-white"></div>
           <Link
-            href="/auth/register"
+            href="/auth/choose-type?action=register"
             className="text-base font-medium text-[#EFF9F0]"
           >
             {dict.home.signup}

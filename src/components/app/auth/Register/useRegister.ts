@@ -1,17 +1,17 @@
-import { useDict } from "@/hooks/useDict";
-import AuthService from "@/services/auth.service";
-import { showErrorMessage, showSuccessMessage } from "@/utils/show.messages";
-import Cookie from "js-cookie";
-import { useState } from "react";
-import { useRegisterStore } from "./useRegisterStore";
 import {
   RegisterInput,
   ResendOtpInput,
   UserRole,
   VerifyOtpInput,
 } from "@/gql/graphql";
+import { useDict } from "@/hooks/useDict";
+import AuthService from "@/services/auth.service";
+import { uploadFile } from "@/utils/file.upload";
+import { showErrorMessage, showSuccessMessage } from "@/utils/show.messages";
 import { usePathname, useRouter } from "next/navigation";
 import { useQueryState } from "nuqs";
+import { useState } from "react";
+import { useRegisterStore } from "./useRegisterStore";
 
 export const useRegister = () => {
   const [busy, setBusy] = useState(false);
@@ -22,6 +22,8 @@ export const useRegister = () => {
   const [method, setMethod] = useQueryState("method", {
     defaultValue: "phone",
   });
+  const [type] = useQueryState("type");
+
   const [country, setCountry] = useQueryState("country", {
     defaultValue: "+966",
   });
@@ -30,12 +32,20 @@ export const useRegister = () => {
   const register = async () => {
     setBusy(true);
     try {
-      const { confirmPassword, ...rest } = form;
+      const { confirmPassword, avatarFile, ...rest } = form;
+      let filename;
+      if (avatarFile) {
+        const uploadResult = await uploadFile(avatarFile);
+        if (uploadResult.url) {
+          filename = uploadResult.filename;
+        }
+      }
       const result = await AuthService.register({
         ...(rest as RegisterInput),
-        role: UserRole.User,
+        role: type === "provider" ? UserRole.Provider : UserRole.User,
         dialCode: country,
         phone: `${country}${form.phone}`,
+        avatarFilename: filename,
       });
       if (result) {
         router.push(
