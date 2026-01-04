@@ -1,3 +1,4 @@
+import { UserRole } from "@/gql/graphql";
 export interface ValidationErrors {
   [key: string]: string;
 }
@@ -17,6 +18,7 @@ export interface RegisterValidationData {
   latitude?: number;
   longitude?: number;
   role?: string;
+  avatarFile?: File | null;
 }
 
 // Validation rules and patterns
@@ -143,6 +145,33 @@ const validateDocument = (
   return null;
 };
 
+const validateAvatarFile = (
+  value: File | null | undefined,
+  t: (key: string) => string,
+): string | null => {
+  if (!value) return t("auth.validation.avatarFile.required");
+  return null;
+};
+
+const validateLocation = (
+  latitude: number | null | undefined,
+  longitude: number | null | undefined,
+  t: (key: string) => string,
+): string | null => {
+  if (!latitude || !longitude) {
+    return t("auth.validation.location.required");
+  }
+  // Validate latitude range (-90 to 90)
+  if (latitude < -90 || latitude > 90) {
+    return t("auth.validation.location.invalid");
+  }
+  // Validate longitude range (-180 to 180)
+  if (longitude < -180 || longitude > 180) {
+    return t("auth.validation.location.invalid");
+  }
+  return null;
+};
+
 /**
  * Validate register form data
  * @param data - The register form data to validate
@@ -231,8 +260,8 @@ export const validateField = (
   formData: RegisterValidationData,
   t: (key: string) => string,
 ): string | null => {
-  const isProvider = formData.role === "provider";
-
+  const isProvider = formData.role === UserRole.Provider;
+  console.log("isProvider ", formData.role);
   switch (field) {
     case "name":
       return validateName(value as string, t);
@@ -262,6 +291,18 @@ export const validateField = (
       return validateTerms(value as boolean, t);
     case "document":
       return validateDocument(value as boolean, t);
+    case "avatarFile":
+      console.log("Validating avatarFile for isProvider:", isProvider);
+      return isProvider ? validateAvatarFile(value as File | null, t) : null;
+    case "latitude":
+    case "longitude":
+      return isProvider
+        ? validateLocation(
+            formData.latitude ?? null,
+            formData.longitude ?? null,
+            t,
+          )
+        : null;
     default:
       return null;
   }

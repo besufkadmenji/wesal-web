@@ -32,7 +32,7 @@ export const useRegister = () => {
   const register = async () => {
     setBusy(true);
     try {
-      const { confirmPassword, avatarFile, ...rest } = form;
+      const { confirmPassword, terms, document, avatarFile, ...rest } = form;
       let filename;
       if (avatarFile) {
         const uploadResult = await uploadFile(avatarFile);

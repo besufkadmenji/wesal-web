@@ -3,17 +3,17 @@ import { useForm, FieldValues, FieldErrors } from "react-hook-form";
 import { useDict } from "@/hooks/useDict";
 import { validateField } from "@/utils/register-validation";
 
-interface UseRegisterFormProps<T extends FieldValues> {
+interface UseRegisterProviderFormProps<T extends FieldValues> {
   form: T;
   updateField: <K extends keyof T>(field: K, value: T[K]) => void;
 }
 
 type ErrorRecord = Record<string, { message?: string }>;
 
-export const useRegisterForm = <T extends FieldValues>({
+export const useRegisterProviderForm = <T extends FieldValues>({
   form,
   updateField,
-}: UseRegisterFormProps<T>) => {
+}: UseRegisterProviderFormProps<T>) => {
   const dict = useDict();
 
   // Translation function helper
@@ -92,39 +92,98 @@ export const useRegisterForm = <T extends FieldValues>({
     [updateField, setValue, form, t, setError, clearErrors],
   );
 
-  // Validate multiple fields
-  const validateFields = useCallback(
-    async (fieldNames: string[]) => {
-      let allValid = true;
+  // Validate step 1 fields
+  const validateStep1 = useCallback(async () => {
+    const step1Fields = [
+      "name",
+      "phone",
+      "email",
+      "password",
+      "confirmPassword",
+      "avatarFile",
+    ];
 
-      for (const fieldName of fieldNames) {
-        const value = form[fieldName as keyof T];
-        const error = validateField(fieldName, value, form, t);
+    let allValid = true;
 
-        if (error) {
-          setError(fieldName as never, {
-            type: "manual",
-            message: error,
-          });
-          allValid = false;
-        } else {
-          clearErrors(fieldName as never);
-        }
-
-        // Mark as touched
-        await trigger(fieldName as never);
+    for (const fieldName of step1Fields) {
+      const value = form[fieldName as keyof T];
+      const error = validateField(fieldName, value, form, t);
+      console.log(
+        "Validating field:",
+        fieldName,
+        "Value:",
+        value,
+        "Error:",
+        error,
+      );
+      if (error) {
+        setError(fieldName as never, {
+          type: "manual",
+          message: error,
+        });
+        allValid = false;
+      } else {
+        clearErrors(fieldName as never);
       }
 
-      return allValid;
+      // Mark as touched
+      await trigger(fieldName as never);
+    }
+
+    return allValid;
+  }, [form, t, setError, clearErrors, trigger]);
+
+  // Validate step 2 fields
+  const validateStep2 = useCallback(async () => {
+    const step2Fields = [
+      "cityId",
+      "address",
+      "latitude",
+      "longitude",
+      "categoryIds",
+      "terms",
+    ];
+
+    let allValid = true;
+
+    for (const fieldName of step2Fields) {
+      const value = form[fieldName as keyof T];
+      const error = validateField(fieldName, value, form, t);
+
+      if (error) {
+        setError(fieldName as never, {
+          type: "manual",
+          message: error,
+        });
+        allValid = false;
+      } else {
+        clearErrors(fieldName as never);
+      }
+
+      // Mark as touched
+      await trigger(fieldName as never);
+    }
+
+    return allValid;
+  }, [form, t, setError, clearErrors, trigger]);
+
+  const showError = useCallback(
+    (fieldName: string) => {
+      const touched = (touchedFields as Record<string, boolean>)[fieldName];
+      const error = (errors as ErrorRecord)[fieldName];
+      return touched && error?.message;
     },
-    [form, t, setError, clearErrors, trigger],
+    [errors, touchedFields],
   );
 
-  const showError = (fieldName: string) => {
-    const touched = (touchedFields as Record<string, boolean>)[fieldName];
-    const error = (errors as ErrorRecord)[fieldName];
-    return touched && error?.message;
-  };
+  const getError = useCallback(
+    (field: string) => {
+      if (!showError(field)) return undefined;
+      const error = (errors as ErrorRecord)[field];
+      return error?.message;
+    },
+    [errors, showError],
+  );
 
   return {
     errors: errors as FieldErrors<T>,
@@ -133,7 +192,9 @@ export const useRegisterForm = <T extends FieldValues>({
     handleFieldChange,
     handleCheckboxChange,
     showError,
-    validateFields,
+    getError,
+    validateStep1,
+    validateStep2,
     trigger,
     setValue,
     setError,

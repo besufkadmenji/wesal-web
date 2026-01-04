@@ -294,11 +294,13 @@
         "step": "Step {current} of {total}",
         "city": "City",
         "address": "Address",
-        "verifyWithAbsher": "Verification with Absher (Optional)",
-        "verifyWithAbsherDescription": "Absher verification simplifies the verification process and eliminates the need to upload documents",
+        "category": "Category",
         "acceptTerms": "Confirm Terms and Conditions Policy",
         "step1": "Step 1 of 2",
-        "step2": "Step 2 of 2"
+        "step2": "Step 2 of 2",
+        "verifyWithAbsher": "Verification with Absher",
+        "verifyWithAbsherOptional": "(Optional)",
+        "verifyWithAbsherDescription": "Verification with Absher makes the verification process easier and eliminates the need to upload documents"
       }
     },
     "register": {
@@ -402,6 +404,13 @@
       },
       "document": {
         "required": "You must accept the verification link"
+      },
+      "avatarFile": {
+        "required": "Profile picture is required"
+      },
+      "location": {
+        "required": "Please select your location on the map",
+        "invalid": "Invalid location coordinates"
       }
     }
   },
