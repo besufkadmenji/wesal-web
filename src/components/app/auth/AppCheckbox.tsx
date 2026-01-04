@@ -8,6 +8,7 @@ export const AppCheckbox = ({
   onChange,
   id,
   error,
+  checked,
 }: {
   label: string;
   link: {
@@ -17,6 +18,7 @@ export const AppCheckbox = ({
   onChange?: (checked: boolean) => void;
   id?: string;
   error?: string;
+  checked?: boolean;
 }) => {
   return (
     <div className="grid grid-cols-1">
@@ -25,6 +27,7 @@ export const AppCheckbox = ({
           <div className="flex items-center gap-3">
             <Checkbox
               id={id}
+              checked={checked}
               onCheckedChange={onChange}
               className="size-4.5 border-2 border-[#999999] shadow-none ring-0!"
             />

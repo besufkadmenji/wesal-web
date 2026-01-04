@@ -13,11 +13,10 @@ export interface UploadResponse {
  * @param uploadUrl optional upload endpoint (defaults to NEXT_PUBLIC_UPLOAD_URL or https://wesal-api.testing3000.cloud/upload)
  */
 export const uploadFile = async (file: File): Promise<UploadResponse> => {
-  const url = process.env.NEXT_PUBLIC_UPLOAD_URL || "";
   const form = new FormData();
   form.append("file", file);
 
-  const res = await fetch(url, {
+  const res = await fetch("/api/proxy/upload", {
     method: "POST",
     body: form,
   });

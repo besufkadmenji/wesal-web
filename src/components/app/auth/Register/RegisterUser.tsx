@@ -22,13 +22,34 @@ export const RegisterUser = () => {
     errors,
     handleFieldChange,
     handleCheckboxChange,
-    handleSubmit: validateForm,
     showError,
+    validateFields,
   } = useRegisterForm({ form, updateField });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    const isValid = validateForm(e);
+  const getError = (field: string) => {
+    if (!showError(field)) return undefined;
+    const error = errors[field as keyof typeof errors];
+    return error?.message;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const allFields = [
+      "name",
+      "phone",
+      "email",
+      "password",
+      "confirmPassword",
+      "bankName",
+      "ibanNumber",
+      "document",
+      "terms",
+    ];
+
+    const isValid = await validateFields(allFields);
     console.log("isValid", isValid, errors);
+
     if (isValid) {
       register();
     }
@@ -57,14 +78,14 @@ export const RegisterUser = () => {
           placeholder={dict.auth.signup.name}
           value={form.name || ""}
           onChange={(value) => handleFieldChange("name", value)}
-          error={showError("name") ? errors.name : undefined}
+          error={errors.name?.message}
         />
 
         {/* Phone Field */}
         <PhoneInput
           value={form.phone || ""}
           onChange={(value) => handleFieldChange("phone", value)}
-          error={showError("phone") ? errors.phone : undefined}
+          error={errors.phone?.message}
         />
 
         {/* Email Field */}
@@ -73,7 +94,7 @@ export const RegisterUser = () => {
           placeholder={dict.auth.signup.email}
           value={form.email || ""}
           onChange={(value) => handleFieldChange("email", value)}
-          error={showError("email") ? errors.email : undefined}
+          error={errors.email?.message}
         />
 
         {/* Password Fields */}
@@ -82,15 +103,13 @@ export const RegisterUser = () => {
             placeholder={dict.auth.signup.password}
             value={form.password || ""}
             onChange={(value) => handleFieldChange("password", value)}
-            error={showError("password") ? errors.password : undefined}
+            error={errors.password?.message}
           />
           <PasswordInput
             placeholder={dict.auth.signup.confirmPassword}
             value={form.confirmPassword || ""}
             onChange={(value) => handleFieldChange("confirmPassword", value)}
-            error={
-              showError("confirmPassword") ? errors.confirmPassword : undefined
-            }
+            error={errors.confirmPassword?.message}
           />
         </div>
 
@@ -100,7 +119,7 @@ export const RegisterUser = () => {
           placeholder={dict.auth.signup.bankName}
           value={form.bankName || ""}
           onChange={(value) => handleFieldChange("bankName", value)}
-          error={showError("bankName") ? errors.bankName : undefined}
+          error={errors.bankName?.message}
         />
 
         {/* IBAN Field */}
@@ -109,7 +128,7 @@ export const RegisterUser = () => {
           placeholder={dict.auth.signup.ibanNumber}
           value={form.ibanNumber || ""}
           onChange={(value) => handleFieldChange("ibanNumber", value)}
-          error={showError("ibanNumber") ? errors.ibanNumber : undefined}
+          error={errors.ibanNumber?.message}
         />
       </div>
 
@@ -122,8 +141,9 @@ export const RegisterUser = () => {
             text: dict.auth.signup.documentLinkText,
           }}
           id="document"
+          checked={form.document || false}
           onChange={(value) => handleCheckboxChange("document", value)}
-          error={showError("document") ? errors.document : undefined}
+          error={errors.document?.message}
         />
         <AppCheckbox
           label={dict.auth.signup.termsAndConditions}
@@ -132,8 +152,9 @@ export const RegisterUser = () => {
             text: dict.auth.signup.termsAndConditionsLink,
           }}
           id="terms"
+          checked={form.terms || false}
           onChange={(value) => handleCheckboxChange("terms", value)}
-          error={showError("terms") ? errors.terms : undefined}
+          error={errors.terms?.message}
         />
       </div>
 

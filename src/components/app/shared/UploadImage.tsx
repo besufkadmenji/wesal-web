@@ -7,9 +7,11 @@ import Image from "next/image";
 export const UploadImage = ({
   file,
   onChange,
+  error,
 }: {
   file: File | null;
   onChange?: (file: File) => void;
+  error?: string;
 }) => {
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -28,51 +30,54 @@ export const UploadImage = ({
   const dict = useDict();
   const url = file ? URL.createObjectURL(file) : null;
   return (
-    <div
-      {...getRootProps()}
-      className={twMerge(
-        "border-border relative grid h-37 w-full auto-rows-max content-center justify-items-center gap-1 rounded-[20px] border border-dashed p-4",
-        isDragActive && "border-primary bg-primary/5",
-        isDragReject && "border-red-500 bg-red-500/5",
-      )}
-    >
-      <input {...getInputProps()} />
-      {url ? (
-        <Image
-          src={url}
-          alt=""
-          fill
-          className="rounded-[16px] object-contain"
-        />
-      ) : (
-        <div className="grid grid-cols-1 justify-items-center gap-1">
-          <ImageUploadIcon
-            className={twMerge(
-              "size-4 text-[#999999]",
-              isDragActive && "text-primary",
-              isDragReject && "text-red-500",
-            )}
+    <div className="grid grid-cols-1 gap-1">
+      <div
+        {...getRootProps()}
+        className={twMerge(
+          "border-border relative grid h-37 w-full auto-rows-max content-center justify-items-center gap-1 rounded-[20px] border border-dashed p-4",
+          isDragActive && "border-primary bg-primary/5",
+          isDragReject && "border-red-500 bg-red-500/5",
+        )}
+      >
+        <input {...getInputProps()} />
+        {url ? (
+          <Image
+            src={url}
+            alt=""
+            fill
+            className="rounded-[16px] object-contain"
           />
-          <p
-            className={twMerge(
-              "text-xs leading-5 text-[#999999]",
-              isDragActive && "text-primary",
-              isDragReject && "text-red-500",
-            )}
-          >
-            {dict.support.contactUs.form.image}
-          </p>
-          <p
-            className={twMerge(
-              "text-xs leading-5 text-[#999999]",
-              isDragActive && "text-primary",
-              isDragReject && "text-red-500",
-            )}
-          >
-            png, jpg, jpeg
-          </p>
-        </div>
-      )}
+        ) : (
+          <div className="grid grid-cols-1 justify-items-center gap-1">
+            <ImageUploadIcon
+              className={twMerge(
+                "size-4 text-[#999999]",
+                isDragActive && "text-primary",
+                isDragReject && "text-red-500",
+              )}
+            />
+            <p
+              className={twMerge(
+                "text-xs leading-5 text-[#999999]",
+                isDragActive && "text-primary",
+                isDragReject && "text-red-500",
+              )}
+            >
+              {dict.support.contactUs.form.image}
+            </p>
+            <p
+              className={twMerge(
+                "text-xs leading-5 text-[#999999]",
+                isDragActive && "text-primary",
+                isDragReject && "text-red-500",
+              )}
+            >
+              png, jpg, jpeg
+            </p>
+          </div>
+        )}
+      </div>
+      {error && <p className="text-xs text-red-500">{error}</p>}
     </div>
   );
 };

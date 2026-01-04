@@ -1,41 +1,75 @@
-import NameIcon from "@/assets/icons/auth/name.svg";
+"use client";
 import EmailIcon from "@/assets/icons/auth/email.svg";
-import BankIcon from "@/assets/icons/auth/bank.svg";
-import IbanIcon from "@/assets/icons/auth/iban.svg";
-import ProfileIcon from "@/assets/icons/auth/profile.picture.svg";
-import { PasswordInput } from "@/components/app/shared/inputs/PasswordInput";
-import { TextInput } from "@/components/app/shared/inputs/TextInput";
-import { PhoneInput } from "@/components/app/shared/inputs/PhoneInput";
-import { AppCheckbox } from "@/components/app/auth/AppCheckbox";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { useDict } from "@/hooks/useDict";
-import { useRegisterForm } from "@/hooks/useRegisterForm";
-import { useRegisterStore } from "@/components/app/auth/Register/useRegisterStore";
-import { useRegister } from "@/components/app/auth/Register/useRegister";
+import NameIcon from "@/assets/icons/auth/name.svg";
 import CheckIcon from "@/assets/icons/check.svg";
-import { twMerge } from "tailwind-merge";
+import { useRegister } from "@/components/app/auth/Register/useRegister";
+import { useRegisterStore } from "@/components/app/auth/Register/useRegisterStore";
+import type { FormType } from "@/components/app/auth/Register/useRegisterStore";
+import { PasswordInput } from "@/components/app/shared/inputs/PasswordInput";
+import { PhoneInput } from "@/components/app/shared/inputs/PhoneInput";
+import { TextInput } from "@/components/app/shared/inputs/TextInput";
 import { UploadImage } from "@/components/app/shared/UploadImage";
+import { Button } from "@/components/ui/button";
+import { useDict } from "@/hooks/useDict";
+import { useRegisterProviderForm } from "@/hooks/useRegisterProviderForm";
+import Link from "next/link";
+import { parseAsInteger, useQueryState } from "nuqs";
+import { twMerge } from "tailwind-merge";
+
+import AddressIcon from "@/assets/icons/address.svg";
+import { AppCheckbox } from "@/components/app/auth/AppCheckbox";
+import {
+  CategorySelect,
+  CitySelect,
+} from "@/components/app/auth/Register/FormSelect";
+import { PickLocation } from "@/components/app/auth/Register/PickLocation";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { useEffect } from "react";
+
 export const RegisterProvider = () => {
   const dict = useDict();
   const form = useRegisterStore((state) => state.formData);
   const updateField = useRegisterStore((state) => state.updateField);
   const { register, busy } = useRegister();
+  const [step, setStep] = useQueryState("step", parseAsInteger.withDefault(1));
   const {
+    validateStep1,
+    validateStep2,
     errors,
     handleFieldChange,
     handleCheckboxChange,
-    handleSubmit: validateForm,
-    showError,
-  } = useRegisterForm({ form, updateField });
+    getError,
+  } = useRegisterProviderForm({
+    form,
+    updateField,
+  });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    const isValid = validateForm(e);
-    console.log("isValid", isValid, errors);
-    if (isValid) {
-      register();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Validate based on current step
+    if (step === 1) {
+      const isValid = await validateStep1();
+      console.log("Step 1 validation:", isValid, errors);
+      if (isValid) {
+        setStep(2, { history: "push" });
+      }
+    } else {
+      const isValid = await validateStep2();
+      console.log("Step 2 validation:", isValid, errors);
+      if (isValid) {
+        register();
+      }
     }
   };
+
+  useEffect(() => {
+    setStep(1, { history: "replace" });
+
+    return () => {};
+  }, [setStep]);
+
   return (
     <form
       onSubmit={handleSubmit}
@@ -50,83 +84,24 @@ export const RegisterProvider = () => {
             {dict.auth.signup.provider.subtitle}
           </p>
         </div>
-        <Stepper currentStep={0} />
+        <Stepper currentStep={step} />
       </div>
 
-      <div className="grid grid-cols-1 gap-5">
-        {/* Name Field */}
-        <TextInput
-          icon={<NameIcon />}
-          placeholder={dict.auth.signup.name}
-          value={form.name || ""}
-          onChange={(value) => handleFieldChange("name", value)}
-          error={showError("name") ? errors.name : undefined}
+      {step === 1 ? (
+        <BasicInfoForm
+          handleFieldChange={handleFieldChange}
+          getError={getError}
+          errors={errors}
+          updateField={updateField}
         />
-
-        {/* Phone Field */}
-        <PhoneInput
-          value={form.phone || ""}
-          onChange={(value) => handleFieldChange("phone", value)}
-          error={showError("phone") ? errors.phone : undefined}
+      ) : (
+        <ProviderForm
+          handleFieldChange={handleFieldChange}
+          handleCheckboxChange={handleCheckboxChange}
+          getError={getError}
+          errors={errors}
         />
-
-        {/* Email Field */}
-        <TextInput
-          icon={<EmailIcon />}
-          placeholder={dict.auth.signup.email}
-          value={form.email || ""}
-          onChange={(value) => handleFieldChange("email", value)}
-          error={showError("email") ? errors.email : undefined}
-        />
-
-        {/* Password Fields */}
-        <div className="grid grid-cols-2 gap-3">
-          <PasswordInput
-            placeholder={dict.auth.signup.password}
-            value={form.password || ""}
-            onChange={(value) => handleFieldChange("password", value)}
-            error={showError("password") ? errors.password : undefined}
-          />
-          <PasswordInput
-            placeholder={dict.auth.signup.confirmPassword}
-            value={form.confirmPassword || ""}
-            onChange={(value) => handleFieldChange("confirmPassword", value)}
-            error={
-              showError("confirmPassword") ? errors.confirmPassword : undefined
-            }
-          />
-        </div>
-        <UploadImage
-          file={form.avatarFile ?? null}
-          onChange={(f) => {
-            updateField("avatarFile", f);
-          }}
-        />
-      </div>
-
-      {/* Checkboxes */}
-      <div className="grid grid-cols-1 gap-3">
-        <AppCheckbox
-          label={dict.auth.signup.documentLink}
-          link={{
-            url: "/",
-            text: dict.auth.signup.documentLinkText,
-          }}
-          id="document"
-          onChange={(value) => handleCheckboxChange("document", value)}
-          error={showError("document") ? errors.document : undefined}
-        />
-        <AppCheckbox
-          label={dict.auth.signup.termsAndConditions}
-          link={{
-            url: "/",
-            text: dict.auth.signup.termsAndConditionsLink,
-          }}
-          id="terms"
-          onChange={(value) => handleCheckboxChange("terms", value)}
-          error={showError("terms") ? errors.terms : undefined}
-        />
-      </div>
+      )}
 
       {/* Submit Button */}
       <Button
@@ -134,7 +109,7 @@ export const RegisterProvider = () => {
         type="submit"
         disabled={busy}
       >
-        {dict.auth.signup.submit}
+        {step === 1 ? dict.auth.choose.next : dict.auth.signup.submit}
       </Button>
 
       {/* Sign In Link */}
@@ -186,28 +161,34 @@ const StepperItem = ({
   number: number;
 }) => {
   return (
-    <div className="grid grid-cols-1 justify-items-center">
+    <div className="grid grid-cols-1 justify-items-center gap-2">
       <div
         className={twMerge(
           "grid size-10 items-center justify-items-center rounded-full bg-[#F2F2F2]",
-          active && "bg-[#4B5981]",
+          active && "bg-[#4B5981] text-white",
+          completed && "bg-[#0F9D58]",
         )}
       >
-        {completed ? <CheckIcon /> : <p>{number}</p>}
+        {completed ? <CheckIcon className="size-6" /> : <p>{number}</p>}
       </div>
-      <p className="text-center text-sm font-medium">{label}</p>
+      <p className="text-center text-xs leading-5 font-normal">{label}</p>
     </div>
   );
 };
 
-const BasicInfoForm = () => {
+const BasicInfoForm = ({
+  handleFieldChange,
+  getError,
+  errors,
+  updateField,
+}: {
+  handleFieldChange: (fieldName: string, value: unknown) => Promise<void>;
+  getError: (field: string) => string | undefined;
+  errors: Record<string, { message?: string }>;
+  updateField: <K extends keyof FormType>(field: K, value: FormType[K]) => void;
+}) => {
   const dict = useDict();
   const form = useRegisterStore((state) => state.formData);
-  const updateField = useRegisterStore((state) => state.updateField);
-  const { errors, handleFieldChange, showError } = useRegisterForm({
-    form,
-    updateField,
-  });
 
   return (
     <div className="grid grid-cols-1 gap-5">
@@ -217,14 +198,14 @@ const BasicInfoForm = () => {
         placeholder={dict.auth.signup.name}
         value={form.name || ""}
         onChange={(value) => handleFieldChange("name", value)}
-        error={showError("name") ? errors.name : undefined}
+        error={errors.name?.message}
       />
 
       {/* Phone Field */}
       <PhoneInput
         value={form.phone || ""}
         onChange={(value) => handleFieldChange("phone", value)}
-        error={showError("phone") ? errors.phone : undefined}
+        error={errors.phone?.message}
       />
 
       {/* Email Field */}
@@ -233,7 +214,7 @@ const BasicInfoForm = () => {
         placeholder={dict.auth.signup.email}
         value={form.email || ""}
         onChange={(value) => handleFieldChange("email", value)}
-        error={showError("email") ? errors.email : undefined}
+        error={errors.email?.message}
       />
 
       {/* Password Fields */}
@@ -242,86 +223,95 @@ const BasicInfoForm = () => {
           placeholder={dict.auth.signup.password}
           value={form.password || ""}
           onChange={(value) => handleFieldChange("password", value)}
-          error={showError("password") ? errors.password : undefined}
+          error={errors.password?.message}
         />
         <PasswordInput
           placeholder={dict.auth.signup.confirmPassword}
           value={form.confirmPassword || ""}
           onChange={(value) => handleFieldChange("confirmPassword", value)}
-          error={
-            showError("confirmPassword") ? errors.confirmPassword : undefined
-          }
+          error={errors.confirmPassword?.message}
         />
       </div>
       <UploadImage
         file={form.avatarFile ?? null}
         onChange={(f) => {
           updateField("avatarFile", f);
+          handleFieldChange("avatarFile", f);
         }}
+        error={errors.avatarFile?.message}
       />
     </div>
   );
 };
 
-const ProviderForm = () => {
+const ProviderForm = ({
+  handleFieldChange,
+  handleCheckboxChange,
+  getError,
+  errors,
+}: {
+  handleFieldChange: (fieldName: string, value: unknown) => Promise<void>;
+  handleCheckboxChange: (
+    checkboxType: "terms" | "document",
+    value: boolean,
+  ) => Promise<void>;
+  getError: (field: string) => string | undefined;
+  errors: Record<string, { message?: string }>;
+}) => {
   const dict = useDict();
   const form = useRegisterStore((state) => state.formData);
-  const updateField = useRegisterStore((state) => state.updateField);
-  const { errors, handleFieldChange, showError } = useRegisterForm({
-    form,
-    updateField,
-  });
+
+  console.log("ProviderForm rendered");
 
   return (
     <div className="grid grid-cols-1 gap-5">
-      {/* Name Field */}
+      <CitySelect error={errors.cityId?.message} />
       <TextInput
-        icon={<NameIcon />}
-        placeholder={dict.auth.signup.name}
-        value={form.name || ""}
-        onChange={(value) => handleFieldChange("name", value)}
-        error={showError("name") ? errors.name : undefined}
+        icon={<AddressIcon className="size-4" />}
+        placeholder={dict.auth.signup.provider.address}
+        value={form.address || ""}
+        onChange={(value) => handleFieldChange("address", value)}
+        error={errors.address?.message}
       />
-
-      {/* Phone Field */}
-      <PhoneInput
-        value={form.phone || ""}
-        onChange={(value) => handleFieldChange("phone", value)}
-        error={showError("phone") ? errors.phone : undefined}
+      <PickLocation
+        error={errors.latitude?.message || errors.longitude?.message}
       />
-
-      {/* Email Field */}
-      <TextInput
-        icon={<EmailIcon />}
-        placeholder={dict.auth.signup.email}
-        value={form.email || ""}
-        onChange={(value) => handleFieldChange("email", value)}
-        error={showError("email") ? errors.email : undefined}
-      />
-
-      {/* Password Fields */}
-      <div className="grid grid-cols-2 gap-3">
-        <PasswordInput
-          placeholder={dict.auth.signup.password}
-          value={form.password || ""}
-          onChange={(value) => handleFieldChange("password", value)}
-          error={showError("password") ? errors.password : undefined}
-        />
-        <PasswordInput
-          placeholder={dict.auth.signup.confirmPassword}
-          value={form.confirmPassword || ""}
-          onChange={(value) => handleFieldChange("confirmPassword", value)}
-          error={
-            showError("confirmPassword") ? errors.confirmPassword : undefined
-          }
+      <CategorySelect error={errors.categoryIds?.message} />
+      <div className="grid grid-cols-1 gap-2 rounded-[16px] border border-[#F2F2F2] bg-[#FBFBFB] p-4">
+        <div className="flex items-center gap-2">
+          <Checkbox
+            id="verifyWithAbsher"
+            className="size-4.5 border-2 border-[#999999] shadow-none ring-0!"
+          />
+          <div className="flex items-center gap-1">
+            <Label
+              htmlFor="verifyWithAbsher"
+              className="text-base font-medium text-black"
+            >
+              {dict.auth.signup.provider.verifyWithAbsher}
+            </Label>
+            <p className="text-gray text-xs font-normal">
+              {dict.auth.signup.provider.verifyWithAbsherOptional}
+            </p>
+          </div>
+        </div>
+        <p className="text-gray text-base leading-7 font-normal">
+          {dict.auth.signup.provider.verifyWithAbsherDescription}
+        </p>
+      </div>
+      <div className="grid grid-cols-1 px-1">
+        <AppCheckbox
+          label={dict.auth.signup.termsAndConditions}
+          link={{
+            url: "/",
+            text: dict.auth.signup.termsAndConditionsLink,
+          }}
+          id="terms"
+          checked={form.terms || false}
+          onChange={(value) => handleCheckboxChange("terms", value)}
+          error={errors.terms?.message}
         />
       </div>
-      <UploadImage
-        file={form.avatarFile ?? null}
-        onChange={(f) => {
-          updateField("avatarFile", f);
-        }}
-      />
     </div>
   );
 };

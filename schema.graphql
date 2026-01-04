@@ -125,7 +125,8 @@ type City {
   countryId: String!
   createdAt: DateTime!
   id: ID!
-  name: String!
+  nameAr: String!
+  nameEn: String!
   updatedAt: DateTime!
 }
 
@@ -331,10 +332,11 @@ enum ConversationSortField {
 
 type Country {
   code: String!
+  codeEn: String!
   createdAt: DateTime!
   dialCode: String
   id: ID!
-  name: String!
+  nameAr: String!
   updatedAt: DateTime!
 }
 
@@ -383,7 +385,8 @@ input CreateCategoryInput {
 
 input CreateCityInput {
   countryId: ID!
-  name: String!
+  nameAr: String!
+  nameEn: String!
 }
 
 input CreateComplaintInput {
@@ -1048,7 +1051,8 @@ input UpdateCategoryInput {
 input UpdateCityInput {
   countryId: ID
   id: ID!
-  name: String
+  nameAr: String
+  nameEn: String
 }
 
 input UpdateComplaintInput {
