@@ -44,6 +44,7 @@ jobs:
                   remote_host: ${{ secrets.CPANEL_HOST }}
                   remote_user: ${{ secrets.CPANEL_USERNAME }}
                   remote_key: ${{ secrets.CPANEL_SSH_KEY }}
+                  remote_port: ${{ secrets.CPANEL_PORT }}
 
             - name: Restart Passenger
               uses: appleboy/ssh-action@v1.0.3
