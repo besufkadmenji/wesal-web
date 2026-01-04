@@ -10,6 +10,7 @@ export enum SupportPageType {
   FAQ = "faq",
   TERMS = "terms",
   PRIVACY = "privacy",
+  PROFILE = "profile",
 }
 
 export const Wrapper = ({
@@ -30,11 +31,13 @@ export const Wrapper = ({
         <div className="z-10 grid h-full w-full auto-rows-max grid-cols-1 content-center gap-4 bg-black/75 px-[7vw]">
           <h1 className="text-3xl font-semibold text-white">{title}</h1>
           <div className="flex items-center gap-2">
-            <Link href={"/"} className="text-2xl text-white leading-7">
+            <Link href={"/"} className="text-2xl leading-7 text-white">
               {dict.home.nav.home}
             </Link>
             <BreadcrumbIcon className="size-6 ltr:rotate-180" />
-            <p className="text-2xl leading-7 text-white opacity-70">{breadcrumb}</p>
+            <p className="text-2xl leading-7 text-white opacity-70">
+              {breadcrumb}
+            </p>
           </div>
         </div>
       </div>

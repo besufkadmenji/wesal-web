@@ -501,6 +501,7 @@ input ForgotPasswordInput {
 input LoginInput {
   emailOrPhone: String!
   password: String!
+  role: UserRole!
 }
 
 type Message {

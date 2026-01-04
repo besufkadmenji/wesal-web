@@ -477,6 +477,7 @@ export type ForgotPasswordInput = {
 export type LoginInput = {
   emailOrPhone: Scalars['String']['input'];
   password: Scalars['String']['input'];
+  role: UserRole;
 };
 
 export type Message = {

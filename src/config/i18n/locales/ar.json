@@ -414,6 +414,10 @@
   },
 
   "support": {
+    "profile": {
+      "title": "بيانات الحساب الشخصى",
+      "breadcrumb": "بيانات الحساب الشخصى"
+    },
     "contactUs": {
       "title": "تواصل معنا",
       "breadcrumb": "تواصل معنا",
@@ -489,5 +493,23 @@
       "title": "سياسة الخصوصية",
       "breadcrumb": "سياسة الخصوصية"
     }
+  },
+
+  "profile": {
+    "personalInfo": "بيانات الحساب الشخصى",
+    "changePassword": "تغيير كلمة المرور",
+    "favorites": "المفضلة",
+    "logout": "تسجيل الخروج",
+    "businessInfo": "بيانات النشاط التجاري",
+    "signedContract": "العقد الإلكترونى الموقع",
+    "deletePhoto": "حذف الصورة",
+    "name": "الاسم",
+    "phone": "رقم الجوال",
+    "email": "البريد الإلكتروني",
+    "bankName": "اسم البنك",
+    "ibanNumber": "رقم الآيبان",
+    "address": "العنوان",
+    "change": "تغيير",
+    "saveChanges": "حفظ التغييرات"
   }
 }

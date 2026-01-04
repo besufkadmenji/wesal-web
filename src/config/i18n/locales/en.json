@@ -419,6 +419,10 @@
     "skip": "Skip"
   },
   "support": {
+    "profile": {
+      "title": "Personal Account Information",
+      "breadcrumb": "Personal Account Information"
+    },
     "contactUs": {
       "title": "Contact Us",
       "breadcrumb": "Contact Us",
@@ -495,5 +499,22 @@
       "title": "Privacy Policy",
       "breadcrumb": "Privacy Policy"
     }
+  },
+  "profile": {
+    "personalInfo": "Personal Account Information",
+    "changePassword": "Change Password",
+    "favorites": "Favorites",
+    "logout": "Logout",
+    "businessInfo": "Business Information",
+    "signedContract": "Signed Electronic Contract",
+    "deletePhoto": "Delete Photo",
+    "name": "Name",
+    "phone": "Phone Number",
+    "email": "Email",
+    "bankName": "Bank Name",
+    "ibanNumber": "IBAN Number",
+    "address": "Address",
+    "change": "Change",
+    "saveChanges": "Save Changes"
   }
 }

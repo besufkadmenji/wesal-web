@@ -13,7 +13,7 @@ import { useLogin } from "@/components/app/auth/useLogin";
 import { useState } from "react";
 export const Login = () => {
   const dict = useDict();
-  const [type, setType] = useQueryState("type");
+  const [type, setType] = useQueryState("type", { defaultValue: "user" });
   const [method, setMethod] = useQueryState("method", {
     defaultValue: "phone",
   });
