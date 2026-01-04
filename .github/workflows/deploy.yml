@@ -1,58 +1,57 @@
 name: Deploy Next.js (Passenger + pnpm)
 
 on:
-    push:
-        branches: [staging]
+  push:
+    branches: [staging]
 
 jobs:
-    deploy:
-        runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-            - name: Setup pnpm
-              uses: pnpm/action-setup@v4
-              with:
-                  version: 10
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
-            - name: Setup Node
-              uses: actions/setup-node@v4
-              with:
-                  node-version: 24
-                  cache: "pnpm"
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: "pnpm"
 
-            - name: Setup pnpm
-              uses: pnpm/action-setup@v4
-              with:
-                  version: 9
-                  run_install: false
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: false
 
-            - name: Install dependencies
-              run: pnpm install --frozen-lockfile
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-            - name: Build Next.js
-              run: pnpm build
+      - name: Build Next.js
+        run: pnpm build
 
-            - name: Upload app to cPanel
-              uses: burnett01/rsync-deployments@6.0.0
-              with:
-                  switches: -avz --delete
-                  path: ./
-                  remote_path: ~/nextapp
-                  remote_host: ${{ secrets.CPANEL_HOST }}
-                  remote_user: ${{ secrets.CPANEL_USERNAME }}
-                  remote_key: ${{ secrets.CPANEL_SSH_KEY }}
-                  remote_port: ${{ secrets.CPANEL_PORT }}
+      - name: Upload app to cPanel
+        uses: burnett01/rsync-deployments@6.0.0
+        with:
+          switches: -avz --delete
+          path: ./
+          remote_path: ~/nextapp
+          remote_host: ${{ secrets.CPANEL_HOST }}
+          remote_user: ${{ secrets.CPANEL_USERNAME }}
+          remote_key: ${{ secrets.CPANEL_SSH_KEY }}
+          remote_port: ${{ secrets.CPANEL_PORT }}
 
-            - name: Restart Passenger
-              uses: appleboy/ssh-action@v1.0.3
-              with:
-                  host: ${{ secrets.CPANEL_HOST }}
-                  username: ${{ secrets.CPANEL_USERNAME }}
-                  key: ${{ secrets.CPANEL_SSH_KEY }}
-                  port: ${{ secrets.CPANEL_PORT }}
-                  script: |
-                      mkdir -p ~/nextapp/tmp
-                      touch ~/nextapp/tmp/restart.txt
+      - name: Restart Passenger
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.CPANEL_HOST }}
+          username: ${{ secrets.CPANEL_USERNAME }}
+          key: ${{ secrets.CPANEL_SSH_KEY }}
+          port: ${{ secrets.CPANEL_PORT }}
+          script: |
+            pm2 restart wesal-app
