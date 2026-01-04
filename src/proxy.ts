@@ -15,7 +15,7 @@ function getLocale(req: NextRequest) {
   const { pathname } = req.nextUrl;
   if (pathname.startsWith("/en")) return "en";
   if (pathname.startsWith("/ar")) return "ar";
-  if (req.cookies.has("lng")) return req.cookies.get("lng")?.value;
+  if (req.cookies.has("lang")) return req.cookies.get("lang")?.value;
   return acceptLanguage.get(req.headers.get("Accept-Language")) || fallbackLng;
 }
 
