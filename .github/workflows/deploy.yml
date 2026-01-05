@@ -35,18 +35,29 @@ jobs:
       - name: Build Next.js
         run: pnpm build
 
-      - name: Upload app to cPanel
+      - name: Upload build artifacts to cPanel
         uses: burnett01/rsync-deployments@6.0.0
         with:
-          switches: -avz --delete
-          path: ./
-          remote_path: ~/nextapp
+          switches: -avz --delete --exclude='node_modules' --exclude='.git' --exclude='.next/cache'
+          path: ./.next/
+          remote_path: ~/nextapp/.next/
           remote_host: ${{ secrets.CPANEL_HOST }}
           remote_user: ${{ secrets.CPANEL_USERNAME }}
           remote_key: ${{ secrets.CPANEL_SSH_KEY }}
           remote_port: ${{ secrets.CPANEL_PORT }}
 
-      - name: Restart Passenger
+      - name: Upload public assets to cPanel
+        uses: burnett01/rsync-deployments@6.0.0
+        with:
+          switches: -avz --delete
+          path: ./public/
+          remote_path: ~/nextapp/public/
+          remote_host: ${{ secrets.CPANEL_HOST }}
+          remote_user: ${{ secrets.CPANEL_USERNAME }}
+          remote_key: ${{ secrets.CPANEL_SSH_KEY }}
+          remote_port: ${{ secrets.CPANEL_PORT }}
+
+      - name: Copy package files and restart app
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.CPANEL_HOST }}
@@ -54,4 +65,9 @@ jobs:
           key: ${{ secrets.CPANEL_SSH_KEY }}
           port: ${{ secrets.CPANEL_PORT }}
           script: |
-            pm2 restart wesal-app
+            cd ~/nextapp
+            # Copy package.json and pnpm-lock.yaml if needed for running standalone
+            cp package.json package.json.bak 2>/dev/null || true
+            cp pnpm-lock.yaml pnpm-lock.yaml.bak 2>/dev/null || true
+            # Restart the application
+            pm2 restart wesal-app || pm2 start .next/standalone/server.js --name wesal-app
