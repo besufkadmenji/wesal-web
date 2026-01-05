@@ -120,6 +120,7 @@ const NavItem = ({
         isActive && "bg-[#EFF1F6]! text-black!",
         className,
       )}
+      onClick={onClick}
     >
       {icon} <span>{label}</span>
     </Button>

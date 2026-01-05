@@ -1,4 +1,4 @@
-import { User } from "@/gql/graphql";
+import { User, UserRole } from "@/gql/graphql";
 import { useDict } from "@/hooks/useDict";
 import { useMe } from "@/hooks/useMe";
 import Image from "next/image";
@@ -13,6 +13,7 @@ import { FormPhoneInput } from "@/components/app/profile/FormInput";
 import { PickLocation } from "@/components/app/auth/Register/PickLocation";
 import { Button } from "@/components/ui/button";
 import { useUpdateProfile } from "@/components/app/profile/useUpdateProfile";
+
 export const UserProfile = () => {
   const { me } = useMe();
   const { form, updateInputField } = useProfileStore();
@@ -84,26 +85,27 @@ export const UserProfile = () => {
             }}
             icon={<IbanIcon className="size-4.5" />}
           />
-          <FormInput
-            label={dict.profile.address}
-            placeholder={dict.profile.address}
-            value={form.input.address ?? ""}
-            onChange={(v: string): void => {
-              updateInputField("address", v);
-            }}
-            icon={<AddressIcon className="size-4.5" />}
-          />
-          <PickLocation
-            // error={errors.latitude?.message || errors.longitude?.message}
-            onChange={(lat, lng) => {
-              updateInputField("latitude", lat);
-              updateInputField("longitude", lng);
-              // handleFieldChange("latitude", lat);
-              // handleFieldChange("longitude", lng);
-            }}
-            latitude={form.input.latitude || undefined}
-            longitude={form.input.longitude || undefined}
-          />
+          {me.role === UserRole.User && (
+            <>
+              <FormInput
+                label={dict.profile.address}
+                placeholder={dict.profile.address}
+                value={form.input.address ?? ""}
+                onChange={(v: string): void => {
+                  updateInputField("address", v);
+                }}
+                icon={<AddressIcon className="size-4.5" />}
+              />
+              <PickLocation
+                onChange={(lat, lng) => {
+                  updateInputField("latitude", lat);
+                  updateInputField("longitude", lng);
+                }}
+                latitude={form.input.latitude || undefined}
+                longitude={form.input.longitude || undefined}
+              />
+            </>
+          )}
           <Button
             className="mt-5 h-12.5 justify-self-center rounded-[20px] px-20"
             disabled={updating}

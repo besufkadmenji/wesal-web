@@ -519,6 +519,7 @@
     "updateSuccessMessage": "Profile updated successfully",
     "updateProfileFailed": "Failed to update profile",
     "removeAvatarSuccessMessage": "Avatar removed successfully",
-    "removeAvatarFailed": "Failed to remove avatar"
+    "removeAvatarFailed": "Failed to remove avatar",
+    "commercialRecordNumber": "Commercial Registration Number"
   }
 }
