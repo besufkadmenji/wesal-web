@@ -1,10 +1,7 @@
 "use client";
-import { Nav } from "@/components/app/profile/Nav";
 import { useProfileStore } from "@/components/app/profile/useProfileForm";
-import { SupportPageType } from "@/components/app/support/Wrapper";
 import { useMe } from "@/hooks/useMe";
 import { useEffect } from "react";
-import { Wrapper } from "../support/Wrapper";
 import { UserProfile } from "./UserProfile";
 
 export const Profile = () => {
@@ -32,13 +29,5 @@ export const Profile = () => {
     return () => {};
   }, [me, setInitialData]);
 
-  return (
-    <Wrapper variant={SupportPageType.PROFILE}>
-      <div className="grid grid-cols-[3fr_8fr] gap-8 px-[7vw] items-start py-20">
-        <Nav />
-        <UserProfile />
-        {/* {me?.role === UserRole.User ? <UserProfile /> : <ProviderProfile />} */}
-      </div>
-    </Wrapper>
-  );
+  return <UserProfile />;
 };

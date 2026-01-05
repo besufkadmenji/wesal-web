@@ -1125,6 +1125,7 @@ input UpdateUserInput {
   bankName: String
   categoryIds: [String!]
   cityId: String
+  commercialRegistrationNumber: String
   countryId: String
   dialCode: String
   email: String
@@ -1136,6 +1137,7 @@ input UpdateUserInput {
   name: String
   password: String
   phone: String
+  withAbsher: Boolean
 }
 
 type User {
@@ -1144,6 +1146,7 @@ type User {
   bankName: String
   categories: [Category!]
   cityId: String
+  commercialRegistrationNumber: String
   countryId: String
   createdAt: DateTime!
   dialCode: String
@@ -1160,6 +1163,7 @@ type User {
   phoneVerified: Boolean!
   role: UserRole!
   updatedAt: DateTime!
+  withAbsher: Boolean
 }
 
 input UserPaginationInput {

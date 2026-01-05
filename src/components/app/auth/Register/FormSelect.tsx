@@ -1,3 +1,14 @@
+import CategoryIcon from "@/assets/icons/category.bold.svg";
+import CityIcon from "@/assets/icons/city.svg";
+import RemoveIcon from "@/assets/icons/remove.svg";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Select,
   SelectContent,
@@ -5,39 +16,35 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import CityIcon from "@/assets/icons/city.svg";
-import CategoryIcon from "@/assets/icons/category.bold.svg";
-import { useRegisterStore } from "@/components/app/auth/Register/useRegisterStore";
+import { Category } from "@/gql/graphql";
+import { useCategories } from "@/hooks/useCategories";
 import { useCities } from "@/hooks/useCities";
 import { useDict } from "@/hooks/useDict";
-import { useRegisterForm } from "@/hooks/useRegisterForm";
 import { useLang } from "@/hooks/useLang";
-import { useCategories } from "@/hooks/useCategories";
-import RemoveIcon from "@/assets/icons/remove.svg";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { Category } from "@/gql/graphql";
-export const CitySelect = ({ error }: { error?: string }) => {
+export const CitySelect = ({
+  value,
+  onChange,
+  error,
+  label,
+}: {
+  value?: string;
+  onChange: (value: string) => void;
+  error?: string;
+  label?: string;
+}) => {
   const dict = useDict();
-  const form = useRegisterStore((state) => state.formData);
-  const updateField = useRegisterStore((state) => state.updateField);
-  const { errors, handleFieldChange, showError } = useRegisterForm({
-    form,
-    updateField,
-  });
   const { cities } = useCities();
   const lng = useLang();
   return (
-    <div className="grid grid-cols-1 gap-1">
+    <div className="relative grid grid-cols-1 gap-1">
+      {label && (
+        <Label className="text-gray absolute top-0 z-10 -translate-y-1/2 bg-white px-1 text-sm ltr:left-4 rtl:right-4">
+          {label}
+        </Label>
+      )}
       <Select
-        value={form.cityId || undefined}
-        onValueChange={(value) => handleFieldChange("cityId", value)}
+        value={value || undefined}
+        onValueChange={(value) => onChange?.(value)}
       >
         <SelectTrigger className="relative flex h-14! w-full rounded-[20px]! border-[#F2F2F2]! p-0! shadow-none! ring-0! ltr:pr-4! rtl:pl-4!">
           <CityIcon className="absolute right-auto left-4 size-4.5 text-[#999999] rtl:right-4 rtl:left-auto" />
@@ -58,14 +65,16 @@ export const CitySelect = ({ error }: { error?: string }) => {
   );
 };
 
-export const CategorySelect = ({ error }: { error?: string }) => {
+export const CategorySelect = ({
+  value,
+  onChange,
+  error,
+}: {
+  value?: string[];
+  onChange: (value: string[]) => void;
+  error?: string;
+}) => {
   const dict = useDict();
-  const form = useRegisterStore((state) => state.formData);
-  const updateField = useRegisterStore((state) => state.updateField);
-  const { errors, handleFieldChange, showError } = useRegisterForm({
-    form,
-    updateField,
-  });
   const { categories } = useCategories();
   const lng = useLang();
   return (
@@ -89,19 +98,15 @@ export const CategorySelect = ({ error }: { error?: string }) => {
                 <div key={category.id} className="flex h-10 items-center gap-4">
                   <Checkbox
                     id={category.id}
-                    checked={form.categoryIds?.includes(category.id)}
+                    checked={value?.includes(category.id)}
                     onCheckedChange={(v) => {
-                      const selectedIds = form.categoryIds || [];
+                      const selectedIds = value || [];
                       if (v) {
                         // Add category
-                        handleFieldChange("categoryIds", [
-                          ...selectedIds,
-                          category.id,
-                        ]);
+                        onChange([...selectedIds, category.id]);
                       } else {
                         // Remove category
-                        handleFieldChange(
-                          "categoryIds",
+                        onChange(
                           selectedIds.filter((id) => id !== category.id),
                         );
                       }
@@ -118,20 +123,17 @@ export const CategorySelect = ({ error }: { error?: string }) => {
         {error && <p className="text-xs text-red-500">{error}</p>}
       </div>
       <div className="flex flex-nowrap gap-2 overflow-x-auto pb-4">
-        {form.categoryIds &&
-          form.categoryIds.length > 0 &&
+        {value &&
+          value.length > 0 &&
           categories?.items
-            .filter((cat) => form.categoryIds?.includes(cat.id))
+            .filter((cat) => value?.includes(cat.id))
             .map((category) => (
               <SelectedCategory
                 key={category.id}
                 category={category}
                 onRemove={(): void => {
-                  const selectedIds = form.categoryIds || [];
-                  handleFieldChange(
-                    "categoryIds",
-                    selectedIds.filter((id) => id !== category.id),
-                  );
+                  const selectedIds = value || [];
+                  onChange(selectedIds.filter((id) => id !== category.id));
                 }}
               />
             ))}
