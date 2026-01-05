@@ -70,4 +70,4 @@ jobs:
             cp package.json package.json.bak 2>/dev/null || true
             cp pnpm-lock.yaml pnpm-lock.yaml.bak 2>/dev/null || true
             # Restart the application
-            pm2 restart wesal-app || pm2 start .next/standalone/server.js --name wesal-app
+            pm2 restart wesal-app

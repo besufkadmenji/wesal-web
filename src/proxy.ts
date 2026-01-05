@@ -29,6 +29,7 @@ const preAuthPaths = (locale: string) => [
   `/${locale}/auth/register`,
   `/${locale}/auth/register/verify`,
   `/${locale}`,
+  "/",
 ];
 
 const publicPaths = (locale: string) => [
