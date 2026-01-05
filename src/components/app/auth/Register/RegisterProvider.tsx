@@ -275,6 +275,12 @@ const ProviderForm = ({
       />
       <PickLocation
         error={errors.latitude?.message || errors.longitude?.message}
+        onChange={(lat, lng) => {
+          handleFieldChange("latitude", lat);
+          handleFieldChange("longitude", lng);
+        }}
+        latitude={form.latitude || undefined}
+        longitude={form.longitude || undefined}
       />
       <CategorySelect error={errors.categoryIds?.message} />
       <div className="grid grid-cols-1 gap-2 rounded-[16px] border border-[#F2F2F2] bg-[#FBFBFB] p-4">

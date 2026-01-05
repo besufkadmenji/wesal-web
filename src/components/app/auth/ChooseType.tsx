@@ -9,7 +9,9 @@ import { useQueryState } from "nuqs";
 export const ChooseType = () => {
   const dict = useDict();
   const [type, setType] = useQueryState("type");
-  const [action] = useQueryState("action");
+  const [action] = useQueryState("action", {
+    defaultValue: "login",
+  });
   const router = useRouter();
   return (
     <Wrapper>
