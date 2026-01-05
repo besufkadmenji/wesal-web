@@ -3,6 +3,7 @@ import EyeOpenIcon from "@/assets/icons/auth/eye.open.svg";
 import PasswordIcon from "@/assets/icons/auth/password.svg";
 import { Input } from "@/components/ui/input";
 import { useDict } from "@/hooks/useDict";
+import { useLang } from "@/hooks/useLang";
 import { useState } from "react";
 export const PasswordInput = ({
   value,
@@ -16,6 +17,7 @@ export const PasswordInput = ({
   error?: string;
 }) => {
   const dict = useDict();
+  const lng = useLang();
   const [showPassword, setShowPassword] = useState(false);
   return (
     <div className="grid grid-cols-1">
@@ -26,6 +28,7 @@ export const PasswordInput = ({
           className="focus-visible:border-primary peer border-border h-full rounded-[20px] shadow-none ring-0! ltr:pl-10.5 rtl:pr-10.5"
           value={value}
           onChange={(e) => onChange?.(e.target.value)}
+          dir={lng === "ar" ? "rtl" : "ltr"}
         />
         <PasswordIcon className="peer-focus-visible:text-primary absolute right-auto left-4 size-4.5 text-[#999999] rtl:right-4 rtl:left-auto" />
 

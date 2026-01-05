@@ -3,9 +3,12 @@ import AuthService from "@/services/auth.service";
 import { showErrorMessage, showSuccessMessage } from "@/utils/show.messages";
 import Cookie from "js-cookie";
 import { useState } from "react";
+import { useQueryState } from "nuqs";
+import { UserRole } from "@/gql/graphql";
 
 export const useLogin = () => {
   const [busy, setBusy] = useState(false);
+  const [type] = useQueryState("type");
   const dict = useDict();
   const login = async (emailOrPhone: string, password: string) => {
     setBusy(true);
@@ -13,6 +16,7 @@ export const useLogin = () => {
       const result = await AuthService.login({
         emailOrPhone,
         password,
+        role: type === "user" ? UserRole.User : UserRole.Provider,
       });
       if (result) {
         const token = result.accessToken;

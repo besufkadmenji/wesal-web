@@ -1,6 +1,4 @@
-import DefaultMarkerIcon from "@/assets/icons/default.marker.svg";
-import { useRegisterStore } from "@/components/app/auth/Register/useRegisterStore";
-import { useRegisterForm } from "@/hooks/useRegisterForm";
+import DefaultMarkerIcon from "@/assets/icons/user.marker.svg";
 import GoogleMapReact from "google-map-react";
 import { useRef } from "react";
 
@@ -13,33 +11,35 @@ const defaultProps = {
 };
 
 const Marker = ({}: { lat: number; lng: number }) => (
-  <DefaultMarkerIcon className="size-6 origin-center -translate-x-1/2 -translate-y-[80%]" />
+  <DefaultMarkerIcon className="size-16 origin-center -translate-y-[80%] ltr:-translate-x-1/2 rtl:translate-x-1/2" />
 );
 
-export const PickLocation = ({ error }: { error?: string }) => {
-  const form = useRegisterStore((state) => state.formData);
-  const updateField = useRegisterStore((state) => state.updateField);
-  const { showError } = useRegisterForm({
-    form,
-    updateField,
-  });
+export const PickLocation = ({
+  error,
+  latitude,
+  longitude,
+  onChange,
+}: {
+  error?: string;
+  latitude?: number;
+  longitude?: number;
+  onChange: (lat: number, lng: number) => void;
+}) => {
   const mapRef = useRef<{
     setCenter: (arg: { lat: number; lng: number }) => void;
   } | null>(null);
-
-  const handleMapClick = (args: { lat: number; lng: number }) => {
-    updateField("latitude", args.lat);
-    updateField("longitude", args.lng);
-  };
-
   return (
     <div className="grid grid-cols-1 gap-1">
-      <div className="grid h-40 grid-cols-1 overflow-hidden rounded-[32px]">
+      <div className="grid h-47.5 grid-cols-1 overflow-hidden rounded-[32px]">
         <GoogleMapReact
           bootstrapURLKeys={{
             key: process.env.NEXT_PUBLIC_MAPS_API_KEY || "",
           }}
-          center={defaultProps.center}
+          center={
+            latitude && longitude
+              ? { lat: latitude, lng: longitude }
+              : defaultProps.center
+          }
           zoom={defaultProps.zoom}
           options={{
             fullscreenControl: false,
@@ -52,11 +52,9 @@ export const PickLocation = ({ error }: { error?: string }) => {
           onGoogleApiLoaded={({ map }) => {
             mapRef.current = map;
           }}
-          onClick={handleMapClick}
+          onClick={(args) => onChange(args.lat, args.lng)}
         >
-          {form.latitude && form.longitude && (
-            <Marker lat={form.latitude} lng={form.longitude} />
-          )}
+          {latitude && longitude && <Marker lat={latitude} lng={longitude} />}
         </GoogleMapReact>
       </div>
       {error && <p className="mt-1 text-xs text-red-500">{error}</p>}

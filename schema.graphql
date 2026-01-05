@@ -332,11 +332,11 @@ enum ConversationSortField {
 
 type Country {
   code: String!
-  codeEn: String!
   createdAt: DateTime!
   dialCode: String
   id: ID!
   nameAr: String!
+  nameEn: String!
   updatedAt: DateTime!
 }
 
@@ -501,6 +501,7 @@ input ForgotPasswordInput {
 input LoginInput {
   emailOrPhone: String!
   password: String!
+  role: UserRole!
 }
 
 type Message {
@@ -582,6 +583,9 @@ type Mutation {
   """Reject a complaint"""
   rejectComplaint(complaintId: String!, reason: String!, reviewerId: String!): Complaint!
   removeAdvertisement(id: String!): Advertisement!
+
+  """Delete user avatar by ID"""
+  removeAvatar(id: ID!): Boolean!
   removeCategory(id: String!): Category!
   removeCity(id: ID!): City!
   removeComplaint(id: String!): Complaint!
