@@ -2,19 +2,19 @@ import {
   ForgotPasswordInput,
   ResendOtpInput,
   ResetPasswordWithTokenInput,
-  VerifyOtpInput,
   VerifyPasswordResetOtpInput,
 } from "@/gql/graphql";
+import { useAppRouter } from "@/hooks/use.app.router";
 import { useDict } from "@/hooks/useDict";
 import AuthService from "@/services/auth.service";
 import { showErrorMessage } from "@/utils/show.messages";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 export const useForgotPassword = () => {
   const [busy, setBusy] = useState(false);
   const dict = useDict();
-  const router = useRouter();
+  const router = useAppRouter();
   const pathname = usePathname();
 
   const forgotPassword = async (

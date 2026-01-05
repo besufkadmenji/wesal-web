@@ -1,22 +1,23 @@
+import AccountIcon from "@/assets/icons/account.svg";
+import BusinessDataIcon from "@/assets/icons/business.data.svg";
+import ChangePasswordIcon from "@/assets/icons/change.password.svg";
+import FavoritesIcon from "@/assets/icons/favorites.svg";
+import LogoutIcon from "@/assets/icons/logout.alt.svg";
+import SignedContractIcon from "@/assets/icons/signed.contract.svg";
 import { Button } from "@/components/ui/button";
+import { UserRole } from "@/gql/graphql";
+import { useAppRouter } from "@/hooks/use.app.router";
+import { useDict } from "@/hooks/useDict";
+import { useLang } from "@/hooks/useLang";
 import { useMe } from "@/hooks/useMe";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
-import AccountIcon from "@/assets/icons/account.svg";
-import FavoritesIcon from "@/assets/icons/favorites.svg";
-import ChangePasswordIcon from "@/assets/icons/change.password.svg";
-import LogoutIcon from "@/assets/icons/logout.alt.svg";
-import BusinessDataIcon from "@/assets/icons/business.data.svg";
-import SignedContractIcon from "@/assets/icons/signed.contract.svg";
-import { useDict } from "@/hooks/useDict";
-import { usePathname, useRouter } from "next/navigation";
 import { twMerge } from "tailwind-merge";
-import { useLang } from "@/hooks/useLang";
-import { UserRole } from "@/gql/graphql";
 export const Nav = () => {
   const { me, logout } = useMe();
   const dict = useDict();
-  const router = useRouter();
+  const router = useAppRouter();
   const pathname = usePathname();
   const lng = useLang();
   return (
