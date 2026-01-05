@@ -16,13 +16,14 @@ const client = (token?: string, url?: string) => {
   });
 
   const authLink = new SetContextLink(({ headers }) => {
+    console.log("Setting auth headers", Cookies.get("lang"));
     return {
       headers: {
         ...headers,
         authorization: `Bearer ${
           token ?? (typeof window !== "undefined" ? Cookies.get("token") : "")
         }`,
-        acceptLanguage: Cookies.get("lang") || "ar",
+        "accept-language": Cookies.get("lang") || "ar",
       },
     };
   });

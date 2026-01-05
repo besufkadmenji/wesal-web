@@ -265,7 +265,11 @@ const ProviderForm = ({
 
   return (
     <div className="grid grid-cols-1 gap-5">
-      <CitySelect error={errors.cityId?.message} />
+      <CitySelect
+        value={form.cityId || ""}
+        onChange={(value) => handleFieldChange("cityId", value)}
+        error={errors.cityId?.message}
+      />
       <TextInput
         icon={<AddressIcon className="size-4" />}
         placeholder={dict.auth.signup.provider.address}
@@ -275,8 +279,20 @@ const ProviderForm = ({
       />
       <PickLocation
         error={errors.latitude?.message || errors.longitude?.message}
+        onChange={(lat, lng) => {
+          handleFieldChange("latitude", lat);
+          handleFieldChange("longitude", lng);
+        }}
+        latitude={form.latitude || undefined}
+        longitude={form.longitude || undefined}
       />
-      <CategorySelect error={errors.categoryIds?.message} />
+      <CategorySelect
+        error={errors.categoryIds?.message}
+        value={form.categoryIds || []}
+        onChange={(value) => {
+          handleFieldChange("categoryIds", value);
+        }}
+      />
       <div className="grid grid-cols-1 gap-2 rounded-[16px] border border-[#F2F2F2] bg-[#FBFBFB] p-4">
         <div className="flex items-center gap-2">
           <Checkbox

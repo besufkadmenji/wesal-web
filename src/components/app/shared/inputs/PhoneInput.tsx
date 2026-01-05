@@ -12,14 +12,21 @@ import { countries, Country } from "@/config/countries";
 import Image from "next/image";
 import SimpleDownIcon from "@/assets/icons/auth/simple.down.svg";
 import { useLang } from "@/hooks/useLang";
+import { twMerge } from "tailwind-merge";
 export const PhoneInput = ({
   value,
   onChange,
   error,
+  isDisabled,
+  countryCode,
+  readonly,
 }: {
   value?: string;
   onChange?: (value: string) => void;
   error?: string;
+  isDisabled?: boolean;
+  readonly?: boolean;
+  countryCode?: string;
 }) => {
   const dict = useDict();
   return (
@@ -27,25 +34,44 @@ export const PhoneInput = ({
       <div className="flex items-center gap-3">
         <div className="relative grid h-14 grow grid-cols-1 items-center">
           <Input
-            type="tel"
+            type={isDisabled || readonly ? "text" : "tel"}
             placeholder={dict.auth.login.phone}
-            className="focus-visible:border-primary peer border-border h-full rounded-[20px] shadow-none ring-0! ltr:pl-10.5 ltr:placeholder:text-left rtl:pr-10.5 rtl:placeholder:text-right"
+            className={twMerge(
+              "focus-visible:border-primary peer border-border h-full rounded-[20px] shadow-none ring-0! ltr:pl-10.5 ltr:placeholder:text-left rtl:pr-10.5 rtl:placeholder:text-right",
+              readonly && "focus-visible:border-border! cursor-not-allowed",
+            )}
             value={value}
             onChange={(e) => onChange?.(e.target.value)}
+            disabled={isDisabled}
+            readOnly={readonly}
           />
-          <PhoneIcon className="peer-focus-visible:text-primary absolute right-auto left-4 size-4.5 text-[#999999] rtl:right-4 rtl:left-auto" />
+          <PhoneIcon
+            className={twMerge(
+              "peer-focus-visible:text-primary absolute right-auto left-4 size-4.5 text-[#999999] rtl:right-4 rtl:left-auto",
+              readonly && "text-[#999999]!",
+            )}
+          />
         </div>
-        <CountrySelect />
+        <CountrySelect
+          isDisabled={isDisabled || readonly}
+          defaultValue={countryCode}
+        />
       </div>
-      {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+      {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
     </div>
   );
 };
 
-const CountrySelect = () => {
+const CountrySelect = ({
+  isDisabled,
+  defaultValue,
+}: {
+  isDisabled?: boolean;
+  defaultValue?: string;
+}) => {
   const lang = useLang();
   const [country, setCountry] = useQueryState("country", {
-    defaultValue: "+966",
+    defaultValue: defaultValue ?? "+966",
   });
   const [showCountries, setShowCountries] = useQueryState("showCountries");
   const [query, setQuery] = useQueryState("query");
@@ -55,7 +81,10 @@ const CountrySelect = () => {
       open={!!showCountries}
       onOpenChange={(open) => setShowCountries(open ? "true" : null)}
     >
-      <PopoverTrigger className="border-border flex h-14 items-center gap-0.5 rounded-[20px] border px-3">
+      <PopoverTrigger
+        disabled={isDisabled}
+        className="border-border flex h-14 items-center gap-0.5 rounded-[20px] border px-3"
+      >
         <div className="relative size-4">
           <Image src={selectedCountry.flag} alt={selectedCountry.name} fill />
         </div>

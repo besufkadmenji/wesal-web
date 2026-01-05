@@ -515,6 +515,11 @@
     "ibanNumber": "IBAN Number",
     "address": "Address",
     "change": "Change",
-    "saveChanges": "Save Changes"
+    "saveChanges": "Save Changes",
+    "updateSuccessMessage": "Profile updated successfully",
+    "updateProfileFailed": "Failed to update profile",
+    "removeAvatarSuccessMessage": "Avatar removed successfully",
+    "removeAvatarFailed": "Failed to remove avatar",
+    "commercialRecordNumber": "Commercial Registration Number"
   }
 }

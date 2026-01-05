@@ -11,8 +11,8 @@ export async function changeLang(
   const cookieStore = await cookies();
 
   cookieStore.set("lang", lng, {
-    maxAge: 60 * 60 * 24 * 365, // 1 year
-    httpOnly: true,
+    maxAge: 60 * 60 * 24 * 365,
+    httpOnly: false,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",

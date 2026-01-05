@@ -1,4 +1,7 @@
 import AnnouncementIcon from "@/assets/icons/announcement.svg";
+import HeartIcon from "@/assets/icons/heart.svg";
+import LogoutIcon from "@/assets/icons/logout.svg";
+import ProfileIcon from "@/assets/icons/profile.svg";
 import AccountIcon from "@/assets/icons/user.rounded.svg";
 import {
   DropdownMenu,
@@ -6,18 +9,15 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useAppRouter } from "@/hooks/use.app.router";
 import { useDict } from "@/hooks/useDict";
+import { useLang } from "@/hooks/useLang";
 import { useMe } from "@/hooks/useMe";
 import Image from "next/image";
 import Link from "next/link";
-import { SelectLanguage } from "./SelectLanguage";
-import ProfileIcon from "@/assets/icons/profile.svg";
-import HeartIcon from "@/assets/icons/heart.svg";
-import LogoutIcon from "@/assets/icons/logout.svg";
 import { ReactNode } from "react";
-import { useRouter } from "next/navigation";
-import { useLang } from "@/hooks/useLang";
 import { twMerge } from "tailwind-merge";
+import { SelectLanguage } from "./SelectLanguage";
 export const TopBar = () => {
   const dict = useDict();
   const { me, isLoading } = useMe();
@@ -60,7 +60,7 @@ export const TopBar = () => {
 const LoggedUser = () => {
   const { me, logout } = useMe();
   const dict = useDict();
-  const router = useRouter();
+  const router = useAppRouter();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="flex cursor-pointer items-center gap-3 justify-self-end outline-none!">

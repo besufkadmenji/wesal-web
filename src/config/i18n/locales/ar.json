@@ -510,6 +510,11 @@
     "ibanNumber": "رقم الآيبان",
     "address": "العنوان",
     "change": "تغيير",
-    "saveChanges": "حفظ التغييرات"
+    "saveChanges": "حفظ التغييرات",
+    "updateSuccessMessage": "تم تحديث الملف الشخصي بنجاح",
+    "updateProfileFailed": "فشل تحديث الملف الشخصي",
+    "removeAvatarSuccessMessage": "تم حذف الصورة بنجاح",
+    "removeAvatarFailed": "فشل حذف الصورة",
+    "commercialRecordNumber": "رقم السجل التجارى"
   }
 }

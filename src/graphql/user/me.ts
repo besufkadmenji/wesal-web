@@ -22,6 +22,19 @@ export const ME_QUERY: TypedDocumentNode<MeQuery> = gql`
       phoneVerified
       role
       updatedAt
+      ibanNumber
+      bankName
+      commercialRegistrationNumber
+      categories {
+        id
+        createdAt
+        descriptionAr
+        descriptionEn
+        nameAr
+        nameEn
+        updatedAt
+      }
+      withAbsher
     }
   }
 `;

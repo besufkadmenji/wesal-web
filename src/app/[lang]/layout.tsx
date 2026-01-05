@@ -7,6 +7,7 @@ import type { Metadata } from "next";
 import { ToastContainer } from "react-toastify";
 import "swiper/css";
 import "../globals.css";
+import NextTopLoader from "nextjs-toploader";
 
 export const metadata: Metadata = {
   title: "Wesal",
@@ -27,6 +28,7 @@ export default async function RootLayout({
   return (
     <html lang={lang} dir={dir(lang)} key={lang} suppressHydrationWarning>
       <body className={`${norsal.className}`}>
+        <NextTopLoader showSpinner={false} color="#eff1f6" shadow="" />
         <AppProvider>{children}</AppProvider>
         <ToastContainer position="top-right" closeButton={CloseButton} />
         <Toaster
