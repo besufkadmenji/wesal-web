@@ -22,7 +22,7 @@ const client = (token?: string, url?: string) => {
         authorization: `Bearer ${
           token ?? (typeof window !== "undefined" ? Cookies.get("token") : "")
         }`,
-        acceptLanguage: Cookies.get("lang") || "ar",
+        "accept-language": Cookies.get("lang") || "ar",
       },
     };
   });
