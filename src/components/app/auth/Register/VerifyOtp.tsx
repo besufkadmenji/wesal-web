@@ -1,14 +1,13 @@
 "use client";
-import { OtpInput } from "@/components/app/shared/inputs/OtpInput";
 import { Wrapper } from "@/components/app/auth/Wrapper";
-import { useDict } from "@/hooks/useDict";
-import { useCountdownTimer } from "@/hooks/useCountdownTimer";
-import { useQueryState } from "nuqs";
-import { useEffect, useState } from "react";
+import { OtpInput } from "@/components/app/shared/inputs/OtpInput";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
-import { useRegister } from "./useRegister";
 import { OtpType } from "@/gql/graphql";
+import { useCountdownTimer } from "@/hooks/useCountdownTimer";
+import { useDict } from "@/hooks/useDict";
+import { useQueryState } from "nuqs";
+import { useEffect } from "react";
+import { useRegister } from "./useRegister";
 
 export const VerifyOtp = () => {
   const dict = useDict();
@@ -19,7 +18,6 @@ export const VerifyOtp = () => {
   const [phone, setPhone] = useQueryState("phone");
   const [email, setEmail] = useQueryState("email");
   const { remainingSeconds, start, reset, formatTime } = useCountdownTimer(60);
-  const router = useRouter();
   const { verifyOtp, resendOtp, otp, setOtp, busy } = useRegister();
   useEffect(() => {
     start();

@@ -1,13 +1,12 @@
 "use client";
-import { TextInput } from "@/components/app/shared/inputs/TextInput";
-import { PhoneInput } from "@/components/app/shared/inputs/PhoneInput";
+import EmailIcon from "@/assets/icons/auth/email.svg";
 import { Wrapper } from "@/components/app/auth/Wrapper";
+import { PhoneInput } from "@/components/app/shared/inputs/PhoneInput";
+import { TextInput } from "@/components/app/shared/inputs/TextInput";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useDict } from "@/hooks/useDict";
-import { usePathname, useRouter } from "next/navigation";
 import { useQueryState } from "nuqs";
-import EmailIcon from "@/assets/icons/auth/email.svg";
 import { useState } from "react";
 import { useForgotPassword } from "./useForgotPassword";
 export const ForgotPassword = () => {

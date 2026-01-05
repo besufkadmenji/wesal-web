@@ -1,10 +1,10 @@
 "use client";
 import { Wrapper } from "@/components/app/auth/Wrapper";
 import { Button } from "@/components/ui/button";
+import { useAppRouter } from '@/hooks/use.app.router';
 import { useDict } from "@/hooks/useDict";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useQueryState } from "nuqs";
 export const ChooseType = () => {
   const dict = useDict();
@@ -12,7 +12,7 @@ export const ChooseType = () => {
   const [action] = useQueryState("action", {
     defaultValue: "login",
   });
-  const router = useRouter();
+  const router = useAppRouter();
   return (
     <Wrapper>
       <div className="grid grid-cols-1 gap-60 px-15 py-10">
