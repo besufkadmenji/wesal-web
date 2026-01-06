@@ -16,6 +16,7 @@ export const Profile = () => {
           name: me.name,
           email: me.email,
           phone: me.phone,
+          dialCode: me.dialCode,
           avatarFilename: me.avatarFilename,
           bankName: me.bankName || "",
           ibanNumber: me.ibanNumber || "",
