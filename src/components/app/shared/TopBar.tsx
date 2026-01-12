@@ -61,16 +61,15 @@ const LoggedUser = () => {
   const { me, logout } = useMe();
   const dict = useDict();
   const router = useAppRouter();
+  const url =
+    me?.avatarFilename && me.avatarFilename !== ""
+      ? `${process.env.NEXT_PUBLIC_DATA}/files/${me.avatarFilename}`
+      : "/default-avatar.png";
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="flex cursor-pointer items-center gap-3 justify-self-end outline-none!">
         <div className="relative size-12.5 shrink-0 overflow-hidden rounded-full">
-          <Image
-            src={"/images/no.avatar.png"}
-            alt="User Avatar"
-            fill
-            className="object-cover"
-          />
+          <Image src={url} alt="User Avatar" fill className="object-cover" />
         </div>
         <p className="text-base font-semibold text-[#EFF9F0]">{me?.name}</p>
       </DropdownMenuTrigger>
