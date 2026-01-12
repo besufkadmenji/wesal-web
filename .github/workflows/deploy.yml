@@ -54,17 +54,6 @@ jobs:
           remote_key: ${{ secrets.CPANEL_SSH_KEY }}
           remote_port: ${{ secrets.CPANEL_PORT }}
 
-      - name: Upload public assets to cPanel
-        uses: burnett01/rsync-deployments@6.0.0
-        with:
-          switches: -avz --delete
-          path: ./public/
-          remote_path: ~/nextapp/public/
-          remote_host: ${{ secrets.CPANEL_HOST }}
-          remote_user: ${{ secrets.CPANEL_USERNAME }}
-          remote_key: ${{ secrets.CPANEL_SSH_KEY }}
-          remote_port: ${{ secrets.CPANEL_PORT }}
-
       - name: Copy package files and restart app
         uses: appleboy/ssh-action@v1.0.3
         env:
