@@ -7,6 +7,13 @@ class CategoryService {
     try {
       const categoriesResult = await client().query({
         query: CATEGORIES_QUERY,
+        variables: {
+          input: {
+            limit: 100,
+            page: 1,
+            parentId: null,
+          },
+        },
       });
       return categoriesResult.data?.categories ?? null;
     } catch (e) {

@@ -9,6 +9,107 @@ directive @specifiedBy(
   url: String!
 ) on SCALAR
 
+type Admin {
+  avatarFilename: String
+  createdAt: DateTime!
+  deactivationReason: String
+  email: String!
+  fullName: String!
+  id: ID!
+  organizationName: String!
+  permissionType: AdminPermissionType!
+  phoneNumber: String!
+  roleName: String!
+  status: AdminStatus!
+  updatedAt: DateTime!
+  userType: AdminUserType!
+}
+
+type AdminAuthResponse {
+  accessToken: String!
+  admin: Admin!
+}
+
+input AdminChangePasswordInput {
+  currentPassword: String!
+  newPassword: String!
+}
+
+input AdminForgotPasswordInput {
+  email: String!
+}
+
+input AdminLoginInput {
+  email: String!
+  password: String!
+}
+
+input AdminPaginationInput {
+  """Number of items per page"""
+  limit: Int! = 10
+
+  """Page number (1-based)"""
+  page: Int! = 1
+  permissionType: AdminPermissionType
+  search: String
+
+  """Sort field name"""
+  sortBy: AdminSortField
+
+  """Sort order: ASC or DESC"""
+  sortOrder: SortOrder = DESC
+  status: AdminStatus
+}
+
+type AdminPermission {
+  admin: Admin!
+  adminId: ID!
+  createdAt: DateTime!
+  id: ID!
+  permission: Permission!
+  permissionId: ID!
+  updatedAt: DateTime!
+}
+
+"""Admin permission types"""
+enum AdminPermissionType {
+  ADMINISTRATOR
+  CUSTOM
+  MODERATOR
+  SUPER_ADMIN
+  VIEWER
+}
+
+input AdminResetPasswordInput {
+  newPassword: String!
+  resetToken: String!
+}
+
+"""Available fields to sort admins by"""
+enum AdminSortField {
+  createdAt
+  email
+  fullName
+  id
+  permissionType
+  status
+  updatedAt
+}
+
+"""Admin account status"""
+enum AdminStatus {
+  ACTIVE
+  INACTIVE
+  PENDING_APPROVAL
+  SUSPENDED
+}
+
+"""Admin user types"""
+enum AdminUserType {
+  ORGANIZATION
+  PLATFORM
+}
+
 type Advertisement {
   attributes: [AdvertisementAttributes!]
   category: Category!
@@ -67,7 +168,7 @@ input AdvertisementPaginationInput {
   sortBy: AdvertisementSortField
 
   """Sort order: ASC or DESC"""
-  sortOrder: SortOrder = ASC
+  sortOrder: SortOrder = DESC
   status: AdvertisementStatus
   userId: String
 }
@@ -90,9 +191,23 @@ enum AdvertisementStatus {
   SUSPENDED
 }
 
+input AssignPermissionInput {
+  adminId: ID!
+  permissionId: ID!
+}
+
 type AuthResponse {
   accessToken: String!
   user: User!
+}
+
+input BulkAssignPermissionsInput {
+  adminId: ID!
+  permissionIds: [ID!]!
+}
+
+input BulkUpdateFaqOrderInput {
+  items: [UpdateFaqOrderInput!]!
 }
 
 type Category {
@@ -115,9 +230,10 @@ input CategoryPaginationInput {
   """Page number (1-based)"""
   page: Int! = 1
   parentId: String
+  search: String
 
   """Sort order: ASC or DESC"""
-  sortOrder: SortOrder = ASC
+  sortOrder: SortOrder = DESC
 }
 
 input ChangeEmailInput {
@@ -142,7 +258,7 @@ type ChangePhoneResponse {
 }
 
 type City {
-  country: Country!
+  country: Country
   countryId: String!
   createdAt: DateTime!
   id: ID!
@@ -157,12 +273,13 @@ input CityPaginationInput {
 
   """Page number (1-based)"""
   page: Int! = 1
+  search: String
 
   """Sort field name"""
   sortBy: CitySortField
 
   """Sort order: ASC or DESC"""
-  sortOrder: SortOrder = ASC
+  sortOrder: SortOrder = DESC
 }
 
 """Available fields to sort cities by"""
@@ -170,7 +287,8 @@ enum CitySortField {
   countryId
   createdAt
   id
-  name
+  nameAr
+  nameEn
   updatedAt
 }
 
@@ -206,7 +324,7 @@ input ComplaintPaginationInput {
   sortBy: ComplaintSortField
 
   """Sort order: ASC or DESC"""
-  sortOrder: SortOrder = ASC
+  sortOrder: SortOrder = DESC
   status: ComplaintStatus
   userId: String
 }
@@ -240,6 +358,42 @@ enum ComplaintStatus {
   UNDER_REVIEW
 }
 
+type ContactMessage {
+  attachmentFilename: String
+  createdAt: DateTime!
+  dialCode: String
+  email: String!
+  id: ID!
+  isRead: Boolean!
+  messageContent: String!
+  messageType: String!
+  name: String!
+  phone: String!
+  updatedAt: DateTime!
+}
+
+input ContactMessagePaginationInput {
+  isRead: Boolean
+
+  """Number of items per page"""
+  limit: Int! = 10
+  messageType: String
+
+  """Page number (1-based)"""
+  page: Int! = 1
+  sortBy: ContactMessageSortField
+
+  """Sort order: ASC or DESC"""
+  sortOrder: SortOrder = DESC
+}
+
+"""Fields to sort contact messages by"""
+enum ContactMessageSortField {
+  createdAt
+  id
+  isRead
+}
+
 type Contract {
   agreedPrice: Float!
   client: User!
@@ -271,7 +425,7 @@ input ContractPaginationInput {
   sortBy: ContractSortField
 
   """Sort order: ASC or DESC"""
-  sortOrder: SortOrder = ASC
+  sortOrder: SortOrder = DESC
   status: ContractStatus
 }
 
@@ -339,7 +493,7 @@ input ConversationPaginationInput {
   sortBy: ConversationSortField
 
   """Sort order: ASC or DESC"""
-  sortOrder: SortOrder = ASC
+  sortOrder: SortOrder = DESC
   userId: String
 }
 
@@ -372,7 +526,7 @@ input CountryPaginationInput {
   sortBy: CountrySortField
 
   """Sort order: ASC or DESC"""
-  sortOrder: SortOrder = ASC
+  sortOrder: SortOrder = DESC
 }
 
 """Available fields to sort countries by"""
@@ -382,6 +536,19 @@ enum CountrySortField {
   id
   name
   updatedAt
+}
+
+input CreateAdminInput {
+  avatarFilename: String
+  email: String!
+  fullName: String!
+  organizationName: String!
+  password: String!
+  permissionType: AdminPermissionType!
+  phoneNumber: String!
+  roleName: String!
+  status: AdminStatus! = ACTIVE
+  userType: AdminUserType!
 }
 
 input CreateAdvertisementInput {
@@ -418,6 +585,16 @@ input CreateComplaintInput {
   userId: String!
 }
 
+input CreateContactMessageInput {
+  attachmentFilename: String
+  dialCode: String
+  email: String!
+  messageContent: String!
+  messageType: String!
+  name: String!
+  phone: String!
+}
+
 input CreateContractInput {
   agreedPrice: Float!
   clientId: String!
@@ -438,6 +615,15 @@ input CreateConversationInput {
 input CreateCountryInput {
   code: String!
   name: String!
+}
+
+input CreateFaqInput {
+  answerAr: String!
+  answerEn: String!
+  isActive: Boolean
+  order: Float
+  questionAr: String!
+  questionEn: String!
 }
 
 input CreateFavoriteInput {
@@ -471,6 +657,16 @@ input CreatePaymentInput {
   userId: String!
 }
 
+input CreatePermissionInput {
+  action: String!
+  description: String!
+  module: String!
+  name: String!
+  nameAr: String!
+  permissionPlatform: PermissionPlatform! = GLOBAL
+  resource: String!
+}
+
 input CreateRatingInput {
   advertisementId: String!
   comment: String
@@ -482,6 +678,30 @@ input CreateRatingInput {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+input DeactivateAdminInput {
+  reason: String
+}
+
+input DeactivateUserInput {
+  reason: String
+}
+
+input DeleteUserInput {
+  reason: String
+}
+
+type Faq {
+  answerAr: String!
+  answerEn: String!
+  createdAt: DateTime!
+  id: ID!
+  isActive: Boolean!
+  order: Float!
+  questionAr: String!
+  questionEn: String!
+  updatedAt: DateTime!
+}
 
 type Favorite {
   advertisement: Advertisement!
@@ -505,7 +725,7 @@ input FavoritePaginationInput {
   sortBy: FavoriteSortField
 
   """Sort order: ASC or DESC"""
-  sortOrder: SortOrder = ASC
+  sortOrder: SortOrder = DESC
   userId: String
 }
 
@@ -550,7 +770,7 @@ input MessagePaginationInput {
   sortBy: MessageSortField
 
   """Sort order: ASC or DESC"""
-  sortOrder: SortOrder = ASC
+  sortOrder: SortOrder = DESC
 }
 
 """Available fields to sort messages by"""
@@ -561,20 +781,48 @@ enum MessageSortField {
 }
 
 type Mutation {
+  activateAdmin(id: ID!): Admin!
+
+  """Activate user by ID"""
+  activateUser(id: ID!): User!
+  adminChangePassword(input: AdminChangePasswordInput!): Boolean!
+  adminForgotPassword(input: AdminForgotPasswordInput!): Boolean!
+  adminLogin(input: AdminLoginInput!): AdminAuthResponse!
+  adminResetPassword(input: AdminResetPasswordInput!): Boolean!
+  adminVerifyPasswordResetOtp(input: VerifyAdminPasswordResetOtpInput!): VerifyAdminPasswordResetOtpResponse!
+  assignPermissionToAdmin(input: AssignPermissionInput!): AdminPermission!
+  bulkAssignPermissionsToAdmin(input: BulkAssignPermissionsInput!): [AdminPermission!]!
+  bulkRevokePermissionsFromAdmin(adminId: ID!, permissionIds: [ID!]!): Boolean!
+
+  """Bulk update FAQ order (admin only)"""
+  bulkUpdateOrder(input: BulkUpdateFaqOrderInput!): [Faq!]!
+
   """Change password for authenticated user"""
   changePassword(input: ChangePasswordInput!): Boolean!
+  createAdmin(createAdminInput: CreateAdminInput!): Admin!
   createAdvertisement(input: CreateAdvertisementInput!): Advertisement!
   createCategory(input: CreateCategoryInput!): Category!
   createCity(input: CreateCityInput!): City!
   createComplaint(input: CreateComplaintInput!): Complaint!
+
+  """Create contact message (public)"""
+  createContactMessage(createContactMessageInput: CreateContactMessageInput!): ContactMessage!
   createContract(input: CreateContractInput!): Contract!
   createConversation(input: CreateConversationInput!): Conversation!
   createCountry(input: CreateCountryInput!): Country!
+
+  """Create FAQ (admin only)"""
+  createFaq(createFaqInput: CreateFaqInput!): Faq!
   createFavorite(input: CreateFavoriteInput!): Favorite!
   createMessage(input: CreateMessageInput!): Message!
   createNotification(input: CreateNotificationInput!): Notification!
   createPayment(input: CreatePaymentInput!): Payment!
+  createPermission(createPermissionInput: CreatePermissionInput!): Permission!
   createRating(input: CreateRatingInput!): Rating!
+  deactivateAdmin(id: ID!, input: DeactivateAdminInput!): Admin!
+
+  """Deactivate user by ID"""
+  deactivateUser(id: ID!, input: DeactivateUserInput!): User!
 
   """Delete all notifications for a user"""
   deleteAllNotificationsForUser(userId: String!): Boolean!
@@ -598,6 +846,9 @@ type Mutation {
   """Mark all notifications as read for a user"""
   markAllNotificationsAsRead(userId: String!): Boolean!
 
+  """Mark message as read (admin only)"""
+  markAsRead(id: ID!): ContactMessage!
+
   """Mark multiple notifications as read"""
   markMultipleNotificationsAsRead(ids: [String!]!): Boolean!
 
@@ -615,6 +866,7 @@ type Mutation {
 
   """Reject a complaint"""
   rejectComplaint(complaintId: String!, reason: String!, reviewerId: String!): Complaint!
+  removeAdmin(id: ID!): Boolean!
   removeAdvertisement(id: String!): Advertisement!
 
   """Delete user avatar by ID"""
@@ -622,9 +874,15 @@ type Mutation {
   removeCategory(id: String!): Category!
   removeCity(id: ID!): City!
   removeComplaint(id: String!): Complaint!
+
+  """Delete contact message (admin only)"""
+  removeContactMessage(id: ID!): Boolean!
   removeContract(id: String!): Contract!
   removeConversation(id: String!): Conversation!
   removeCountry(id: ID!): Country!
+
+  """Remove FAQ (admin only)"""
+  removeFaq(id: ID!): Boolean!
   removeFavorite(id: String!): Favorite!
 
   """Remove favorite by user and advertisement IDs"""
@@ -632,10 +890,11 @@ type Mutation {
   removeMessage(id: String!): Message!
   removeNotification(id: String!): Notification!
   removePayment(id: String!): Payment!
+  removePermission(id: ID!): Boolean!
   removeRating(id: String!): Rating!
 
   """Delete user by ID"""
-  removeUser(id: ID!): User!
+  removeUser(id: ID!, input: DeleteUserInput!): User!
 
   """Resend OTP for email or phone verification"""
   resendOtp(input: ResendOtpInput!): Boolean!
@@ -645,15 +904,28 @@ type Mutation {
 
   """Review and resolve a complaint"""
   reviewComplaint(input: ReviewComplaintInput!): Complaint!
+  revokeAllPermissionsFromAdmin(adminId: ID!): Boolean!
+  revokePermissionFromAdmin(adminId: ID!, permissionId: ID!): Boolean!
+
+  """Create or update application settings (admin only)"""
+  setSetting(input: SettingInput!): Setting!
+  updateAdmin(id: ID!, updateAdminInput: UpdateAdminInput!): Admin!
   updateAdvertisement(input: UpdateAdvertisementInput!): Advertisement!
   updateCategory(input: UpdateCategoryInput!): Category!
   updateCity(input: UpdateCityInput!): City!
   updateComplaint(input: UpdateComplaintInput!): Complaint!
+
+  """Update contact message (admin only)"""
+  updateContactMessage(updateContactMessageInput: UpdateContactMessageInput!): ContactMessage!
   updateContract(input: UpdateContractInput!): Contract!
   updateConversation(input: UpdateConversationInput!): Conversation!
   updateCountry(input: UpdateCountryInput!): Country!
+
+  """Update FAQ (admin only)"""
+  updateFaq(updateFaqInput: UpdateFaqInput!): Faq!
   updateMessage(input: UpdateMessageInput!): Message!
   updatePayment(input: UpdatePaymentInput!): Payment!
+  updatePermission(id: ID!, updatePermissionInput: UpdatePermissionInput!): Permission!
   updateRating(input: UpdateRatingInput!): Rating!
 
   """Update user"""
@@ -699,7 +971,7 @@ input NotificationPaginationInput {
   sortBy: NotificationSortField
 
   """Sort order: ASC or DESC"""
-  sortOrder: SortOrder = ASC
+  sortOrder: SortOrder = DESC
   type: NotificationType
   userId: String
 }
@@ -740,6 +1012,14 @@ enum OtpType {
   PHONE_VERIFICATION
 }
 
+type PaginatedAdminResponse {
+  """List of items"""
+  items: [Admin!]!
+
+  """Pagination metadata"""
+  meta: PaginationMeta!
+}
+
 type PaginatedAdvertisementResponse {
   """List of items"""
   items: [Advertisement!]!
@@ -767,6 +1047,14 @@ type PaginatedCityResponse {
 type PaginatedComplaintResponse {
   """List of items"""
   items: [Complaint!]!
+
+  """Pagination metadata"""
+  meta: PaginationMeta!
+}
+
+type PaginatedContactMessageResponse {
+  """List of items"""
+  items: [ContactMessage!]!
 
   """Pagination metadata"""
   meta: PaginationMeta!
@@ -903,7 +1191,7 @@ input PaymentPaginationInput {
   sortBy: PaymentSortField
 
   """Sort order: ASC or DESC"""
-  sortOrder: SortOrder = ASC
+  sortOrder: SortOrder = DESC
   status: PaymentStatus
   userId: String
 }
@@ -928,7 +1216,29 @@ enum PaymentStatus {
   REFUNDED
 }
 
+type Permission {
+  action: String!
+  createdAt: DateTime!
+  description: String!
+  id: ID!
+  module: String!
+  name: String!
+  nameAr: String!
+  permissionPlatform: PermissionPlatform!
+  resource: String!
+  updatedAt: DateTime!
+}
+
+"""Permission platform types"""
+enum PermissionPlatform {
+  ADMIN
+  GLOBAL
+}
+
 type Query {
+  admin(id: ID!): Admin!
+  adminPermissions(adminId: ID!): [AdminPermission!]!
+  admins(paginationInput: AdminPaginationInput): PaginatedAdminResponse!
   advertisement(id: String!): Advertisement!
   advertisements(input: AdvertisementPaginationInput): PaginatedAdvertisementResponse!
   categories(input: CategoryPaginationInput): PaginatedCategoryResponse!
@@ -942,6 +1252,12 @@ type Query {
   city(id: ID!): City!
   complaint(id: String!): Complaint!
   complaints(input: ComplaintPaginationInput): PaginatedComplaintResponse!
+
+  """Get single contact message (admin only)"""
+  contactMessage(id: ID!): ContactMessage!
+
+  """Get contact messages (admin only) with pagination"""
+  contactMessages(paginationInput: ContactMessagePaginationInput): PaginatedContactMessageResponse!
   contract(id: String!): Contract!
   contracts(input: ContractPaginationInput): PaginatedContractResponse!
   conversation(id: String!): Conversation!
@@ -950,14 +1266,22 @@ type Query {
   """Get all countries with pagination"""
   countries(pagination: CountryPaginationInput): PaginatedCountryResponse!
   country(id: ID!): Country!
+  faq(id: ID!): Faq!
+
+  """Get all active FAQs (or all if admin)"""
+  faqs: [Faq!]!
   favorite(id: String!): Favorite!
   favorites(input: FavoritePaginationInput): PaginatedFavoriteResponse!
+
+  """Get application settings (admin only)"""
+  getSetting: Setting!
 
   """Check if advertisement is favorited by user"""
   isFavorite(advertisementId: String!, userId: String!): Boolean!
 
   """Get current authenticated user"""
   me: User!
+  meAdmin: Admin!
   message(id: String!): Message!
   messages(input: MessagePaginationInput): PaginatedMessageResponse!
   notification(id: String!): Notification!
@@ -967,6 +1291,9 @@ type Query {
   notifications(input: NotificationPaginationInput): PaginatedNotificationResponse!
   payment(id: String!): Payment!
   payments(input: PaymentPaginationInput): PaginatedPaymentResponse!
+  permission(id: ID!): Permission!
+  permissionAdmins(permissionId: ID!): [AdminPermission!]!
+  permissions: [Permission!]!
   rating(id: String!): Rating!
 
   """Get rating statistics for an advertisement"""
@@ -976,8 +1303,8 @@ type Query {
   """Get user by ID"""
   user(id: ID!): User!
 
-  """Get all users with pagination"""
-  users(pagination: UserPaginationInput): PaginatedUserResponse!
+  """Get all users with pagination by role"""
+  users(pagination: UserPaginationInput!): PaginatedUserResponse!
 }
 
 type Rating {
@@ -1007,7 +1334,7 @@ input RatingPaginationInput {
   sortBy: RatingSortField
 
   """Sort order: ASC or DESC"""
-  sortOrder: SortOrder = ASC
+  sortOrder: SortOrder = DESC
   userId: String
 }
 
@@ -1043,7 +1370,7 @@ input RegisterInput {
   name: String!
   password: String!
   phone: String!
-  role: UserRole
+  role: UserRole!
 }
 
 input ResendOtpInput {
@@ -1063,10 +1390,58 @@ input ReviewComplaintInput {
   reviewerId: String!
 }
 
+type Setting {
+  aboutAr: String!
+  aboutEn: String!
+  email: String!
+  phones: [String!]!
+  privacyPolicyAr: String!
+  privacyPolicyEn: String!
+  socialMediaLinks: [SocialMediaLink!]!
+  termsAr: String!
+  termsEn: String!
+  whatsappNumber: String!
+}
+
+input SettingInput {
+  aboutAr: String
+  aboutEn: String
+  email: String
+  phones: [String!]
+  privacyPolicyAr: String
+  privacyPolicyEn: String
+  socialMediaLinks: [SocialMediaLinkInput!]
+  termsAr: String
+  termsEn: String
+  whatsappNumber: String
+}
+
+type SocialMediaLink {
+  link: String!
+  name: String!
+}
+
+input SocialMediaLinkInput {
+  link: String!
+  name: String!
+}
+
 """Sort order direction"""
 enum SortOrder {
   ASC
   DESC
+}
+
+input UpdateAdminInput {
+  avatarFilename: String
+  email: String
+  fullName: String
+  organizationName: String
+  permissionType: AdminPermissionType
+  phoneNumber: String!
+  roleName: String
+  status: AdminStatus
+  userType: AdminUserType
 }
 
 input UpdateAdvertisementInput {
@@ -1107,6 +1482,17 @@ input UpdateComplaintInput {
   userId: String
 }
 
+input UpdateContactMessageInput {
+  attachmentFilename: String
+  dialCode: String
+  email: String
+  id: ID!
+  messageContent: String
+  messageType: String
+  name: String
+  phone: String
+}
+
 input UpdateContractInput {
   agreedPrice: Float
   clientId: String
@@ -1132,6 +1518,21 @@ input UpdateCountryInput {
   name: String
 }
 
+input UpdateFaqInput {
+  answerAr: String
+  answerEn: String
+  id: String!
+  isActive: Boolean
+  order: Float
+  questionAr: String
+  questionEn: String
+}
+
+input UpdateFaqOrderInput {
+  id: String!
+  order: Int!
+}
+
 input UpdateMessageInput {
   content: String
   conversationId: String
@@ -1148,6 +1549,16 @@ input UpdatePaymentInput {
   status: PaymentStatus
   transactionReference: String
   userId: String
+}
+
+input UpdatePermissionInput {
+  action: String
+  description: String
+  module: String
+  name: String
+  nameAr: String
+  permissionPlatform: PermissionPlatform
+  resource: String
 }
 
 input UpdateRatingInput {
@@ -1176,6 +1587,7 @@ input UpdateUserInput {
   name: String
   password: String
   phone: String
+  role: UserRole
   withAbsher: Boolean
 }
 
@@ -1184,10 +1596,15 @@ type User {
   avatarFilename: String
   bankName: String
   categories: [Category!]
+  city: City
   cityId: String
   commercialRegistrationNumber: String
+  country: Country
   countryId: String
   createdAt: DateTime!
+  deactivationReason: String
+  deleteReason: String
+  deletedAt: String
   dialCode: String
   email: String!
   emailVerified: Boolean!
@@ -1201,6 +1618,7 @@ type User {
   phone: String!
   phoneVerified: Boolean!
   role: UserRole!
+  status: UserStatus!
   updatedAt: DateTime!
   withAbsher: Boolean
 }
@@ -1211,12 +1629,15 @@ input UserPaginationInput {
 
   """Page number (1-based)"""
   page: Int! = 1
+  role: UserRole!
+  search: String
 
   """Sort field name"""
   sortBy: UserSortField
 
   """Sort order: ASC or DESC"""
-  sortOrder: SortOrder = ASC
+  sortOrder: SortOrder = DESC
+  status: UserStatus
 }
 
 """User role enumeration"""
@@ -1234,6 +1655,23 @@ enum UserSortField {
   isActive
   phone
   updatedAt
+}
+
+"""User account status"""
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  PENDING_APPROVAL
+  SUSPENDED
+}
+
+input VerifyAdminPasswordResetOtpInput {
+  code: String!
+  email: String!
+}
+
+type VerifyAdminPasswordResetOtpResponse {
+  resetToken: String!
 }
 
 input VerifyChangeEmailInput {

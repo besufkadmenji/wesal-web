@@ -18,6 +18,104 @@ export type Scalars = {
   DateTime: { input: any; output: any; }
 };
 
+export type Admin = {
+  avatarFilename?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  deactivationReason?: Maybe<Scalars['String']['output']>;
+  email: Scalars['String']['output'];
+  fullName: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  organizationName: Scalars['String']['output'];
+  permissionType: AdminPermissionType;
+  phoneNumber: Scalars['String']['output'];
+  roleName: Scalars['String']['output'];
+  status: AdminStatus;
+  updatedAt: Scalars['DateTime']['output'];
+  userType: AdminUserType;
+};
+
+export type AdminAuthResponse = {
+  accessToken: Scalars['String']['output'];
+  admin: Admin;
+};
+
+export type AdminChangePasswordInput = {
+  currentPassword: Scalars['String']['input'];
+  newPassword: Scalars['String']['input'];
+};
+
+export type AdminForgotPasswordInput = {
+  email: Scalars['String']['input'];
+};
+
+export type AdminLoginInput = {
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+};
+
+export type AdminPaginationInput = {
+  /** Number of items per page */
+  limit?: Scalars['Int']['input'];
+  /** Page number (1-based) */
+  page?: Scalars['Int']['input'];
+  permissionType?: InputMaybe<AdminPermissionType>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  /** Sort field name */
+  sortBy?: InputMaybe<AdminSortField>;
+  /** Sort order: ASC or DESC */
+  sortOrder?: InputMaybe<SortOrder>;
+  status?: InputMaybe<AdminStatus>;
+};
+
+export type AdminPermission = {
+  admin: Admin;
+  adminId: Scalars['ID']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  permission: Permission;
+  permissionId: Scalars['ID']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+/** Admin permission types */
+export enum AdminPermissionType {
+  Administrator = 'ADMINISTRATOR',
+  Custom = 'CUSTOM',
+  Moderator = 'MODERATOR',
+  SuperAdmin = 'SUPER_ADMIN',
+  Viewer = 'VIEWER'
+}
+
+export type AdminResetPasswordInput = {
+  newPassword: Scalars['String']['input'];
+  resetToken: Scalars['String']['input'];
+};
+
+/** Available fields to sort admins by */
+export enum AdminSortField {
+  CreatedAt = 'createdAt',
+  Email = 'email',
+  FullName = 'fullName',
+  Id = 'id',
+  PermissionType = 'permissionType',
+  Status = 'status',
+  UpdatedAt = 'updatedAt'
+}
+
+/** Admin account status */
+export enum AdminStatus {
+  Active = 'ACTIVE',
+  Inactive = 'INACTIVE',
+  PendingApproval = 'PENDING_APPROVAL',
+  Suspended = 'SUSPENDED'
+}
+
+/** Admin user types */
+export enum AdminUserType {
+  Organization = 'ORGANIZATION',
+  Platform = 'PLATFORM'
+}
+
 export type Advertisement = {
   attributes?: Maybe<Array<AdvertisementAttributes>>;
   category: Category;
@@ -95,9 +193,23 @@ export enum AdvertisementStatus {
   Suspended = 'SUSPENDED'
 }
 
+export type AssignPermissionInput = {
+  adminId: Scalars['ID']['input'];
+  permissionId: Scalars['ID']['input'];
+};
+
 export type AuthResponse = {
   accessToken: Scalars['String']['output'];
   user: User;
+};
+
+export type BulkAssignPermissionsInput = {
+  adminId: Scalars['ID']['input'];
+  permissionIds: Array<Scalars['ID']['input']>;
+};
+
+export type BulkUpdateFaqOrderInput = {
+  items: Array<UpdateFaqOrderInput>;
 };
 
 export type Category = {
@@ -119,6 +231,7 @@ export type CategoryPaginationInput = {
   /** Page number (1-based) */
   page?: Scalars['Int']['input'];
   parentId?: InputMaybe<Scalars['String']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   /** Sort order: ASC or DESC */
   sortOrder?: InputMaybe<SortOrder>;
 };
@@ -145,7 +258,7 @@ export type ChangePhoneResponse = {
 };
 
 export type City = {
-  country: Country;
+  country?: Maybe<Country>;
   countryId: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['ID']['output'];
@@ -159,6 +272,7 @@ export type CityPaginationInput = {
   limit?: Scalars['Int']['input'];
   /** Page number (1-based) */
   page?: Scalars['Int']['input'];
+  search?: InputMaybe<Scalars['String']['input']>;
   /** Sort field name */
   sortBy?: InputMaybe<CitySortField>;
   /** Sort order: ASC or DESC */
@@ -170,7 +284,8 @@ export enum CitySortField {
   CountryId = 'countryId',
   CreatedAt = 'createdAt',
   Id = 'id',
-  Name = 'name',
+  NameAr = 'nameAr',
+  NameEn = 'nameEn',
   UpdatedAt = 'updatedAt'
 }
 
@@ -234,6 +349,39 @@ export enum ComplaintStatus {
   Rejected = 'REJECTED',
   Resolved = 'RESOLVED',
   UnderReview = 'UNDER_REVIEW'
+}
+
+export type ContactMessage = {
+  attachmentFilename?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  dialCode?: Maybe<Scalars['String']['output']>;
+  email: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  isRead: Scalars['Boolean']['output'];
+  messageContent: Scalars['String']['output'];
+  messageType: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  phone: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type ContactMessagePaginationInput = {
+  isRead?: InputMaybe<Scalars['Boolean']['input']>;
+  /** Number of items per page */
+  limit?: Scalars['Int']['input'];
+  messageType?: InputMaybe<Scalars['String']['input']>;
+  /** Page number (1-based) */
+  page?: Scalars['Int']['input'];
+  sortBy?: InputMaybe<ContactMessageSortField>;
+  /** Sort order: ASC or DESC */
+  sortOrder?: InputMaybe<SortOrder>;
+};
+
+/** Fields to sort contact messages by */
+export enum ContactMessageSortField {
+  CreatedAt = 'createdAt',
+  Id = 'id',
+  IsRead = 'isRead'
 }
 
 export type Contract = {
@@ -369,6 +517,19 @@ export enum CountrySortField {
   UpdatedAt = 'updatedAt'
 }
 
+export type CreateAdminInput = {
+  avatarFilename?: InputMaybe<Scalars['String']['input']>;
+  email: Scalars['String']['input'];
+  fullName: Scalars['String']['input'];
+  organizationName: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+  permissionType: AdminPermissionType;
+  phoneNumber: Scalars['String']['input'];
+  roleName: Scalars['String']['input'];
+  status?: AdminStatus;
+  userType: AdminUserType;
+};
+
 export type CreateAdvertisementInput = {
   attributes?: InputMaybe<Array<AdvertisementAttributesInput>>;
   categoryId: Scalars['String']['input'];
@@ -403,6 +564,16 @@ export type CreateComplaintInput = {
   userId: Scalars['String']['input'];
 };
 
+export type CreateContactMessageInput = {
+  attachmentFilename?: InputMaybe<Scalars['String']['input']>;
+  dialCode?: InputMaybe<Scalars['String']['input']>;
+  email: Scalars['String']['input'];
+  messageContent: Scalars['String']['input'];
+  messageType: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  phone: Scalars['String']['input'];
+};
+
 export type CreateContractInput = {
   agreedPrice: Scalars['Float']['input'];
   clientId: Scalars['String']['input'];
@@ -423,6 +594,15 @@ export type CreateConversationInput = {
 export type CreateCountryInput = {
   code: Scalars['String']['input'];
   name: Scalars['String']['input'];
+};
+
+export type CreateFaqInput = {
+  answerAr: Scalars['String']['input'];
+  answerEn: Scalars['String']['input'];
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  order?: InputMaybe<Scalars['Float']['input']>;
+  questionAr: Scalars['String']['input'];
+  questionEn: Scalars['String']['input'];
 };
 
 export type CreateFavoriteInput = {
@@ -456,11 +636,45 @@ export type CreatePaymentInput = {
   userId: Scalars['String']['input'];
 };
 
+export type CreatePermissionInput = {
+  action: Scalars['String']['input'];
+  description: Scalars['String']['input'];
+  module: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  nameAr: Scalars['String']['input'];
+  permissionPlatform?: PermissionPlatform;
+  resource: Scalars['String']['input'];
+};
+
 export type CreateRatingInput = {
   advertisementId: Scalars['String']['input'];
   comment?: InputMaybe<Scalars['String']['input']>;
   rating: Scalars['Int']['input'];
   userId: Scalars['String']['input'];
+};
+
+export type DeactivateAdminInput = {
+  reason?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type DeactivateUserInput = {
+  reason?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type DeleteUserInput = {
+  reason?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type Faq = {
+  answerAr: Scalars['String']['output'];
+  answerEn: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  isActive: Scalars['Boolean']['output'];
+  order: Scalars['Float']['output'];
+  questionAr: Scalars['String']['output'];
+  questionEn: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
 };
 
 export type Favorite = {
@@ -533,20 +747,42 @@ export enum MessageSortField {
 }
 
 export type Mutation = {
+  activateAdmin: Admin;
+  /** Activate user by ID */
+  activateUser: User;
+  adminChangePassword: Scalars['Boolean']['output'];
+  adminForgotPassword: Scalars['Boolean']['output'];
+  adminLogin: AdminAuthResponse;
+  adminResetPassword: Scalars['Boolean']['output'];
+  adminVerifyPasswordResetOtp: VerifyAdminPasswordResetOtpResponse;
+  assignPermissionToAdmin: AdminPermission;
+  bulkAssignPermissionsToAdmin: Array<AdminPermission>;
+  bulkRevokePermissionsFromAdmin: Scalars['Boolean']['output'];
+  /** Bulk update FAQ order (admin only) */
+  bulkUpdateOrder: Array<Faq>;
   /** Change password for authenticated user */
   changePassword: Scalars['Boolean']['output'];
+  createAdmin: Admin;
   createAdvertisement: Advertisement;
   createCategory: Category;
   createCity: City;
   createComplaint: Complaint;
+  /** Create contact message (public) */
+  createContactMessage: ContactMessage;
   createContract: Contract;
   createConversation: Conversation;
   createCountry: Country;
+  /** Create FAQ (admin only) */
+  createFaq: Faq;
   createFavorite: Favorite;
   createMessage: Message;
   createNotification: Notification;
   createPayment: Payment;
+  createPermission: Permission;
   createRating: Rating;
+  deactivateAdmin: Admin;
+  /** Deactivate user by ID */
+  deactivateUser: User;
   /** Delete all notifications for a user */
   deleteAllNotificationsForUser: Scalars['Boolean']['output'];
   /** Request password reset OTP */
@@ -559,6 +795,8 @@ export type Mutation = {
   login: AuthResponse;
   /** Mark all notifications as read for a user */
   markAllNotificationsAsRead: Scalars['Boolean']['output'];
+  /** Mark message as read (admin only) */
+  markAsRead: ContactMessage;
   /** Mark multiple notifications as read */
   markMultipleNotificationsAsRead: Scalars['Boolean']['output'];
   /** Mark a notification as read */
@@ -571,21 +809,27 @@ export type Mutation = {
   register: User;
   /** Reject a complaint */
   rejectComplaint: Complaint;
+  removeAdmin: Scalars['Boolean']['output'];
   removeAdvertisement: Advertisement;
   /** Delete user avatar by ID */
   removeAvatar: Scalars['Boolean']['output'];
   removeCategory: Category;
   removeCity: City;
   removeComplaint: Complaint;
+  /** Delete contact message (admin only) */
+  removeContactMessage: Scalars['Boolean']['output'];
   removeContract: Contract;
   removeConversation: Conversation;
   removeCountry: Country;
+  /** Remove FAQ (admin only) */
+  removeFaq: Scalars['Boolean']['output'];
   removeFavorite: Favorite;
   /** Remove favorite by user and advertisement IDs */
   removeFavoriteByUserAndAdvertisement: Favorite;
   removeMessage: Message;
   removeNotification: Notification;
   removePayment: Payment;
+  removePermission: Scalars['Boolean']['output'];
   removeRating: Rating;
   /** Delete user by ID */
   removeUser: User;
@@ -595,15 +839,25 @@ export type Mutation = {
   resetPassword: Scalars['Boolean']['output'];
   /** Review and resolve a complaint */
   reviewComplaint: Complaint;
+  revokeAllPermissionsFromAdmin: Scalars['Boolean']['output'];
+  revokePermissionFromAdmin: Scalars['Boolean']['output'];
+  /** Create or update application settings (admin only) */
+  setSetting: Setting;
+  updateAdmin: Admin;
   updateAdvertisement: Advertisement;
   updateCategory: Category;
   updateCity: City;
   updateComplaint: Complaint;
+  /** Update contact message (admin only) */
+  updateContactMessage: ContactMessage;
   updateContract: Contract;
   updateConversation: Conversation;
   updateCountry: Country;
+  /** Update FAQ (admin only) */
+  updateFaq: Faq;
   updateMessage: Message;
   updatePayment: Payment;
+  updatePermission: Permission;
   updateRating: Rating;
   /** Update user */
   updateUser: User;
@@ -618,8 +872,69 @@ export type Mutation = {
 };
 
 
+export type MutationActivateAdminArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationActivateUserArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationAdminChangePasswordArgs = {
+  input: AdminChangePasswordInput;
+};
+
+
+export type MutationAdminForgotPasswordArgs = {
+  input: AdminForgotPasswordInput;
+};
+
+
+export type MutationAdminLoginArgs = {
+  input: AdminLoginInput;
+};
+
+
+export type MutationAdminResetPasswordArgs = {
+  input: AdminResetPasswordInput;
+};
+
+
+export type MutationAdminVerifyPasswordResetOtpArgs = {
+  input: VerifyAdminPasswordResetOtpInput;
+};
+
+
+export type MutationAssignPermissionToAdminArgs = {
+  input: AssignPermissionInput;
+};
+
+
+export type MutationBulkAssignPermissionsToAdminArgs = {
+  input: BulkAssignPermissionsInput;
+};
+
+
+export type MutationBulkRevokePermissionsFromAdminArgs = {
+  adminId: Scalars['ID']['input'];
+  permissionIds: Array<Scalars['ID']['input']>;
+};
+
+
+export type MutationBulkUpdateOrderArgs = {
+  input: BulkUpdateFaqOrderInput;
+};
+
+
 export type MutationChangePasswordArgs = {
   input: ChangePasswordInput;
+};
+
+
+export type MutationCreateAdminArgs = {
+  createAdminInput: CreateAdminInput;
 };
 
 
@@ -643,6 +958,11 @@ export type MutationCreateComplaintArgs = {
 };
 
 
+export type MutationCreateContactMessageArgs = {
+  createContactMessageInput: CreateContactMessageInput;
+};
+
+
 export type MutationCreateContractArgs = {
   input: CreateContractInput;
 };
@@ -655,6 +975,11 @@ export type MutationCreateConversationArgs = {
 
 export type MutationCreateCountryArgs = {
   input: CreateCountryInput;
+};
+
+
+export type MutationCreateFaqArgs = {
+  createFaqInput: CreateFaqInput;
 };
 
 
@@ -678,8 +1003,25 @@ export type MutationCreatePaymentArgs = {
 };
 
 
+export type MutationCreatePermissionArgs = {
+  createPermissionInput: CreatePermissionInput;
+};
+
+
 export type MutationCreateRatingArgs = {
   input: CreateRatingInput;
+};
+
+
+export type MutationDeactivateAdminArgs = {
+  id: Scalars['ID']['input'];
+  input: DeactivateAdminInput;
+};
+
+
+export type MutationDeactivateUserArgs = {
+  id: Scalars['ID']['input'];
+  input: DeactivateUserInput;
 };
 
 
@@ -710,6 +1052,11 @@ export type MutationLoginArgs = {
 
 export type MutationMarkAllNotificationsAsReadArgs = {
   userId: Scalars['String']['input'];
+};
+
+
+export type MutationMarkAsReadArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
@@ -745,6 +1092,11 @@ export type MutationRejectComplaintArgs = {
 };
 
 
+export type MutationRemoveAdminArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
 export type MutationRemoveAdvertisementArgs = {
   id: Scalars['String']['input'];
 };
@@ -770,6 +1122,11 @@ export type MutationRemoveComplaintArgs = {
 };
 
 
+export type MutationRemoveContactMessageArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
 export type MutationRemoveContractArgs = {
   id: Scalars['String']['input'];
 };
@@ -781,6 +1138,11 @@ export type MutationRemoveConversationArgs = {
 
 
 export type MutationRemoveCountryArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationRemoveFaqArgs = {
   id: Scalars['ID']['input'];
 };
 
@@ -811,6 +1173,11 @@ export type MutationRemovePaymentArgs = {
 };
 
 
+export type MutationRemovePermissionArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
 export type MutationRemoveRatingArgs = {
   id: Scalars['String']['input'];
 };
@@ -818,6 +1185,7 @@ export type MutationRemoveRatingArgs = {
 
 export type MutationRemoveUserArgs = {
   id: Scalars['ID']['input'];
+  input: DeleteUserInput;
 };
 
 
@@ -833,6 +1201,28 @@ export type MutationResetPasswordArgs = {
 
 export type MutationReviewComplaintArgs = {
   input: ReviewComplaintInput;
+};
+
+
+export type MutationRevokeAllPermissionsFromAdminArgs = {
+  adminId: Scalars['ID']['input'];
+};
+
+
+export type MutationRevokePermissionFromAdminArgs = {
+  adminId: Scalars['ID']['input'];
+  permissionId: Scalars['ID']['input'];
+};
+
+
+export type MutationSetSettingArgs = {
+  input: SettingInput;
+};
+
+
+export type MutationUpdateAdminArgs = {
+  id: Scalars['ID']['input'];
+  updateAdminInput: UpdateAdminInput;
 };
 
 
@@ -856,6 +1246,11 @@ export type MutationUpdateComplaintArgs = {
 };
 
 
+export type MutationUpdateContactMessageArgs = {
+  updateContactMessageInput: UpdateContactMessageInput;
+};
+
+
 export type MutationUpdateContractArgs = {
   input: UpdateContractInput;
 };
@@ -871,6 +1266,11 @@ export type MutationUpdateCountryArgs = {
 };
 
 
+export type MutationUpdateFaqArgs = {
+  updateFaqInput: UpdateFaqInput;
+};
+
+
 export type MutationUpdateMessageArgs = {
   input: UpdateMessageInput;
 };
@@ -878,6 +1278,12 @@ export type MutationUpdateMessageArgs = {
 
 export type MutationUpdatePaymentArgs = {
   input: UpdatePaymentInput;
+};
+
+
+export type MutationUpdatePermissionArgs = {
+  id: Scalars['ID']['input'];
+  updatePermissionInput: UpdatePermissionInput;
 };
 
 
@@ -974,6 +1380,13 @@ export enum OtpType {
   PhoneVerification = 'PHONE_VERIFICATION'
 }
 
+export type PaginatedAdminResponse = {
+  /** List of items */
+  items: Array<Admin>;
+  /** Pagination metadata */
+  meta: PaginationMeta;
+};
+
 export type PaginatedAdvertisementResponse = {
   /** List of items */
   items: Array<Advertisement>;
@@ -998,6 +1411,13 @@ export type PaginatedCityResponse = {
 export type PaginatedComplaintResponse = {
   /** List of items */
   items: Array<Complaint>;
+  /** Pagination metadata */
+  meta: PaginationMeta;
+};
+
+export type PaginatedContactMessageResponse = {
+  /** List of items */
+  items: Array<ContactMessage>;
   /** Pagination metadata */
   meta: PaginationMeta;
 };
@@ -1140,7 +1560,29 @@ export enum PaymentStatus {
   Refunded = 'REFUNDED'
 }
 
+export type Permission = {
+  action: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  description: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  module: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  nameAr: Scalars['String']['output'];
+  permissionPlatform: PermissionPlatform;
+  resource: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+/** Permission platform types */
+export enum PermissionPlatform {
+  Admin = 'ADMIN',
+  Global = 'GLOBAL'
+}
+
 export type Query = {
+  admin: Admin;
+  adminPermissions: Array<AdminPermission>;
+  admins: PaginatedAdminResponse;
   advertisement: Advertisement;
   advertisements: PaginatedAdvertisementResponse;
   categories: PaginatedCategoryResponse;
@@ -1152,6 +1594,10 @@ export type Query = {
   city: City;
   complaint: Complaint;
   complaints: PaginatedComplaintResponse;
+  /** Get single contact message (admin only) */
+  contactMessage: ContactMessage;
+  /** Get contact messages (admin only) with pagination */
+  contactMessages: PaginatedContactMessageResponse;
   contract: Contract;
   contracts: PaginatedContractResponse;
   conversation: Conversation;
@@ -1159,12 +1605,18 @@ export type Query = {
   /** Get all countries with pagination */
   countries: PaginatedCountryResponse;
   country: Country;
+  faq: Faq;
+  /** Get all active FAQs (or all if admin) */
+  faqs: Array<Faq>;
   favorite: Favorite;
   favorites: PaginatedFavoriteResponse;
+  /** Get application settings (admin only) */
+  getSetting: Setting;
   /** Check if advertisement is favorited by user */
   isFavorite: Scalars['Boolean']['output'];
   /** Get current authenticated user */
   me: User;
+  meAdmin: Admin;
   message: Message;
   messages: PaginatedMessageResponse;
   notification: Notification;
@@ -1173,14 +1625,32 @@ export type Query = {
   notifications: PaginatedNotificationResponse;
   payment: Payment;
   payments: PaginatedPaymentResponse;
+  permission: Permission;
+  permissionAdmins: Array<AdminPermission>;
+  permissions: Array<Permission>;
   rating: Rating;
   /** Get rating statistics for an advertisement */
   ratingStatistics: RatingStatistics;
   ratings: PaginatedRatingResponse;
   /** Get user by ID */
   user: User;
-  /** Get all users with pagination */
+  /** Get all users with pagination by role */
   users: PaginatedUserResponse;
+};
+
+
+export type QueryAdminArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryAdminPermissionsArgs = {
+  adminId: Scalars['ID']['input'];
+};
+
+
+export type QueryAdminsArgs = {
+  paginationInput?: InputMaybe<AdminPaginationInput>;
 };
 
 
@@ -1230,6 +1700,16 @@ export type QueryComplaintsArgs = {
 };
 
 
+export type QueryContactMessageArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryContactMessagesArgs = {
+  paginationInput?: InputMaybe<ContactMessagePaginationInput>;
+};
+
+
 export type QueryContractArgs = {
   id: Scalars['String']['input'];
 };
@@ -1256,6 +1736,11 @@ export type QueryCountriesArgs = {
 
 
 export type QueryCountryArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryFaqArgs = {
   id: Scalars['ID']['input'];
 };
 
@@ -1311,6 +1796,16 @@ export type QueryPaymentsArgs = {
 };
 
 
+export type QueryPermissionArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryPermissionAdminsArgs = {
+  permissionId: Scalars['ID']['input'];
+};
+
+
 export type QueryRatingArgs = {
   id: Scalars['String']['input'];
 };
@@ -1332,7 +1827,7 @@ export type QueryUserArgs = {
 
 
 export type QueryUsersArgs = {
-  pagination?: InputMaybe<UserPaginationInput>;
+  pagination: UserPaginationInput;
 };
 
 export type Rating = {
@@ -1394,7 +1889,7 @@ export type RegisterInput = {
   name: Scalars['String']['input'];
   password: Scalars['String']['input'];
   phone: Scalars['String']['input'];
-  role?: InputMaybe<UserRole>;
+  role: UserRole;
 };
 
 export type ResendOtpInput = {
@@ -1414,11 +1909,59 @@ export type ReviewComplaintInput = {
   reviewerId: Scalars['String']['input'];
 };
 
+export type Setting = {
+  aboutAr: Scalars['String']['output'];
+  aboutEn: Scalars['String']['output'];
+  email: Scalars['String']['output'];
+  phones: Array<Scalars['String']['output']>;
+  privacyPolicyAr: Scalars['String']['output'];
+  privacyPolicyEn: Scalars['String']['output'];
+  socialMediaLinks: Array<SocialMediaLink>;
+  termsAr: Scalars['String']['output'];
+  termsEn: Scalars['String']['output'];
+  whatsappNumber: Scalars['String']['output'];
+};
+
+export type SettingInput = {
+  aboutAr?: InputMaybe<Scalars['String']['input']>;
+  aboutEn?: InputMaybe<Scalars['String']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  phones?: InputMaybe<Array<Scalars['String']['input']>>;
+  privacyPolicyAr?: InputMaybe<Scalars['String']['input']>;
+  privacyPolicyEn?: InputMaybe<Scalars['String']['input']>;
+  socialMediaLinks?: InputMaybe<Array<SocialMediaLinkInput>>;
+  termsAr?: InputMaybe<Scalars['String']['input']>;
+  termsEn?: InputMaybe<Scalars['String']['input']>;
+  whatsappNumber?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type SocialMediaLink = {
+  link: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+};
+
+export type SocialMediaLinkInput = {
+  link: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+};
+
 /** Sort order direction */
 export enum SortOrder {
   Asc = 'ASC',
   Desc = 'DESC'
 }
+
+export type UpdateAdminInput = {
+  avatarFilename?: InputMaybe<Scalars['String']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  fullName?: InputMaybe<Scalars['String']['input']>;
+  organizationName?: InputMaybe<Scalars['String']['input']>;
+  permissionType?: InputMaybe<AdminPermissionType>;
+  phoneNumber: Scalars['String']['input'];
+  roleName?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<AdminStatus>;
+  userType?: InputMaybe<AdminUserType>;
+};
 
 export type UpdateAdvertisementInput = {
   attributes?: InputMaybe<Array<AdvertisementAttributesInput>>;
@@ -1458,6 +2001,17 @@ export type UpdateComplaintInput = {
   userId?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type UpdateContactMessageInput = {
+  attachmentFilename?: InputMaybe<Scalars['String']['input']>;
+  dialCode?: InputMaybe<Scalars['String']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+  messageContent?: InputMaybe<Scalars['String']['input']>;
+  messageType?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  phone?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type UpdateContractInput = {
   agreedPrice?: InputMaybe<Scalars['Float']['input']>;
   clientId?: InputMaybe<Scalars['String']['input']>;
@@ -1483,6 +2037,21 @@ export type UpdateCountryInput = {
   name?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type UpdateFaqInput = {
+  answerAr?: InputMaybe<Scalars['String']['input']>;
+  answerEn?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  order?: InputMaybe<Scalars['Float']['input']>;
+  questionAr?: InputMaybe<Scalars['String']['input']>;
+  questionEn?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateFaqOrderInput = {
+  id: Scalars['String']['input'];
+  order: Scalars['Int']['input'];
+};
+
 export type UpdateMessageInput = {
   content?: InputMaybe<Scalars['String']['input']>;
   conversationId?: InputMaybe<Scalars['String']['input']>;
@@ -1499,6 +2068,16 @@ export type UpdatePaymentInput = {
   status?: InputMaybe<PaymentStatus>;
   transactionReference?: InputMaybe<Scalars['String']['input']>;
   userId?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdatePermissionInput = {
+  action?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  module?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  nameAr?: InputMaybe<Scalars['String']['input']>;
+  permissionPlatform?: InputMaybe<PermissionPlatform>;
+  resource?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateRatingInput = {
@@ -1527,6 +2106,7 @@ export type UpdateUserInput = {
   name?: InputMaybe<Scalars['String']['input']>;
   password?: InputMaybe<Scalars['String']['input']>;
   phone?: InputMaybe<Scalars['String']['input']>;
+  role?: InputMaybe<UserRole>;
   withAbsher?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
@@ -1535,10 +2115,15 @@ export type User = {
   avatarFilename?: Maybe<Scalars['String']['output']>;
   bankName?: Maybe<Scalars['String']['output']>;
   categories?: Maybe<Array<Category>>;
+  city?: Maybe<City>;
   cityId?: Maybe<Scalars['String']['output']>;
   commercialRegistrationNumber?: Maybe<Scalars['String']['output']>;
+  country?: Maybe<Country>;
   countryId?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
+  deactivationReason?: Maybe<Scalars['String']['output']>;
+  deleteReason?: Maybe<Scalars['String']['output']>;
+  deletedAt?: Maybe<Scalars['String']['output']>;
   dialCode?: Maybe<Scalars['String']['output']>;
   email: Scalars['String']['output'];
   emailVerified: Scalars['Boolean']['output'];
@@ -1552,6 +2137,7 @@ export type User = {
   phone: Scalars['String']['output'];
   phoneVerified: Scalars['Boolean']['output'];
   role: UserRole;
+  status: UserStatus;
   updatedAt: Scalars['DateTime']['output'];
   withAbsher?: Maybe<Scalars['Boolean']['output']>;
 };
@@ -1561,10 +2147,13 @@ export type UserPaginationInput = {
   limit?: Scalars['Int']['input'];
   /** Page number (1-based) */
   page?: Scalars['Int']['input'];
+  role: UserRole;
+  search?: InputMaybe<Scalars['String']['input']>;
   /** Sort field name */
   sortBy?: InputMaybe<UserSortField>;
   /** Sort order: ASC or DESC */
   sortOrder?: InputMaybe<SortOrder>;
+  status?: InputMaybe<UserStatus>;
 };
 
 /** User role enumeration */
@@ -1583,6 +2172,23 @@ export enum UserSortField {
   Phone = 'phone',
   UpdatedAt = 'updatedAt'
 }
+
+/** User account status */
+export enum UserStatus {
+  Active = 'ACTIVE',
+  Inactive = 'INACTIVE',
+  PendingApproval = 'PENDING_APPROVAL',
+  Suspended = 'SUSPENDED'
+}
+
+export type VerifyAdminPasswordResetOtpInput = {
+  code: Scalars['String']['input'];
+  email: Scalars['String']['input'];
+};
+
+export type VerifyAdminPasswordResetOtpResponse = {
+  resetToken: Scalars['String']['output'];
+};
 
 export type VerifyChangeEmailInput = {
   changeToken: Scalars['String']['input'];
@@ -1706,7 +2312,7 @@ export type CitiesQueryVariables = Exact<{
 }>;
 
 
-export type CitiesQuery = { cities: { meta: { hasNext: boolean, hasPrevious: boolean, limit: number, page: number, total: number, totalPages: number }, items: Array<{ countryId: string, createdAt: any, id: string, nameEn: string, updatedAt: any, nameAr: string, country: { code: string, nameEn: string, createdAt: any, dialCode?: string | null, id: string, nameAr: string, updatedAt: any } }> } };
+export type CitiesQuery = { cities: { meta: { hasNext: boolean, hasPrevious: boolean, limit: number, page: number, total: number, totalPages: number }, items: Array<{ countryId: string, createdAt: any, id: string, nameEn: string, updatedAt: any, nameAr: string, country?: { code: string, nameEn: string, createdAt: any, dialCode?: string | null, id: string, nameAr: string, updatedAt: any } | null }> } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 

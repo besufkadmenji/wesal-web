@@ -14,9 +14,16 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import ArrowDownIcon from "@/assets/icons/arrow.down.svg";
 import { twMerge } from "tailwind-merge";
+import { useCategories } from "@/hooks/useCategories";
+import { useQueryState } from "nuqs";
+import { usePathname, useRouter } from "next/navigation";
 export const Hero = () => {
   const dict = useDict();
   const lng = useLang();
+  const router = useRouter();
+  const pathname = usePathname();
+  const { categories } = useCategories();
+  const [category, setCategory] = useQueryState("category");
   return (
     <div className="mt-10 mb-20 grid grid-cols-1 justify-items-center gap-11">
       <div className="grid grid-cols-1 gap-3">
@@ -44,7 +51,12 @@ export const Hero = () => {
         </p>
       </div>
       <div className="grid w-[48vw] grid-cols-[1fr_auto] items-center gap-2">
-        <Select dir={lng === "ar" ? "rtl" : "ltr"}>
+        <Select
+          dir={lng === "ar" ? "rtl" : "ltr"}
+          disabled={categories?.items.length === 0}
+          value={category || undefined}
+          onValueChange={(value) => setCategory(value)}
+        >
           <SelectTrigger
             className="flex h-14! w-full justify-start gap-2 rounded-[20px] bg-white px-4 shadow-none! ring-0!"
             icon={<ChevronDownIcon className="size-6" />}
@@ -55,13 +67,19 @@ export const Hero = () => {
             </div>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="category1">Category One</SelectItem>
-            <SelectItem value="category2">Category Two</SelectItem>
-            <SelectItem value="category3">Category Three</SelectItem>
-            <SelectItem value="category4">Category Four</SelectItem>
+            {categories?.items.map((category) => (
+              <SelectItem key={category.id} value={category.id}>
+                {lng === "ar" ? category.nameAr : category.nameEn}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
-        <Button className="h-12.5 rounded-[20px] px-16">
+        <Button
+          className="h-12.5 rounded-[20px] px-16"
+          onClick={() => {
+            router.push(`${pathname}/categories?category=${category}`);
+          }}
+        >
           {dict.home.hero.search}
         </Button>
       </div>
@@ -101,7 +119,7 @@ const HeroAssets = () => {
             className="border-primary grid size-14 cursor-pointer items-center justify-items-center rounded-full border"
             onClick={() => {
               window.scrollBy({
-                top:( window.innerHeight * 0.8),
+                top: window.innerHeight * 0.8,
                 behavior: "smooth",
               });
             }}

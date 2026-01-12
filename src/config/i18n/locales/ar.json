@@ -565,5 +565,8 @@
       "confirm": "تأكيد البريد الإلكترونى"
     },
     "emailChangeSuccessMessage": "تم تغيير البريد الإلكترونى بنجاح"
+  },
+  "categories": {
+    "title": "نتائج البحث"
   }
 }
