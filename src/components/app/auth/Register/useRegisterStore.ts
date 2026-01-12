@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { RegisterInput } from "@/gql/graphql";
+import { RegisterInput, UserRole } from "@/gql/graphql";
 export type FormType = Partial<RegisterInput> & {
   confirmPassword?: string;
   avatarFile?: File | null;
@@ -26,7 +26,7 @@ const initialState: FormType = {
   categoryIds: [],
   latitude: null,
   longitude: null,
-  role: null,
+  role: UserRole.User,
   terms: false,
   document: false,
 };

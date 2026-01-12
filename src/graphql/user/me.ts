@@ -35,6 +35,7 @@ export const ME_QUERY: TypedDocumentNode<MeQuery> = gql`
         updatedAt
       }
       withAbsher
+      status
     }
   }
 `;

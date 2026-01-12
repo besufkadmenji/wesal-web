@@ -1,10 +1,9 @@
-import { User, LoginInput, UpdateUserInput } from "@/gql/graphql";
+import { UpdateUserInput, User } from "@/gql/graphql";
 import { ME_QUERY } from "@/graphql/user/me";
-import client from "@/utils/apollo.client";
-import { LOGIN_MUTATION } from "@/graphql/auth/login";
-import { parseGraphQLError } from "@/utils/parse-graphql-error";
 import { REMOVE_AVATAR_MUTATION } from "@/graphql/user/removeAvatar";
 import { UPDATE_USER_MUTATION } from "@/graphql/user/updateUser";
+import client from "@/utils/apollo.client";
+import { parseGraphQLError } from "@/utils/parse-graphql-error";
 
 class UserService {
   static me = async (): Promise<User | null> => {
