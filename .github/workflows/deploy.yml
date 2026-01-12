@@ -1,60 +1,81 @@
 name: Deploy Next.js (Passenger + pnpm)
 
 on:
-    push:
-        branches: [staging]
+  push:
+    branches: [staging]
 
 jobs:
-    deploy:
-        runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-            - name: Setup Node
-              uses: actions/setup-node@v4
-              with:
-                  node-version: 24
-                  cache: "pnpm"
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
-            - name: Setup pnpm
-              uses: pnpm/action-setup@v4
-              with:
-                  version: 9
-                  run_install: false
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: "pnpm"
 
-            - name: Install dependencies
-              run: pnpm install --frozen-lockfile
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: false
 
-            - name: Build Next.js
-              run: pnpm build
-              env:
-                  NEXT_PUBLIC_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_MAPS_API_KEY }}
-                  NEXT_PUBLIC_DOMAIN: ${{ secrets.NEXT_PUBLIC_DOMAIN }}
-                  NEXT_PUBLIC_API: ${{ secrets.NEXT_PUBLIC_API }}
-                  NEXT_PUBLIC_DATA: ${{ secrets.NEXT_PUBLIC_DATA }}
-                  NEXT_PUBLIC_SOCKET: ${{ secrets.NEXT_PUBLIC_SOCKET }}
-                  NEXT_PUBLIC_NODE_ENV: ${{ secrets.NEXT_PUBLIC_NODE_ENV }}
-                  API_BASE_URL: ${{ secrets.API_BASE_URL }}
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-            - name: Upload app to cPanel
-              uses: burnett01/rsync-deployments@6.0.0
-              with:
-                  switches: -avz --delete
-                  path: ./
-                  remote_path: ~/nextapp
-                  remote_host: ${{ secrets.CPANEL_HOST }}
-                  remote_user: ${{ secrets.CPANEL_USERNAME }}
-                  remote_key: ${{ secrets.CPANEL_SSH_KEY }}
+      - name: Build Next.js
+        run: pnpm build
+        env:
+          NEXT_PUBLIC_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_MAPS_API_KEY }}
+          NEXT_PUBLIC_DOMAIN: ${{ secrets.NEXT_PUBLIC_DOMAIN }}
+          NEXT_PUBLIC_API: ${{ secrets.NEXT_PUBLIC_API }}
+          NEXT_PUBLIC_DATA: ${{ secrets.NEXT_PUBLIC_DATA }}
+          NEXT_PUBLIC_SOCKET: ${{ secrets.NEXT_PUBLIC_SOCKET }}
+          NEXT_PUBLIC_NODE_ENV: ${{ secrets.NEXT_PUBLIC_NODE_ENV }}
+          API_BASE_URL: ${{ secrets.API_BASE_URL }}
 
-            - name: Restart Passenger
-              uses: appleboy/ssh-action@v1.0.3
-              with:
-                  host: ${{ secrets.CPANEL_HOST }}
-                  username: ${{ secrets.CPANEL_USERNAME }}
-                  key: ${{ secrets.CPANEL_SSH_KEY }}
-                  port: ${{ secrets.CPANEL_PORT }}
-                  script: |
-                      mkdir -p ~/nextapp/tmp
-                      touch ~/nextapp/tmp/restart.txt
+      - name: Upload build artifacts to cPanel
+        uses: burnett01/rsync-deployments@6.0.0
+        with:
+          switches: -avz --delete --exclude='node_modules' --exclude='.git' --exclude='.next/cache'
+          path: ./.next/
+          remote_path: ~/nextapp/.next/
+          remote_host: ${{ secrets.CPANEL_HOST }}
+          remote_user: ${{ secrets.CPANEL_USERNAME }}
+          remote_key: ${{ secrets.CPANEL_SSH_KEY }}
+          remote_port: ${{ secrets.CPANEL_PORT }}
+
+      - name: Upload public assets to cPanel
+        uses: burnett01/rsync-deployments@6.0.0
+        with:
+          switches: -avz --delete
+          path: ./public/
+          remote_path: ~/nextapp/public/
+          remote_host: ${{ secrets.CPANEL_HOST }}
+          remote_user: ${{ secrets.CPANEL_USERNAME }}
+          remote_key: ${{ secrets.CPANEL_SSH_KEY }}
+          remote_port: ${{ secrets.CPANEL_PORT }}
+
+      - name: Copy package files and restart app
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.CPANEL_HOST }}
+          username: ${{ secrets.CPANEL_USERNAME }}
+          key: ${{ secrets.CPANEL_SSH_KEY }}
+          port: ${{ secrets.CPANEL_PORT }}
+          script: |
+            cd ~/nextapp
+            # Copy package.json and pnpm-lock.yaml if needed for running standalone
+            cp package.json package.json.bak 2>/dev/null || true
+            cp pnpm-lock.yaml pnpm-lock.yaml.bak 2>/dev/null || true
+            # Restart the application
+            pm2 restart wesal-app
