@@ -14,13 +14,18 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 type Documents = {
+    "\n  mutation changePassword($input: ChangePasswordInput!) {\n    changePassword(input: $input)\n  }\n": typeof types.ChangePasswordDocument,
     "\n  mutation forgotPassword($input: ForgotPasswordInput!) {\n    forgotPassword(input: $input)\n  }\n": typeof types.ForgotPasswordDocument,
+    "\n  mutation initiateEmailChange($input: ChangeEmailInput!) {\n    initiateEmailChange(input: $input) {\n      changeToken\n    }\n  }\n": typeof types.InitiateEmailChangeDocument,
+    "\n  mutation initiatePhoneChange($input: ChangePhoneInput!) {\n    initiatePhoneChange(input: $input) {\n      changeToken\n    }\n  }\n": typeof types.InitiatePhoneChangeDocument,
     "\n  mutation login($input: LoginInput!) {\n    login(input: $input) {\n      accessToken\n      user {\n        cityId\n      }\n    }\n  }\n": typeof types.LoginDocument,
     "\n  mutation register($input: RegisterInput!) {\n    register(input: $input) {\n      name\n      phone\n      id\n      isActive\n      languageCode\n      latitude\n      longitude\n      phoneVerified\n      role\n      updatedAt\n      emailVerified\n      email\n      dialCode\n      address\n      avatarFilename\n      cityId\n      countryId\n      createdAt\n    }\n  }\n": typeof types.RegisterDocument,
     "\n  mutation resendOtp($input: ResendOtpInput!) {\n    resendOtp(input: $input)\n  }\n": typeof types.ResendOtpDocument,
     "\n  mutation ResetPassword($input: ResetPasswordWithTokenInput!) {\n    resetPassword(input: $input)\n  }\n": typeof types.ResetPasswordDocument,
+    "\n  mutation verifyEmailChange($input: VerifyChangeEmailInput!) {\n    verifyEmailChange(input: $input)\n  }\n": typeof types.VerifyEmailChangeDocument,
     "\n  mutation verifyOtp($input: VerifyOtpInput!) {\n    verifyOtp(input: $input)\n  }\n": typeof types.VerifyOtpDocument,
     "\n  mutation verifyPasswordResetOtp($input: VerifyPasswordResetOtpInput!) {\n    verifyPasswordResetOtp(input: $input) {\n      resetToken\n    }\n  }\n": typeof types.VerifyPasswordResetOtpDocument,
+    "\n  mutation verifyPhoneChange($input: VerifyChangePhoneInput!) {\n    verifyPhoneChange(input: $input)\n  }\n": typeof types.VerifyPhoneChangeDocument,
     "\n  query categories($input: CategoryPaginationInput) {\n    categories(input: $input) {\n      meta {\n        hasNext\n        hasPrevious\n        limit\n        page\n        total\n        totalPages\n      }\n      items {\n        createdAt\n        descriptionAr\n        descriptionEn\n        id\n        nameAr\n        nameEn\n        parentId\n        updatedAt\n      }\n    }\n  }\n": typeof types.CategoriesDocument,
     "\n  query cities($pagination: CityPaginationInput) {\n    cities(pagination: $pagination) {\n      meta {\n        hasNext\n        hasPrevious\n        limit\n        page\n        total\n        totalPages\n      }\n      items {\n        countryId\n        createdAt\n        id\n        nameEn\n        updatedAt\n        nameAr\n        country {\n          code\n          nameEn\n          createdAt\n          dialCode\n          id\n          nameAr\n          updatedAt\n        }\n      }\n    }\n  }\n": typeof types.CitiesDocument,
     "\n  query me {\n    me {\n      id\n      name\n      isActive\n      languageCode\n      address\n      avatarFilename\n      cityId\n      countryId\n      createdAt\n      dialCode\n      email\n      emailVerified\n      latitude\n      longitude\n      phone\n      phoneVerified\n      role\n      updatedAt\n      ibanNumber\n      bankName\n      commercialRegistrationNumber\n      categories {\n        id\n        createdAt\n        descriptionAr\n        descriptionEn\n        nameAr\n        nameEn\n        updatedAt\n      }\n      withAbsher\n    }\n  }\n": typeof types.MeDocument,
@@ -28,13 +33,18 @@ type Documents = {
     "\n  mutation updateUser($updateUserInput: UpdateUserInput!) {\n    updateUser(updateUserInput: $updateUserInput) {\n      id\n    }\n  }\n": typeof types.UpdateUserDocument,
 };
 const documents: Documents = {
+    "\n  mutation changePassword($input: ChangePasswordInput!) {\n    changePassword(input: $input)\n  }\n": types.ChangePasswordDocument,
     "\n  mutation forgotPassword($input: ForgotPasswordInput!) {\n    forgotPassword(input: $input)\n  }\n": types.ForgotPasswordDocument,
+    "\n  mutation initiateEmailChange($input: ChangeEmailInput!) {\n    initiateEmailChange(input: $input) {\n      changeToken\n    }\n  }\n": types.InitiateEmailChangeDocument,
+    "\n  mutation initiatePhoneChange($input: ChangePhoneInput!) {\n    initiatePhoneChange(input: $input) {\n      changeToken\n    }\n  }\n": types.InitiatePhoneChangeDocument,
     "\n  mutation login($input: LoginInput!) {\n    login(input: $input) {\n      accessToken\n      user {\n        cityId\n      }\n    }\n  }\n": types.LoginDocument,
     "\n  mutation register($input: RegisterInput!) {\n    register(input: $input) {\n      name\n      phone\n      id\n      isActive\n      languageCode\n      latitude\n      longitude\n      phoneVerified\n      role\n      updatedAt\n      emailVerified\n      email\n      dialCode\n      address\n      avatarFilename\n      cityId\n      countryId\n      createdAt\n    }\n  }\n": types.RegisterDocument,
     "\n  mutation resendOtp($input: ResendOtpInput!) {\n    resendOtp(input: $input)\n  }\n": types.ResendOtpDocument,
     "\n  mutation ResetPassword($input: ResetPasswordWithTokenInput!) {\n    resetPassword(input: $input)\n  }\n": types.ResetPasswordDocument,
+    "\n  mutation verifyEmailChange($input: VerifyChangeEmailInput!) {\n    verifyEmailChange(input: $input)\n  }\n": types.VerifyEmailChangeDocument,
     "\n  mutation verifyOtp($input: VerifyOtpInput!) {\n    verifyOtp(input: $input)\n  }\n": types.VerifyOtpDocument,
     "\n  mutation verifyPasswordResetOtp($input: VerifyPasswordResetOtpInput!) {\n    verifyPasswordResetOtp(input: $input) {\n      resetToken\n    }\n  }\n": types.VerifyPasswordResetOtpDocument,
+    "\n  mutation verifyPhoneChange($input: VerifyChangePhoneInput!) {\n    verifyPhoneChange(input: $input)\n  }\n": types.VerifyPhoneChangeDocument,
     "\n  query categories($input: CategoryPaginationInput) {\n    categories(input: $input) {\n      meta {\n        hasNext\n        hasPrevious\n        limit\n        page\n        total\n        totalPages\n      }\n      items {\n        createdAt\n        descriptionAr\n        descriptionEn\n        id\n        nameAr\n        nameEn\n        parentId\n        updatedAt\n      }\n    }\n  }\n": types.CategoriesDocument,
     "\n  query cities($pagination: CityPaginationInput) {\n    cities(pagination: $pagination) {\n      meta {\n        hasNext\n        hasPrevious\n        limit\n        page\n        total\n        totalPages\n      }\n      items {\n        countryId\n        createdAt\n        id\n        nameEn\n        updatedAt\n        nameAr\n        country {\n          code\n          nameEn\n          createdAt\n          dialCode\n          id\n          nameAr\n          updatedAt\n        }\n      }\n    }\n  }\n": types.CitiesDocument,
     "\n  query me {\n    me {\n      id\n      name\n      isActive\n      languageCode\n      address\n      avatarFilename\n      cityId\n      countryId\n      createdAt\n      dialCode\n      email\n      emailVerified\n      latitude\n      longitude\n      phone\n      phoneVerified\n      role\n      updatedAt\n      ibanNumber\n      bankName\n      commercialRegistrationNumber\n      categories {\n        id\n        createdAt\n        descriptionAr\n        descriptionEn\n        nameAr\n        nameEn\n        updatedAt\n      }\n      withAbsher\n    }\n  }\n": types.MeDocument,
@@ -59,7 +69,19 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function graphql(source: "\n  mutation changePassword($input: ChangePasswordInput!) {\n    changePassword(input: $input)\n  }\n"): (typeof documents)["\n  mutation changePassword($input: ChangePasswordInput!) {\n    changePassword(input: $input)\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function graphql(source: "\n  mutation forgotPassword($input: ForgotPasswordInput!) {\n    forgotPassword(input: $input)\n  }\n"): (typeof documents)["\n  mutation forgotPassword($input: ForgotPasswordInput!) {\n    forgotPassword(input: $input)\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation initiateEmailChange($input: ChangeEmailInput!) {\n    initiateEmailChange(input: $input) {\n      changeToken\n    }\n  }\n"): (typeof documents)["\n  mutation initiateEmailChange($input: ChangeEmailInput!) {\n    initiateEmailChange(input: $input) {\n      changeToken\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation initiatePhoneChange($input: ChangePhoneInput!) {\n    initiatePhoneChange(input: $input) {\n      changeToken\n    }\n  }\n"): (typeof documents)["\n  mutation initiatePhoneChange($input: ChangePhoneInput!) {\n    initiatePhoneChange(input: $input) {\n      changeToken\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -79,11 +101,19 @@ export function graphql(source: "\n  mutation ResetPassword($input: ResetPasswor
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function graphql(source: "\n  mutation verifyEmailChange($input: VerifyChangeEmailInput!) {\n    verifyEmailChange(input: $input)\n  }\n"): (typeof documents)["\n  mutation verifyEmailChange($input: VerifyChangeEmailInput!) {\n    verifyEmailChange(input: $input)\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function graphql(source: "\n  mutation verifyOtp($input: VerifyOtpInput!) {\n    verifyOtp(input: $input)\n  }\n"): (typeof documents)["\n  mutation verifyOtp($input: VerifyOtpInput!) {\n    verifyOtp(input: $input)\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation verifyPasswordResetOtp($input: VerifyPasswordResetOtpInput!) {\n    verifyPasswordResetOtp(input: $input) {\n      resetToken\n    }\n  }\n"): (typeof documents)["\n  mutation verifyPasswordResetOtp($input: VerifyPasswordResetOtpInput!) {\n    verifyPasswordResetOtp(input: $input) {\n      resetToken\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation verifyPhoneChange($input: VerifyChangePhoneInput!) {\n    verifyPhoneChange(input: $input)\n  }\n"): (typeof documents)["\n  mutation verifyPhoneChange($input: VerifyChangePhoneInput!) {\n    verifyPhoneChange(input: $input)\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

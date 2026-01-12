@@ -14,6 +14,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
+import { ConfirmLogout } from "@/components/app/profile/ConfirmLogout";
 export const Nav = () => {
   const { me, logout } = useMe();
   const dict = useDict();
@@ -63,7 +64,10 @@ export const Nav = () => {
           <NavItem
             icon={<ChangePasswordIcon className="size-5 shrink-0" />}
             label={dict.profile.changePassword}
-            onClick={(): void => {}}
+            onClick={(): void => {
+              router.push("/profile/change-password");
+            }}
+            isActive={pathname === `/${lng}/profile/change-password`}
           />
           {me.role === UserRole.Provider && (
             <NavItem
@@ -85,14 +89,16 @@ export const Nav = () => {
               isActive={pathname === `/${lng}/profile/favorites`}
             />
           )}
-          <NavItem
-            icon={<LogoutIcon className="size-5 shrink-0" />}
-            label={dict.profile.logout}
-            className="text-[#B3251E]!"
-            onClick={(): void => {
-              logout();
-            }}
-          />
+          <ConfirmLogout>
+            <NavItem
+              icon={<LogoutIcon className="size-5 shrink-0" />}
+              label={dict.profile.logout}
+              className="text-[#B3251E]!"
+              onClick={(): void => {
+                // logout();
+              }}
+            />
+          </ConfirmLogout>
         </div>
       </div>
     )

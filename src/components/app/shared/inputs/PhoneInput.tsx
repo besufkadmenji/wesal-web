@@ -20,6 +20,7 @@ export const PhoneInput = ({
   isDisabled,
   countryCode,
   readonly,
+  queryKey,
 }: {
   value?: string;
   onChange?: (value: string) => void;
@@ -27,6 +28,7 @@ export const PhoneInput = ({
   isDisabled?: boolean;
   readonly?: boolean;
   countryCode?: string;
+  queryKey?: string;
 }) => {
   const dict = useDict();
   return (
@@ -55,6 +57,7 @@ export const PhoneInput = ({
         <CountrySelect
           isDisabled={isDisabled || readonly}
           defaultValue={countryCode}
+          queryKey={queryKey}
         />
       </div>
       {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
@@ -65,17 +68,20 @@ export const PhoneInput = ({
 const CountrySelect = ({
   isDisabled,
   defaultValue,
+  queryKey = "showCountries",
 }: {
   isDisabled?: boolean;
   defaultValue?: string;
+  queryKey?: string;
 }) => {
   const lang = useLang();
   const [country, setCountry] = useQueryState("country", {
     defaultValue: defaultValue ?? "+966",
   });
-  const [showCountries, setShowCountries] = useQueryState("showCountries");
+  const [showCountries, setShowCountries] = useQueryState(queryKey);
   const [query, setQuery] = useQueryState("query");
   const selectedCountry = countries.find((c) => c.code === country)!;
+  console.log("showCountries", showCountries);
   return (
     <Popover
       open={!!showCountries}
