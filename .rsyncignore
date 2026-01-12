@@ -1,0 +1,10 @@
+.git
+.github
+.env
+.env.*
+npm-debug.log
+pnpm-debug.log
+.next/cache
+logs
+tmp
+server.js

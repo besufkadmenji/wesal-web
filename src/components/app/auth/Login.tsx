@@ -10,52 +10,62 @@ import { useQueryState } from "nuqs";
 import { TextInput } from "../shared/inputs/TextInput";
 import EmailIcon from "@/assets/icons/auth/email.svg";
 import { useLogin } from "@/components/app/auth/useLogin";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 export const Login = () => {
   const dict = useDict();
-  const [type, setType] = useQueryState("type", { defaultValue: "user" });
+  const [type, setType] = useQueryState("type");
   const [method, setMethod] = useQueryState("method", {
     defaultValue: "phone",
   });
+  const router = useRouter();
+  useEffect(() => {
+    if (!type) {
+      router.replace("/auth/choose-type");
+    }
+    return () => {};
+  }, [router, type]);
   return (
-    <Wrapper>
-      <div className="grid grid-cols-1 gap-10 px-15 py-27">
-        <div className="grid justify-items-center gap-3">
-          <h1 className="text-2xl leading-8 font-semibold text-black">
-            {dict.auth.login.title}
-          </h1>
-          <p className="text-gray text-center text-lg leading-9">
-            {dict.auth.login.subtitle}
-          </p>
+    type && (
+      <Wrapper>
+        <div className="grid grid-cols-1 gap-10 px-15 py-27">
+          <div className="grid justify-items-center gap-3">
+            <h1 className="text-2xl leading-8 font-semibold text-black">
+              {dict.auth.login.title}
+            </h1>
+            <p className="text-gray text-center text-lg leading-9">
+              {dict.auth.login.subtitle}
+            </p>
+          </div>
+          <Tabs
+            defaultValue={method}
+            onValueChange={setMethod}
+            className="grid grid-cols-1 gap-10"
+          >
+            <TabsList className="grid w-full grid-cols-2 border-none bg-transparent">
+              <TabsTrigger
+                value="phone"
+                className="data-[state=active]:bg-light-primary h-11.5 rounded-[16px] text-sm font-semibold data-[state=active]:shadow-none"
+              >
+                {dict.auth.login.signInWithPhone}
+              </TabsTrigger>
+              <TabsTrigger
+                value="email"
+                className="data-[state=active]:bg-light-primary h-11.5 rounded-[16px] text-sm font-semibold data-[state=active]:shadow-none"
+              >
+                {dict.auth.login.signInWithEmail}
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="phone">
+              <LoginWithPhone />
+            </TabsContent>
+            <TabsContent value="email">
+              <LoginWithEmail />
+            </TabsContent>
+          </Tabs>
         </div>
-        <Tabs
-          defaultValue={method}
-          onValueChange={setMethod}
-          className="grid grid-cols-1 gap-10"
-        >
-          <TabsList className="grid w-full grid-cols-2 border-none bg-transparent">
-            <TabsTrigger
-              value="phone"
-              className="data-[state=active]:bg-light-primary h-11.5 rounded-[16px] text-sm font-semibold data-[state=active]:shadow-none"
-            >
-              {dict.auth.login.signInWithPhone}
-            </TabsTrigger>
-            <TabsTrigger
-              value="email"
-              className="data-[state=active]:bg-light-primary h-11.5 rounded-[16px] text-sm font-semibold data-[state=active]:shadow-none"
-            >
-              {dict.auth.login.signInWithEmail}
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="phone">
-            <LoginWithPhone />
-          </TabsContent>
-          <TabsContent value="email">
-            <LoginWithEmail />
-          </TabsContent>
-        </Tabs>
-      </div>
-    </Wrapper>
+      </Wrapper>
+    )
   );
 };
 

@@ -1,18 +1,20 @@
+import AddressIcon from "@/assets/icons/address.svg";
+import BankIcon from "@/assets/icons/auth/bank.svg";
+import EmailIcon from "@/assets/icons/auth/email.svg";
+import IbanIcon from "@/assets/icons/auth/iban.svg";
+import NameIcon from "@/assets/icons/auth/name.svg";
+import { PickLocation } from "@/components/app/auth/Register/PickLocation";
+import { PhoneChange } from "@/components/app/profile/ChangePhone/PhoneChange";
+import { FormPhoneInput } from "@/components/app/profile/FormInput";
+import { useProfileStore } from "@/components/app/profile/useProfileForm";
+import { useUpdateProfile } from "@/components/app/profile/useUpdateProfile";
+import { Button } from "@/components/ui/button";
 import { User, UserRole } from "@/gql/graphql";
 import { useDict } from "@/hooks/useDict";
 import { useMe } from "@/hooks/useMe";
 import Image from "next/image";
-import { useProfileStore } from "@/components/app/profile/useProfileForm";
 import { FormInput } from "./FormInput";
-import NameIcon from "@/assets/icons/auth/name.svg";
-import EmailIcon from "@/assets/icons/auth/email.svg";
-import BankIcon from "@/assets/icons/auth/bank.svg";
-import IbanIcon from "@/assets/icons/auth/iban.svg";
-import AddressIcon from "@/assets/icons/address.svg";
-import { FormPhoneInput } from "@/components/app/profile/FormInput";
-import { PickLocation } from "@/components/app/auth/Register/PickLocation";
-import { Button } from "@/components/ui/button";
-import { useUpdateProfile } from "@/components/app/profile/useUpdateProfile";
+import { EmailChange } from "@/components/app/profile/ChangeEmail/EmailChange";
 
 export const UserProfile = () => {
   const { me } = useMe();
@@ -41,13 +43,16 @@ export const UserProfile = () => {
                 updateInputField("phone", v);
               }}
               readOnly
+              countryCode={form.input.dialCode || "+966"}
             />
-            <Button
-              variant={"secondary"}
-              className="h-12.5 rounded-[20px] px-6 font-semibold"
-            >
-              {dict.profile.change}
-            </Button>
+            <PhoneChange>
+              <Button
+                variant={"secondary"}
+                className="h-12.5 rounded-[20px] px-6 font-semibold"
+              >
+                {dict.profile.change}
+              </Button>
+            </PhoneChange>
           </div>
           <div className="grid grid-cols-[1fr_auto] items-center gap-3">
             <FormInput
@@ -60,12 +65,14 @@ export const UserProfile = () => {
               icon={<EmailIcon className="size-4.5" />}
               readOnly
             />
-            <Button
-              variant={"secondary"}
-              className="h-12.5 rounded-[20px] px-6 font-semibold"
-            >
-              {dict.profile.change}
-            </Button>
+            <EmailChange>
+              <Button
+                variant={"secondary"}
+                className="h-12.5 rounded-[20px] px-6 font-semibold"
+              >
+                {dict.profile.change}
+              </Button>
+            </EmailChange>
           </div>
           <FormInput
             label={dict.profile.bankName}

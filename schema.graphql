@@ -120,6 +120,27 @@ input CategoryPaginationInput {
   sortOrder: SortOrder = ASC
 }
 
+input ChangeEmailInput {
+  newEmail: String!
+}
+
+type ChangeEmailResponse {
+  changeToken: String!
+}
+
+input ChangePasswordInput {
+  newPassword: String!
+}
+
+input ChangePhoneInput {
+  countryCode: String!
+  newPhone: String!
+}
+
+type ChangePhoneResponse {
+  changeToken: String!
+}
+
 type City {
   country: Country!
   countryId: String!
@@ -540,6 +561,8 @@ enum MessageSortField {
 }
 
 type Mutation {
+  """Change password for authenticated user"""
+  changePassword(input: ChangePasswordInput!): Boolean!
   createAdvertisement(input: CreateAdvertisementInput!): Advertisement!
   createCategory(input: CreateCategoryInput!): Category!
   createCity(input: CreateCityInput!): City!
@@ -558,6 +581,16 @@ type Mutation {
 
   """Request password reset OTP"""
   forgotPassword(input: ForgotPasswordInput!): Boolean!
+
+  """
+  Initiate email change - sends OTP to new email and returns change token
+  """
+  initiateEmailChange(input: ChangeEmailInput!): ChangeEmailResponse!
+
+  """
+  Initiate phone change - sends OTP to new phone and returns change token
+  """
+  initiatePhoneChange(input: ChangePhoneInput!): ChangePhoneResponse!
 
   """Login with email and password"""
   login(input: LoginInput!): AuthResponse!
@@ -626,11 +659,17 @@ type Mutation {
   """Update user"""
   updateUser(updateUserInput: UpdateUserInput!): User!
 
+  """Verify email change with OTP and change token"""
+  verifyEmailChange(input: VerifyChangeEmailInput!): Boolean!
+
   """Verify email or phone with OTP"""
   verifyOtp(input: VerifyOtpInput!): Boolean!
 
   """Verify password reset OTP and get reset token"""
   verifyPasswordResetOtp(input: VerifyPasswordResetOtpInput!): VerifyPasswordResetOtpResponse!
+
+  """Verify phone change with OTP and change token"""
+  verifyPhoneChange(input: VerifyChangePhoneInput!): Boolean!
 }
 
 type Notification {
@@ -1195,6 +1234,17 @@ enum UserSortField {
   isActive
   phone
   updatedAt
+}
+
+input VerifyChangeEmailInput {
+  changeToken: String!
+  code: String!
+}
+
+input VerifyChangePhoneInput {
+  changeToken: String!
+  code: String!
+  countryCode: String!
 }
 
 input VerifyOtpInput {

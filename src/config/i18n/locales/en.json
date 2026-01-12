@@ -416,7 +416,8 @@
   },
   "common": {
     "continue": "Continue",
-    "skip": "Skip"
+    "skip": "Skip",
+    "somethingWentWrong": "Something went wrong. Please try again."
   },
   "support": {
     "profile": {
@@ -520,6 +521,54 @@
     "updateProfileFailed": "Failed to update profile",
     "removeAvatarSuccessMessage": "Avatar removed successfully",
     "removeAvatarFailed": "Failed to remove avatar",
-    "commercialRecordNumber": "Commercial Registration Number"
+    "commercialRecordNumber": "Commercial Registration Number",
+    "logoutConfirmation": {
+      "title": "Logout",
+      "description": "Your current session will be ended and you will not be able to continue using the account.",
+      "cancel": "No, Stay in the Account",
+      "confirm": "Yes, Logout"
+    },
+    "changePasswordForm": {
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm Password",
+      "saveChanges": "Save Changes"
+    },
+    "passwordChangeSuccessMessage": "Password changed successfully",
+    "changePhoneNumber": {
+      "title": "Change Phone Number",
+      "description": "For your account security, a verification code will be sent to the new phone number to confirm the change.",
+      "phone": "Phone Number",
+      "cancel": "Cancel",
+      "send": "Send Verification Code",
+      "invalidPhoneNumber": "Phone number must be 9 digits",
+      "successMessage": "Phone number changed successfully"
+    },
+    "phoneVerification": {
+      "title": "Verification Code",
+      "description": "Enter the code sent to {phone} to verify your identity and change your phone number.",
+      "didNotReceive": "Didn't receive the code?",
+      "resend": "Resend Verification Code",
+      "cancel": "Cancel",
+      "confirm": "Confirm Phone Number"
+    },
+    "phoneNumberChangeSuccessMessage": "Phone number changed successfully",
+    "changeEmail": {
+      "title": "Change Email",
+      "description": "For your account security, a verification code will be sent to the new email to confirm the change.",
+      "email": "Email",
+      "cancel": "Cancel",
+      "send": "Send Verification Code",
+      "invalidEmail": "Please enter a valid email address",
+      "successMessage": "Email changed successfully"
+    },
+    "emailVerification": {
+      "title": "Verification Code",
+      "description": "Enter the code sent to {email} to verify your identity and change your email.",
+      "didNotReceive": "Didn't receive the code?",
+      "resend": "Resend Verification Code",
+      "cancel": "Cancel",
+      "confirm": "Confirm Email"
+    },
+    "emailChangeSuccessMessage": "Email changed successfully"
   }
 }

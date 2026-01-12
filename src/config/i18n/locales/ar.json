@@ -410,7 +410,8 @@
   },
   "common": {
     "continue": "متابعة",
-    "skip": "تخطي"
+    "skip": "تخطي",
+    "somethingWentWrong": "حدث خطأ ما. يرجى المحاولة مجددا."
   },
 
   "support": {
@@ -515,6 +516,54 @@
     "updateProfileFailed": "فشل تحديث الملف الشخصي",
     "removeAvatarSuccessMessage": "تم حذف الصورة بنجاح",
     "removeAvatarFailed": "فشل حذف الصورة",
-    "commercialRecordNumber": "رقم السجل التجارى"
+    "commercialRecordNumber": "رقم السجل التجارى",
+    "logoutConfirmation": {
+      "title": "تسجيل الخروج",
+      "description": "سيتم إنهاء جلستك الحالية ولن تتمكن من متابعة استخدام الحساب.",
+      "cancel": "لا، البقاء في الحساب",
+      "confirm": "نعم، تسجيل الخروج"
+    },
+    "changePasswordForm": {
+      "newPassword": "كلمة المرور الجديدة",
+      "confirmPassword": "تأكيد كلمة المرور",
+      "saveChanges": "حفظ التغييرات"
+    },
+    "passwordChangeSuccessMessage": "تم تغيير كلمة المرور بنجاح",
+    "changePhoneNumber": {
+      "title": "تغيير رقم الجوال",
+      "description": "لأمان حسابك، سيتم إرسال رمز تحقق إلى رقم الجوال الجديد لتأكيد عملية التغيير.",
+      "phone": "رقم الجوال",
+      "cancel": "إلغاء",
+      "send": "إرسال رمز التحقق",
+      "invalidPhoneNumber": "يجب أن يتكون رقم الجوال 9 أرقام",
+      "successMessage": "تم تغيير رقم الجوال بنجاح"
+    },
+    "phoneVerification": {
+      "title": "رمز التحقق",
+      "description": "أدخل الرمز المرسل إلى {phone} للتحقق من هويتك وتغيير رقم الجوال.",
+      "didNotReceive": "لم يتم إرسال الكود؟",
+      "resend": "إعادة إرسال رمز التحقق",
+      "cancel": "إلغاء",
+      "confirm": "تأكيد رقم الجوال"
+    },
+    "phoneNumberChangeSuccessMessage": "تم تغيير رقم الجوال بنجاح",
+    "changeEmail": {
+      "title": "تغيير البريد الإلكترونى",
+      "description": "لأمان حسابك، سيتم إرسال رمز تحقق إلى البريد الإلكترونى الجديد لتأكيد عملية التغيير.",
+      "email": "البريد الإلكترونى",
+      "cancel": "إلغاء",
+      "send": "إرسال رمز التحقق",
+      "invalidEmail": "يرجى إدخال بريد إلكتروني صحيح",
+      "successMessage": "تم تغيير البريد الإلكترونى بنجاح"
+    },
+    "emailVerification": {
+      "title": "رمز التحقق",
+      "description": "أدخل الرمز المرسل إلى {email} للتحقق من هويتك وتغيير البريد الإلكترونى.",
+      "didNotReceive": "لم يتم إرسال الكود؟",
+      "resend": "إعادة إرسال رمز التحقق",
+      "cancel": "إلغاء",
+      "confirm": "تأكيد البريد الإلكترونى"
+    },
+    "emailChangeSuccessMessage": "تم تغيير البريد الإلكترونى بنجاح"
   }
 }
