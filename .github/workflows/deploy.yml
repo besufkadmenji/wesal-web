@@ -67,13 +67,32 @@ jobs:
 
       - name: Copy package files and restart app
         uses: appleboy/ssh-action@v1.0.3
+        env:
+          NEXT_PUBLIC_MAPS_API_KEY: ${{ secrets.NEXT_PUBLIC_MAPS_API_KEY }}
+          NEXT_PUBLIC_DOMAIN: ${{ secrets.NEXT_PUBLIC_DOMAIN }}
+          NEXT_PUBLIC_API: ${{ secrets.NEXT_PUBLIC_API }}
+          NEXT_PUBLIC_DATA: ${{ secrets.NEXT_PUBLIC_DATA }}
+          NEXT_PUBLIC_SOCKET: ${{ secrets.NEXT_PUBLIC_SOCKET }}
+          NEXT_PUBLIC_NODE_ENV: ${{ secrets.NEXT_PUBLIC_NODE_ENV }}
+          API_BASE_URL: ${{ secrets.API_BASE_URL }}
         with:
           host: ${{ secrets.CPANEL_HOST }}
           username: ${{ secrets.CPANEL_USERNAME }}
           key: ${{ secrets.CPANEL_SSH_KEY }}
           port: ${{ secrets.CPANEL_PORT }}
+          envs: NEXT_PUBLIC_MAPS_API_KEY,NEXT_PUBLIC_DOMAIN,NEXT_PUBLIC_API,NEXT_PUBLIC_DATA,NEXT_PUBLIC_SOCKET,NEXT_PUBLIC_NODE_ENV,API_BASE_URL
           script: |
             cd ~/nextapp
+            # Create .env file with environment variables
+            cat > .env << EOF
+            NEXT_PUBLIC_MAPS_API_KEY=$NEXT_PUBLIC_MAPS_API_KEY
+            NEXT_PUBLIC_DOMAIN=$NEXT_PUBLIC_DOMAIN
+            NEXT_PUBLIC_API=$NEXT_PUBLIC_API
+            NEXT_PUBLIC_DATA=$NEXT_PUBLIC_DATA
+            NEXT_PUBLIC_SOCKET=$NEXT_PUBLIC_SOCKET
+            NEXT_PUBLIC_NODE_ENV=$NEXT_PUBLIC_NODE_ENV
+            API_BASE_URL=$API_BASE_URL
+            EOF
             # Copy package.json and pnpm-lock.yaml if needed for running standalone
             cp package.json package.json.bak 2>/dev/null || true
             cp pnpm-lock.yaml pnpm-lock.yaml.bak 2>/dev/null || true
