@@ -570,5 +570,9 @@
       "confirm": "Confirm Email"
     },
     "emailChangeSuccessMessage": "Email changed successfully"
+  },
+
+  "categories": {
+    "title": "Search Results"
   }
 }

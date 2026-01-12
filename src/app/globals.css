@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@plugin "./hero.ts";
+/* Note: You may need to change the path to fit your project structure */
+@source "../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}";
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -146,6 +149,10 @@
     rgba(129, 143, 161, 0.04) 84.06%,
     rgba(0, 28, 65, 0) 100%
   );
+}
+
+.categorySearch {
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.05);
 }
 
 .contact-gradient {
