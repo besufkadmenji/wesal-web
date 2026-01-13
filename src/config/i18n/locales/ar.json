@@ -603,8 +603,10 @@
     },
     "error": {
       "serviceProviderSignatureRequired": "توقيع مقدم الخدمة مطلوب",
-      "platformManagerSignatureRequired": "توقيع مدير المنصة مطلوب"
+      "platformManagerSignatureRequired": "توقيع مدير المنصة مطلوب",
+      "cancelReasonRequired": "يرجى تقديم سبب لفسخ العقد"
     },
-    "signatureSavedSuccessfully": "تم حفظ التوقيع بنجاح"
+    "signatureSavedSuccessfully": "تم حفظ التوقيع بنجاح",
+    "contractTerminatedSuccessfully": "تم إرسال فسخ العقد للإدارة بنجاح"
   }
 }

@@ -23,7 +23,7 @@ export const ConfirmLogout = ({ children }: { children: ReactNode }) => {
         <div className="grid grid-cols-1 gap-8">
           <div className="grid grid-cols-[auto_1fr] gap-6">
             <div className="grid size-15 items-center justify-items-center rounded-[16px] bg-[#FBEAE9]">
-              <LogoutIcon className="size-7.5" />
+              <LogoutIcon className="size-7.5 text-[#B3251E]" />
             </div>
             <div className="grid grid-cols-1 gap-2">
               <h3 className="text-xl leading-8 font-semibold text-black">

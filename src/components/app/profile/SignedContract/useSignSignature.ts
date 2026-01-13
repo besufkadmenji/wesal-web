@@ -51,8 +51,35 @@ export const useSignSignature = () => {
     }
   };
 
+  const terminateContract = async (reason: string) => {
+    if (reason.trim().length === 0) {
+      showErrorMessage(dict.contract.error.cancelReasonRequired);
+      return false;
+    }
+    setBusy(true);
+    try {
+      const result = await UserService.terminateContact(reason);
+      if (result) {
+        showSuccessMessage(dict.contract.contractTerminatedSuccessfully);
+        queryClient.invalidateQueries({
+          queryKey: ["me"],
+        });
+      }
+      // Handle successful login (e.g., redirect, show message)
+    } catch (error) {
+      console.error("Login error:", error);
+      showErrorMessage(
+        error instanceof Error ? error.message : dict.common.unexpectedError,
+      );
+    } finally {
+      setBusy(false);
+    }
+    return true;
+  };
+
   return {
     saveSignature,
+    terminateContract,
     busy,
   };
 };

@@ -65,11 +65,13 @@ class UserService {
       throw new Error(errorMessage);
     }
   };
-  static terminateContact = async () => {
+  static terminateContact = async (terminationReason: string) => {
     try {
       const removeAvatarResponse = await client().mutate({
         mutation: TERMINATE_CONTRACT_MUTATION,
-        variables: {},
+        variables: {
+          terminationReason,
+        },
       });
       return removeAvatarResponse.data?.terminateContract ?? null;
     } catch (error) {
