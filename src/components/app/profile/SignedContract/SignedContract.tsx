@@ -14,6 +14,7 @@ import { useEffect, useRef } from "react";
 import { FormInput } from "./FormInput";
 import { SignatureInput } from "./SignatureInput";
 import { downloadPDF } from "@/utils/download.pdf";
+import { CancelContract } from "@/components/app/profile/SignedContract/CancelContact";
 export const SignedContract = () => {
   const dict = useDict();
   const lng = useLang();
@@ -137,14 +138,15 @@ export const SignedContract = () => {
               <DownloadIcon className="size-5" />
               {dict.contract.exportPDF}
             </Button>
-            <Button
-              className="h-12.5 rounded-[20px] bg-[#FBEAE9]! px-24 font-semibold text-[#B3251E]!"
-              onClick={() => {
-              }}
-              variant={"ghost"}
-            >
-              {dict.contract.cancelContract}
-            </Button>
+            <CancelContract>
+              <Button
+                className="h-12.5 rounded-[20px] bg-[#FBEAE9]! px-24 font-semibold text-[#B3251E]!"
+                onClick={() => {}}
+                variant={"ghost"}
+              >
+                {dict.contract.cancelContract}
+              </Button>
+            </CancelContract>
           </div>
         ) : (
           <Button

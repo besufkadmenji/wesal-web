@@ -609,8 +609,10 @@
     },
     "error": {
       "serviceProviderSignatureRequired": "Service provider signature is required",
-      "platformManagerSignatureRequired": "Platform manager signature is required"
+      "platformManagerSignatureRequired": "Platform manager signature is required",
+      "cancelReasonRequired": "Please provide a reason for contract termination"
     },
-    "signatureSavedSuccessfully": "Signature saved successfully"
+    "signatureSavedSuccessfully": "Signature saved successfully",
+    "contractTerminatedSuccessfully": "Contract termination has been sent to the administration successfully"
   }
 }

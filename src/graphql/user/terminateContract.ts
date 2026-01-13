@@ -1,7 +1,13 @@
-import { TerminateContractMutation } from "@/gql/graphql";
+import {
+  TerminateContractMutation,
+  TerminateContractMutationVariables,
+} from "@/gql/graphql";
 import { gql, TypedDocumentNode } from "@apollo/client";
 
-export const TERMINATE_CONTRACT_MUTATION: TypedDocumentNode<TerminateContractMutation> = gql`
+export const TERMINATE_CONTRACT_MUTATION: TypedDocumentNode<
+  TerminateContractMutation,
+  TerminateContractMutationVariables
+> = gql`
   mutation terminateContract($terminationReason: String!) {
     terminateContract(terminationReason: $terminationReason) {
       id
