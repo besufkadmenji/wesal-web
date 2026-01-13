@@ -301,7 +301,8 @@
         "step2": "Step 2 of 2",
         "verifyWithAbsher": "Verification with Absher",
         "verifyWithAbsherOptional": "(Optional)",
-        "verifyWithAbsherDescription": "Verification with Absher makes the verification process easier and eliminates the need to upload documents"
+        "verifyWithAbsherDescription": "Verification with Absher makes the verification process easier and eliminates the need to upload documents",
+        "uploadCommercialRegistration": "Upload Commercial Registration"
       }
     },
     "register": {

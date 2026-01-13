@@ -255,6 +255,7 @@ const BasicInfoForm = ({
           );
           handleFieldChange("commercialRegistrationFilename", f);
         }}
+        placeholder={dict.auth.signup.provider.uploadCommercialRegistration}
         error={errors.commercialRegistrationFilename?.message}
       />
     </div>

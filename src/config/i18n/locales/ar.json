@@ -295,7 +295,8 @@
         "step2": "الخطوة 2 من 2",
         "verifyWithAbsher": "التوثيق مع أبشر",
         "verifyWithAbsherOptional": "(اختياري)",
-        "verifyWithAbsherDescription": "التوثيق مع أبشر يسهل عملية التحقق ويغنيك عن رفع المستندات"
+        "verifyWithAbsherDescription": "التوثيق مع أبشر يسهل عملية التحقق ويغنيك عن رفع المستندات",
+        "uploadCommercialRegistration": "السجل التجاري"
       }
     },
     "register": {
