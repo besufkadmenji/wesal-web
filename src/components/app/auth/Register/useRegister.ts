@@ -32,10 +32,16 @@ export const useRegister = () => {
   const register = async () => {
     setBusy(true);
     try {
-      const { confirmPassword, terms, document, avatarFile, ...rest } = form;
+      const {
+        confirmPassword,
+        terms,
+        document,
+        commercialRegistrationFilename,
+        ...rest
+      } = form;
       let filename;
-      if (avatarFile) {
-        const uploadResult = await uploadFile(avatarFile);
+      if (commercialRegistrationFilename) {
+        const uploadResult = await uploadFile(commercialRegistrationFilename);
         if (uploadResult.url) {
           filename = uploadResult.filename;
         }
@@ -45,7 +51,7 @@ export const useRegister = () => {
         role: type === "provider" ? UserRole.Provider : UserRole.User,
         dialCode: country,
         phone: `${country}${form.phone}`,
-        avatarFilename: filename,
+        commercialRegistrationFilename: filename,
       });
       if (result) {
         router.push(

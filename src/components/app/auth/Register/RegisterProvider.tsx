@@ -15,6 +15,8 @@ import { useRegisterProviderForm } from "@/hooks/useRegisterProviderForm";
 import Link from "next/link";
 import { parseAsInteger, useQueryState } from "nuqs";
 import { twMerge } from "tailwind-merge";
+import BusinessIcon from "@/assets/icons/auth/business.svg";
+import DocumentIcon from "@/assets/icons/auth/document.svg";
 
 import AddressIcon from "@/assets/icons/address.svg";
 import { AppCheckbox } from "@/components/app/auth/AppCheckbox";
@@ -39,7 +41,6 @@ export const RegisterProvider = () => {
     errors,
     handleFieldChange,
     handleCheckboxChange,
-    getError,
   } = useRegisterProviderForm({
     form,
     updateField,
@@ -90,7 +91,6 @@ export const RegisterProvider = () => {
       {step === 1 ? (
         <BasicInfoForm
           handleFieldChange={handleFieldChange}
-          getError={getError}
           errors={errors}
           updateField={updateField}
         />
@@ -98,7 +98,6 @@ export const RegisterProvider = () => {
         <ProviderForm
           handleFieldChange={handleFieldChange}
           handleCheckboxChange={handleCheckboxChange}
-          getError={getError}
           errors={errors}
         />
       )}
@@ -178,12 +177,10 @@ const StepperItem = ({
 
 const BasicInfoForm = ({
   handleFieldChange,
-  getError,
   errors,
   updateField,
 }: {
   handleFieldChange: (fieldName: string, value: unknown) => Promise<void>;
-  getError: (field: string) => string | undefined;
   errors: Record<string, { message?: string }>;
   updateField: <K extends keyof FormType>(field: K, value: FormType[K]) => void;
 }) => {
@@ -199,6 +196,14 @@ const BasicInfoForm = ({
         value={form.name || ""}
         onChange={(value) => handleFieldChange("name", value)}
         error={errors.name?.message}
+      />
+      {/* Name Field */}
+      <TextInput
+        icon={<BusinessIcon />}
+        placeholder={dict.auth.signup.provider.commercialName}
+        value={form.commercialName || ""}
+        onChange={(value) => handleFieldChange("commercialName", value)}
+        error={errors.commercialName?.message}
       />
 
       {/* Phone Field */}
@@ -232,13 +237,25 @@ const BasicInfoForm = ({
           error={errors.confirmPassword?.message}
         />
       </div>
+      <TextInput
+        icon={<DocumentIcon />}
+        placeholder={dict.auth.signup.provider.commercialRegistrationNumber}
+        value={form.commercialRegistrationNumber || ""}
+        onChange={(value) =>
+          handleFieldChange("commercialRegistrationNumber", value)
+        }
+        error={errors.commercialRegistrationNumber?.message}
+      />
       <UploadImage
-        file={form.avatarFile ?? null}
-        onChange={(f) => {
-          updateField("avatarFile", f);
-          handleFieldChange("avatarFile", f);
+        file={form.commercialRegistrationFilename ?? null}
+        onChange={(f: File) => {
+          updateField(
+            "commercialRegistrationFilename",
+            f as FormType["commercialRegistrationFilename"],
+          );
+          handleFieldChange("commercialRegistrationFilename", f);
         }}
-        error={errors.avatarFile?.message}
+        error={errors.commercialRegistrationFilename?.message}
       />
     </div>
   );
@@ -247,15 +264,13 @@ const BasicInfoForm = ({
 const ProviderForm = ({
   handleFieldChange,
   handleCheckboxChange,
-  getError,
   errors,
 }: {
   handleFieldChange: (fieldName: string, value: unknown) => Promise<void>;
   handleCheckboxChange: (
-    checkboxType: "terms" | "document",
+    checkboxType: "terms" | "document" | "withAbsher",
     value: boolean,
   ) => Promise<void>;
-  getError: (field: string) => string | undefined;
   errors: Record<string, { message?: string }>;
 }) => {
   const dict = useDict();
@@ -298,6 +313,10 @@ const ProviderForm = ({
           <Checkbox
             id="verifyWithAbsher"
             className="size-4.5 border-2 border-[#999999] shadow-none ring-0!"
+            checked={form.withAbsher || false}
+            onCheckedChange={(checked) =>
+              handleCheckboxChange("withAbsher", checked as boolean)
+            }
           />
           <div className="flex items-center gap-1">
             <Label

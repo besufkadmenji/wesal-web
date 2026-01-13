@@ -71,7 +71,10 @@ export const useRegisterProviderForm = <T extends FieldValues>({
 
   // Handle checkbox changes
   const handleCheckboxChange = useCallback(
-    async (checkboxType: "terms" | "document", value: boolean) => {
+    async (
+      checkboxType: "terms" | "document" | "withAbsher",
+      value: boolean,
+    ) => {
       updateField(checkboxType as keyof T, value as T[keyof T]);
 
       setValue(checkboxType as never, value as never, {
@@ -96,11 +99,11 @@ export const useRegisterProviderForm = <T extends FieldValues>({
   const validateStep1 = useCallback(async () => {
     const step1Fields = [
       "name",
+      "commercialName",
       "phone",
       "email",
       "password",
       "confirmPassword",
-      "avatarFile",
     ];
 
     let allValid = true;

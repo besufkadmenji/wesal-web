@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { fallbackLng, languages } from "./config/i18n/settings";
 import { ME_QUERY } from "./graphql/user/me";
 import client from "./utils/apollo.client";
+import { UserRole } from "./gql/graphql";
 acceptLanguage.languages(languages);
 
 export const config = {
@@ -74,6 +75,16 @@ export async function proxy(request: NextRequest) {
         new URL(`/${currentLocale}/auth?action=login`, request.url),
       );
     }
+  }
+  if (
+    isLoggedIn &&
+    isLoggedIn.role === UserRole.Provider &&
+    !isLoggedIn.signedContract &&
+    !pathname.startsWith(`/${currentLocale}/profile/signed-contract`)
+  ) {
+    return NextResponse.redirect(
+      new URL(`/${currentLocale}/profile/signed-contract`, request.url),
+    );
   }
 
   return NextResponse.next();

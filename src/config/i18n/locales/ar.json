@@ -283,6 +283,7 @@
         "title": "انضم إلينا وأنشئ حسابك كمقدم خدمة",
         "subtitle": "قم بإنشاء حسابك الآن لتتمكن من الاستفادة من المميزات",
         "commercialName": "الاسم التجاري",
+        "commercialRegistrationNumber": "رقم السجل التجارى",
         "profileImage": "الصورة الشخصية / التجارية",
         "imageFormat": "png,jpeg",
         "step": "الخطوة {current} من {total}",
@@ -411,10 +412,15 @@
   "common": {
     "continue": "متابعة",
     "skip": "تخطي",
-    "somethingWentWrong": "حدث خطأ ما. يرجى المحاولة مجددا."
+    "somethingWentWrong": "حدث خطأ ما. يرجى المحاولة مجددا.",
+    "unexpectedError": "حدث خطأ غير متوقع. يرجى المحاولة لاحقاً."
   },
 
   "support": {
+    "signedContract": {
+      "title": "العقد الإلكترونى الموقع",
+      "breadcrumb": "العقد الإلكترونى الموقع"
+    },
     "profile": {
       "title": "بيانات الحساب الشخصى",
       "breadcrumb": "بيانات الحساب الشخصى"
@@ -568,5 +574,37 @@
   },
   "categories": {
     "title": "نتائج البحث"
+  },
+  "contract": {
+    "serviceProviderName": "اسم مقدم الخدمة",
+    "commercialName": "الاسم التجاري",
+    "phoneNumber": "رقم الجوال",
+    "category": "القسم التابع له",
+    "address": "العنوان",
+    "platformManagerName": "اسم مدير المنصة",
+    "locationOnMap": "الموقع على الخريطة",
+    "serviceProviderSignature": "التوقيع الإلكتروني لمقدم الخدمة",
+    "platformManagerSignature": "التوقيع الإلكتروني لمدير المنصة",
+    "signatureAllowedOnce": "لا يمكن التوقيع سوى لمرة واحدة فقط",
+    "verifiedWithAbsher": "تم التوثيق مع أبشر",
+    "verifiedWithAbsherDescription": "نجاح عملية التوثيق عبر أبشر، تم اعتماد بياناتك ويمكنك استخدام جميع خدمات المنصة.",
+    "commitmentText": "نص التعهد",
+    "commitmentDescription": "يتعهد الطرفان بالالتزام الكامل بجميع بنود هذا التعاقد والشروط المذكورة فيه، وفي حالة الإخلال بأي من الشروط بحث للطرف الآخر اتخاذ الإجراءات القانونية اللازمة كما يتعهد الطرفان بحل أي نزاع قد ينشأ بينهما بالطرق الودية أولاً، وفي حالة عدم الوصول لحل يتم اللجوء للجهات المختصة.",
+    "saveSignature": "حفظ التوقيع",
+    "cancelContract": "قسم العقد",
+    "exportPDF": "تصدير العقد PDF",
+    "downloadPDF": "تحميل PDF",
+    "cancelReason": {
+      "title": "سبب فسخ العقد",
+      "subtitle": "يرجى توضيح سبب فسخ العقد، حيث تساعدنا هذه المعلومات على تحسين تجربة المستخدم وضمان جودة الخدمة.",
+      "placeholder": "أضف السبب",
+      "cancel": "إلغاء",
+      "send": "إرسال"
+    },
+    "error": {
+      "serviceProviderSignatureRequired": "توقيع مقدم الخدمة مطلوب",
+      "platformManagerSignatureRequired": "توقيع مدير المنصة مطلوب"
+    },
+    "signatureSavedSuccessfully": "تم حفظ التوقيع بنجاح"
   }
 }

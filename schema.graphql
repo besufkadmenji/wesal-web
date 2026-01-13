@@ -909,6 +909,12 @@ type Mutation {
 
   """Create or update application settings (admin only)"""
   setSetting(input: SettingInput!): Setting!
+
+  """Sign contract as service provider"""
+  signContract(input: SignContractInput!): User!
+
+  """Terminate contract as service provider"""
+  terminateContract(terminationReason: String!): User!
   updateAdmin(id: ID!, updateAdminInput: UpdateAdminInput!): Admin!
   updateAdvertisement(input: UpdateAdvertisementInput!): Advertisement!
   updateCategory(input: UpdateCategoryInput!): Category!
@@ -1362,6 +1368,9 @@ input RegisterInput {
   bankName: String
   categoryIds: [String!]
   cityId: String
+  commercialName: String
+  commercialRegistrationFilename: String
+  commercialRegistrationNumber: String
   dialCode: String
   email: String!
   ibanNumber: String
@@ -1371,6 +1380,7 @@ input RegisterInput {
   password: String!
   phone: String!
   role: UserRole!
+  withAbsher: Boolean
 }
 
 input ResendOtpInput {
@@ -1414,6 +1424,28 @@ input SettingInput {
   termsAr: String
   termsEn: String
   whatsappNumber: String
+}
+
+input SignContractInput {
+  platformManagerSignature: String
+  serviceProviderSignature: String!
+}
+
+type SignedContract {
+  contractExpiresAt: String
+  contractSignedAt: DateTime!
+  platformManagerSignature: String
+  serviceProviderSignature: String!
+  status: SignedContractStatus!
+  terminationReason: String
+}
+
+"""User account status"""
+enum SignedContractStatus {
+  ACTIVE
+  EXPIRED
+  TERMINATED_BY_ADMIN
+  TERMINATED_BY_USER
 }
 
 type SocialMediaLink {
@@ -1575,6 +1607,8 @@ input UpdateUserInput {
   bankName: String
   categoryIds: [String!]
   cityId: String
+  commercialName: String
+  commercialRegistrationFilename: String
   commercialRegistrationNumber: String
   countryId: String
   dialCode: String
@@ -1598,6 +1632,8 @@ type User {
   categories: [Category!]
   city: City
   cityId: String
+  commercialName: String
+  commercialRegistrationFilename: String
   commercialRegistrationNumber: String
   country: Country
   countryId: String
@@ -1618,6 +1654,7 @@ type User {
   phone: String!
   phoneVerified: Boolean!
   role: UserRole!
+  signedContract: SignedContract
   status: UserStatus!
   updatedAt: DateTime!
   withAbsher: Boolean
