@@ -64,7 +64,7 @@ const LoggedUser = () => {
   const url =
     me?.avatarFilename && me.avatarFilename !== ""
       ? `${process.env.NEXT_PUBLIC_DATA}/files/${me.avatarFilename}`
-      : "/default-avatar.png";
+      : "/images/no.avatar.png";
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="flex cursor-pointer items-center gap-3 justify-self-end outline-none!">
