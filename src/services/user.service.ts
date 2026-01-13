@@ -1,6 +1,8 @@
-import { UpdateUserInput, User } from "@/gql/graphql";
+import { SignContractInput, UpdateUserInput, User } from "@/gql/graphql";
 import { ME_QUERY } from "@/graphql/user/me";
 import { REMOVE_AVATAR_MUTATION } from "@/graphql/user/removeAvatar";
+import { SIGN_CONTRACT_MUTATION } from "@/graphql/user/signContract";
+import { TERMINATE_CONTRACT_MUTATION } from "@/graphql/user/terminateContract";
 import { UPDATE_USER_MUTATION } from "@/graphql/user/updateUser";
 import client from "@/utils/apollo.client";
 import { parseGraphQLError } from "@/utils/parse-graphql-error";
@@ -42,6 +44,34 @@ class UserService {
         },
       });
       return removeAvatarResponse.data?.removeAvatar ?? null;
+    } catch (error) {
+      // Parse and throw the error with a readable message
+      const errorMessage = parseGraphQLError(error);
+      throw new Error(errorMessage);
+    }
+  };
+  static signContact = async (input: SignContractInput) => {
+    try {
+      const removeAvatarResponse = await client().mutate({
+        mutation: SIGN_CONTRACT_MUTATION,
+        variables: {
+          input,
+        },
+      });
+      return removeAvatarResponse.data?.signContract ?? null;
+    } catch (error) {
+      // Parse and throw the error with a readable message
+      const errorMessage = parseGraphQLError(error);
+      throw new Error(errorMessage);
+    }
+  };
+  static terminateContact = async () => {
+    try {
+      const removeAvatarResponse = await client().mutate({
+        mutation: TERMINATE_CONTRACT_MUTATION,
+        variables: {},
+      });
+      return removeAvatarResponse.data?.terminateContract ?? null;
     } catch (error) {
       // Parse and throw the error with a readable message
       const errorMessage = parseGraphQLError(error);

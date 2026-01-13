@@ -289,6 +289,7 @@
         "title": "Join us and create your account as a service provider",
         "subtitle": "Create your account now to benefit from our features",
         "commercialName": "Business Name",
+        "commercialRegistrationNumber": "Commercial Registration Number",
         "profileImage": "Personal/Commercial Image",
         "imageFormat": "png,jpeg",
         "step": "Step {current} of {total}",
@@ -417,9 +418,14 @@
   "common": {
     "continue": "Continue",
     "skip": "Skip",
-    "somethingWentWrong": "Something went wrong. Please try again."
+    "somethingWentWrong": "Something went wrong. Please try again.",
+    "unexpectedError": "An unexpected error occurred. Please try again later."
   },
   "support": {
+    "signedContract": {
+      "title": "Signed Electronic Contract",
+      "breadcrumb": "Signed Electronic Contract"
+    },
     "profile": {
       "title": "Personal Account Information",
       "breadcrumb": "Personal Account Information"
@@ -574,5 +580,37 @@
 
   "categories": {
     "title": "Search Results"
+  },
+  "contract": {
+    "serviceProviderName": "Service Provider Name",
+    "commercialName": "Commercial Name",
+    "phoneNumber": "Phone Number",
+    "category": "Category",
+    "address": "Address",
+    "platformManagerName": "Platform Manager Name",
+    "locationOnMap": "Location on Map",
+    "serviceProviderSignature": "Electronic Signature of Service Provider",
+    "platformManagerSignature": "Electronic Signature of Platform Manager",
+    "signatureAllowedOnce": "Signature is only allowed once",
+    "verifiedWithAbsher": "Verified with Absher",
+    "verifiedWithAbsherDescription": "The verification process via Absher has been successful, your data has been approved and you can use all the platform's services.",
+    "commitmentText": "Commitment Text",
+    "commitmentDescription": "Both parties fully commit to the terms and conditions mentioned herein and referred to therein. In case of any dispute between the parties, and in the event of non-fulfillment by either party, the matter shall be referred to the competent authorities to take the necessary legal measures to resolve the dispute.",
+    "saveSignature": "Save Signature",
+    "cancelContract": "Cancel Contract",
+    "exportPDF": "Export Contract as PDF",
+    "downloadPDF": "Download PDF",
+    "cancelReason": {
+      "title": "Reason for Contract Termination",
+      "subtitle": "Please clarify the reason for terminating the contract, as this information helps us improve the user experience and ensure service quality.",
+      "placeholder": "Add the reason",
+      "cancel": "Cancel",
+      "send": "Send"
+    },
+    "error": {
+      "serviceProviderSignatureRequired": "Service provider signature is required",
+      "platformManagerSignatureRequired": "Platform manager signature is required"
+    },
+    "signatureSavedSuccessfully": "Signature saved successfully"
   }
 }

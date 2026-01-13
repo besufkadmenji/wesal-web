@@ -1,9 +1,15 @@
-import { MeQuery } from "@/gql/graphql";
+import {
+  SignContractMutation,
+  SignContractMutationVariables,
+} from "@/gql/graphql";
 import { gql, TypedDocumentNode } from "@apollo/client";
 
-export const ME_QUERY: TypedDocumentNode<MeQuery> = gql`
-  query me {
-    me {
+export const SIGN_CONTRACT_MUTATION: TypedDocumentNode<
+  SignContractMutation,
+  SignContractMutationVariables
+> = gql`
+  mutation signContract($input: SignContractInput!) {
+    signContract(input: $input) {
       id
       name
       isActive

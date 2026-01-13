@@ -1,9 +1,9 @@
-import { MeQuery } from "@/gql/graphql";
+import { TerminateContractMutation } from "@/gql/graphql";
 import { gql, TypedDocumentNode } from "@apollo/client";
 
-export const ME_QUERY: TypedDocumentNode<MeQuery> = gql`
-  query me {
-    me {
+export const TERMINATE_CONTRACT_MUTATION: TypedDocumentNode<TerminateContractMutation> = gql`
+  mutation terminateContract($terminationReason: String!) {
+    terminateContract(terminationReason: $terminationReason) {
       id
       name
       isActive
