@@ -8,10 +8,12 @@ export const UploadImage = ({
   file,
   onChange,
   error,
+  placeholder,
 }: {
   file: File | null;
   onChange?: (file: File) => void;
   error?: string;
+  placeholder: string;
 }) => {
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -63,7 +65,7 @@ export const UploadImage = ({
                 isDragReject && "text-red-500",
               )}
             >
-              {dict.support.contactUs.form.image}
+              {placeholder}
             </p>
             <p
               className={twMerge(

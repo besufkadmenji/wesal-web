@@ -50,8 +50,11 @@ export const ContactForm = () => {
       <UploadImage
         file={form.image}
         onChange={(file) => setForm({ image: file })}
+        placeholder={dict.support.contactUs.form.image}
       />
-      <Button className="mt-1 justify-self-center w-1/3 h-12.5 rounded-[20px]">{dict.support.contactUs.form.submit}</Button>
+      <Button className="mt-1 h-12.5 w-1/3 justify-self-center rounded-[20px]">
+        {dict.support.contactUs.form.submit}
+      </Button>
     </form>
   );
 };
