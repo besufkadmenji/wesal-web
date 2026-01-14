@@ -14,8 +14,8 @@ import WhatsappIcon from "@/assets/icons/whatsapp.svg";
 export const Footer = () => {
   const dict = useDict();
   return (
-    <footer className="footer-gradient grid-cols-1 items-start px-[7vw] py-20">
-      <div className="relative grid grid-cols-[1.5fr_1fr_1fr_1fr] items-start gap-13 border-b-[.25px] border-b-[#F2F2F2] pb-8">
+    <footer className="footer-gradient grid-cols-1 items-start px-[7vw] md:py-20 py-10">
+      <div className="relative grid grid-cols-2 items-start gap-13 border-b-[.25px] border-b-[#F2F2F2] pb-8 md:grid-cols-3 xl:grid-cols-[1.5fr_1fr_1fr_1fr]">
         <AboutUsSummary />
         <FooterLinks
           title={dict.footer.staticPages}
@@ -82,11 +82,11 @@ export const Footer = () => {
           </div>
         </FooterLinks>
       </div>
-      <div className="flex items-center justify-between pt-8.5">
+      <div className="grid grid-cols-1 items-center justify-between justify-items-center gap-6 pt-8.5 md:flex">
         <p className="text-base font-semibold text-white">
           {dict.footer.copyrightText} &copy; {new Date().getFullYear()}
         </p>
-        <ul className="flex list-disc gap-10">
+        <ul className="flex list-disc gap-x-10 gap-y-6">
           <li className="text-sm leading-6 font-medium text-white">
             <Link href="/support/terms">{dict.footer.terms}</Link>
           </li>
@@ -137,7 +137,7 @@ const FooterLinks = ({
 const AboutUsSummary = () => {
   const dict = useDict();
   return (
-    <div className="grid grid-cols-1 gap-9">
+    <div className="col-span-2 grid grid-cols-1 gap-9 md:col-span-3 xl:col-span-1">
       <div className="grid grid-cols-1 gap-5">
         <LogoIcon className="size-20 text-white" />
         <p className="text-base leading-7 text-white">{dict.footer.aboutUs}</p>

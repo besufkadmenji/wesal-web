@@ -23,10 +23,12 @@ export const TopBar = () => {
   const { me, isLoading } = useMe();
   console.log("me in topbar", me);
   return (
-    <div className="top-bar-gradient grid h-20 grid-cols-[1fr_auto_1fr] items-center justify-between px-[7vw]">
+    <div className="top-bar-gradient grt grid h-20 grid-cols-2 items-center justify-between px-4 md:px-8 md:grid-cols-[1fr_auto_1fr] xl:px-[7vw]">
       <SelectLanguage />
-      <div className="flex items-center justify-center gap-2">
-        <p className="text-lg font-medium text-white">{dict.home.tagline}</p>
+      <div className="col-span-2 row-start-2 flex items-center justify-center gap-2 md:col-span-1 md:col-start-2 md:row-start-1">
+        <p className="text-center text-xs md:text-sm font-medium text-white lg:text-lg">
+          {dict.home.tagline}
+        </p>
         <AnnouncementIcon className="size-6" />
       </div>
       {isLoading ? (
@@ -36,10 +38,10 @@ export const TopBar = () => {
       ) : (
         <div className="flex gap-4 justify-self-end">
           <div className="flex items-center gap-1">
-            <AccountIcon className="size-5" />
+            <AccountIcon className="size-4 lg:size-5" />
             <Link
               href="/auth/choose-type?action=login"
-              className="text-base font-medium text-[#EFF9F0]"
+              className="text-sm font-medium text-[#EFF9F0] lg:text-base"
             >
               {dict.home.login}
             </Link>
@@ -47,7 +49,7 @@ export const TopBar = () => {
           <div className="h-5 w-px bg-white"></div>
           <Link
             href="/auth/choose-type?action=register"
-            className="text-base font-medium text-[#EFF9F0]"
+            className="text-sm font-medium text-[#EFF9F0] lg:text-base"
           >
             {dict.home.signup}
           </Link>
@@ -68,10 +70,12 @@ const LoggedUser = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="flex cursor-pointer items-center gap-3 justify-self-end outline-none!">
-        <div className="relative size-12.5 shrink-0 overflow-hidden rounded-full">
+        <div className="relative size-8 shrink-0 overflow-hidden rounded-full lg:size-12.5">
           <Image src={url} alt="User Avatar" fill className="object-cover" />
         </div>
-        <p className="text-base font-semibold text-[#EFF9F0]">{me?.name}</p>
+        <p className="text-sm font-semibold text-[#EFF9F0] lg:text-base">
+          {me?.name}
+        </p>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="min-w-72">
         <OptionItem
@@ -120,7 +124,12 @@ const OptionItem = ({
       dir={lang === "ar" ? "rtl" : "ltr"}
     >
       {icon}
-      <span className={twMerge("text-gray text-base font-medium", className)}>
+      <span
+        className={twMerge(
+          "text-gray text-sm font-medium lg:text-base",
+          className,
+        )}
+      >
         {label}
       </span>
     </DropdownMenuLabel>
