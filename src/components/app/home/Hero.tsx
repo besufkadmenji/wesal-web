@@ -27,30 +27,32 @@ export const Hero = () => {
   return (
     <div className="mt-10 mb-20 grid grid-cols-1 justify-items-center gap-11">
       <div className="grid grid-cols-1 gap-3">
-        <div className="flex flex-wrap items-center gap-3 px-[16vw]">
+        <div className="flex flex-wrap items-center justify-center gap-3 px-3 sm:px-[12vw] md:px-8 lg:justify-start lg:px-[14vw] xl:px-[12vw] 2xl:px-[16vw]">
           <h1
             className={twMerge(
-              "relative align-baseline text-5xl leading-13 font-medium text-black",
+              "md:3xl relative grid align-baseline text-lg leading-5.5 sm:leading-8 font-medium text-black sm:text-2xl md:inline-block lg:text-4xl xl:text-5xl xl:leading-13",
             )}
           >
             {dict.home.hero.title}
+            <br className="hidden md:block lg:hidden 2xl:block" />
             <SmartAnimateText
               items={dict.home.hero.tags}
               className={twMerge(
-                "text-5xl leading-none font-medium text-black",
+                "text-lg leading-none font-medium text-black sm:text-2xl lg:text-4xl xl:text-5xl",
               )}
               dir={lng === "ar" ? "rtl" : "ltr"}
               classNames={{
-                container: "leading-13 h-11 mx-3 items-center",
+                container:
+                  "xl:leading-13 lg:leading-11 md:3xl  lg:h-8 xl:h-11 lg:mx-3 2xl:mx-0 items-center md:leading-9 md:h-4.5 h-3 leading-9",
               }}
             />
           </h1>
         </div>
-        <p className="text-gray px-[21vw] text-center text-lg leading-9 font-normal">
+        <p className="text-gray mt-3 px-4 text-start text-sm leading-5 font-normal sm:px-[12vw] md:mt-0 md:text-center md:text-lg md:leading-8 lg:px-[14vw] xl:px-[21vw]">
           {dict.home.hero.subtitle}
         </p>
       </div>
-      <div className="grid w-[48vw] grid-cols-[1fr_auto] items-center gap-2">
+      <div className="grid w-full grid-cols-[1fr_auto] items-center gap-2 px-8 md:w-[48vw]">
         <Select
           dir={lng === "ar" ? "rtl" : "ltr"}
           disabled={categories?.items.length === 0}
@@ -75,7 +77,7 @@ export const Hero = () => {
           </SelectContent>
         </Select>
         <Button
-          className="h-12.5 rounded-[20px] px-16"
+          className="h-12.5 rounded-[20px] md:px-16"
           onClick={() => {
             router.push(`${pathname}/categories?category=${category}`);
           }}
@@ -91,8 +93,8 @@ export const Hero = () => {
 const HeroAssets = () => {
   const dict = useDict();
   return (
-    <div className="grid h-129.25 w-full grid-cols-5 grid-rows-1 gap-10 px-10">
-      <div className="grid h-full grid-rows-2 gap-4">
+    <div className="grid h-129.25 w-full grid-cols-1 grid-rows-1 gap-10 px-10 md:grid-cols-3 xl:grid-cols-5">
+      <div className="hidden h-full grid-rows-2 gap-4 md:grid">
         <div className="relative h-full w-full">
           <Image src={"/images/hero.4.png"} alt="hero" fill />
         </div>
@@ -102,7 +104,7 @@ const HeroAssets = () => {
           </p>
         </div>
       </div>
-      <div className="relative h-full w-full">
+      <div className="relative hidden h-full w-full xl:block">
         <Image src={"/images/hero.3.png"} alt="hero" fill />
       </div>
       <div className="grid grid-cols-1 justify-items-center gap-15 pt-10">
@@ -129,10 +131,10 @@ const HeroAssets = () => {
           <p>{dict.home.hero.scrollDown}</p>
         </div>
       </div>
-      <div className="relative h-full w-full">
+      <div className="relative hidden h-full w-full xl:block">
         <Image src={"/images/hero.2.png"} alt="hero" fill />
       </div>
-      <div className="grid grid-rows-2 gap-4">
+      <div className="hidden grid-rows-2 gap-4 md:grid">
         <div className="bg-primary h-full overflow-hidden rounded-[16px] px-4 py-3">
           <p className="line-clamp-7 text-base leading-8 font-medium text-ellipsis text-white">
             {dict.home.hero.heroOptionOne}

@@ -12,17 +12,17 @@ export const NotificationPopover = () => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="ghost" className="flex gap-2 bg-white px-2 h-10">
+        <Button variant="ghost" className="flex h-10 gap-2 bg-white px-0 lg:px-2">
           <div className="grid size-9.5 shrink-0 items-center justify-items-center rounded-[12px] border border-[#F2F2F2]">
             <NotificationIcon className="size-6" />
           </div>
-          <p className="text-gray text-base font-medium">
+          <p className="text-gray hidden text-base font-medium xl:block">
             {dict.header.notifications}
           </p>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80">
-        <div></div>{" "}
+        <div></div>
       </PopoverContent>
     </Popover>
   );

@@ -5,7 +5,7 @@ import ScrollArrow from "@/assets/icons/scroll.arrow.svg";
 import { Button } from "@/components/ui/button";
 import { useDict } from "@/hooks/useDict";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Swiper as SwiperType } from "swiper";
 import { FreeMode, Mousewheel } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -54,12 +54,12 @@ export const AdsCarousel = ({
       <div className="flex justify-between px-[7vw]">
         <div className="grid grid-cols-1 gap-4">
           <div className="flex items-center gap-4">
-            <p className="text-lg leading-5.25 font-semibold text-[#389441]">
+            <p className="text-app-green text-base leading-5.25 font-semibold md:text-lg">
               {subtitle}
-              <DotLine className="mx-4 inline-block h-5 w-14.5" />
+              <DotLine className="md:mx-4 mx-1 inline-block h-5 w-14.5" />
             </p>
           </div>
-          <p className="text-primary text-2xl leading-7.75 font-bold">
+          <p className="text-primary text-lg leading-6 md:leading-7.75 font-bold md:text-2xl">
             {title}
           </p>
         </div>
@@ -90,7 +90,21 @@ export const AdsCarousel = ({
         {mounted && (
           <Swiper
             spaceBetween={32}
-            slidesPerView={4}
+            slidesPerView={1}
+            breakpoints={{
+              600: {
+                slidesPerView: 2,
+                spaceBetween: 40,
+              },
+              1024: {
+                slidesPerView: 3,
+                spaceBetween: 50,
+              },
+              1440: {
+                slidesPerView: 4,
+                spaceBetween: 50,
+              },
+            }}
             modules={[Mousewheel, FreeMode]}
             freeMode={{
               enabled: true,
@@ -139,7 +153,9 @@ const CategoryCard = ({
       </div>
       <div className="grid gap-6">
         <div className="grid grid-cols-1 gap-2 px-3">
-          <p className="text-lg font-semibold text-black">{title}</p>
+          <p className="line-clamp-1 text-lg font-semibold text-ellipsis text-black">
+            {title}
+          </p>
           <div className="w-full overflow-hidden">
             <p className="text-gray line-clamp-2 text-sm text-ellipsis">
               {desc}
@@ -151,7 +167,7 @@ const CategoryCard = ({
             {dict.home.popularCategories.viewDetails}
           </Button>
           <div className="relative h-4 grow">
-            <ScrollArrow className="text-primary absolute -bottom-[6.5px] z-20 aspect-170/15 h-3.75 grow opacity-0 duration-300 ease-out group-hover:opacity-100 ltr:-left-5 rtl:-right-5 ltr:rotate-180" />
+            <ScrollArrow className="text-primary absolute -bottom-[6.5px] z-20 aspect-170/15 h-3.75 max-w-full grow opacity-0 duration-300 ease-out group-hover:opacity-100 ltr:-left-5 ltr:rotate-180 rtl:-right-5" />
           </div>
         </div>
       </div>

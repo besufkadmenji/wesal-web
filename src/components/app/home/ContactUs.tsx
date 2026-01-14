@@ -8,32 +8,32 @@ import ContactMessage from "@/assets/icons/contact.message.svg";
 export const ContactUs = () => {
   const dict = useDict();
   return (
-    <div className="relative grid h-104.5 w-full grid-cols-1 justify-items-center px-[15vw]">
+    <div className="relative grid w-full grid-cols-1 justify-items-center px-4 sm:px-8 xl:h-104.5 xl:px-[15vw]">
       <Image
         src={"/images/contact.us.bg.svg"}
         alt="Trusted"
         className="w-full object-cover"
         fill
       />
-      <div className="z-10 grid w-[65vw] auto-rows-max grid-cols-1 items-start justify-items-center gap-8 py-20">
+      <div className="z-10 grid auto-rows-max grid-cols-1 items-start justify-items-center gap-8 py-20 xl:w-[65vw]">
         <div className="grid grid-cols-1 justify-items-center gap-6">
           <div className="grid grid-cols-1 justify-items-center gap-4">
             <div className="flex items-center justify-center gap-4">
               <ContactDot className="w-14.5" />
-              <h3 className="text-app-green text-lg font-semibold">
+              <h3 className="text-app-green text-sm font-semibold md:text-lg">
                 {dict.home.contactUs.subtitle}
               </h3>
               <ContactDot className="w-14.5" />
             </div>
-            <h2 className="text-4xl font-semibold text-black">
+            <h2 className="text-2xl font-semibold text-black md:text-4xl">
               {dict.home.contactUs.title}
             </h2>
           </div>
-          <p className="text-gray text-center text-xl leading-9">
+          <p className="text-gray text-center text-lg leading-9 md:text-xl">
             {dict.home.contactUs.description}
           </p>
         </div>
-        <div className="grid w-[40vw] grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-4 xl:w-[40vw]">
           <Button className="h-12.5 gap-2 rounded-[20px] px-6 font-semibold">
             <ContactMessage className="size-5" />
             {dict.home.contactUs.contactButton}

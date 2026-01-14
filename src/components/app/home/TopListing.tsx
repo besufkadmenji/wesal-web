@@ -40,16 +40,16 @@ export const TopListing = () => {
     };
   }, [swiper]);
   return (
-    <div className="grid grid-cols-1 gap-11 overflow-visible bg-[#FBFBFB] py-20">
+    <div className="grid grid-cols-1 gap-6 md:gap-11 overflow-visible bg-[#FBFBFB] py-20">
       <div className="flex justify-between px-[7vw]">
         <div className="grid grid-cols-1 gap-4">
           <div className="flex items-center gap-4">
-            <p className="text-lg leading-5.25 font-semibold text-[#389441]">
+            <p className="text-app-green text-sm leading-5.25 font-semibold md:text-lg">
               {dict.home.topListing.subtitle}
               <DotLine className="mx-4 inline-block h-5 w-14.5" />
             </p>
           </div>
-          <p className="text-primary text-2xl leading-7.75 font-bold">
+          <p className="text-primary text-lg md:leading-7.75 font-bold md:text-2xl">
             {dict.home.topListing.title}
           </p>
         </div>
@@ -80,7 +80,21 @@ export const TopListing = () => {
         {mounted && (
           <Swiper
             spaceBetween={32}
-            slidesPerView={4}
+            slidesPerView={1}
+            breakpoints={{
+              600: {
+                slidesPerView: 2,
+                spaceBetween: 40,
+              },
+              1024: {
+                slidesPerView: 3,
+                spaceBetween: 50,
+              },
+              1440: {
+                slidesPerView: 4,
+                spaceBetween: 50,
+              },
+            }}
             modules={[Mousewheel, FreeMode]}
             freeMode={{
               enabled: true,

@@ -27,11 +27,13 @@ export const SelectLanguage = () => {
   const { label, flag } = langMap[lang] || langMap["en"];
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-center justify-self-start gap-2 outline-none!">
-        <div className="relative size-7 overflow-hidden rounded-full">
+      <DropdownMenuTrigger className="flex items-center gap-2 justify-self-start outline-none!">
+        <div className="relative size-5 overflow-hidden rounded-full lg:size-7">
           <Image src={flag} alt={label} fill className="object-cover" />
         </div>
-        <p className="text-base leading-7 font-normal text-white">{label}</p>
+        <p className="text-sm leading-7 font-normal text-white lg:text-base">
+          {label}
+        </p>
         <DownIcon className="w-2.5" />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
