@@ -191,3 +191,7 @@
   background-color: #0f9d58 !important;
   opacity: 1 !important;
 }
+
+.Toastify__progress-bar.Toastify__progress-bar--info {
+  background-color: #5296D5 !important;
+}

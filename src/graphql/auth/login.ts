@@ -9,7 +9,34 @@ export const LOGIN_MUTATION: TypedDocumentNode<
     login(input: $input) {
       accessToken
       user {
+        address
+        avatarFilename
+        bankName
         cityId
+        commercialName
+        commercialRegistrationFilename
+        commercialRegistrationNumber
+        countryId
+        createdAt
+        deactivationReason
+        deleteReason
+        deletedAt
+        dialCode
+        email
+        emailVerified
+        ibanNumber
+        id
+        isActive
+        languageCode
+        latitude
+        longitude
+        name
+        phone
+        phoneVerified
+        role
+        status
+        updatedAt
+        withAbsher
       }
     }
   }

@@ -1433,7 +1433,7 @@ input SignContractInput {
 
 type SignedContract {
   contractExpiresAt: String
-  contractSignedAt: DateTime!
+  contractSignedAt: String!
   platformManagerSignature: String
   serviceProviderSignature: String!
   status: SignedContractStatus!

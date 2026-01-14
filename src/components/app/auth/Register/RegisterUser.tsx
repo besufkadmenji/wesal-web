@@ -173,7 +173,7 @@ export const RegisterUser = () => {
           {dict.auth.signup.haveAccount}
         </p>
         <Link
-          href={"/auth/login"}
+          href={"/auth/choose-type?action=login"}
           className="text-primary justify-self-end text-base font-semibold"
         >
           {dict.auth.signup.signIn}

@@ -115,7 +115,7 @@ const LoginWithEmail = () => {
             {dict.auth.login.noAccount}
           </p>
           <Link
-            href={"/auth/register"}
+            href={"/auth/choose-type?action=register"}
             className="text-primary justify-self-end text-base font-semibold"
           >
             {dict.auth.login.createAccount}

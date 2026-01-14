@@ -1,10 +1,12 @@
 "use client";
+import BusinessIcon from "@/assets/icons/auth/business.svg";
+import DocumentIcon from "@/assets/icons/auth/document.svg";
 import EmailIcon from "@/assets/icons/auth/email.svg";
 import NameIcon from "@/assets/icons/auth/name.svg";
 import CheckIcon from "@/assets/icons/check.svg";
 import { useRegister } from "@/components/app/auth/Register/useRegister";
-import { useRegisterStore } from "@/components/app/auth/Register/useRegisterStore";
 import type { FormType } from "@/components/app/auth/Register/useRegisterStore";
+import { useRegisterStore } from "@/components/app/auth/Register/useRegisterStore";
 import { PasswordInput } from "@/components/app/shared/inputs/PasswordInput";
 import { PhoneInput } from "@/components/app/shared/inputs/PhoneInput";
 import { TextInput } from "@/components/app/shared/inputs/TextInput";
@@ -15,8 +17,6 @@ import { useRegisterProviderForm } from "@/hooks/useRegisterProviderForm";
 import Link from "next/link";
 import { parseAsInteger, useQueryState } from "nuqs";
 import { twMerge } from "tailwind-merge";
-import BusinessIcon from "@/assets/icons/auth/business.svg";
-import DocumentIcon from "@/assets/icons/auth/document.svg";
 
 import AddressIcon from "@/assets/icons/address.svg";
 import { AppCheckbox } from "@/components/app/auth/AppCheckbox";
@@ -117,7 +117,7 @@ export const RegisterProvider = () => {
           {dict.auth.signup.haveAccount}
         </p>
         <Link
-          href={"/auth/login"}
+          href={"/auth/choose-type?action=login"}
           className="text-primary justify-self-end text-base font-semibold"
         >
           {dict.auth.signup.signIn}
