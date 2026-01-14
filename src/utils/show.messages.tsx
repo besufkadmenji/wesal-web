@@ -1,6 +1,7 @@
 "use client";
 import CloseIcon from "@/assets/icons/close.svg";
 import SuccessIcon from "@/assets/icons/success.check.svg";
+import InfoIcon from "@/assets/icons/info.message.svg";
 import { toast } from "react-toastify";
 import { toast as sonnerToast } from "sonner";
 
@@ -10,6 +11,15 @@ export const showSuccessMessage = (message: string) => {
     autoClose: 3000,
     pauseOnHover: false,
     pauseOnFocusLoss: false,
+  });
+};
+export const showInfoMessage = (message: string) => {
+  toast.info(message, {
+    icon: <InfoIcon className="size-5" />,
+    autoClose: 3000,
+    pauseOnHover: false,
+    pauseOnFocusLoss: false,
+    className: "text-[#1A1A1A]! font-semibold! text-sm! rounded-[16px]! overflow-hidden!",
   });
 };
 

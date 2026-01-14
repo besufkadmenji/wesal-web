@@ -14505,7 +14505,7 @@
               "name": null,
               "ofType": {
                 "kind": "SCALAR",
-                "name": "DateTime",
+                "name": "String",
                 "ofType": null
               }
             },

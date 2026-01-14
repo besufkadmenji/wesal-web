@@ -23,6 +23,7 @@ export const useRegister = () => {
     defaultValue: "phone",
   });
   const [type] = useQueryState("type");
+  const [underReview, setUnderReview] = useQueryState("underReview");
 
   const [country, setCountry] = useQueryState("country", {
     defaultValue: "+966",
@@ -57,7 +58,7 @@ export const useRegister = () => {
         router.push(
           `${pathname}/verify?email=${encodeURIComponent(form.email || "")}&phone=${encodeURIComponent(
             `${country}${form.phone}`,
-          )}&method=phone`,
+          )}&method=phone&type=${type}`,
         );
       }
       // Handle successful login (e.g., redirect, show message)
@@ -79,10 +80,14 @@ export const useRegister = () => {
           setMethod("email");
           setOtp("");
         } else {
-          showSuccessMessage(dict.auth.register.successMessage);
-          setTimeout(() => {
-            window.location.href = "/auth/login";
-          }, 1500);
+          if (type === "user") {
+            showSuccessMessage(dict.auth.register.successMessage);
+            setTimeout(() => {
+              window.location.href = "/auth/login";
+            }, 1500);
+          } else {
+            setUnderReview("true");
+          }
         }
       }
       // Handle successful login (e.g., redirect, show message)
