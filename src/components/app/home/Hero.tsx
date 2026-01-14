@@ -30,7 +30,7 @@ export const Hero = () => {
         <div className="flex flex-wrap items-center justify-center gap-3 px-3 sm:px-[12vw] md:px-8 lg:justify-start lg:px-[14vw] xl:px-[12vw] 2xl:px-[16vw]">
           <h1
             className={twMerge(
-              "md:3xl relative grid align-baseline text-lg leading-5.5 sm:leading-8 font-medium text-black sm:text-2xl md:inline-block lg:text-4xl xl:text-5xl xl:leading-13",
+              "md:3xl relative grid align-baseline text-lg leading-5.5 sm:leading-8 md:leading-11 font-medium text-black sm:text-2xl md:inline-block lg:text-4xl xl:text-5xl xl:leading-13",
             )}
           >
             {dict.home.hero.title}
