@@ -5,7 +5,7 @@ import { Footer } from "@/components/app/shared/Footer";
 
 export const AppWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="grid grid-cols-1">
+    <div className="grid grid-cols-1 overflow-x-hidden">
       <TopBar />
       <Header />
       {children}
