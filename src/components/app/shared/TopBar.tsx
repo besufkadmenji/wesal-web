@@ -41,7 +41,7 @@ export const TopBar = () => {
             <AccountIcon className="size-4 lg:size-5" />
             <Link
               href="/auth/choose-type?action=login"
-              className="text-sm font-medium text-[#EFF9F0] lg:text-base"
+              className="text-sm font-medium whitespace-nowrap text-[#EFF9F0] lg:text-base"
             >
               {dict.home.login}
             </Link>
@@ -49,7 +49,7 @@ export const TopBar = () => {
           <div className="h-5 w-px bg-white"></div>
           <Link
             href="/auth/choose-type?action=register"
-            className="text-sm font-medium text-[#EFF9F0] lg:text-base"
+            className="text-sm font-medium whitespace-nowrap text-[#EFF9F0] lg:text-base"
           >
             {dict.home.signup}
           </Link>

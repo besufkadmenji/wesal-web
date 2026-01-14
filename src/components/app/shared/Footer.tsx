@@ -10,11 +10,12 @@ import LinkedinIcon from "@/assets/icons/linkedin.svg";
 import PhoneIcon from "@/assets/icons/phone.outline.svg";
 import EmailIcon from "@/assets/icons/email.outline.svg";
 import WhatsappIcon from "@/assets/icons/whatsapp.svg";
+import { twMerge } from "tailwind-merge";
 
 export const Footer = () => {
   const dict = useDict();
   return (
-    <footer className="footer-gradient grid-cols-1 items-start px-[7vw] md:py-20 py-10">
+    <footer className="footer-gradient grid-cols-1 items-start px-[7vw] py-10 md:py-20">
       <div className="relative grid grid-cols-2 items-start gap-13 border-b-[.25px] border-b-[#F2F2F2] pb-8 md:grid-cols-3 xl:grid-cols-[1.5fr_1fr_1fr_1fr]">
         <AboutUsSummary />
         <FooterLinks
@@ -51,7 +52,7 @@ export const Footer = () => {
             },
           ]}
         />
-        <FooterLinks title={dict.footer.contactMethods}>
+        <FooterLinks title={dict.footer.contactMethods} className="col-span-2 md:col-span-1">
           <div className="grid grid-cols-1 gap-6">
             <ContactMethod
               label={dict.footer.mobileNumber}
@@ -103,6 +104,7 @@ const FooterLinks = ({
   title,
   children,
   links,
+  className,
 }: {
   title: string;
   links?: {
@@ -110,9 +112,10 @@ const FooterLinks = ({
     href: string;
   }[];
   children?: ReactNode;
+  className?: string;
 }) => {
   return (
-    <div className="grid grid-cols-1 gap-5">
+    <div className={twMerge("grid grid-cols-1 gap-5", className)}>
       <div className="grid gap-2">
         <p className="text-base leading-8 font-medium text-white">{title}</p>
         <div className="bg-app-green h-0.5 w-14" />
