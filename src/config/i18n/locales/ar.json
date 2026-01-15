@@ -447,6 +447,29 @@
         "messageContent": "نص الرسالة",
         "image": "صورة الشكوى",
         "submit": "إرسال الرسالة"
+      },
+      "validation": {
+        "name": {
+          "required": "الاسم مطلوب",
+          "minLength": "يجب أن يكون الاسم 2 أحرف على الأقل",
+          "maxLength": "يجب ألا يتجاوز الاسم 50 حرفاً"
+        },
+        "phoneNumber": {
+          "required": "رقم الجوال مطلوب",
+          "invalid": "يرجى إدخال رقم جوال صحيح"
+        },
+        "email": {
+          "required": "البريد الإلكتروني مطلوب",
+          "invalid": "يرجى إدخال بريد إلكتروني صحيح"
+        },
+        "messageType": {
+          "required": "نوع الرسالة مطلوب"
+        },
+        "messageContent": {
+          "required": "نص الرسالة مطلوب",
+          "minLength": "يجب أن يكون نص الرسالة 10 أحرف على الأقل",
+          "maxLength": "يجب ألا يتجاوز نص الرسالة 1000 حرف"
+        }
       }
     },
     "about": {
@@ -577,6 +600,9 @@
       "confirm": "تأكيد البريد الإلكترونى"
     },
     "emailChangeSuccessMessage": "تم تغيير البريد الإلكترونى بنجاح"
+  },
+  "contactMessage": {
+    "sendSuccessMessage": "تم إرسال رسالتك بنجاح. سنرد عليك في أقرب وقت ممكن."
   },
   "categories": {
     "title": "نتائج البحث"
