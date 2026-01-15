@@ -452,6 +452,29 @@
         "messageContent": "Message Content",
         "image": "Complaint Image",
         "submit": "Send Message"
+      },
+      "validation": {
+        "name": {
+          "required": "Name is required",
+          "minLength": "Name must be at least 2 characters",
+          "maxLength": "Name must not exceed 50 characters"
+        },
+        "phoneNumber": {
+          "required": "Phone number is required",
+          "invalid": "Please enter a valid phone number"
+        },
+        "email": {
+          "required": "Email is required",
+          "invalid": "Please enter a valid email address"
+        },
+        "messageType": {
+          "required": "Message type is required"
+        },
+        "messageContent": {
+          "required": "Message content is required",
+          "minLength": "Message content must be at least 10 characters",
+          "maxLength": "Message content must not exceed 1000 characters"
+        }
       }
     },
     "about": {
@@ -582,6 +605,9 @@
       "confirm": "Confirm Email"
     },
     "emailChangeSuccessMessage": "Email changed successfully"
+  },
+  "contactMessage": {
+    "sendSuccessMessage": "Your message has been sent successfully. We will get back to you as soon as possible."
   },
 
   "categories": {

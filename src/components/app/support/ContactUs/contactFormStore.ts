@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import type { ContactFormErrors } from "@/utils/contact-form-validation";
 
 export interface ContactForm {
   name: string;
@@ -15,12 +16,14 @@ export interface ContactFormState {
   isSubmitting: boolean;
   error: string | null;
   success: boolean;
+  validationErrors: ContactFormErrors;
 
   // Actions
   setForm: (form: Partial<ContactForm>) => void;
   setIsSubmitting: (isSubmitting: boolean) => void;
   setError: (error: string | null) => void;
   setSuccess: (success: boolean) => void;
+  setValidationErrors: (errors: ContactFormErrors) => void;
   resetForm: () => void;
 }
 
@@ -39,6 +42,7 @@ export const useContactFormStore = create<ContactFormState>((set) => ({
   isSubmitting: false,
   error: null,
   success: false,
+  validationErrors: {},
 
   setForm: (form: Partial<ContactForm>) =>
     set((state) => ({
@@ -51,12 +55,15 @@ export const useContactFormStore = create<ContactFormState>((set) => ({
   setIsSubmitting: (isSubmitting: boolean) => set({ isSubmitting }),
   setError: (error: string | null) => set({ error }),
   setSuccess: (success: boolean) => set({ success }),
+  setValidationErrors: (validationErrors: ContactFormErrors) =>
+    set({ validationErrors }),
 
   resetForm: () =>
     set({
-      ...initialFormState,
+      form: initialFormState,
       isSubmitting: false,
       error: null,
       success: false,
+      validationErrors: {},
     }),
 }));
