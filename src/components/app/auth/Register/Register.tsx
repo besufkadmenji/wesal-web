@@ -19,7 +19,11 @@ export const Register = () => {
   }, [setForm, type]);
 
   return (
-    <Wrapper>
+    <Wrapper
+      classNames={{
+        message: "hidden lg:grid",
+      }}
+    >
       {type === "provider" ? <RegisterProvider /> : <RegisterUser />}
     </Wrapper>
   );

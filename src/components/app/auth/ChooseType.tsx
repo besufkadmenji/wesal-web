@@ -1,7 +1,7 @@
 "use client";
 import { Wrapper } from "@/components/app/auth/Wrapper";
 import { Button } from "@/components/ui/button";
-import { useAppRouter } from '@/hooks/use.app.router';
+import { useAppRouter } from "@/hooks/use.app.router";
 import { useDict } from "@/hooks/useDict";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -15,13 +15,13 @@ export const ChooseType = () => {
   const router = useAppRouter();
   return (
     <Wrapper>
-      <div className="grid grid-cols-1 gap-60 px-15 py-10">
-        <div className="grid grid-cols-1 gap-20">
+      <div className="grid grid-cols-1 gap-10 px-6 py-10 lg:gap-40 lg:px-10 xl:gap-60 xl:px-15">
+        <div className="grid grid-cols-1 gap-6 lg:gap-20">
           <div className="grid grid-cols-1 gap-3">
-            <h1 className="text-center text-2xl font-semibold text-black">
+            <h1 className="text-center text-xl font-semibold text-black lg:text-2xl">
               {dict.auth.choose.title}
             </h1>
-            <p className="text-gray text-center text-lg leading-9">
+            <p className="text-gray text-center text-base leading-7 lg:text-lg lg:leading-9">
               {dict.auth.choose.subtitle}
             </p>
           </div>
@@ -80,7 +80,7 @@ const ChooseCard = ({
       <div className="relative aspect-216/134 w-full overflow-hidden rounded-2xl">
         <Image src={image} alt={label} fill className="object-cover" />
       </div>
-      <p className="text-lg font-medium text-black">{label}</p>
+      <p className="text-base font-medium text-black lg:text-lg">{label}</p>
     </div>
   );
 };

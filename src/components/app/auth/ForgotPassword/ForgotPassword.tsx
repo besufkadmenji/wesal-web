@@ -16,13 +16,17 @@ export const ForgotPassword = () => {
     defaultValue: "phone",
   });
   return (
-    <Wrapper>
-      <div className="grid grid-cols-1 gap-10 px-15 py-27">
+    <Wrapper
+      classNames={{
+        message: "hidden lg:grid",
+      }}
+    >
+      <div className="grid grid-cols-1 gap-6 px-6 py-10 xl:px-15">
         <div className="grid justify-items-center gap-3">
-          <h1 className="text-2xl leading-8 font-semibold text-black">
+          <h1 className="text-center text-xl font-semibold text-black lg:text-2xl lg:leading-8">
             {dict.auth.resetPassword.method.title}
           </h1>
-          <p className="text-gray text-center text-lg leading-9">
+          <p className="text-gray text-center text-base lg:text-lg lg:leading-9">
             {dict.auth.resetPassword.method.subtitle}
           </p>
         </div>
@@ -101,9 +105,12 @@ const ResetWithPhone = () => {
       <Button
         className="h-12.5 rounded-[20px] text-base font-semibold"
         onClick={() => {
-          forgotPassword({
-            emailOrPhone: `${country}${phone}`,
-          },"phone");
+          forgotPassword(
+            {
+              emailOrPhone: `${country}${phone}`,
+            },
+            "phone",
+          );
         }}
         disabled={busy}
       >

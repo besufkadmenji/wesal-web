@@ -122,7 +122,7 @@ export const CategorySelect = ({
         </Popover>
         {error && <p className="text-xs text-red-500">{error}</p>}
       </div>
-      <div className="flex flex-nowrap gap-2 overflow-x-auto pb-4">
+      <div className="flex flex-wrap lg:flex-nowrap gap-2 overflow-x-auto pb-4">
         {value &&
           value.length > 0 &&
           categories?.items
