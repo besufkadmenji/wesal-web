@@ -11,7 +11,7 @@ export const AboutUs = () => {
   const dict = useDict();
   return (
     <Wrapper variant={SupportPageType.ABOUT}>
-      <div className="grid grid-cols-2 gap-10 px-[7vw] py-20">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-10 px-[7vw] py-20">
         <div className="grid grid-cols-1 grid-rows-[auto_1fr] gap-8">
           <div className="grid grid-cols-1 justify-items-start gap-4">
             <div className="flex items-center justify-center gap-4">

@@ -36,7 +36,7 @@ export const FAQ = () => {
             console.log("value", v);
             setValue(v);
           }}
-          className="grid grid-cols-2 gap-x-4 gap-y-6"
+          className="grid grid-cols-1 lg:grid-cols-2 gap-x-4 gap-y-6"
         >
           {dict.support.faq.faqs.map((item, index) => (
             <AccordionItem
