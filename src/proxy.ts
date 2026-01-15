@@ -39,6 +39,7 @@ const publicPaths = (locale: string) => [
   `/${locale}/support/about-us`,
   `/${locale}/support/contact-us`,
   `/${locale}/support/faq`,
+  `/${locale}/categories`,
 ];
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;

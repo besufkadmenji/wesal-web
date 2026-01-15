@@ -30,13 +30,18 @@ export const Wrapper = ({
       <div className="relative grid h-50 grid-cols-1">
         <Image src={"/images/support.bg.png"} fill alt="Support Background" />
         <div className="z-10 grid h-full w-full auto-rows-max grid-cols-1 content-center gap-4 bg-black/75 px-[7vw]">
-          <h1 className="text-3xl font-semibold text-white">{title}</h1>
+          <h1 className="text-2xl font-semibold text-white lg:text-3xl">
+            {title}
+          </h1>
           <div className="flex items-center gap-2">
-            <Link href={"/"} className="text-2xl leading-7 text-white">
+            <Link
+              href={"/"}
+              className="text-xl leading-7 text-white lg:text-2xl"
+            >
               {dict.home.nav.home}
             </Link>
             <BreadcrumbIcon className="size-6 ltr:rotate-180" />
-            <p className="text-2xl leading-7 text-white opacity-70">
+            <p className="text-xl leading-7 text-white opacity-70 lg:text-2xl">
               {breadcrumb}
             </p>
           </div>
