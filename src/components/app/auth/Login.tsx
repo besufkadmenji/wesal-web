@@ -27,13 +27,17 @@ export const Login = () => {
   }, [router, type]);
   return (
     type && (
-      <Wrapper>
-        <div className="grid grid-cols-1 gap-10 px-15 py-27">
+      <Wrapper
+        classNames={{
+          message: "hidden lg:grid",
+        }}
+      >
+        <div className="grid grid-cols-1 gap-10 px-4 py-10 lg:px-15 lg:py-27">
           <div className="grid justify-items-center gap-3">
-            <h1 className="text-2xl leading-8 font-semibold text-black">
+            <h1 className="text-xl font-semibold text-black lg:text-2xl lg:leading-8">
               {dict.auth.login.title}
             </h1>
-            <p className="text-gray text-center text-lg leading-9">
+            <p className="text-gray text-center text-base lg:text-lg lg:leading-9">
               {dict.auth.login.subtitle}
             </p>
           </div>
@@ -45,13 +49,13 @@ export const Login = () => {
             <TabsList className="grid w-full grid-cols-2 border-none bg-transparent">
               <TabsTrigger
                 value="phone"
-                className="data-[state=active]:bg-light-primary h-11.5 rounded-[16px] text-sm font-semibold data-[state=active]:shadow-none"
+                className="data-[state=active]:bg-light-primary h-11.5 rounded-[16px] text-xs font-semibold data-[state=active]:shadow-none lg:text-sm"
               >
                 {dict.auth.login.signInWithPhone}
               </TabsTrigger>
               <TabsTrigger
                 value="email"
-                className="data-[state=active]:bg-light-primary h-11.5 rounded-[16px] text-sm font-semibold data-[state=active]:shadow-none"
+                className="data-[state=active]:bg-light-primary h-11.5 rounded-[16px] text-xs font-semibold data-[state=active]:shadow-none lg:text-sm"
               >
                 {dict.auth.login.signInWithEmail}
               </TabsTrigger>
@@ -172,7 +176,7 @@ const LoginWithPhone = () => {
             {dict.auth.login.noAccount}
           </p>
           <Link
-            href={"/auth/register"}
+            href={"/auth/choose-type?action=register"}
             className="text-primary justify-self-end text-base font-semibold"
           >
             {dict.auth.login.createAccount}
