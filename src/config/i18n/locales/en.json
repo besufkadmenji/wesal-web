@@ -629,6 +629,7 @@
     "commitmentText": "Commitment Text",
     "commitmentDescription": "Both parties fully commit to the terms and conditions mentioned herein and referred to therein. In case of any dispute between the parties, and in the event of non-fulfillment by either party, the matter shall be referred to the competent authorities to take the necessary legal measures to resolve the dispute.",
     "saveSignature": "Save Signature",
+    "signContract": "Sign Contract",
     "cancelContract": "Cancel Contract",
     "exportPDF": "Export Contract as PDF",
     "downloadPDF": "Download PDF",

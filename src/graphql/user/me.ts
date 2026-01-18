@@ -33,6 +33,8 @@ export const ME_QUERY: TypedDocumentNode<MeQuery> = gql`
         nameAr
         nameEn
         updatedAt
+        rulesEn
+        rulesAr
       }
       withAbsher
       status
@@ -42,6 +44,10 @@ export const ME_QUERY: TypedDocumentNode<MeQuery> = gql`
         platformManagerSignature
         serviceProviderSignature
         status
+        platformManagerName
+        terminationReason
+        acceptedRulesAr
+        acceptedRulesEn
       }
       deactivationReason
       deleteReason

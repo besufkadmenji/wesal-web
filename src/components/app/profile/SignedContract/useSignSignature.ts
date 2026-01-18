@@ -1,5 +1,8 @@
 import { useContractStore } from "@/components/app/profile/SignedContract/useForm";
 import { useDict } from "@/hooks/useDict";
+import { useLang } from "@/hooks/useLang";
+import { useMe } from "@/hooks/useMe";
+import { useSetting } from "@/hooks/useSettings";
 import UserService from "@/services/user.service";
 import { uploadFile } from "@/utils/file.upload";
 import { queryClient } from "@/utils/query.client";
@@ -10,6 +13,52 @@ export const useSignSignature = () => {
   const [busy, setBusy] = useState(false);
   const dict = useDict();
   const form = useContractStore((state) => state.form);
+  const lng = useLang();
+  const { me } = useMe();
+  const { setting } = useSetting();
+
+  const getRules = () => {
+    if (me?.signedContract) {
+      return lng === "ar"
+        ? me.signedContract.acceptedRulesAr
+        : me.signedContract.acceptedRulesEn;
+    }
+    const rules = new Set<string>();
+    if (lng === "ar") {
+      rules.add(setting?.rulesAr || "");
+    } else {
+      rules.add(setting?.rulesEn || "");
+    }
+    const categories = me?.categories?.map((cat) =>
+      lng === "en" ? cat.rulesEn : cat.rulesAr,
+    );
+    categories
+      ?.filter((cat) => cat.length > 0)
+      .forEach((cat) => rules.add(cat));
+
+    return Array.from(rules).join("\n");
+  };
+  const getRulesObj = () => {
+    const rulesEn = new Set<string>();
+    const rulesAr = new Set<string>();
+    rulesAr.add(setting?.rulesAr || "");
+    rulesEn.add(setting?.rulesEn || "");
+    const categories = me?.categories?.map((cat) => ({
+      en: cat.rulesEn,
+      ar: cat.rulesAr,
+    }));
+    categories
+      ?.filter((cat) => cat.en.length > 0 || cat.ar.length > 0)
+      .forEach((cat) => {
+        rulesEn.add(cat.en);
+        rulesAr.add(cat.ar);
+      });
+
+    return {
+      en: Array.from(rulesEn).join("\n"),
+      ar: Array.from(rulesAr).join("\n"),
+    };
+  };
 
   const saveSignature = async () => {
     if (!form.serviceProviderSignature) {
@@ -21,18 +70,11 @@ export const useSignSignature = () => {
       const serviceProviderSignatureFilename = await uploadFile(
         form.serviceProviderSignature!,
       );
-      let platformManagerSignatureFilename = null;
-      if (form.platformManagerSignature) {
-        platformManagerSignatureFilename = await uploadFile(
-          form.platformManagerSignature!,
-        );
-      }
 
       const result = await UserService.signContact({
         serviceProviderSignature: serviceProviderSignatureFilename.filename,
-        platformManagerSignature: platformManagerSignatureFilename
-          ? platformManagerSignatureFilename.filename
-          : null,
+        acceptedRulesAr: getRulesObj().ar,
+        acceptedRulesEn: getRulesObj().en,
       });
       if (result) {
         showSuccessMessage(dict.contract.signatureSavedSuccessfully);
@@ -80,6 +122,7 @@ export const useSignSignature = () => {
   return {
     saveSignature,
     terminateContract,
+    getRules,
     busy,
   };
 };

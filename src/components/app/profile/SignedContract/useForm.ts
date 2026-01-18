@@ -5,7 +5,6 @@ import { create } from "zustand";
 
 export interface ContactFormState {
   input: SignContractInput;
-  platformManagerSignature: File | null;
   serviceProviderSignature: File | null;
 }
 
@@ -25,10 +24,10 @@ interface ContractFormStore {
 
 const initialState: ContactFormState = {
   input: {
-    platformManagerSignature: "",
     serviceProviderSignature: "",
+    acceptedRulesAr: "",
+    acceptedRulesEn: "",
   },
-  platformManagerSignature: null,
   serviceProviderSignature: null,
 };
 
