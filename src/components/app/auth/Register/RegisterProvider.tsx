@@ -339,7 +339,7 @@ const ProviderForm = ({
         <AppCheckbox
           label={dict.auth.signup.termsAndConditions}
           link={{
-            url: "/",
+            url: "/support/terms",
             text: dict.auth.signup.termsAndConditionsLink,
           }}
           id="terms"
