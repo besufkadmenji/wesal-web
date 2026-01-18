@@ -19,6 +19,7 @@ type Admin {
   organizationName: String!
   permissionType: AdminPermissionType!
   phoneNumber: String!
+  platformManagerSignature: String
   roleName: String!
   status: AdminStatus!
   updatedAt: DateTime!
@@ -83,6 +84,10 @@ enum AdminPermissionType {
 input AdminResetPasswordInput {
   newPassword: String!
   resetToken: String!
+}
+
+input AdminSignContractInput {
+  userId: ID!
 }
 
 """Available fields to sort admins by"""
@@ -220,6 +225,8 @@ type Category {
   nameEn: String!
   parent: Category
   parentId: String
+  rulesAr: String!
+  rulesEn: String!
   updatedAt: DateTime!
 }
 
@@ -569,6 +576,8 @@ input CreateCategoryInput {
   nameAr: String!
   nameEn: String!
   parentId: String
+  rulesAr: String!
+  rulesEn: String!
 }
 
 input CreateCityInput {
@@ -789,6 +798,12 @@ type Mutation {
   adminForgotPassword(input: AdminForgotPasswordInput!): Boolean!
   adminLogin(input: AdminLoginInput!): AdminAuthResponse!
   adminResetPassword(input: AdminResetPasswordInput!): Boolean!
+
+  """Sign contract as service provider"""
+  adminSignContract(input: AdminSignContractInput!): User!
+
+  """Terminate contract as service provider"""
+  adminTerminateContract(terminationReason: String!, userId: String!): User!
   adminVerifyPasswordResetOtp(input: VerifyAdminPasswordResetOtpInput!): VerifyAdminPasswordResetOtpResponse!
   assignPermissionToAdmin(input: AssignPermissionInput!): AdminPermission!
   bulkAssignPermissionsToAdmin(input: BulkAssignPermissionsInput!): [AdminPermission!]!
@@ -1310,7 +1325,7 @@ type Query {
   user(id: ID!): User!
 
   """Get all users with pagination by role"""
-  users(pagination: UserPaginationInput!): PaginatedUserResponse!
+  users(pagination: UserPaginationInput!, withContracts: Boolean): PaginatedUserResponse!
 }
 
 type Rating {
@@ -1407,6 +1422,8 @@ type Setting {
   phones: [String!]!
   privacyPolicyAr: String!
   privacyPolicyEn: String!
+  rulesAr: String!
+  rulesEn: String!
   socialMediaLinks: [SocialMediaLink!]!
   termsAr: String!
   termsEn: String!
@@ -1420,6 +1437,8 @@ input SettingInput {
   phones: [String!]
   privacyPolicyAr: String
   privacyPolicyEn: String
+  rulesAr: String
+  rulesEn: String
   socialMediaLinks: [SocialMediaLinkInput!]
   termsAr: String
   termsEn: String
@@ -1427,13 +1446,17 @@ input SettingInput {
 }
 
 input SignContractInput {
-  platformManagerSignature: String
+  acceptedRulesAr: String
+  acceptedRulesEn: String
   serviceProviderSignature: String!
 }
 
 type SignedContract {
+  acceptedRulesAr: String
+  acceptedRulesEn: String
   contractExpiresAt: String
   contractSignedAt: String!
+  platformManagerName: String
   platformManagerSignature: String
   serviceProviderSignature: String!
   status: SignedContractStatus!
@@ -1471,6 +1494,7 @@ input UpdateAdminInput {
   organizationName: String
   permissionType: AdminPermissionType
   phoneNumber: String!
+  platformManagerSignature: String
   roleName: String
   status: AdminStatus
   userType: AdminUserType
@@ -1496,6 +1520,8 @@ input UpdateCategoryInput {
   nameAr: String
   nameEn: String
   parentId: String
+  rulesAr: String
+  rulesEn: String
 }
 
 input UpdateCityInput {

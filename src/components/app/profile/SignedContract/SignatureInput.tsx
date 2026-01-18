@@ -11,6 +11,7 @@ export const SignatureInput = ({
   file,
   onChange,
   error,
+  disabled,
 }: {
   label: string;
   isRequired?: boolean;
@@ -18,6 +19,7 @@ export const SignatureInput = ({
   file: File | null;
   onChange?: (file: File) => void;
   error?: string;
+  disabled?: boolean;
 }) => {
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -52,7 +54,7 @@ export const SignatureInput = ({
           isDragReject && "border-red-500 bg-red-500/5",
         )}
       >
-        <input {...getInputProps()} disabled={!!initUrl} />
+        <input {...getInputProps()} disabled={!!initUrl || disabled} />
         {url ? (
           <Image src={url} alt="" fill className="object-contain" />
         ) : (

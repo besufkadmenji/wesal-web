@@ -24,6 +24,8 @@ export const CATEGORIES_QUERY: TypedDocumentNode<
         nameEn
         parentId
         updatedAt
+        rulesEn
+        rulesAr
       }
     }
   }

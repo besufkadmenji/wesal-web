@@ -48,6 +48,10 @@ export const SIGN_CONTRACT_MUTATION: TypedDocumentNode<
         platformManagerSignature
         serviceProviderSignature
         status
+        platformManagerName
+        terminationReason
+        acceptedRulesAr
+        acceptedRulesEn
       }
       deactivationReason
       deleteReason

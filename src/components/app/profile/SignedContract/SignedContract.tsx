@@ -15,12 +15,14 @@ import { FormInput } from "./FormInput";
 import { SignatureInput } from "./SignatureInput";
 import { downloadPDF } from "@/utils/download.pdf";
 import { CancelContract } from "@/components/app/profile/SignedContract/CancelContact";
+import { useSetting } from "@/hooks/useSettings";
 export const SignedContract = () => {
   const dict = useDict();
   const lng = useLang();
   const { me } = useMe();
+  const { setting } = useSetting();
   const contractRef = useRef<HTMLDivElement | null>(null);
-  const { saveSignature, busy } = useSignSignature();
+  const { saveSignature, getRules, busy } = useSignSignature();
   const form = useContractStore((state) => state.form);
   const setServiceProviderSignature = useContractStore(
     (state) => state.setServiceProviderSignature,
@@ -106,11 +108,12 @@ export const SignedContract = () => {
             />
             <SignatureInput
               initUrl={me.signedContract?.platformManagerSignature || null}
-              file={form.platformManagerSignature}
+              file={null}
               onChange={(f) => {
                 setPlatformManagerSignature(f);
               }}
               label={dict.contract.platformManagerSignature}
+              disabled
             />
             <p className="col-span-2 text-xs leading-5 text-[#999999]">
               {dict.contract.signatureAllowedOnce}
@@ -121,8 +124,8 @@ export const SignedContract = () => {
             <h3 className="leading-8 font-medium text-black">
               {dict.contract.commitmentText}
             </h3>
-            <p className="text-gray leading-7">
-              {dict.contract.commitmentDescription}
+            <p className="text-gray leading-7 whitespace-pre-line">
+              {getRules()}
             </p>
           </div>
         </div>
@@ -156,7 +159,7 @@ export const SignedContract = () => {
             }}
             disabled={busy}
           >
-            {dict.contract.saveSignature}
+            {dict.contract.signContract}
           </Button>
         )}
       </div>
