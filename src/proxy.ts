@@ -14,9 +14,11 @@ export const config = {
 
 function getLocale(req: NextRequest) {
   const { pathname } = req.nextUrl;
+  console.log("pathname lang", pathname);
+  if (req.cookies.has("lang")) return req.cookies.get("lang")?.value;
+  console.log("No lang cookie");
   if (pathname.startsWith("/en")) return "en";
   if (pathname.startsWith("/ar")) return "ar";
-  if (req.cookies.has("lang")) return req.cookies.get("lang")?.value;
   return acceptLanguage.get(req.headers.get("Accept-Language")) || fallbackLng;
 }
 

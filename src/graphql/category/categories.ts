@@ -22,7 +22,7 @@ export const CATEGORIES_QUERY: TypedDocumentNode<
         id
         nameAr
         nameEn
-        parentId
+        image
         updatedAt
         rulesEn
         rulesAr
