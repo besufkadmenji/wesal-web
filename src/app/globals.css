@@ -201,7 +201,6 @@
   color: #1a1a1a;
   font-weight: 600;
   font-size: 14px;
-  width: 70%;
 }
 
 .Toastify__progress-bar--bg {
@@ -215,3 +214,5 @@
 .Toastify__progress-bar.Toastify__progress-bar--info {
   background-color: #5296d5 !important;
 }
+
+

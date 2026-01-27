@@ -35,6 +35,8 @@ export const ME_QUERY: TypedDocumentNode<MeQuery> = gql`
         updatedAt
         rulesEn
         rulesAr
+        image
+        publicId
       }
       withAbsher
       status
@@ -48,12 +50,18 @@ export const ME_QUERY: TypedDocumentNode<MeQuery> = gql`
         terminationReason
         acceptedRulesAr
         acceptedRulesEn
+        id
+        createdAt
+        publicId
+        updatedAt
+        userId
       }
       deactivationReason
       deleteReason
       deletedAt
       commercialName
       commercialRegistrationFilename
+      publicId
     }
   }
 `;
