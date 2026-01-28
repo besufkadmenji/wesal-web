@@ -700,5 +700,23 @@
       "videoMaxSize": "يجب ألا يتجاوز حجم الفيديو 100 ميجا بايت"
     },
     "listingCreatedSuccessfully": "تم إنشاء الإعلان بنجاح"
+  },
+
+  "listingDetail": {
+    "about": "عن الإعلان",
+    "viewAll": "عرض الكل",
+    "storyVideo": "الفيديو الخاص بالإعلان",
+    "editAdData": "تعديل بيانات الإعلان",
+    "reviews": {
+      "title": "التعليقات",
+      "overallRating": "التقييم العام",
+      "commentCount": "تعليق",
+      "comments": "التعليقات",
+      "reviewerName": "اسم المقيّم",
+      "postedDate": "تاريخ النشر",
+      "rating": "التقييم",
+      "comment": "التعليق",
+      "viewMore": "المزيد من التعليقات"
+    }
   }
 }

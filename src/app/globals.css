@@ -215,4 +215,15 @@
   background-color: #5296d5 !important;
 }
 
+.playVideoIcon {
+  border-radius: var(--Available-stables-raduis, 50px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+}
 
+.playVideoIconWrapper {
+  border-radius: var(--Available-stables-raduis, 50px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(5px);
+}

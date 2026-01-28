@@ -707,5 +707,22 @@
       "videoMaxSize": "Video size must not exceed 100MB"
     },
     "listingCreatedSuccessfully": "Listing created successfully"
+  },
+  "listingDetail": {
+    "about": "About the Ad",
+    "viewAll": "View All",
+    "storyVideo": "The video for the advertisement",
+    "editAdData": "Edit ad data",
+    "reviews": {
+      "title": "Comments",
+      "overallRating": "Overall Rating",
+      "commentCount": "comment",
+      "comments": "Comments",
+      "reviewerName": "Reviewer Name",
+      "postedDate": "Posted Date",
+      "rating": "Rating",
+      "comment": "Comment",
+      "viewMore": "View More Comments"
+    }
   }
 }

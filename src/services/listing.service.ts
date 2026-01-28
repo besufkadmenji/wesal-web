@@ -1,10 +1,12 @@
 import {
   CreateListingInput,
+  Listing,
   ListingPaginationInput,
   PaginatedListingResponse,
-  UpdateListingInput
+  UpdateListingInput,
 } from "@/gql/graphql";
 import { CREATE_LISTING_MUTATION } from "@/graphql/listing/createListing";
+import { LISTING_QUERY } from "@/graphql/listing/listing";
 import { MY_LISTINGS_QUERY } from "@/graphql/listing/myListings";
 import { REMOVE_LISTING_MUTATION } from "@/graphql/listing/removeListing";
 import { UPDATE_LISTING_MUTATION } from "@/graphql/listing/updateListing";
@@ -23,6 +25,21 @@ class ListingService {
         },
       });
       return listingResult.data?.myListings ?? null;
+    } catch (e) {
+      console.error("listingResult", e);
+    }
+    return null;
+  };
+
+  static listing = async (id: string): Promise<Listing | null> => {
+    try {
+      const listingResult = await client().query({
+        query: LISTING_QUERY,
+        variables: {
+          listingId: id,
+        },
+      });
+      return listingResult.data?.listing ?? null;
     } catch (e) {
       console.error("listingResult", e);
     }

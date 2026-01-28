@@ -2,7 +2,7 @@ import { PaginatedListingResponse } from "@/gql/graphql";
 import ListingService from "@/services/listing.service";
 import { useQuery } from "@tanstack/react-query";
 import { parseAsInteger, useQueryState } from "nuqs";
-export const useListing = (): {
+export const useListings = (): {
   listings: PaginatedListingResponse | null | undefined;
   isLoading: boolean;
   isError: boolean;

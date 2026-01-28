@@ -6,11 +6,15 @@ import { useDict } from "@/hooks/useDict";
 import { twMerge } from "tailwind-merge";
 import { sar } from "@/assets/fonts/sar";
 import { moneyFormatter } from "@/utils/formmater";
+import Link from "next/link";
 export const ListingCard = ({ listing }: { listing: Listing }) => {
   const dict = useDict();
   const imageUrl = `${process.env.NEXT_PUBLIC_DATA}/files/${listing.photos[0].filename}`;
   return (
-    <div className="grid grid-cols-1 rounded-[20px] bg-white">
+    <Link
+      href={`/my-listings/${listing.id}`}
+      className="grid cursor-pointer grid-cols-1 rounded-[20px] bg-white"
+    >
       <div className="relative h-44 overflow-hidden rounded-[20px]">
         <Image
           src={imageUrl}
@@ -26,7 +30,7 @@ export const ListingCard = ({ listing }: { listing: Listing }) => {
               {listing.name}
             </p>
             <div className="flex items-center gap-1">
-              <RatingIcon className="size-4.5" />
+              <RatingIcon className="size-4.5 text-[#FB8A00]" />
               <p className="text-sm font-medium text-[#1A1A1A]">0.0</p>
             </div>
           </div>
@@ -54,7 +58,7 @@ export const ListingCard = ({ listing }: { listing: Listing }) => {
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
