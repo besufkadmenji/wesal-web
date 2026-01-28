@@ -725,5 +725,9 @@
       "comment": "Comment",
       "viewMore": "View More Comments"
     }
+  },
+
+  "editListing": {
+    "saveChanges": "Save Changes"
   }
 }

@@ -719,5 +719,8 @@
       "comment": "التعليق",
       "viewMore": "المزيد من التعليقات"
     }
+  },
+  "editListing": {
+    "saveChanges": "حفظ التغييرات"
   }
 }

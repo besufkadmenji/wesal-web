@@ -208,7 +208,7 @@ export const EditListing = () => {
             onClick={handleSubmit}
             disabled={updating}
           >
-            {dict.addListing.form.submit}
+            {dict.editListing.saveChanges}
           </Button>
         </div>
       </Wrapper>
