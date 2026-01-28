@@ -1,6 +1,6 @@
 import {
-    UpdateListingMutation,
-    UpdateListingMutationVariables,
+  UpdateListingMutation,
+  UpdateListingMutationVariables,
 } from "@/gql/graphql";
 import { gql, TypedDocumentNode } from "@apollo/client";
 
@@ -23,6 +23,8 @@ export const UPDATE_LISTING_MUTATION: TypedDocumentNode<
         id
         sortOrder
         type
+        originalFilename
+        size
       }
       tags
       type
@@ -33,6 +35,8 @@ export const UPDATE_LISTING_MUTATION: TypedDocumentNode<
         id
         sortOrder
         type
+        originalFilename
+        size
       }
     }
   }

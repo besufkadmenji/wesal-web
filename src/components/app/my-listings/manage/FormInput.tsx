@@ -84,7 +84,10 @@ export const AppTextarea = ({
         <Textarea
           value={value}
           onChange={(e) => onChange?.(e.target.value)}
-          className="focus-visible:border-primary peer border-border h-full max-h-80 min-h-30 resize-none rounded-[20px] p-4 shadow-none ring-0!"
+          className={twMerge(
+            "focus-visible:border-primary peer border-border h-full max-h-80 min-h-30 resize-none rounded-[20px] p-4 shadow-none ring-0!",
+            endContent && "ltr:pr-20 rtl:pl-20",
+          )}
           disabled={isDisabled}
           readOnly={readOnly}
           required={isRequired}

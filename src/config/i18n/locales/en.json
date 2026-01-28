@@ -706,7 +706,8 @@
       "videoInvalidFormat": "Only video files are allowed",
       "videoMaxSize": "Video size must not exceed 100MB"
     },
-    "listingCreatedSuccessfully": "Listing created successfully"
+    "listingCreatedSuccessfully": "Listing created successfully",
+    "listingUpdatedSuccessfully": "Listing updated successfully"
   },
   "listingDetail": {
     "about": "About the Ad",

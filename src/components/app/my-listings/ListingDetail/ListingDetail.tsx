@@ -9,9 +9,12 @@ import EditAdIcon from "@/assets/icons/edit.svg";
 import { Button } from "@/components/ui/button";
 import { useDict } from "@/hooks/useDict";
 import { Reviews } from "@/components/app/my-listings/ListingDetail/Reviews";
+import { usePathname, useRouter } from "next/navigation";
 
 export const ListingDetail = () => {
   const { listing, isLoading } = useListing();
+  const router = useRouter();
+  const pathname = usePathname();
   const dict = useDict();
   return (
     <AppWrapper>
@@ -30,6 +33,7 @@ export const ListingDetail = () => {
               <Button
                 variant={"secondary"}
                 className="h-12.5 gap-3 justify-self-center rounded-[20px] px-4!"
+                onClick={() => router.push(`${pathname}/edit`)}
               >
                 <p className="text-primary text-base font-semibold">
                   {dict.listingDetail.editAdData}

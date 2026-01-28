@@ -6,9 +6,13 @@ import Image from "next/image";
 import Link from "next/link";
 import SearchIcon from "@/assets/icons/search.svg";
 import { Input } from "@heroui/react";
+import { useQueryState } from "nuqs";
+import { useState } from "react";
 export const ListingHeader = () => {
   const dict = useDict();
   const lng = useLang();
+  const [query, setQuery] = useQueryState("query");
+  const [localQuery, setLocalQuery] = useState(query ?? "");
   return (
     <div className="relative grid h-50 grid-cols-1">
       <Image src={"/images/support.bg.png"} fill alt="Support Background" />
@@ -28,7 +32,9 @@ export const ListingHeader = () => {
       </div>
       <div className="categorySearch absolute right-0 -bottom-12 left-0 z-10 mx-auto grid min-w-[48vw] grid-cols-[1fr_auto] items-center justify-center-safe gap-2 justify-self-center rounded-[20px] bg-white p-5">
         <Input
-          startContent={<SearchIcon className="size-4.5 shrink-0 text-[#999999]" />}
+          startContent={
+            <SearchIcon className="size-4.5 shrink-0 text-[#999999]" />
+          }
           size="lg"
           className="h-14"
           placeholder={dict.myListings.searchPlaceholder}
@@ -38,8 +44,20 @@ export const ListingHeader = () => {
               "bg-white border rounded-[20px] h-14 border-[#F2F2F2]",
             input: "placeholder:text-gray",
           }}
+          value={localQuery}
+          onChange={(e) => setLocalQuery(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              setQuery(localQuery);
+            }
+          }}
         />
-        <Button className="h-12.5 rounded-[20px] px-16" onClick={() => {}}>
+        <Button
+          className="h-12.5 rounded-[20px] px-16"
+          onClick={() => {
+            setQuery(localQuery);
+          }}
+        >
           {dict.home.hero.search}
         </Button>
       </div>

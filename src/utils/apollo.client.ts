@@ -5,10 +5,13 @@ import {
   InMemoryCache,
 } from "@apollo/client";
 import { SetContextLink } from "@apollo/client/link/context";
+import { RemoveTypenameFromVariablesLink } from "@apollo/client/link/remove-typename";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { createClient } from "graphql-ws";
 import Cookies from "js-cookie";
+
+const removeTypenameLink = new RemoveTypenameFromVariablesLink();
 
 const client = (token?: string, url?: string) => {
   const httpLink = new HttpLink({
@@ -47,6 +50,7 @@ const client = (token?: string, url?: string) => {
       errorPolicy: "all",
     },
   };
+  const link = ApolloLink.from([removeTypenameLink, httpLink]);
 
   const splitLink = ApolloLink.split(
     ({ query }) => {
@@ -58,7 +62,7 @@ const client = (token?: string, url?: string) => {
       );
     },
     wsLink,
-    authLink.concat(httpLink),
+    authLink.concat(link),
   );
 
   return new ApolloClient({

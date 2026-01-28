@@ -88,19 +88,27 @@ export const useFormValidation = (form: ListingFormData) => {
   );
 
   const validatePhotos = useCallback(
-    (files: File[] | null | undefined): string | null => {
-      if (!files || files.length === 0) {
+    (
+      files: File[] | null | undefined,
+      existingPhotos: unknown,
+    ): string | null => {
+      // Only validate if no existing photos and no new files
+      const hasExistingPhotos =
+        Array.isArray(existingPhotos) && existingPhotos.length > 0;
+      if (!hasExistingPhotos && (!files || files.length === 0)) {
         return dict.addListing.validation.photosRequired;
       }
-      if (files.length > 5) {
+      if (files && files.length > 5) {
         return dict.addListing.validation.photosMaxCount;
       }
-      for (const file of files) {
-        if (!file.type.startsWith("image/")) {
-          return dict.addListing.validation.photosInvalidFormat;
-        }
-        if (file.size > MAX_IMAGE_SIZE) {
-          return dict.addListing.validation.photosMaxSize;
+      if (files) {
+        for (const file of files) {
+          if (!file.type.startsWith("image/")) {
+            return dict.addListing.validation.photosInvalidFormat;
+          }
+          if (file.size > MAX_IMAGE_SIZE) {
+            return dict.addListing.validation.photosMaxSize;
+          }
         }
       }
       return null;
@@ -109,15 +117,19 @@ export const useFormValidation = (form: ListingFormData) => {
   );
 
   const validateStoryVideoFile = useCallback(
-    (file: File | null | undefined): string | null => {
-      if (!file) {
+    (file: File | null | undefined, existingStory: unknown): string | null => {
+      // Only validate if no existing story and no new file
+      const hasExistingStory = !!existingStory;
+      if (!hasExistingStory && !file) {
         return dict.addListing.validation.videoRequired;
       }
-      if (!file.type.startsWith("video/")) {
-        return dict.addListing.validation.videoInvalidFormat;
-      }
-      if (file.size > MAX_VIDEO_SIZE) {
-        return dict.addListing.validation.videoMaxSize;
+      if (file) {
+        if (!file.type.startsWith("video/")) {
+          return dict.addListing.validation.videoInvalidFormat;
+        }
+        if (file.size > MAX_VIDEO_SIZE) {
+          return dict.addListing.validation.videoMaxSize;
+        }
       }
       return null;
     },
@@ -142,10 +154,10 @@ export const useFormValidation = (form: ListingFormData) => {
     const typeError = validateType(form.type);
     if (typeError) newErrors.type = typeError;
 
-    const photosError = validatePhotos(form.photoFiles);
+    const photosError = validatePhotos(form.photoFiles, form.photos);
     if (photosError) newErrors.photoFiles = photosError;
 
-    const videoError = validateStoryVideoFile(form.storyVideoFile);
+    const videoError = validateStoryVideoFile(form.storyVideoFile, form.story);
     if (videoError) newErrors.storyVideoFile = videoError;
 
     setErrors(newErrors);
@@ -158,6 +170,8 @@ export const useFormValidation = (form: ListingFormData) => {
     form.type,
     form.photoFiles,
     form.storyVideoFile,
+    form.photos,
+    form.story,
     validateName,
     validateDescription,
     validatePrice,
@@ -173,8 +187,8 @@ export const useFormValidation = (form: ListingFormData) => {
     const priceError = validatePrice(form.priceString || "");
     const categoryIdError = validateCategoryId(form.categoryId);
     const typeError = validateType(form.type);
-    const photosError = validatePhotos(form.photoFiles);
-    const videoError = validateStoryVideoFile(form.storyVideoFile);
+    const photosError = validatePhotos(form.photoFiles, form.photos);
+    const videoError = validateStoryVideoFile(form.storyVideoFile, form.story);
 
     return (
       !nameError &&
@@ -193,6 +207,8 @@ export const useFormValidation = (form: ListingFormData) => {
     form.type,
     form.photoFiles,
     form.storyVideoFile,
+    form.photos,
+    form.story,
     validateName,
     validateDescription,
     validatePrice,
@@ -227,11 +243,14 @@ export const useFormValidation = (form: ListingFormData) => {
           error = validateType(value as string) || "";
           break;
         case "photoFiles":
-          error = validatePhotos(value as File[]) || "";
+          error = validatePhotos(value as File[], form.photos) || "";
           break;
         case "storyVideoFile":
           error =
-            validateStoryVideoFile(value as File | null | undefined) || "";
+            validateStoryVideoFile(
+              value as File | null | undefined,
+              form.story,
+            ) || "";
           break;
       }
 
@@ -253,6 +272,8 @@ export const useFormValidation = (form: ListingFormData) => {
       validateType,
       validatePhotos,
       validateStoryVideoFile,
+      form.photos,
+      form.story,
     ],
   );
 

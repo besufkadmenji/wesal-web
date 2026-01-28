@@ -25,7 +25,13 @@ export const ListingImages = ({ listing }: { listing: Listing }) => {
             <ImageItem
               key={index}
               image={img}
-              onClick={() => setImage(index)}
+              onClick={() => {
+                if (index === 3 && images.length > 4 && !showAll) {
+                  setShowAll(true);
+                  return;
+                }
+                return setImage(index);
+              }}
               isActive={index === image}
               showViewAll={index === 3 && images.length > 4 && !showAll}
             />
