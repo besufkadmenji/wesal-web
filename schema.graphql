@@ -567,7 +567,9 @@ input CreateListingInput {
 input CreateListingMediaInput {
   filename: String!
   id: String!
-  sortOrder: Float!
+  originalFilename: String!
+  size: Int!
+  sortOrder: Int!
   type: MediaType!
 }
 
@@ -700,6 +702,8 @@ type Listing {
 type ListingMedia {
   filename: String!
   id: String!
+  originalFilename: String!
+  size: Int!
   sortOrder: Float!
   type: MediaType!
 }

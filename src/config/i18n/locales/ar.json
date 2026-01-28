@@ -699,7 +699,8 @@
       "videoInvalidFormat": "يتم السماح بملفات الفيديو فقط",
       "videoMaxSize": "يجب ألا يتجاوز حجم الفيديو 100 ميجا بايت"
     },
-    "listingCreatedSuccessfully": "تم إنشاء الإعلان بنجاح"
+    "listingCreatedSuccessfully": "تم إنشاء الإعلان بنجاح",
+    "listingUpdatedSuccessfully": "تم تحديث الإعلان بنجاح"
   },
 
   "listingDetail": {

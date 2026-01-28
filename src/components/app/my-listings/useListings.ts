@@ -9,16 +9,19 @@ export const useListings = (): {
 } => {
   const [page] = useQueryState("page", parseAsInteger.withDefault(1));
   const [limit] = useQueryState("limit", parseAsInteger.withDefault(16));
+  const [query, setQuery] = useQueryState("query");
+
   const {
     isLoading,
     isError,
     data: listings,
   } = useQuery({
-    queryKey: ["listings", page, limit],
+    queryKey: ["listings", page, limit, query],
     queryFn: () =>
       ListingService.myListings({
         page,
         limit,
+        search: query || undefined,
       }),
   });
 

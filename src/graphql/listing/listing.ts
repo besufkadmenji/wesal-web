@@ -20,6 +20,8 @@ export const LISTING_QUERY: TypedDocumentNode<
         id
         sortOrder
         type
+        originalFilename
+        size
       }
       tags
       type
@@ -30,6 +32,8 @@ export const LISTING_QUERY: TypedDocumentNode<
         id
         sortOrder
         type
+        originalFilename
+        size
       }
     }
   }

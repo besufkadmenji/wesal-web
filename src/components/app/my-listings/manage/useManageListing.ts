@@ -1,4 +1,4 @@
-import { ListingStatus, MediaType } from "@/gql/graphql";
+import { ListingMedia, ListingStatus, MediaType } from "@/gql/graphql";
 import { useDict } from "@/hooks/useDict";
 import ListingService from "@/services/listing.service";
 import { uploadFile } from "@/utils/file.upload";
@@ -22,36 +22,41 @@ export const useManageListing = () => {
     setCreating(true);
     try {
       const { priceString, ...rest } = form;
-      const photos = [];
-      for (const file of photoFiles) {
+      const photos: ListingMedia[] = [];
+      for (let i = 0; i < photoFiles.length; i++) {
+        const file = photoFiles[i];
         const uploadResult = await uploadFile(file);
         if (uploadResult.url) {
-          photos.push(uploadResult.filename);
+          photos.push({
+            id: uuidv4(),
+            filename: uploadResult.filename,
+            type: MediaType.Image,
+            sortOrder: i,
+            originalFilename: file.name,
+            size: file.size,
+          });
         }
       }
 
-      let storyVideoFilename;
+      let story: ListingMedia | null = null;
       if (storyVideoFile) {
         const uploadResult = await uploadFile(storyVideoFile);
         if (uploadResult.url) {
-          storyVideoFilename = uploadResult.filename;
+          story = {
+            id: uuidv4(),
+            filename: uploadResult.filename,
+            type: MediaType.Video,
+            sortOrder: 0,
+            originalFilename: storyVideoFile.name,
+            size: storyVideoFile.size,
+          };
         }
       }
       const result = await ListingService.createListing({
         ...rest,
         cityId: me?.cityId || "",
-        photos: photos.map((filename, index) => ({
-          id: uuidv4(),
-          filename,
-          type: MediaType.Image,
-          sortOrder: index,
-        })),
-        story: {
-          id: uuidv4(),
-          filename: storyVideoFilename || "",
-          type: MediaType.Video,
-          sortOrder: 0,
-        },
+        photos: photos,
+        story: story,
         status: ListingStatus.Published,
       });
       if (result) {
@@ -71,11 +76,71 @@ export const useManageListing = () => {
       setCreating(false);
     }
   };
+  const updateListing = async (listingId: string) => {
+    setUpdating(true);
+    try {
+      const { priceString, ...rest } = form;
+      const photos: ListingMedia[] = form.photos ? [...form.photos] : [];
+      for (let i = 0; i < photoFiles.length; i++) {
+        const file = photoFiles[i];
+        const uploadResult = await uploadFile(file);
+        if (uploadResult.url) {
+          photos.push({
+            id: uuidv4(),
+            filename: uploadResult.filename,
+            type: MediaType.Image,
+            sortOrder: i,
+            originalFilename: file.name,
+            size: file.size,
+          });
+        }
+      }
+
+      let story: ListingMedia | null = form.story || null;
+      if (storyVideoFile) {
+        const uploadResult = await uploadFile(storyVideoFile);
+        if (uploadResult.url) {
+          story = {
+            id: uuidv4(),
+            filename: uploadResult.filename,
+            type: MediaType.Video,
+            sortOrder: 0,
+            originalFilename: storyVideoFile.name,
+            size: storyVideoFile.size,
+          };
+        }
+      }
+      const result = await ListingService.updateListing({
+        id: listingId,
+        ...rest,
+        cityId: me?.cityId || "",
+        photos: photos,
+        story: story,
+        status: ListingStatus.Published,
+      });
+      if (result) {
+        showSuccessMessage(dict.addListing.listingUpdatedSuccessfully);
+        reset();
+        router.push("/my-listings");
+      }
+      // Handle successful login (e.g., redirect, show message)
+    } catch (error) {
+      console.error("Login error:", error);
+      showErrorMessage(
+        error instanceof Error
+          ? error.message
+          : dict.profile.updateProfileFailed,
+      );
+    } finally {
+      setUpdating(false);
+    }
+  };
 
   return {
     creating,
     updating,
     removing,
     createListing,
+    updateListing,
   };
 };

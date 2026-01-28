@@ -29,6 +29,8 @@ export const MY_LISTINGS_QUERY: TypedDocumentNode<
           id
           sortOrder
           type
+          originalFilename
+          size
         }
         tags
         type
@@ -39,6 +41,8 @@ export const MY_LISTINGS_QUERY: TypedDocumentNode<
           id
           sortOrder
           type
+          originalFilename
+          size
         }
       }
     }

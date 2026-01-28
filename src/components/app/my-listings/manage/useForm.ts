@@ -1,10 +1,4 @@
-import {
-  Category,
-  CreateCategoryInput,
-  CreateListingInput,
-  Listing,
-  ListingType,
-} from "@/gql/graphql";
+import { CreateListingInput, Listing, ListingType } from "@/gql/graphql";
 import { useEffect } from "react";
 import { create } from "zustand";
 
@@ -59,10 +53,12 @@ export const useForm = create<FormState>((set) => ({
     })),
 }));
 
-export const useManageForm = (id: string, listing?: Listing | null) => {
+export const useManageForm = (listing?: Listing | null) => {
   const form = useForm((state) => state.form);
   const setForm = useForm((state) => state.setForm);
   const reset = useForm((state) => state.reset);
+  const { photoFiles, setPhotoFiles, storyVideoFile, setStoryVideoFile } =
+    useForm();
 
   useEffect(() => {
     setForm({
@@ -78,5 +74,13 @@ export const useManageForm = (id: string, listing?: Listing | null) => {
     });
   }, [listing, setForm]);
 
-  return { form, setForm, reset };
+  return {
+    form,
+    setForm,
+    reset,
+    photoFiles,
+    setPhotoFiles,
+    storyVideoFile,
+    setStoryVideoFile,
+  };
 };
