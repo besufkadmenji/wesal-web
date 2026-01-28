@@ -12,6 +12,7 @@ export enum SupportPageType {
   PRIVACY = "privacy",
   PROFILE = "profile",
   SIGNED_CONTRACT = "signedContract",
+  ADD_LISTING = "addListing",
 }
 
 export const Wrapper = ({

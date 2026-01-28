@@ -11,6 +11,7 @@ export const showSuccessMessage = (message: string) => {
     autoClose: 3000,
     pauseOnHover: false,
     pauseOnFocusLoss: false,
+    className:"w-max whitespace-nowrap"
   });
 };
 export const showInfoMessage = (message: string) => {

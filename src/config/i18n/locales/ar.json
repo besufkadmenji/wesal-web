@@ -47,6 +47,7 @@
     "nav": {
       "home": "الرئيسية",
       "categories": "الأقسام",
+      "myListings": "إعلاناتى",
       "contracts": "عقودى",
       "goodConnections": "وصال الخير",
       "contactUs": "تواصل معنا"
@@ -423,6 +424,10 @@
   },
 
   "support": {
+    "addListing": {
+      "title": "إضافة إعلان",
+      "breadcrumb": "إضافة إعلان"
+    },
     "signedContract": {
       "title": "العقد الإلكترونى الموقع",
       "breadcrumb": "العقد الإلكترونى الموقع"
@@ -641,5 +646,77 @@
     },
     "signatureSavedSuccessfully": "تم حفظ التوقيع بنجاح",
     "contractTerminatedSuccessfully": "تم إرسال فسخ العقد للإدارة بنجاح"
+  },
+  "myListings": {
+    "title": "إعلاناتي",
+    "empty": {
+      "title": "لم تقم بنشر أي إعلان بعد",
+      "description": "لم تقم بنشر أي إعلان بعد. يمكنك البدء الآن بنشر إعلانك الأول والوصول إلى أكبر عدد من المستخدمين."
+    },
+    "searchPlaceholder": "يمكنك البحث باسم الإعلان",
+    "card": {
+      "price": "السعر"
+    }
+  },
+  "addListing": {
+    "title": "إضافة إعلان",
+    "breadcrumb": "إضافة إعلان",
+    "form": {
+      "listingType": "نوع الإعلان",
+      "freeListing": "إعلان مجاني",
+      "featuredListing": "إعلان ممیز",
+      "listingName": "اسم الإعلان",
+      "listingPrice": "سعر الإعلان",
+      "listingCategory": "فئة الإعلان",
+      "listingDescription": "وصف الإعلان",
+      "listingImages": "صور الإعلان",
+      "listingVideo": "فيديو الإعلان (قصة الإعلان)",
+      "fileFormat": "png,jpeg",
+      "maxImages": "(حد أقصى 5 صور - 10 ميجا لكل صورة)",
+      "maxVideo": " (حد أقصى 100 ميجا)",
+      "characterLimit50": "0/50",
+      "characterLimit1000": "0/1000",
+      "submit": "نشر الإعلان"
+    },
+    "validation": {
+      "nameRequired": "اسم الإعلان مطلوب",
+      "nameMinLength": "يجب أن يكون اسم الإعلان 3 أحرف على الأقل",
+      "nameMaxLength": "لا يجب أن يتجاوز اسم الإعلان 50 حرفاً",
+      "descriptionRequired": "الوصف مطلوب",
+      "descriptionMinLength": "يجب أن يكون الوصف 10 أحرف على الأقل",
+      "descriptionMaxLength": "لا يجب أن يتجاوز الوصف 1000 حرف",
+      "priceRequired": "السعر مطلوب",
+      "priceInvalid": "يجب أن يكون السعر رقماً صحيحاً",
+      "priceNegative": "يجب أن يكون السعر أكبر من أو يساوي 0",
+      "categoryRequired": "القسم مطلوب",
+      "cityRequired": "المدينة مطلوبة",
+      "typeRequired": "نوع الإعلان مطلوب",
+      "photosRequired": "يجب اختيار صورة واحدة على الأقل",
+      "photosMaxCount": "الحد الأقصى هو 5 صور",
+      "photosInvalidFormat": "يتم السماح بملفات الصور فقط",
+      "photosMaxSize": "يجب ألا يتجاوز حجم الصورة 10 ميجا بايت",
+      "videoRequired": "الفيديو مطلوب",
+      "videoInvalidFormat": "يتم السماح بملفات الفيديو فقط",
+      "videoMaxSize": "يجب ألا يتجاوز حجم الفيديو 100 ميجا بايت"
+    },
+    "listingCreatedSuccessfully": "تم إنشاء الإعلان بنجاح"
+  },
+
+  "listingDetail": {
+    "about": "عن الإعلان",
+    "viewAll": "عرض الكل",
+    "storyVideo": "الفيديو الخاص بالإعلان",
+    "editAdData": "تعديل بيانات الإعلان",
+    "reviews": {
+      "title": "التعليقات",
+      "overallRating": "التقييم العام",
+      "commentCount": "تعليق",
+      "comments": "التعليقات",
+      "reviewerName": "اسم المقيّم",
+      "postedDate": "تاريخ النشر",
+      "rating": "التقييم",
+      "comment": "التعليق",
+      "viewMore": "المزيد من التعليقات"
+    }
   }
 }

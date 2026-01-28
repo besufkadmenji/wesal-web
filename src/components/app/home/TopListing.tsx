@@ -40,7 +40,7 @@ export const TopListing = () => {
     };
   }, [swiper]);
   return (
-    <div className="grid grid-cols-1 gap-6 md:gap-11 overflow-visible bg-[#FBFBFB] py-20">
+    <div className="grid grid-cols-1 gap-6 overflow-visible bg-[#FBFBFB] py-20 md:gap-11">
       <div className="flex justify-between px-[7vw]">
         <div className="grid grid-cols-1 gap-4">
           <div className="flex items-center gap-4">
@@ -49,7 +49,7 @@ export const TopListing = () => {
               <DotLine className="mx-4 inline-block h-5 w-14.5" />
             </p>
           </div>
-          <p className="text-primary text-lg md:leading-7.75 font-bold md:text-2xl">
+          <p className="text-primary text-lg font-bold md:text-2xl md:leading-7.75">
             {dict.home.topListing.title}
           </p>
         </div>
@@ -149,7 +149,7 @@ const ListingCard = ({
           <div className="grid grid-cols-[1fr_auto]">
             <p className="text-lg font-semibold text-black">{title}</p>
             <div className="flex items-center gap-0.5">
-              <RatingIcon className="size-4" />
+              <RatingIcon className="size-4 text-[#FB8A00]" />
               <p className="grow text-sm leading-6 font-medium text-black">
                 4.5
               </p>

@@ -20,6 +20,7 @@ type Admin {
   permissionType: AdminPermissionType!
   phoneNumber: String!
   platformManagerSignature: String
+  publicId: Int
   roleName: String!
   status: AdminStatus!
   updatedAt: DateTime!
@@ -69,6 +70,7 @@ type AdminPermission {
   id: ID!
   permission: Permission!
   permissionId: ID!
+  publicId: Int
   updatedAt: DateTime!
 }
 
@@ -115,87 +117,6 @@ enum AdminUserType {
   PLATFORM
 }
 
-type Advertisement {
-  attributes: [AdvertisementAttributes!]
-  category: Category!
-  categoryId: String!
-  city: City!
-  cityId: String!
-  createdAt: DateTime!
-  description: String!
-  id: ID!
-  media: [AdvertisementMedia!]
-  price: Float!
-  status: AdvertisementStatus!
-  title: String!
-  updatedAt: DateTime!
-  user: User!
-  userId: String!
-}
-
-type AdvertisementAttributes {
-  advertisement: Advertisement!
-  advertisementId: String!
-  id: ID!
-  key: String!
-  value: String!
-}
-
-input AdvertisementAttributesInput {
-  key: String!
-  value: String!
-}
-
-type AdvertisementMedia {
-  advertisement: Advertisement!
-  advertisementId: String!
-  id: ID!
-  sortOrder: Int!
-  url: String!
-}
-
-input AdvertisementMediaInput {
-  sortOrder: Int!
-  url: String!
-}
-
-input AdvertisementPaginationInput {
-  categoryId: String
-  cityId: String
-
-  """Number of items per page"""
-  limit: Int! = 10
-
-  """Page number (1-based)"""
-  page: Int! = 1
-
-  """Sort field name"""
-  sortBy: AdvertisementSortField
-
-  """Sort order: ASC or DESC"""
-  sortOrder: SortOrder = DESC
-  status: AdvertisementStatus
-  userId: String
-}
-
-"""Available fields to sort advertisements by"""
-enum AdvertisementSortField {
-  createdAt
-  id
-  price
-  status
-  title
-  updatedAt
-}
-
-"""Advertisement status"""
-enum AdvertisementStatus {
-  DRAFT
-  EXPIRED
-  PUBLISHED
-  SUSPENDED
-}
-
 input AssignPermissionInput {
   adminId: ID!
   permissionId: ID!
@@ -216,15 +137,14 @@ input BulkUpdateFaqOrderInput {
 }
 
 type Category {
-  children: [Category!]
   createdAt: DateTime!
   descriptionAr: String!
   descriptionEn: String!
   id: ID!
+  image: String!
   nameAr: String!
   nameEn: String!
-  parent: Category
-  parentId: String
+  publicId: Int
   rulesAr: String!
   rulesEn: String!
   updatedAt: DateTime!
@@ -236,7 +156,6 @@ input CategoryPaginationInput {
 
   """Page number (1-based)"""
   page: Int! = 1
-  parentId: String
   search: String
 
   """Sort order: ASC or DESC"""
@@ -271,6 +190,7 @@ type City {
   id: ID!
   nameAr: String!
   nameEn: String!
+  publicId: Int
   updatedAt: DateTime!
 }
 
@@ -301,11 +221,12 @@ enum CitySortField {
 
 type Complaint {
   adminResponse: String
-  advertisement: Advertisement!
-  advertisementId: String!
   createdAt: DateTime!
   description: String!
   id: ID!
+  listing: Listing!
+  listingId: String!
+  publicId: Int
   reason: ComplaintReason!
   reviewedAt: DateTime
   reviewedBy: String
@@ -317,10 +238,9 @@ type Complaint {
 }
 
 input ComplaintPaginationInput {
-  advertisementId: String
-
   """Number of items per page"""
   limit: Int! = 10
+  listingId: String
 
   """Page number (1-based)"""
   page: Int! = 1
@@ -376,6 +296,7 @@ type ContactMessage {
   messageType: String!
   name: String!
   phone: String!
+  publicId: Int
   updatedAt: DateTime!
 }
 
@@ -412,6 +333,7 @@ type Contract {
   id: ID!
   provider: User!
   providerId: String!
+  publicId: Int
   signatures: [ContractSignature!]
   status: ContractStatus!
   updatedAt: DateTime!
@@ -472,25 +394,26 @@ enum ContractStatus {
 }
 
 type Conversation {
-  advertisement: Advertisement!
-  advertisementId: String!
   createdAt: DateTime!
   id: ID!
   isPaid: Boolean!
+  listing: Listing!
+  listingId: String!
   messages: [Message!]
   provider: User!
   providerId: String!
+  publicId: Int
   updatedAt: DateTime!
   user: User!
   userId: String!
 }
 
 input ConversationPaginationInput {
-  advertisementId: String
   isPaid: Boolean
 
   """Number of items per page"""
   limit: Int! = 10
+  listingId: String
 
   """Page number (1-based)"""
   page: Int! = 1
@@ -519,6 +442,7 @@ type Country {
   id: ID!
   nameAr: String!
   nameEn: String!
+  publicId: Int
   updatedAt: DateTime!
 }
 
@@ -558,24 +482,12 @@ input CreateAdminInput {
   userType: AdminUserType!
 }
 
-input CreateAdvertisementInput {
-  attributes: [AdvertisementAttributesInput!]
-  categoryId: String!
-  cityId: String!
-  description: String!
-  media: [AdvertisementMediaInput!]
-  price: Float!
-  status: AdvertisementStatus
-  title: String!
-  userId: String!
-}
-
 input CreateCategoryInput {
   descriptionAr: String!
   descriptionEn: String!
+  image: String!
   nameAr: String!
   nameEn: String!
-  parentId: String
   rulesAr: String!
   rulesEn: String!
 }
@@ -587,8 +499,8 @@ input CreateCityInput {
 }
 
 input CreateComplaintInput {
-  advertisementId: String!
   description: String!
+  listingId: String!
   reason: ComplaintReason!
   status: ComplaintStatus
   userId: String!
@@ -615,8 +527,8 @@ input CreateContractInput {
 }
 
 input CreateConversationInput {
-  advertisementId: String!
   isPaid: Boolean
+  listingId: String!
   providerId: String!
   userId: String!
 }
@@ -636,8 +548,27 @@ input CreateFaqInput {
 }
 
 input CreateFavoriteInput {
-  advertisementId: String!
+  listingId: String!
   userId: String!
+}
+
+input CreateListingInput {
+  categoryId: String!
+  cityId: String!
+  description: String!
+  name: String!
+  photos: [CreateListingMediaInput!]
+  price: Float!
+  status: ListingStatus
+  story: CreateListingMediaInput
+  type: ListingType!
+}
+
+input CreateListingMediaInput {
+  filename: String!
+  id: String!
+  sortOrder: Float!
+  type: MediaType!
 }
 
 input CreateMessageInput {
@@ -677,8 +608,8 @@ input CreatePermissionInput {
 }
 
 input CreateRatingInput {
-  advertisementId: String!
   comment: String
+  listingId: String!
   rating: Int!
   userId: String!
 }
@@ -707,25 +638,26 @@ type Faq {
   id: ID!
   isActive: Boolean!
   order: Float!
+  publicId: Int
   questionAr: String!
   questionEn: String!
   updatedAt: DateTime!
 }
 
 type Favorite {
-  advertisement: Advertisement!
-  advertisementId: String!
   createdAt: DateTime!
   id: ID!
+  listing: Listing!
+  listingId: String!
+  publicId: Int
   user: User!
   userId: String!
 }
 
 input FavoritePaginationInput {
-  advertisementId: String
-
   """Number of items per page"""
   limit: Int! = 10
+  listingId: String
 
   """Page number (1-based)"""
   page: Int! = 1
@@ -748,10 +680,80 @@ input ForgotPasswordInput {
   emailOrPhone: String!
 }
 
+type Listing {
+  categoryId: String!
+  cityId: String!
+  createdAt: DateTime!
+  description: String!
+  id: String!
+  name: String!
+  photos: [ListingMedia!]!
+  price: Float!
+  status: ListingStatus!
+  story: ListingMedia!
+  tags: String!
+  type: ListingType!
+  updatedAt: DateTime!
+  userId: String!
+}
+
+type ListingMedia {
+  filename: String!
+  id: String!
+  sortOrder: Float!
+  type: MediaType!
+}
+
+input ListingPaginationInput {
+  """Number of items per page"""
+  limit: Int! = 10
+
+  """Page number (1-based)"""
+  page: Int! = 1
+  search: String
+
+  """Sort field name"""
+  sortBy: ListingSortField
+
+  """Sort order: ASC or DESC"""
+  sortOrder: SortOrder = DESC
+  status: ListingStatus
+}
+
+"""Available fields to sort listings by"""
+enum ListingSortField {
+  createdAt
+  id
+  name
+  price
+  status
+  updatedAt
+}
+
+"""Listing publication status"""
+enum ListingStatus {
+  DRAFT
+  EXPIRED
+  PUBLISHED
+  SUSPENDED
+}
+
+"""Listing type (free or featured)"""
+enum ListingType {
+  FEATURED
+  FREE
+}
+
 input LoginInput {
   emailOrPhone: String!
   password: String!
   role: UserRole!
+}
+
+"""Media file type"""
+enum MediaType {
+  IMAGE
+  VIDEO
 }
 
 type Message {
@@ -760,6 +762,7 @@ type Message {
   conversationId: String!
   createdAt: DateTime!
   id: ID!
+  publicId: Int
   sender: User!
   senderId: String!
   updatedAt: DateTime!
@@ -815,7 +818,6 @@ type Mutation {
   """Change password for authenticated user"""
   changePassword(input: ChangePasswordInput!): Boolean!
   createAdmin(createAdminInput: CreateAdminInput!): Admin!
-  createAdvertisement(input: CreateAdvertisementInput!): Advertisement!
   createCategory(input: CreateCategoryInput!): Category!
   createCity(input: CreateCityInput!): City!
   createComplaint(input: CreateComplaintInput!): Complaint!
@@ -829,6 +831,7 @@ type Mutation {
   """Create FAQ (admin only)"""
   createFaq(createFaqInput: CreateFaqInput!): Faq!
   createFavorite(input: CreateFavoriteInput!): Favorite!
+  createListing(createListingInput: CreateListingInput!): Listing!
   createMessage(input: CreateMessageInput!): Message!
   createNotification(input: CreateNotificationInput!): Notification!
   createPayment(input: CreatePaymentInput!): Payment!
@@ -841,6 +844,7 @@ type Mutation {
 
   """Delete all notifications for a user"""
   deleteAllNotificationsForUser(userId: String!): Boolean!
+  deleteSignedContract(id: String!): SignedContract!
 
   """Request password reset OTP"""
   forgotPassword(input: ForgotPasswordInput!): Boolean!
@@ -882,7 +886,6 @@ type Mutation {
   """Reject a complaint"""
   rejectComplaint(complaintId: String!, reason: String!, reviewerId: String!): Complaint!
   removeAdmin(id: ID!): Boolean!
-  removeAdvertisement(id: String!): Advertisement!
 
   """Delete user avatar by ID"""
   removeAvatar(id: ID!): Boolean!
@@ -900,8 +903,9 @@ type Mutation {
   removeFaq(id: ID!): Boolean!
   removeFavorite(id: String!): Favorite!
 
-  """Remove favorite by user and advertisement IDs"""
-  removeFavoriteByUserAndAdvertisement(advertisementId: String!, userId: String!): Favorite!
+  """Remove favorite by user and listing IDs"""
+  removeFavoriteByUserAndListing(listingId: String!, userId: String!): Favorite!
+  removeListing(id: String!): RemoveListingResponse!
   removeMessage(id: String!): Message!
   removeNotification(id: String!): Notification!
   removePayment(id: String!): Payment!
@@ -931,7 +935,6 @@ type Mutation {
   """Terminate contract as service provider"""
   terminateContract(terminationReason: String!): User!
   updateAdmin(id: ID!, updateAdminInput: UpdateAdminInput!): Admin!
-  updateAdvertisement(input: UpdateAdvertisementInput!): Advertisement!
   updateCategory(input: UpdateCategoryInput!): Category!
   updateCity(input: UpdateCityInput!): City!
   updateComplaint(input: UpdateComplaintInput!): Complaint!
@@ -944,6 +947,7 @@ type Mutation {
 
   """Update FAQ (admin only)"""
   updateFaq(updateFaqInput: UpdateFaqInput!): Faq!
+  updateListing(updateListingInput: UpdateListingInput!): Listing!
   updateMessage(input: UpdateMessageInput!): Message!
   updatePayment(input: UpdatePaymentInput!): Payment!
   updatePermission(id: ID!, updatePermissionInput: UpdatePermissionInput!): Permission!
@@ -970,6 +974,7 @@ type Notification {
   id: ID!
   isRead: Boolean!
   message: String!
+  publicId: Int
   readAt: DateTime
   relatedEntityId: String
   relatedEntityType: String
@@ -1013,12 +1018,12 @@ type NotificationStats {
 
 """Type of notification"""
 enum NotificationType {
-  ADVERTISEMENT_APPROVED
-  ADVERTISEMENT_REJECTED
   COMPLAINT_RESOLVED
   COMPLAINT_SUBMITTED
   CONTRACT_CREATED
   CONTRACT_SIGNED
+  LISTING_APPROVED
+  LISTING_REJECTED
   NEW_MESSAGE
   NEW_RATING
   PAYMENT_COMPLETED
@@ -1036,14 +1041,6 @@ enum OtpType {
 type PaginatedAdminResponse {
   """List of items"""
   items: [Admin!]!
-
-  """Pagination metadata"""
-  meta: PaginationMeta!
-}
-
-type PaginatedAdvertisementResponse {
-  """List of items"""
-  items: [Advertisement!]!
 
   """Pagination metadata"""
   meta: PaginationMeta!
@@ -1113,6 +1110,14 @@ type PaginatedFavoriteResponse {
   meta: PaginationMeta!
 }
 
+type PaginatedListingResponse {
+  """List of items"""
+  items: [Listing!]!
+
+  """Pagination metadata"""
+  meta: PaginationMeta!
+}
+
 type PaginatedMessageResponse {
   """List of items"""
   items: [Message!]!
@@ -1140,6 +1145,14 @@ type PaginatedPaymentResponse {
 type PaginatedRatingResponse {
   """List of items"""
   items: [Rating!]!
+
+  """Pagination metadata"""
+  meta: PaginationMeta!
+}
+
+type PaginatedSignedContractResponse {
+  """List of items"""
+  items: [SignedContract!]!
 
   """Pagination metadata"""
   meta: PaginationMeta!
@@ -1182,6 +1195,7 @@ type Payment {
   id: ID!
   notes: String
   paymentMethod: PaymentMethod!
+  publicId: Int
   status: PaymentStatus!
   transactionReference: String
   updatedAt: DateTime!
@@ -1246,6 +1260,7 @@ type Permission {
   name: String!
   nameAr: String!
   permissionPlatform: PermissionPlatform!
+  publicId: Int
   resource: String!
   updatedAt: DateTime!
 }
@@ -1260,8 +1275,6 @@ type Query {
   admin(id: ID!): Admin!
   adminPermissions(adminId: ID!): [AdminPermission!]!
   admins(paginationInput: AdminPaginationInput): PaginatedAdminResponse!
-  advertisement(id: String!): Advertisement!
-  advertisements(input: AdvertisementPaginationInput): PaginatedAdvertisementResponse!
   categories(input: CategoryPaginationInput): PaginatedCategoryResponse!
   category(id: String!): Category!
 
@@ -1297,14 +1310,17 @@ type Query {
   """Get application settings (admin only)"""
   getSetting: Setting!
 
-  """Check if advertisement is favorited by user"""
-  isFavorite(advertisementId: String!, userId: String!): Boolean!
+  """Check if listing is favorited by user"""
+  isFavorite(listingId: String!, userId: String!): Boolean!
+  listing(id: String!): Listing
+  listings(paginationInput: ListingPaginationInput!): PaginatedListingResponse!
 
   """Get current authenticated user"""
   me: User!
   meAdmin: Admin!
   message(id: String!): Message!
   messages(input: MessagePaginationInput): PaginatedMessageResponse!
+  myListings(paginationInput: ListingPaginationInput!): PaginatedListingResponse!
   notification(id: String!): Notification!
 
   """Get notification statistics for a user"""
@@ -1317,23 +1333,27 @@ type Query {
   permissions: [Permission!]!
   rating(id: String!): Rating!
 
-  """Get rating statistics for an advertisement"""
-  ratingStatistics(advertisementId: String!): RatingStatistics!
+  """Get rating statistics for an listing"""
+  ratingStatistics(listingId: String!): RatingStatistics!
   ratings(input: RatingPaginationInput): PaginatedRatingResponse!
+  signedContractById(id: String!): SignedContract
+  signedContractByUserId(userId: String!): SignedContract
+  signedContracts(input: SignedContractPaginationInput): PaginatedSignedContractResponse!
 
   """Get user by ID"""
   user(id: ID!): User!
 
   """Get all users with pagination by role"""
-  users(pagination: UserPaginationInput!, withContracts: Boolean): PaginatedUserResponse!
+  users(pagination: UserPaginationInput!): PaginatedUserResponse!
 }
 
 type Rating {
-  advertisement: Advertisement!
-  advertisementId: String!
   comment: String
   createdAt: DateTime!
   id: ID!
+  listing: Listing!
+  listingId: String!
+  publicId: Int
   rating: Int!
   updatedAt: DateTime!
   user: User!
@@ -1341,10 +1361,9 @@ type Rating {
 }
 
 input RatingPaginationInput {
-  advertisementId: String
-
   """Number of items per page"""
   limit: Int! = 10
+  listingId: String
   maxRating: Int
   minRating: Int
 
@@ -1398,6 +1417,11 @@ input RegisterInput {
   withAbsher: Boolean
 }
 
+type RemoveListingResponse {
+  message: String!
+  success: Boolean!
+}
+
 input ResendOtpInput {
   target: String!
   type: OtpType!
@@ -1422,6 +1446,7 @@ type Setting {
   phones: [String!]!
   privacyPolicyAr: String!
   privacyPolicyEn: String!
+  publicId: Int
   rulesAr: String!
   rulesEn: String!
   socialMediaLinks: [SocialMediaLink!]!
@@ -1456,11 +1481,41 @@ type SignedContract {
   acceptedRulesEn: String
   contractExpiresAt: String
   contractSignedAt: String!
+  createdAt: DateTime!
+  id: ID!
   platformManagerName: String
   platformManagerSignature: String
+  publicId: Int
   serviceProviderSignature: String!
   status: SignedContractStatus!
   terminationReason: String
+  updatedAt: DateTime!
+  user: User
+  userId: String!
+}
+
+input SignedContractPaginationInput {
+  """Number of items per page"""
+  limit: Int! = 10
+
+  """Page number (1-based)"""
+  page: Int! = 1
+  search: String
+
+  """Sort field name"""
+  sortBy: SignedContractSortField
+
+  """Sort order: ASC or DESC"""
+  sortOrder: SortOrder = DESC
+  userId: String
+}
+
+"""Available fields to sort signed contracts by"""
+enum SignedContractSortField {
+  createdAt
+  id
+  updatedAt
+  userId
 }
 
 """User account status"""
@@ -1500,26 +1555,13 @@ input UpdateAdminInput {
   userType: AdminUserType
 }
 
-input UpdateAdvertisementInput {
-  attributes: [AdvertisementAttributesInput!]
-  categoryId: String
-  cityId: String
-  description: String
-  id: String!
-  media: [AdvertisementMediaInput!]
-  price: Float
-  status: AdvertisementStatus
-  title: String
-  userId: String
-}
-
 input UpdateCategoryInput {
   descriptionAr: String
   descriptionEn: String
   id: String!
+  image: String
   nameAr: String
   nameEn: String
-  parentId: String
   rulesAr: String
   rulesEn: String
 }
@@ -1532,9 +1574,9 @@ input UpdateCityInput {
 }
 
 input UpdateComplaintInput {
-  advertisementId: String
   description: String
   id: String!
+  listingId: String
   reason: ComplaintReason
   status: ComplaintStatus
   userId: String
@@ -1563,9 +1605,9 @@ input UpdateContractInput {
 }
 
 input UpdateConversationInput {
-  advertisementId: String
   id: String!
   isPaid: Boolean
+  listingId: String
   providerId: String
   userId: String
 }
@@ -1589,6 +1631,19 @@ input UpdateFaqInput {
 input UpdateFaqOrderInput {
   id: String!
   order: Int!
+}
+
+input UpdateListingInput {
+  categoryId: String
+  cityId: String
+  description: String
+  id: String!
+  name: String
+  photos: [CreateListingMediaInput!]
+  price: Float
+  status: ListingStatus
+  story: CreateListingMediaInput
+  type: ListingType
 }
 
 input UpdateMessageInput {
@@ -1620,9 +1675,9 @@ input UpdatePermissionInput {
 }
 
 input UpdateRatingInput {
-  advertisementId: String
   comment: String
   id: String!
+  listingId: String
   rating: Int
   userId: String
 }
@@ -1679,6 +1734,7 @@ type User {
   name: String
   phone: String!
   phoneVerified: Boolean!
+  publicId: Int
   role: UserRole!
   signedContract: SignedContract
   status: UserStatus!

@@ -39,6 +39,10 @@ export const SIGN_CONTRACT_MUTATION: TypedDocumentNode<
         nameAr
         nameEn
         updatedAt
+        rulesEn
+        rulesAr
+        image
+        publicId
       }
       withAbsher
       status
@@ -52,12 +56,18 @@ export const SIGN_CONTRACT_MUTATION: TypedDocumentNode<
         terminationReason
         acceptedRulesAr
         acceptedRulesEn
+        id
+        createdAt
+        publicId
+        updatedAt
+        userId
       }
       deactivationReason
       deleteReason
       deletedAt
       commercialName
       commercialRegistrationFilename
+      publicId
     }
   }
 `;

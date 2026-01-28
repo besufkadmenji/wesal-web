@@ -11,7 +11,6 @@ class CategoryService {
           input: {
             limit: 100,
             page: 1,
-            parentId: null,
           },
         },
       });

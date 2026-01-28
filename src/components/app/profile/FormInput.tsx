@@ -13,6 +13,7 @@ export const FormInput = ({
   icon,
   isDisabled,
   readOnly,
+  isRequired,
 }: {
   label: string;
   placeholder: string;
@@ -21,11 +22,13 @@ export const FormInput = ({
   icon?: ReactNode;
   isDisabled?: boolean;
   readOnly?: boolean;
+  isRequired?: boolean;
 }) => {
   return (
     <div className="relative grid h-14 grid-cols-1 items-center">
       <Label className="text-gray absolute top-0 z-10 -translate-y-1/2 bg-white px-1 text-sm ltr:left-4 rtl:right-4">
         {label}
+        {isRequired && <span className="text-red-500"> *</span>}
       </Label>
       <TextInput
         value={value}

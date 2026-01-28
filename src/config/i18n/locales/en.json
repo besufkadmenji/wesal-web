@@ -47,6 +47,7 @@
     "nav": {
       "home": "Home",
       "categories": "Categories",
+      "myListings": "My Ads",
       "contracts": "My Contracts",
       "goodConnections": "Good Connections",
       "contactUs": "Contact Us"
@@ -428,6 +429,10 @@
     "unexpectedError": "An unexpected error occurred. Please try again later."
   },
   "support": {
+    "addListing": {
+      "title": "Add Listing",
+      "breadcrumb": "Add Listing"
+    },
     "signedContract": {
       "title": "Signed Electronic Contract",
       "breadcrumb": "Signed Electronic Contract"
@@ -647,5 +652,77 @@
     },
     "signatureSavedSuccessfully": "Signature saved successfully",
     "contractTerminatedSuccessfully": "Contract termination has been sent to the administration successfully"
+  },
+  "myListings": {
+    "title": "My Ads",
+    "empty": {
+      "title": "You haven't published any ad yet",
+      "description": "You haven't published any ad yet. You can now start publishing your first ad and reach the largest number of users."
+    },
+    "searchPlaceholder": "You can search by ad name",
+    "card": {
+      "price": "Price"
+    }
+  },
+  "addListing": {
+    "title": "Add Listing",
+    "breadcrumb": "Add Listing",
+
+    "form": {
+      "listingType": "Listing Type",
+      "freeListing": "Free Listing",
+      "featuredListing": "Featured Listing",
+      "listingName": "Listing Name",
+      "listingPrice": "Listing Price",
+      "listingCategory": "Listing Category",
+      "listingDescription": "Listing Description",
+      "listingImages": "Listing Images",
+      "listingVideo": "Ad Video (Ad Story)",
+      "maxVideo": "(Maximum 100 MB)",
+      "fileFormat": "png,jpeg",
+      "maxImages": "(Max 5 images - 10MB each)",
+      "characterLimit50": "0/50",
+      "characterLimit1000": "0/1000",
+      "submit": "Post the advertisement"
+    },
+    "validation": {
+      "nameRequired": "Listing name is required",
+      "nameMinLength": "Listing name must be at least 3 characters",
+      "nameMaxLength": "Listing name must not exceed 50 characters",
+      "descriptionRequired": "Description is required",
+      "descriptionMinLength": "Description must be at least 10 characters",
+      "descriptionMaxLength": "Description must not exceed 1000 characters",
+      "priceRequired": "Price is required",
+      "priceInvalid": "Price must be a valid number",
+      "priceNegative": "Price must be greater than or equal to 0",
+      "categoryRequired": "Category is required",
+      "cityRequired": "City is required",
+      "typeRequired": "Listing type is required",
+      "photosRequired": "At least one image is required",
+      "photosMaxCount": "Maximum 5 images are allowed",
+      "photosInvalidFormat": "Only image files are allowed",
+      "photosMaxSize": "Image size must not exceed 10MB",
+      "videoRequired": "Video is required",
+      "videoInvalidFormat": "Only video files are allowed",
+      "videoMaxSize": "Video size must not exceed 100MB"
+    },
+    "listingCreatedSuccessfully": "Listing created successfully"
+  },
+  "listingDetail": {
+    "about": "About the Ad",
+    "viewAll": "View All",
+    "storyVideo": "The video for the advertisement",
+    "editAdData": "Edit ad data",
+    "reviews": {
+      "title": "Comments",
+      "overallRating": "Overall Rating",
+      "commentCount": "comment",
+      "comments": "Comments",
+      "reviewerName": "Reviewer Name",
+      "postedDate": "Posted Date",
+      "rating": "Rating",
+      "comment": "Comment",
+      "viewMore": "View More Comments"
+    }
   }
 }
