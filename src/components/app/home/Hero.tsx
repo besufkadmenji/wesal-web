@@ -17,6 +17,7 @@ import { twMerge } from "tailwind-merge";
 import { useCategories } from "@/hooks/useCategories";
 import { useQueryState } from "nuqs";
 import { usePathname, useRouter } from "next/navigation";
+import { CategorySelect } from "@/components/app/categories/Categories";
 export const Hero = () => {
   const dict = useDict();
   const lng = useLang();
@@ -30,7 +31,7 @@ export const Hero = () => {
         <div className="flex flex-wrap items-center justify-center gap-3 px-3 sm:px-[12vw] md:px-8 lg:justify-start lg:px-[14vw] xl:px-[12vw] 2xl:px-[16vw]">
           <h1
             className={twMerge(
-              "md:3xl relative grid align-baseline text-lg leading-5.5 sm:leading-8 md:leading-11 font-medium text-black sm:text-2xl md:inline-block lg:text-4xl xl:text-5xl xl:leading-13",
+              "md:3xl relative grid align-baseline text-lg leading-5.5 font-medium text-black sm:text-2xl sm:leading-8 md:inline-block md:leading-11 lg:text-4xl xl:text-5xl xl:leading-13",
             )}
           >
             {dict.home.hero.title}
@@ -53,29 +54,7 @@ export const Hero = () => {
         </p>
       </div>
       <div className="grid w-full grid-cols-[1fr_auto] items-center gap-2 px-8 md:w-[48vw]">
-        <Select
-          dir={lng === "ar" ? "rtl" : "ltr"}
-          disabled={categories?.items.length === 0}
-          value={category || undefined}
-          onValueChange={(value) => setCategory(value)}
-        >
-          <SelectTrigger
-            className="flex h-14! w-full justify-start gap-2 rounded-[20px] bg-white px-4 shadow-none! ring-0!"
-            icon={<ChevronDownIcon className="size-6" />}
-          >
-            <CategoryIcon />
-            <div className="placeholder:text-gray flex grow justify-start text-sm leading-6">
-              <SelectValue placeholder={dict.home.hero.selectCategories} />
-            </div>
-          </SelectTrigger>
-          <SelectContent>
-            {categories?.items.map((category) => (
-              <SelectItem key={category.id} value={category.id}>
-                {lng === "ar" ? category.nameAr : category.nameEn}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <CategorySelect />
         <Button
           className="h-12.5 rounded-[20px] md:px-16"
           onClick={() => {
