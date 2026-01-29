@@ -1,7 +1,7 @@
 import { ListingDetail } from "@/components/app/listings/ListingDetail/ListingDetail";
 
 const ListingDetailPage = () => {
-  return <ListingDetail ownerMode />;
+  return <ListingDetail />;
 };
 
 export default ListingDetailPage;

@@ -1,17 +1,32 @@
 import ShowMoreIcon from "@/assets/icons/show.more.svg";
-import { Ratings } from "@/components/app/listings/my-listings/ListingDetail/MainInfo";
+import { Ratings } from "@/components/app/listings/ListingDetail/MainInfo";
 import { Button } from "@/components/ui/button";
 import { useDict } from "@/hooks/useDict";
 import Image from "next/image";
 import { Review, reviewsData } from "./reviews_data";
+import { twMerge } from "tailwind-merge";
+import RatingIcon from "@/assets/icons/rating.svg";
 
-export const Reviews = () => {
+export const Reviews = ({ ownerMode }: { ownerMode: boolean }) => {
   const dict = useDict();
   return (
     <div className="grid grid-cols-1 gap-6 rounded-[20px] bg-white p-5">
-      <div className="grid grid-cols-1 gap-1">
-        <p>{dict.listingDetail.reviews.title}</p>
-        <Ratings rating={4.5} total={22} />
+      <div
+        className={twMerge(
+          "grid grid-cols-1 items-center",
+          !ownerMode && "grid-cols-[1fr_auto]",
+        )}
+      >
+        <div className="grid grid-cols-1 gap-1">
+          <p>{dict.listingDetail.reviews.title}</p>
+          <Ratings rating={4.5} total={22} />
+        </div>
+        {!ownerMode && (
+          <Button className="flex h-12.5 items-center gap-1 rounded-[20px] px-6!">
+            {dict.listingDetail.reviews.addReview}
+            <RatingIcon className="size-5" />
+          </Button>
+        )}
       </div>
       <div className="grid grid-cols-1 gap-6">
         {reviewsData.map((review) => (

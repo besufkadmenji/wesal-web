@@ -41,6 +41,7 @@ export const Ratings = ({
   hideInfo?: boolean;
   classNames?: {
     rating?: string;
+    info?: string;
   };
 }) => {
   const dict = useDict();
@@ -67,7 +68,7 @@ export const Ratings = ({
           </p>
         </div>
       ) : !hideInfo ? (
-        <p>({rating})</p>
+        <p className={twMerge("", classNames?.info)}>({rating})</p>
       ) : (
         <></>
       )}

@@ -691,6 +691,7 @@ type Listing {
   name: String!
   photos: [ListingMedia!]!
   price: Float!
+  provider: User
   status: ListingStatus!
   story: ListingMedia!
   tags: String!

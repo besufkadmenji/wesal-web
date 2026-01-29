@@ -35,6 +35,10 @@ export const LISTING_QUERY: TypedDocumentNode<
         originalFilename
         size
       }
+      provider {
+        id
+        name
+      }
     }
   }
 `;
