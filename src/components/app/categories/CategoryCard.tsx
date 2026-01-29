@@ -39,7 +39,7 @@ export const CategoryCard = ({ category }: { category: Category }) => {
             {dict.home.popularCategories.viewDetails}
           </Button>
           <div className="relative h-4 grow">
-            <ScrollArrow className="text-primary absolute -bottom-[6.5px] z-20 aspect-170/15 h-3.75 grow opacity-0 duration-300 ease-out group-hover:opacity-100 ltr:-left-5 ltr:rotate-180 rtl:-right-5" />
+            <ScrollArrow className="text-primary absolute -bottom-[6.5px] z-20 aspect-140/15 h-3.75 grow opacity-0 duration-300 ease-out group-hover:opacity-100 ltr:-left-5 ltr:rotate-180 rtl:-right-5" />
           </div>
         </div>
       </div>

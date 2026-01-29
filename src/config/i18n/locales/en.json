@@ -723,8 +723,11 @@
       "postedDate": "Posted Date",
       "rating": "Rating",
       "comment": "Comment",
-      "viewMore": "View More Comments"
-    }
+      "viewMore": "View More Comments",
+      "addReview": "Add Your Review"
+    },
+    "serviceProviderData": "Service Provider Data",
+    "contactProvider": "Conversation and data display"
   },
 
   "editListing": {

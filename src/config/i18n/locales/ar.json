@@ -717,8 +717,11 @@
       "postedDate": "تاريخ النشر",
       "rating": "التقييم",
       "comment": "التعليق",
-      "viewMore": "المزيد من التعليقات"
-    }
+      "viewMore": "المزيد من التعليقات",
+      "addReview":"أضف تقييمك"
+    },
+    "serviceProviderData": "بيانات مقدم الخدمة",
+    "contactProvider": "المحادثة و إظهار البيانات"
   },
   "editListing": {
     "saveChanges": "حفظ التغييرات"

@@ -1,7 +1,7 @@
 "use client";
 import { sar } from "@/assets/fonts/sar";
 import DownIcon from "@/assets/icons/down.bold.svg";
-import { useListing } from "@/components/app/listings/my-listings/ListingDetail/useListing";
+import { useListing } from "@/components/app/listings/ListingDetail/useListing";
 import { AppTextarea } from "@/components/app/listings/my-listings/manage/FormInput";
 import { FormRadio } from "@/components/app/listings/my-listings/manage/FormRadio";
 import {
