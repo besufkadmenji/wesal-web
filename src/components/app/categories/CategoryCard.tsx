@@ -6,10 +6,12 @@ import { Category } from "@/gql/graphql";
 import { dataUrl } from "@/config/url";
 import { useLang } from "@/hooks/useLang";
 import { Skeleton } from "@heroui/react";
+import { useRouter } from "next/navigation";
 
 export const CategoryCard = ({ category }: { category: Category }) => {
   const dict = useDict();
   const lng = useLang();
+  const router = useRouter();
   return (
     <div className="group grid grid-cols-1 gap-4 rounded-[20px] bg-white">
       <div className="relative h-44 w-full rounded-[20px]">
@@ -28,7 +30,12 @@ export const CategoryCard = ({ category }: { category: Category }) => {
           {lng === "en" ? category.descriptionEn : category.descriptionAr}
         </p>
         <div className="mt-6 flex items-end">
-          <Button className="bg-secondary group-hover:bg-primary h-12.5 shrink-0 justify-self-start rounded-[20px] px-6 text-base font-semibold text-[#4D4D4D] transition-colors duration-300 ease-out group-hover:text-white ltr:rounded-br-none group-hover:ltr:rounded-br-[20px] rtl:rounded-bl-none group-hover:rtl:rounded-bl-[20px]">
+          <Button
+            className="bg-secondary group-hover:bg-primary h-12.5 shrink-0 justify-self-start rounded-[20px] px-6 text-base font-semibold text-[#4D4D4D] transition-colors duration-300 ease-out group-hover:text-white ltr:rounded-br-none group-hover:ltr:rounded-br-[20px] rtl:rounded-bl-none group-hover:rtl:rounded-bl-[20px]"
+            onClick={() => {
+              router.push(`/listings?category=${category.id}`);
+            }}
+          >
             {dict.home.popularCategories.viewDetails}
           </Button>
           <div className="relative h-4 grow">
