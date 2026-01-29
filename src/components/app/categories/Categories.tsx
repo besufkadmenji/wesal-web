@@ -14,7 +14,7 @@ import { useLang } from "@/hooks/useLang";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { parseAsString, useQueryState, parseAsInteger } from "nuqs";
+import { parseAsInteger, useQueryState } from "nuqs";
 import { useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { AppPagination } from "../shared/AppPagination";
@@ -57,29 +57,7 @@ export const Categories = () => {
         </div>
         <div className="categorySearch absolute right-0 -bottom-12 left-0 z-10 mx-auto grid min-w-[48vw] grid-cols-[1fr_auto] items-center justify-center-safe gap-2 justify-self-center rounded-[20px] bg-white p-5">
           <CategorySelect />
-          {/* <Select
-            dir={lng === "ar" ? "rtl" : "ltr"}
-            disabled={categories?.items.length === 0}
-            value={category || undefined}
-            onValueChange={(value) => setCategory(value)}
-          >
-            <SelectTrigger
-              className="flex h-14! w-full justify-start gap-2 rounded-[20px] bg-white px-4 shadow-none! ring-0!"
-              icon={<ChevronDownIcon className="size-6" />}
-            >
-              <CategoryIcon />
-              <div className="placeholder:text-gray flex grow justify-start text-sm leading-6">
-                <SelectValue placeholder={dict.home.hero.selectCategories} />
-              </div>
-            </SelectTrigger>
-            <SelectContent>
-              {categories?.items.map((category) => (
-                <SelectItem key={category.id} value={category.id}>
-                  {lng === "ar" ? category.nameAr : category.nameEn}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select> */}
+
           <Button
             className="h-12.5 rounded-[20px] px-16"
             onClick={() => {
@@ -168,7 +146,7 @@ const CategorySuggestions = () => {
   const { categories } = useSearchCategories();
   const lng = useLang();
   return (
-    <div className="absolute top-14 right-0 z-10 left-0 hidden w-full grid-cols-1 gap-1 overflow-hidden rounded-b-2xl bg-white shadow peer-focus:grid hover:grid">
+    <div className="absolute top-14 right-0 left-0 z-10 hidden w-full grid-cols-1 gap-1 overflow-hidden rounded-b-2xl bg-white shadow peer-focus:grid hover:grid">
       {categories?.items.map((category) => (
         <Link
           href={`/listings?category=${category.id}`}
