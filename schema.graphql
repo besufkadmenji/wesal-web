@@ -709,8 +709,13 @@ type ListingMedia {
 }
 
 input ListingPaginationInput {
+  categoryId: String
+  cityId: String
+
   """Number of items per page"""
   limit: Int! = 10
+  maxPrice: Float
+  minPrice: Float
 
   """Page number (1-based)"""
   page: Int! = 1

@@ -2,10 +2,10 @@
 import {
   ListingCard,
   ListingCardSkeleton,
-} from "@/components/app/my-listings/ListingCard";
-import { ListingHeader } from "@/components/app/my-listings/ListingHeader";
-import { NoListing } from "@/components/app/my-listings/NoListing";
-import { useListings } from "@/components/app/my-listings/useListings";
+} from "@/components/app/listings/ListingCard";
+import { ListingHeader } from "@/components/app/listings/my-listings/ListingHeader";
+import { NoListing } from "@/components/app/listings/my-listings/NoListing";
+import { useListings } from "@/components/app/listings/my-listings/useListings";
 import { AppWrapper } from "@/components/app/shared/AppWrapper";
 import { UserRole } from "@/gql/graphql";
 import { useMe } from "@/hooks/useMe";

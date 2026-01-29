@@ -1,4 +1,4 @@
-import { EditListing } from "@/components/app/my-listings/manage/EditListing";
+import { EditListing } from "@/components/app/listings/my-listings/manage/EditListing";
 
 const EditListingPage = () => {
   return <EditListing />;

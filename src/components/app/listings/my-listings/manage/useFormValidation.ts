@@ -1,4 +1,4 @@
-import { CreateListingForm } from "@/components/app/my-listings/manage/useForm";
+import { CreateListingForm } from "@/components/app/listings/my-listings/manage/useForm";
 import { useDict } from "@/hooks/useDict";
 import { useCallback, useMemo, useState } from "react";
 

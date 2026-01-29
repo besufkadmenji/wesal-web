@@ -722,5 +722,32 @@
   },
   "editListing": {
     "saveChanges": "حفظ التغييرات"
+  },
+
+  "listing": {
+    "sections": "Categories"
+  },
+  "listingFilter": {
+    "title": "فلترة الإعلانات",
+    "reset": "إعادة التعيين",
+    "category": "إلكترونيات وأجهزة",
+    "categoryPlaceholder": "إلكترونيات وأجهزة",
+    "city": "المدينة",
+    "priceRange": "السعر من-إلى",
+    "priceFrom": "من",
+    "priceTo": "إلى",
+    "priceUnlimited": "غير محدود",
+    "rating": "التقييم",
+    "star1": "1",
+    "star2": "2",
+    "star3": "3",
+    "star4": "4",
+    "star5": "5"
+  },
+  "listings": {
+    "empty": {
+      "title": "لا توجد إعلانات متطابقة",
+      "description": "عذراً، لم نتمكن من العثور على إعلانات تطابق البحث الخاص بك. يرجى محاولة البحث باستخدام كلمات مفتاحية مختلفة أو فلاتر أخرى."
+    }
   }
 }

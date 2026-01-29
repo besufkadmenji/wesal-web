@@ -1,4 +1,4 @@
-import { AddListing } from "@/components/app/my-listings/manage/AddListing";
+import { AddListing } from "@/components/app/listings/my-listings/manage/AddListing";
 const AddListingPage = () => {
   return <AddListing />;
 };
