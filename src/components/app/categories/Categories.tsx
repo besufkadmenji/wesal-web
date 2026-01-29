@@ -2,33 +2,38 @@
 import BreadcrumbIcon from "@/assets/icons/breadcrumb.svg";
 import CategoryIcon from "@/assets/icons/category.svg";
 import ChevronDownIcon from "@/assets/icons/chevron.down.svg";
-import { ListingCard } from "@/components/app/categories/ListingCard";
+import {
+  CategoryCard,
+  CategoryCardSkeleton,
+} from "@/components/app/categories/CategoryCard";
 import { AppWrapper } from "@/components/app/shared/AppWrapper";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useCategories } from "@/hooks/useCategories";
+import { useCategories, useSearchCategories } from "@/hooks/useCategories";
 import { useDict } from "@/hooks/useDict";
 import { useLang } from "@/hooks/useLang";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useQueryState } from "nuqs";
+import { parseAsString, useQueryState, parseAsInteger } from "nuqs";
+import { useRef, useState } from "react";
+import { twMerge } from "tailwind-merge";
 import { AppPagination } from "../shared/AppPagination";
-import { listings } from "./listings";
 
 export const Categories = () => {
   const dict = useDict();
   const lng = useLang();
   const router = useRouter();
   const pathname = usePathname();
-  const { categories } = useCategories();
+  const { categories, isLoading } = useCategories();
   const [category, setCategory] = useQueryState("category");
+  const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
+
+  const [search, setSearch] = useQueryState("search");
+  const [query, setQuery] = useQueryState("query");
+  const timer = useRef<NodeJS.Timeout | null>(null);
+
+  const [localeQuery, setLocaleQuery] = useState(search ?? query ?? "");
+  console.log("localeQuery", localeQuery, query);
   return (
     <AppWrapper>
       <div className="relative grid h-50 grid-cols-1">
@@ -51,7 +56,8 @@ export const Categories = () => {
           </div>
         </div>
         <div className="categorySearch absolute right-0 -bottom-12 left-0 z-10 mx-auto grid min-w-[48vw] grid-cols-[1fr_auto] items-center justify-center-safe gap-2 justify-self-center rounded-[20px] bg-white p-5">
-          <Select
+          <CategorySelect />
+          {/* <Select
             dir={lng === "ar" ? "rtl" : "ltr"}
             disabled={categories?.items.length === 0}
             value={category || undefined}
@@ -73,20 +79,105 @@ export const Categories = () => {
                 </SelectItem>
               ))}
             </SelectContent>
-          </Select>
-          <Button className="h-12.5 rounded-[20px] px-16" onClick={() => {}}>
+          </Select> */}
+          <Button
+            className="h-12.5 rounded-[20px] px-16"
+            onClick={() => {
+              setQuery(localeQuery);
+              setSearch(null);
+            }}
+          >
             {dict.home.hero.search}
           </Button>
         </div>
       </div>
       <div className="grid grid-cols-1 gap-x-8 gap-y-20 px-[7vw] py-20">
         <div className="grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {[...listings, ...listings].map((listing, index) => (
-            <ListingCard key={`${listing.id}${index}`} {...listing} />
-          ))}
+          {isLoading ? (
+            <>
+              {Array.from({ length: 8 }).map((_, index) => (
+                <CategoryCardSkeleton key={index} />
+              ))}
+            </>
+          ) : (
+            categories?.items.map((category, index) => (
+              <CategoryCard
+                key={`${category.id}${index}`}
+                category={category}
+              />
+            ))
+          )}
         </div>
-        <AppPagination />
+        {categories && (
+          <AppPagination
+            page={categories.meta.page}
+            totalPages={categories.meta.totalPages}
+            onChange={(page) => setPage(page)}
+          />
+        )}
       </div>
     </AppWrapper>
+  );
+};
+
+export const CategorySelect = () => {
+  const dict = useDict();
+  const lng = useLang();
+  const { categories, isLoading } = useCategories();
+  const [category, setCategory] = useQueryState("category");
+  const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
+
+  const [search, setSearch] = useQueryState("search");
+  const [query, setQuery] = useQueryState("query");
+  const timer = useRef<NodeJS.Timeout | null>(null);
+
+  const [localeQuery, setLocaleQuery] = useState(search ?? query ?? "");
+  return (
+    <div
+      className={twMerge(
+        "relative flex h-14 w-full items-center justify-start gap-2 rounded-[20px] border border-[#F2F2F2] bg-white px-4",
+      )}
+    >
+      <input
+        placeholder={dict.home.hero.selectCategories}
+        className="peer h-full w-full ps-10.5 outline-none"
+        value={localeQuery}
+        onChange={(e) => {
+          setLocaleQuery(e.target.value);
+          clearTimeout(timer.current!);
+          timer.current = setTimeout(() => {
+            setSearch(e.target.value);
+          }, 100);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            setQuery(localeQuery);
+            setSearch(null);
+          }
+        }}
+      />
+      <CategoryIcon className="absolute size-6 ltr:left-4 rtl:right-4" />
+
+      <ChevronDownIcon className="absolute size-6 ltr:right-4 rtl:left-4" />
+      <CategorySuggestions />
+    </div>
+  );
+};
+
+const CategorySuggestions = () => {
+  const { categories } = useSearchCategories();
+  const lng = useLang();
+  return (
+    <div className="absolute top-14 right-0 z-10 left-0 hidden w-full grid-cols-1 gap-1 overflow-hidden rounded-b-2xl bg-white shadow peer-focus:grid hover:grid">
+      {categories?.items.map((category) => (
+        <Link
+          href={`/listings?category=${category.id}`}
+          key={category.id}
+          className="hover:text-primary hover:bg-primary/10 px-4 py-2 font-medium text-black"
+        >
+          {lng === "ar" ? category.nameAr : category.nameEn}
+        </Link>
+      ))}
+    </div>
   );
 };

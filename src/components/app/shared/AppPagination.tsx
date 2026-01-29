@@ -7,7 +7,15 @@ import {
 
 import PrevIcon from "@/assets/icons/prev.svg";
 import NextIcon from "@/assets/icons/next.svg";
-export const AppPagination = () => {
+export const AppPagination = ({
+  page,
+  totalPages,
+  onChange,
+}: {
+  page: number;
+  totalPages: number;
+  onChange: (page: number) => void;
+}) => {
   const renderItem = ({
     ref,
     key,
@@ -84,9 +92,10 @@ export const AppPagination = () => {
       disableCursorAnimation
       showControls
       className="gap-2 justify-self-center"
-      initialPage={1}
+      page={page}
       renderItem={renderItem}
-      total={10}
+      total={totalPages}
+      onChange={onChange}
       variant="bordered"
       size="lg"
       classNames={{

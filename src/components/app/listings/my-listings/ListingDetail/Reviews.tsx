@@ -1,5 +1,5 @@
 import ShowMoreIcon from "@/assets/icons/show.more.svg";
-import { Ratings } from "@/components/app/my-listings/ListingDetail/MainInfo";
+import { Ratings } from "@/components/app/listings/my-listings/ListingDetail/MainInfo";
 import { Button } from "@/components/ui/button";
 import { useDict } from "@/hooks/useDict";
 import Image from "next/image";

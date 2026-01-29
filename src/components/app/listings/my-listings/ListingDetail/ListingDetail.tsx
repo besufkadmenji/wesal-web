@@ -1,14 +1,14 @@
 "use client";
-import { useListing } from "@/components/app/my-listings/ListingDetail/useListing";
+import { useListing } from "@/components/app/listings/my-listings/ListingDetail/useListing";
 import { AppWrapper } from "@/components/app/shared/AppWrapper";
 import { DetailSkeleton } from "./DetailSkeleton";
-import { MainInfo } from "@/components/app/my-listings/ListingDetail/MainInfo";
+import { MainInfo } from "@/components/app/listings/my-listings/ListingDetail/MainInfo";
 import { ListingImages } from "./ListingImages";
-import { StoryVideo } from "@/components/app/my-listings/ListingDetail/StoryVideo";
+import { StoryVideo } from "@/components/app/listings/my-listings/ListingDetail/StoryVideo";
 import EditAdIcon from "@/assets/icons/edit.svg";
 import { Button } from "@/components/ui/button";
 import { useDict } from "@/hooks/useDict";
-import { Reviews } from "@/components/app/my-listings/ListingDetail/Reviews";
+import { Reviews } from "@/components/app/listings/my-listings/ListingDetail/Reviews";
 import { usePathname, useRouter } from "next/navigation";
 
 export const ListingDetail = () => {

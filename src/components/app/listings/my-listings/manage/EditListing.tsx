@@ -1,14 +1,16 @@
 "use client";
 import { sar } from "@/assets/fonts/sar";
 import DownIcon from "@/assets/icons/down.bold.svg";
-import { AppTextarea } from "@/components/app/my-listings/manage/FormInput";
-import { FormRadio } from "@/components/app/my-listings/manage/FormRadio";
+import { useListing } from "@/components/app/listings/my-listings/ListingDetail/useListing";
+import { AppTextarea } from "@/components/app/listings/my-listings/manage/FormInput";
+import { FormRadio } from "@/components/app/listings/my-listings/manage/FormRadio";
 import {
   UploadImages,
   UploadVideo,
-} from "@/components/app/my-listings/manage/UploadFile";
-import { useForm } from "@/components/app/my-listings/manage/useForm";
-import { useManageListing } from "@/components/app/my-listings/manage/useManageListing";
+} from "@/components/app/listings/my-listings/manage/UploadFile";
+import { useManageForm } from "@/components/app/listings/my-listings/manage/useForm";
+import { useManageListing } from "@/components/app/listings/my-listings/manage/useManageListing";
+import { AppLoading } from "@/components/app/shared/AppLoading";
 import { AppWrapper } from "@/components/app/shared/AppWrapper";
 import { SupportPageType, Wrapper } from "@/components/app/support/Wrapper";
 import { Button } from "@/components/ui/button";
@@ -27,11 +29,12 @@ import { twMerge } from "tailwind-merge";
 import { FormInput } from "./FormInput";
 import { useFormValidation } from "./useFormValidation";
 
-export const AddListing = () => {
+export const EditListing = () => {
   const dict = useDict();
   const lng = useLang();
   const { me } = useMe();
-  const { createListing, creating } = useManageListing();
+  const { listing, isLoading } = useListing();
+  const { updateListing, updating } = useManageListing();
   const categories = me?.categories || [];
   const {
     form,
@@ -40,7 +43,7 @@ export const AddListing = () => {
     setPhotoFiles,
     storyVideoFile,
     setStoryVideoFile,
-  } = useForm();
+  } = useManageForm(listing);
   const { errors, validateForm, clearError } = useFormValidation({
     ...form,
     photoFiles,
@@ -49,11 +52,13 @@ export const AddListing = () => {
 
   const handleSubmit = async () => {
     if (validateForm()) {
-      await createListing();
+      await updateListing(listing!.id);
     }
   };
-  console.log("errors", errors);
-  return (
+  console.log("errors", errors, listing);
+  return !listing ? (
+    <AppLoading className="h-[90vh]" />
+  ) : (
     <AppWrapper>
       <Wrapper variant={SupportPageType.ADD_LISTING}>
         <div className="grid grid-cols-1 gap-20 rounded-[20px] px-[7vw] py-20">
@@ -175,6 +180,12 @@ export const AddListing = () => {
               description={dict.addListing.form.maxImages}
               isRequired
               error={errors.photoFiles}
+              urls={form.photos ?? []}
+              onChangeUrls={(photos) =>
+                setForm({
+                  photos: photos,
+                })
+              }
             />
             <UploadVideo
               file={storyVideoFile}
@@ -184,14 +195,20 @@ export const AddListing = () => {
               }}
               placeholder={dict.addListing.form.listingVideo}
               error={errors.storyVideoFile}
+              url={form.story ?? undefined}
+              onChangeUrl={(url) =>
+                setForm({
+                  story: url || null,
+                })
+              }
             />
           </div>
           <Button
             className="h-12.5 justify-self-center rounded-[20px] px-20"
             onClick={handleSubmit}
-            disabled={creating}
+            disabled={updating}
           >
-            {dict.addListing.form.submit}
+            {dict.editListing.saveChanges}
           </Button>
         </div>
       </Wrapper>

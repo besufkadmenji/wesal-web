@@ -7,6 +7,7 @@ import {
 } from "@/gql/graphql";
 import { CREATE_LISTING_MUTATION } from "@/graphql/listing/createListing";
 import { LISTING_QUERY } from "@/graphql/listing/listing";
+import { LISTINGS_QUERY } from "@/graphql/listing/listings";
 import { MY_LISTINGS_QUERY } from "@/graphql/listing/myListings";
 import { REMOVE_LISTING_MUTATION } from "@/graphql/listing/removeListing";
 import { UPDATE_LISTING_MUTATION } from "@/graphql/listing/updateListing";
@@ -14,6 +15,22 @@ import client from "@/utils/apollo.client";
 import { parseGraphQLError } from "@/utils/parse-graphql-error";
 
 class ListingService {
+  static listings = async (
+    paginationInput: ListingPaginationInput,
+  ): Promise<PaginatedListingResponse | null> => {
+    try {
+      const listingResult = await client().query({
+        query: LISTINGS_QUERY,
+        variables: {
+          paginationInput,
+        },
+      });
+      return listingResult.data?.listings ?? null;
+    } catch (e) {
+      console.error("listingResult", e);
+    }
+    return null;
+  };
   static myListings = async (
     paginationInput: ListingPaginationInput,
   ): Promise<PaginatedListingResponse | null> => {

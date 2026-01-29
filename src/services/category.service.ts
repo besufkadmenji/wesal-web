@@ -1,20 +1,38 @@
-import { PaginatedCategoryResponse } from "@/gql/graphql";
+import {
+  Category,
+  CategoryPaginationInput,
+  PaginatedCategoryResponse,
+} from "@/gql/graphql";
 import { CATEGORIES_QUERY } from "@/graphql/category/categories";
+import { CATEGORY_QUERY } from "@/graphql/category/category";
 import client from "@/utils/apollo.client";
 
 class CategoryService {
-  static categories = async (): Promise<PaginatedCategoryResponse | null> => {
+  static categories = async (
+    input: CategoryPaginationInput,
+  ): Promise<PaginatedCategoryResponse | null> => {
     try {
       const categoriesResult = await client().query({
         query: CATEGORIES_QUERY,
         variables: {
-          input: {
-            limit: 100,
-            page: 1,
-          },
+          input,
         },
       });
       return categoriesResult.data?.categories ?? null;
+    } catch (e) {
+      console.error("categories", e);
+    }
+    return null;
+  };
+  static category = async (categoryId: string): Promise<Category | null> => {
+    try {
+      const categoriesResult = await client().query({
+        query: CATEGORY_QUERY,
+        variables: {
+          categoryId,
+        },
+      });
+      return categoriesResult.data?.category ?? null;
     } catch (e) {
       console.error("categories", e);
     }

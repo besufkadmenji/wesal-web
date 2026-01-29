@@ -1,18 +1,21 @@
+import { sar } from "@/assets/fonts/sar";
+import RatingIcon from "@/assets/icons/rating.svg";
 import { Listing } from "@/gql/graphql";
+import { useDict } from "@/hooks/useDict";
+import { moneyFormatter } from "@/utils/formmater";
 import { Skeleton } from "@heroui/react";
 import Image from "next/image";
-import RatingIcon from "@/assets/icons/rating.svg";
-import { useDict } from "@/hooks/useDict";
-import { twMerge } from "tailwind-merge";
-import { sar } from "@/assets/fonts/sar";
-import { moneyFormatter } from "@/utils/formmater";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { twMerge } from "tailwind-merge";
 export const ListingCard = ({ listing }: { listing: Listing }) => {
   const dict = useDict();
+  const pathname = usePathname();
   const imageUrl = `${process.env.NEXT_PUBLIC_DATA}/files/${listing.photos[0].filename}`;
+  console.log("imageUrl", pathname, `/${pathname}/${listing.id}`);
   return (
     <Link
-      href={`/my-listings/${listing.id}`}
+      href={`${pathname}/${listing.id}`}
       className="grid cursor-pointer grid-cols-1 rounded-[20px] bg-white"
     >
       <div className="relative h-44 overflow-hidden rounded-[20px]">
