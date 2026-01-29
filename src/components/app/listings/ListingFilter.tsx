@@ -17,12 +17,15 @@ import { parseAsInteger, useQueryState } from "nuqs";
 import { useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import RatingIcon from "@/assets/icons/rating.svg";
+import { useCategory } from "@/components/app/listings/useListings";
 
 export const ListingFilter = () => {
   const dict = useDict();
   const lng = useLang();
 
   const [categoryId, setCategoryId] = useQueryState("category");
+  const { category: selectedCategory } = useCategory(categoryId ?? undefined);
+
   const [minPrice, setMinPrice] = useQueryState("minPrice", parseAsInteger);
   const [maxPrice, setMaxPrice] = useQueryState("maxPrice", parseAsInteger);
   const [cityId, setCityId] = useQueryState("city");
@@ -48,7 +51,7 @@ export const ListingFilter = () => {
         </button>
       </div>
       <div className="grid grid-cols-1 gap-6">
-        <CategorySelect key={categoryId} />
+        <CategorySelect key={selectedCategory?.id} />
         <CitySelect />
         <div className="grid grid-cols-1 gap-4">
           <p className="leading-7 text-[#1A1A1A]">
@@ -145,7 +148,7 @@ export const CategorySelect = () => {
 
   const [search, setSearch] = useQueryState("search");
   const timer = useRef<NodeJS.Timeout | null>(null);
-  const selectedCategory = categories?.items.find((cat) => cat.id === category);
+  const { category: selectedCategory } = useCategory(category ?? undefined);
   const categoryName =
     lng === "en" ? selectedCategory?.nameEn : selectedCategory?.nameAr;
   const [localeQuery, setLocaleQuery] = useState(search ?? categoryName ?? "");
