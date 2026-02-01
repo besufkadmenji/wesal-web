@@ -1,14 +1,13 @@
 import { ListingMedia, ListingStatus, MediaType } from "@/gql/graphql";
 import { useDict } from "@/hooks/useDict";
+import { useMe } from "@/hooks/useMe";
 import ListingService from "@/services/listing.service";
 import { uploadFile } from "@/utils/file.upload";
 import { showErrorMessage, showSuccessMessage } from "@/utils/show.messages";
-import { randomUUID } from "crypto";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useForm } from "./useForm";
 import { v4 as uuidv4 } from "uuid";
-import { useMe } from "@/hooks/useMe";
+import { useForm } from "./useForm";
 
 export const useManageListing = () => {
   const [creating, setCreating] = useState(false);
@@ -57,7 +56,7 @@ export const useManageListing = () => {
         cityId: me?.cityId || "",
         photos: photos,
         story: story,
-        status: ListingStatus.Published,
+        status: ListingStatus.Active,
       });
       if (result) {
         showSuccessMessage(dict.addListing.listingCreatedSuccessfully);
@@ -116,7 +115,6 @@ export const useManageListing = () => {
         cityId: me?.cityId || "",
         photos: photos,
         story: story,
-        status: ListingStatus.Published,
       });
       if (result) {
         showSuccessMessage(dict.addListing.listingUpdatedSuccessfully);

@@ -8,7 +8,7 @@ export const REMOVE_LISTING_MUTATION: TypedDocumentNode<
   RemoveListingMutation,
   RemoveListingMutationVariables
 > = gql`
-  mutation removeListing($removeListingId: String!) {
+  mutation removeListing($removeListingId: ID!) {
     removeListing(id: $removeListingId) {
       message
       success
