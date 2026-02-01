@@ -127,6 +127,35 @@ type AuthResponse {
   user: User!
 }
 
+type Bank {
+  createdAt: DateTime!
+  deactivationReason: String
+  id: ID!
+  nameAr: String!
+  nameEn: String!
+  status: BankStatus!
+  updatedAt: DateTime!
+}
+
+input BankPaginationInput {
+  """Number of items per page"""
+  limit: Int! = 10
+
+  """Page number (1-based)"""
+  page: Int! = 1
+  search: String
+
+  """Sort order: ASC or DESC"""
+  sortOrder: SortOrder = DESC
+  status: BankStatus
+}
+
+"""Status of the bank"""
+enum BankStatus {
+  ACTIVE
+  INACTIVE
+}
+
 input BulkAssignPermissionsInput {
   adminId: ID!
   permissionIds: [ID!]!
@@ -482,6 +511,12 @@ input CreateAdminInput {
   userType: AdminUserType!
 }
 
+input CreateBankInput {
+  nameAr: String!
+  nameEn: String!
+  status: BankStatus!
+}
+
 input CreateCategoryInput {
   descriptionAr: String!
   descriptionEn: String!
@@ -536,6 +571,12 @@ input CreateConversationInput {
 input CreateCountryInput {
   code: String!
   name: String!
+}
+
+input CreateDeliveryCompanyInput {
+  nameAr: String!
+  nameEn: String!
+  status: DeliveryCompanyStatus!
 }
 
 input CreateFaqInput {
@@ -625,12 +666,49 @@ input DeactivateAdminInput {
   reason: String
 }
 
+input DeactivateBankInput {
+  reason: String!
+}
+
+input DeactivateDeliveryCompanyInput {
+  reason: String!
+}
+
 input DeactivateUserInput {
   reason: String
 }
 
 input DeleteUserInput {
   reason: String
+}
+
+type DeliveryCompany {
+  createdAt: DateTime!
+  deactivationReason: String
+  id: ID!
+  nameAr: String!
+  nameEn: String!
+  status: DeliveryCompanyStatus!
+  updatedAt: DateTime!
+}
+
+input DeliveryCompanyPaginationInput {
+  """Number of items per page"""
+  limit: Int! = 10
+
+  """Page number (1-based)"""
+  page: Int! = 1
+  search: String
+
+  """Sort order: ASC or DESC"""
+  sortOrder: SortOrder = DESC
+  status: DeliveryCompanyStatus
+}
+
+"""Status of the delivery company"""
+enum DeliveryCompanyStatus {
+  ACTIVE
+  INACTIVE
 }
 
 type Faq {
@@ -683,9 +761,12 @@ input ForgotPasswordInput {
 }
 
 type Listing {
+  category: Category
   categoryId: String!
+  city: City
   cityId: String!
   createdAt: DateTime!
+  deactivationReason: String
   description: String!
   id: String!
   name: String!
@@ -742,10 +823,8 @@ enum ListingSortField {
 
 """Listing publication status"""
 enum ListingStatus {
-  DRAFT
-  EXPIRED
-  PUBLISHED
-  SUSPENDED
+  ACTIVE
+  INACTIVE
 }
 
 """Listing type (free or featured)"""
@@ -804,6 +883,9 @@ enum MessageSortField {
 
 type Mutation {
   activateAdmin(id: ID!): Admin!
+  activateBank(id: ID!): Bank!
+  activateDeliveryCompany(id: ID!): DeliveryCompany!
+  activateListing(id: ID!): Listing!
 
   """Activate user by ID"""
   activateUser(id: ID!): User!
@@ -828,6 +910,7 @@ type Mutation {
   """Change password for authenticated user"""
   changePassword(input: ChangePasswordInput!): Boolean!
   createAdmin(createAdminInput: CreateAdminInput!): Admin!
+  createBank(input: CreateBankInput!): Bank!
   createCategory(input: CreateCategoryInput!): Category!
   createCity(input: CreateCityInput!): City!
   createComplaint(input: CreateComplaintInput!): Complaint!
@@ -837,6 +920,7 @@ type Mutation {
   createContract(input: CreateContractInput!): Contract!
   createConversation(input: CreateConversationInput!): Conversation!
   createCountry(input: CreateCountryInput!): Country!
+  createDeliveryCompany(input: CreateDeliveryCompanyInput!): DeliveryCompany!
 
   """Create FAQ (admin only)"""
   createFaq(createFaqInput: CreateFaqInput!): Faq!
@@ -848,6 +932,9 @@ type Mutation {
   createPermission(createPermissionInput: CreatePermissionInput!): Permission!
   createRating(input: CreateRatingInput!): Rating!
   deactivateAdmin(id: ID!, input: DeactivateAdminInput!): Admin!
+  deactivateBank(id: ID!, input: DeactivateBankInput!): Bank!
+  deactivateDeliveryCompany(id: ID!, input: DeactivateDeliveryCompanyInput!): DeliveryCompany!
+  deactivateListing(id: ID!, reason: String!): Listing!
 
   """Deactivate user by ID"""
   deactivateUser(id: ID!, input: DeactivateUserInput!): User!
@@ -899,6 +986,7 @@ type Mutation {
 
   """Delete user avatar by ID"""
   removeAvatar(id: ID!): Boolean!
+  removeBank(id: ID!): Bank!
   removeCategory(id: String!): Category!
   removeCity(id: ID!): City!
   removeComplaint(id: String!): Complaint!
@@ -908,6 +996,7 @@ type Mutation {
   removeContract(id: String!): Contract!
   removeConversation(id: String!): Conversation!
   removeCountry(id: ID!): Country!
+  removeDeliveryCompany(id: ID!): DeliveryCompany!
 
   """Remove FAQ (admin only)"""
   removeFaq(id: ID!): Boolean!
@@ -915,7 +1004,7 @@ type Mutation {
 
   """Remove favorite by user and listing IDs"""
   removeFavoriteByUserAndListing(listingId: String!, userId: String!): Favorite!
-  removeListing(id: String!): RemoveListingResponse!
+  removeListing(id: ID!): RemoveListingResponse!
   removeMessage(id: String!): Message!
   removeNotification(id: String!): Notification!
   removePayment(id: String!): Payment!
@@ -945,6 +1034,7 @@ type Mutation {
   """Terminate contract as service provider"""
   terminateContract(terminationReason: String!): User!
   updateAdmin(id: ID!, updateAdminInput: UpdateAdminInput!): Admin!
+  updateBank(input: UpdateBankInput!): Bank!
   updateCategory(input: UpdateCategoryInput!): Category!
   updateCity(input: UpdateCityInput!): City!
   updateComplaint(input: UpdateComplaintInput!): Complaint!
@@ -954,6 +1044,7 @@ type Mutation {
   updateContract(input: UpdateContractInput!): Contract!
   updateConversation(input: UpdateConversationInput!): Conversation!
   updateCountry(input: UpdateCountryInput!): Country!
+  updateDeliveryCompany(input: UpdateDeliveryCompanyInput!): DeliveryCompany!
 
   """Update FAQ (admin only)"""
   updateFaq(updateFaqInput: UpdateFaqInput!): Faq!
@@ -1056,6 +1147,14 @@ type PaginatedAdminResponse {
   meta: PaginationMeta!
 }
 
+type PaginatedBankResponse {
+  """List of items"""
+  items: [Bank!]!
+
+  """Pagination metadata"""
+  meta: PaginationMeta!
+}
+
 type PaginatedCategoryResponse {
   """List of items"""
   items: [Category!]!
@@ -1107,6 +1206,14 @@ type PaginatedConversationResponse {
 type PaginatedCountryResponse {
   """List of items"""
   items: [Country!]!
+
+  """Pagination metadata"""
+  meta: PaginationMeta!
+}
+
+type PaginatedDeliveryCompanyResponse {
+  """List of items"""
+  items: [DeliveryCompany!]!
 
   """Pagination metadata"""
   meta: PaginationMeta!
@@ -1285,6 +1392,8 @@ type Query {
   admin(id: ID!): Admin!
   adminPermissions(adminId: ID!): [AdminPermission!]!
   admins(paginationInput: AdminPaginationInput): PaginatedAdminResponse!
+  bank(id: ID!): Bank!
+  banks(input: BankPaginationInput): PaginatedBankResponse!
   categories(input: CategoryPaginationInput): PaginatedCategoryResponse!
   category(id: String!): Category!
 
@@ -1310,6 +1419,8 @@ type Query {
   """Get all countries with pagination"""
   countries(pagination: CountryPaginationInput): PaginatedCountryResponse!
   country(id: ID!): Country!
+  deliveryCompanies(input: DeliveryCompanyPaginationInput): PaginatedDeliveryCompanyResponse!
+  deliveryCompany(id: ID!): DeliveryCompany!
   faq(id: ID!): Faq!
 
   """Get all active FAQs (or all if admin)"""
@@ -1322,7 +1433,7 @@ type Query {
 
   """Check if listing is favorited by user"""
   isFavorite(listingId: String!, userId: String!): Boolean!
-  listing(id: String!): Listing
+  listing(id: ID!): Listing
   listings(paginationInput: ListingPaginationInput!): PaginatedListingResponse!
 
   """Get current authenticated user"""
@@ -1565,6 +1676,13 @@ input UpdateAdminInput {
   userType: AdminUserType
 }
 
+input UpdateBankInput {
+  id: String!
+  nameAr: String
+  nameEn: String
+  status: BankStatus
+}
+
 input UpdateCategoryInput {
   descriptionAr: String
   descriptionEn: String
@@ -1626,6 +1744,13 @@ input UpdateCountryInput {
   code: String
   id: ID!
   name: String
+}
+
+input UpdateDeliveryCompanyInput {
+  id: String!
+  nameAr: String
+  nameEn: String
+  status: DeliveryCompanyStatus
 }
 
 input UpdateFaqInput {

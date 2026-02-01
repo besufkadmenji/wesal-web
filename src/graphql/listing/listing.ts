@@ -5,7 +5,7 @@ export const LISTING_QUERY: TypedDocumentNode<
   ListingQuery,
   ListingQueryVariables
 > = gql`
-query listing($listingId: String!) {
+query listing($listingId: ID!) {
     listing(id: $listingId) {
       id
       categoryId
