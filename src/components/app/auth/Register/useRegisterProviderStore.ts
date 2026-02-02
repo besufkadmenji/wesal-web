@@ -1,7 +1,8 @@
-import { RegisterInput } from "@/gql/graphql";
+import { RegisterProviderInput } from "@/gql/graphql";
 import { create } from "zustand";
-export type FormType = Partial<RegisterInput> & {
+export type FormType = Partial<RegisterProviderInput> & {
   confirmPassword?: string;
+  commercialRegistrationFilename?: File | null;
   terms?: boolean;
   document?: boolean;
 };
@@ -15,17 +16,24 @@ interface RegisterState {
 
 const initialState: FormType = {
   name: "",
+  commercialName: "",
   email: "",
   phone: "",
   password: "",
   confirmPassword: "",
   dialCode: "",
+  address: null,
   cityId: null,
+  categoryIds: [],
+  latitude: null,
+  longitude: null,
   terms: false,
   document: false,
+  commercialRegistrationFilename: null,
+  withAbsher: false,
 };
 
-export const useRegisterStore = create<RegisterState>((set, get) => ({
+export const useRegisterProviderStore = create<RegisterState>((set, get) => ({
   formData: initialState,
 
   setFormData: (data) =>

@@ -1,17 +1,17 @@
 "use client";
+import EmailIcon from "@/assets/icons/auth/email.svg";
+import { useLogin } from "@/components/app/auth/useLogin";
+import { Wrapper } from "@/components/app/auth/Wrapper";
 import { PasswordInput } from "@/components/app/shared/inputs/PasswordInput";
 import { PhoneInput } from "@/components/app/shared/inputs/PhoneInput";
-import { Wrapper } from "@/components/app/auth/Wrapper";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useDict } from "@/hooks/useDict";
 import Link from "next/link";
-import { useQueryState } from "nuqs";
-import { TextInput } from "../shared/inputs/TextInput";
-import EmailIcon from "@/assets/icons/auth/email.svg";
-import { useLogin } from "@/components/app/auth/useLogin";
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useQueryState } from "nuqs";
+import { useEffect, useState } from "react";
+import { TextInput } from "../shared/inputs/TextInput";
 export const Login = () => {
   const dict = useDict();
   const [type, setType] = useQueryState("type");
@@ -74,8 +74,9 @@ export const Login = () => {
 };
 
 const LoginWithEmail = () => {
+  const [type, setType] = useQueryState("type");
   const dict = useDict();
-  const { login, busy } = useLogin();
+  const { loginUser, loginProvider, busy } = useLogin();
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -109,7 +110,11 @@ const LoginWithEmail = () => {
       <div className="grid grid-cols-1 gap-6.5">
         <Button
           className="h-12.5 rounded-[20px] text-base font-semibold"
-          onClick={() => login(form.email, form.password)}
+          onClick={() => {
+            if (type === "user") loginUser(form.email, form.password);
+            else if (type === "provider")
+              loginProvider(form.email, form.password);
+          }}
           disabled={busy}
         >
           {dict.auth.login.submit}
@@ -132,7 +137,8 @@ const LoginWithEmail = () => {
 
 const LoginWithPhone = () => {
   const dict = useDict();
-  const { login, busy } = useLogin();
+  const [type, setType] = useQueryState("type");
+  const { loginUser, loginProvider, busy } = useLogin();
   const [country, setCountry] = useQueryState("country", {
     defaultValue: "+966",
   });
@@ -166,7 +172,12 @@ const LoginWithPhone = () => {
       <div className="grid grid-cols-1 gap-6.5">
         <Button
           className="h-12.5 rounded-[20px] text-base font-semibold"
-          onClick={() => login(`${country}${form.phone}`, form.password)}
+          onClick={() => {
+            if (type === "user")
+              loginUser(`${country}${form.phone}`, form.password);
+            else if (type === "provider")
+              loginProvider(`${country}${form.phone}`, form.password);
+          }}
           disabled={busy}
         >
           {dict.auth.login.submit}

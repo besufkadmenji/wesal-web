@@ -1,15 +1,15 @@
 import {
-  SignContractMutation,
-  SignContractMutationVariables,
+  SignProviderContractMutation,
+  SignProviderContractMutationVariables,
 } from "@/gql/graphql";
 import { gql, TypedDocumentNode } from "@apollo/client";
 
 export const SIGN_CONTRACT_MUTATION: TypedDocumentNode<
-  SignContractMutation,
-  SignContractMutationVariables
+  SignProviderContractMutation,
+  SignProviderContractMutationVariables
 > = gql`
-  mutation signContract($input: SignContractInput!) {
-    signContract(input: $input) {
+  mutation signProviderContract($input: SignContractInput!) {
+    signProviderContract(input: $input) {
       id
       name
       isActive
@@ -26,7 +26,6 @@ export const SIGN_CONTRACT_MUTATION: TypedDocumentNode<
       longitude
       phone
       phoneVerified
-      role
       updatedAt
       ibanNumber
       bankName
@@ -60,7 +59,7 @@ export const SIGN_CONTRACT_MUTATION: TypedDocumentNode<
         createdAt
         publicId
         updatedAt
-        userId
+        providerId
       }
       deactivationReason
       deleteReason

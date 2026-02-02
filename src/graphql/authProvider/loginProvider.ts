@@ -1,18 +1,24 @@
-import { LoginMutation, LoginMutationVariables } from "@/gql/graphql";
+import {
+  LoginProviderMutation,
+  LoginProviderMutationVariables,
+} from "@/gql/graphql";
 import { gql, TypedDocumentNode } from "@apollo/client";
 
-export const LOGIN_MUTATION: TypedDocumentNode<
-  LoginMutation,
-  LoginMutationVariables
+export const LOGIN_PROVIDER_MUTATION: TypedDocumentNode<
+  LoginProviderMutation,
+  LoginProviderMutationVariables
 > = gql`
-  mutation login($input: LoginInput!) {
-    login(input: $input) {
+  mutation loginProvider($input: LoginProviderInput!) {
+    loginProvider(input: $input) {
       accessToken
-      user {
+      provider {
         address
         avatarFilename
         bankName
         cityId
+        commercialName
+        commercialRegistrationFilename
+        commercialRegistrationNumber
         countryId
         createdAt
         deactivationReason
@@ -32,6 +38,7 @@ export const LOGIN_MUTATION: TypedDocumentNode<
         phoneVerified
         status
         updatedAt
+        withAbsher
       }
     }
   }

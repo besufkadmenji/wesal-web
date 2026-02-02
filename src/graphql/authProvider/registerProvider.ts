@@ -1,12 +1,15 @@
-import { RegisterMutation, RegisterMutationVariables } from "@/gql/graphql";
+import {
+  RegisterProviderMutation,
+  RegisterProviderMutationVariables
+} from "@/gql/graphql";
 import { gql, TypedDocumentNode } from "@apollo/client";
 
-export const REGISTER_MUTATION: TypedDocumentNode<
-  RegisterMutation,
-  RegisterMutationVariables
+export const REGISTER_PROVIDER_MUTATION: TypedDocumentNode<
+  RegisterProviderMutation,
+  RegisterProviderMutationVariables
 > = gql`
-  mutation register($input: RegisterInput!) {
-    register(input: $input) {
+  mutation registerProvider($input: RegisterProviderInput!) {
+    registerProvider(input: $input) {
       name
       phone
       id

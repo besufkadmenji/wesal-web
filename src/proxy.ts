@@ -1,7 +1,7 @@
 import acceptLanguage from "accept-language";
 import { NextRequest, NextResponse } from "next/server";
 import { fallbackLng, languages } from "./config/i18n/settings";
-import { ME_QUERY } from "./graphql/user/me";
+import { ME_USER_QUERY } from "./graphql/user/meUser";
 import client from "./utils/apollo.client";
 import { UserRole } from "./gql/graphql";
 acceptLanguage.languages(languages);
@@ -101,7 +101,7 @@ const getUser = async (req: NextRequest) => {
       token,
       `${process.env.API_BASE_URL}/graphql`,
     ).query({
-      query: ME_QUERY,
+      query: ME_USER_QUERY,
     });
 
     return meResult.data?.me ?? null;

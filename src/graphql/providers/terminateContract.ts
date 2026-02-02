@@ -1,9 +1,15 @@
-import { MeQuery } from "@/gql/graphql";
+import {
+  TerminateProviderContractMutation,
+  TerminateProviderContractMutationVariables,
+} from "@/gql/graphql";
 import { gql, TypedDocumentNode } from "@apollo/client";
 
-export const ME_QUERY: TypedDocumentNode<MeQuery> = gql`
-  query me {
-    me {
+export const TERMINATE_CONTRACT_MUTATION: TypedDocumentNode<
+  TerminateProviderContractMutation,
+  TerminateProviderContractMutationVariables
+> = gql`
+  mutation terminateProviderContract($terminationReason: String!) {
+    terminateProviderContract(terminationReason: $terminationReason) {
       id
       name
       isActive
@@ -20,7 +26,6 @@ export const ME_QUERY: TypedDocumentNode<MeQuery> = gql`
       longitude
       phone
       phoneVerified
-      role
       updatedAt
       ibanNumber
       bankName
@@ -54,7 +59,7 @@ export const ME_QUERY: TypedDocumentNode<MeQuery> = gql`
         createdAt
         publicId
         updatedAt
-        userId
+        providerId
       }
       deactivationReason
       deleteReason

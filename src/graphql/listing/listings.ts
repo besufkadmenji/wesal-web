@@ -38,7 +38,7 @@ export const LISTINGS_QUERY: TypedDocumentNode<
         tags
         type
         updatedAt
-        userId
+        providerId
         photos {
           filename
           id

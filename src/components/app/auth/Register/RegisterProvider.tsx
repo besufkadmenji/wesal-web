@@ -5,8 +5,8 @@ import EmailIcon from "@/assets/icons/auth/email.svg";
 import NameIcon from "@/assets/icons/auth/name.svg";
 import CheckIcon from "@/assets/icons/check.svg";
 import { useRegister } from "@/components/app/auth/Register/useRegister";
-import type { FormType } from "@/components/app/auth/Register/useRegisterStore";
-import { useRegisterStore } from "@/components/app/auth/Register/useRegisterStore";
+import type { FormType } from "@/components/app/auth/Register/useRegisterProviderStore";
+import { useRegisterProviderStore } from "@/components/app/auth/Register/useRegisterProviderStore";
 import { PasswordInput } from "@/components/app/shared/inputs/PasswordInput";
 import { PhoneInput } from "@/components/app/shared/inputs/PhoneInput";
 import { TextInput } from "@/components/app/shared/inputs/TextInput";
@@ -27,13 +27,14 @@ import {
 import { PickLocation } from "@/components/app/auth/Register/PickLocation";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { useEffect } from "react";
+import { use, useEffect } from "react";
+import { useRegisterProvider } from "./useRegisterProvider";
 
 export const RegisterProvider = () => {
   const dict = useDict();
-  const form = useRegisterStore((state) => state.formData);
-  const updateField = useRegisterStore((state) => state.updateField);
-  const { register, busy } = useRegister();
+  const form = useRegisterProviderStore((state) => state.formData);
+  const updateField = useRegisterProviderStore((state) => state.updateField);
+  const { register, busy } = useRegisterProvider();
   const [step, setStep] = useQueryState("step", parseAsInteger.withDefault(1));
   const {
     validateStep1,
@@ -185,7 +186,7 @@ const BasicInfoForm = ({
   updateField: <K extends keyof FormType>(field: K, value: FormType[K]) => void;
 }) => {
   const dict = useDict();
-  const form = useRegisterStore((state) => state.formData);
+  const form = useRegisterProviderStore((state) => state.formData);
 
   return (
     <div className="grid grid-cols-1 gap-5">
@@ -275,7 +276,7 @@ const ProviderForm = ({
   errors: Record<string, { message?: string }>;
 }) => {
   const dict = useDict();
-  const form = useRegisterStore((state) => state.formData);
+  const form = useRegisterProviderStore((state) => state.formData);
 
   console.log("ProviderForm rendered");
 

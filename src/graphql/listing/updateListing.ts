@@ -29,7 +29,7 @@ export const UPDATE_LISTING_MUTATION: TypedDocumentNode<
       tags
       type
       updatedAt
-      userId
+      providerId
       photos {
         filename
         id
