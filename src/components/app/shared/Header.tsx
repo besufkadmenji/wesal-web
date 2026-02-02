@@ -3,7 +3,6 @@ import { ChatPopover } from "@/components/app/shared/ChatPopover";
 import { MobileMenu } from "@/components/app/shared/MobileMenu";
 import { NotificationPopover } from "@/components/app/shared/NotificationPopover";
 import { Button } from "@/components/ui/button";
-import { UserRole } from "@/gql/graphql";
 import { useDict } from "@/hooks/useDict";
 import { useLang } from "@/hooks/useLang";
 import { useMe } from "@/hooks/useMe";
@@ -22,7 +21,7 @@ export const Header = () => {
         <nav className="hidden h-full grow justify-start gap-4 lg:flex xl:gap-5 2xl:gap-6">
           <NavItem label={dict.home.nav.home} href={"/"} />
           <NavItem label={dict.home.nav.categories} href={"/categories"} />
-          {me?.role === UserRole.Provider && (
+          {me?.provider && (
             <NavItem label={dict.home.nav.myListings} href={"/my-listings"} />
           )}
           <NavItem label={dict.home.nav.contracts} href={"/contracts"} />

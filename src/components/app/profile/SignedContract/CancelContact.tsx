@@ -5,7 +5,6 @@ import { useDict } from "@/hooks/useDict";
 import { useQueryState } from "nuqs";
 import { ReactNode, useState } from "react";
 import { useSignSignature } from "./useSignSignature";
-import { showSuccessMessage } from "@/utils/show.messages";
 export const CancelContract = ({ children }: { children: ReactNode }) => {
   const { terminateContract, busy } = useSignSignature();
   const dict = useDict();

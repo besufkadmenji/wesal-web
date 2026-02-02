@@ -1,11 +1,11 @@
+import ShowMoreIcon from "@/assets/icons/show.more.svg";
 import { Ratings } from "@/components/app/listings/ListingDetail/MainInfo";
-import { User } from "@/gql/graphql";
+import { Button } from "@/components/ui/button";
+import { Provider } from "@/gql/graphql";
 import { useDict } from "@/hooks/useDict";
 import Image from "next/image";
-import ShowMoreIcon from "@/assets/icons/show.more.svg";
-import { Button } from "@/components/ui/button";
 
-export const ProviderData = ({ provider }: { provider: User }) => {
+export const ProviderData = ({ provider }: { provider: Provider }) => {
   const dict = useDict();
   return (
     <div className="grid grid-cols-1 gap-6 rounded-[20px] bg-white p-5">

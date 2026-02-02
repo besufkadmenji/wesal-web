@@ -28,6 +28,7 @@ export const ME_USER_QUERY: TypedDocumentNode<MeUserQuery> = gql`
       deleteReason
       deletedAt
       publicId
+      withAbsher
     }
   }
 `;

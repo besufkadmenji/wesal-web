@@ -4,8 +4,8 @@ import ChangePasswordIcon from "@/assets/icons/change.password.svg";
 import FavoritesIcon from "@/assets/icons/favorites.svg";
 import LogoutIcon from "@/assets/icons/logout.alt.svg";
 import SignedContractIcon from "@/assets/icons/signed.contract.svg";
+import { ConfirmLogout } from "@/components/app/profile/ConfirmLogout";
 import { Button } from "@/components/ui/button";
-import { UserRole } from "@/gql/graphql";
 import { useAppRouter } from "@/hooks/use.app.router";
 import { useDict } from "@/hooks/useDict";
 import { useLang } from "@/hooks/useLang";
@@ -14,21 +14,22 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
-import { ConfirmLogout } from "@/components/app/profile/ConfirmLogout";
 export const Nav = () => {
   const { me, logout } = useMe();
   const dict = useDict();
   const router = useAppRouter();
   const pathname = usePathname();
   const lng = useLang();
+
+  const profile = me?.user || me?.provider;
   return (
-    me && (
+    profile && (
       <div className="grid grid-cols-1 gap-6 rounded-[16px] bg-white p-6">
         <div className="grid grid-cols-1 justify-items-center gap-2">
           <div className="bg-border relative size-16 overflow-hidden rounded-full">
-            {me.avatarFilename && (
+            {profile.avatarFilename && (
               <Image
-                src={`${process.env.NEXT_PUBLIC_DATA}/files/${me.avatarFilename}`}
+                src={`${process.env.NEXT_PUBLIC_DATA}/files/${profile.avatarFilename}`}
                 alt="Avatar"
                 fill
                 className="object-cover"
@@ -36,9 +37,9 @@ export const Nav = () => {
             )}
           </div>
           <div className="grid grid-cols-1 justify-items-center gap-1">
-            <p className="font-semibold text-black">{me.name}</p>
+            <p className="font-semibold text-black">{profile.name}</p>
             <p dir="ltr" className="text-gray text-xs font-normal">
-              {me.phone}
+              {profile.phone}
             </p>
           </div>
         </div>
@@ -51,7 +52,7 @@ export const Nav = () => {
             }}
             isActive={pathname === `/${lng}/profile`}
           />
-          {me.role === UserRole.Provider && (
+          {me.provider && (
             <NavItem
               icon={<BusinessDataIcon className="size-5 shrink-0" />}
               label={dict.profile.businessInfo}
@@ -69,7 +70,7 @@ export const Nav = () => {
             }}
             isActive={pathname === `/${lng}/profile/change-password`}
           />
-          {me.role === UserRole.Provider && (
+          {me.provider && (
             <NavItem
               icon={<SignedContractIcon className="size-5 shrink-0" />}
               label={dict.profile.signedContract}
@@ -79,7 +80,7 @@ export const Nav = () => {
               isActive={pathname === `/${lng}/profile/signed-contract`}
             />
           )}
-          {me.role === UserRole.User && (
+          {me.user && (
             <NavItem
               icon={<FavoritesIcon className="size-5 shrink-0" />}
               label={dict.profile.favorites}
@@ -95,7 +96,7 @@ export const Nav = () => {
               label={dict.profile.logout}
               className="text-[#B3251E]!"
               onClick={(): void => {
-                // logout();
+                logout();
               }}
             />
           </ConfirmLogout>

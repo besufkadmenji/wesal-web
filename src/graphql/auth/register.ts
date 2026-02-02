@@ -24,6 +24,9 @@ export const REGISTER_MUTATION: TypedDocumentNode<
       cityId
       countryId
       createdAt
+      withAbsher
+      bankName
+      ibanNumber
     }
   }
 `;

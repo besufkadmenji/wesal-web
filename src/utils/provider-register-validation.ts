@@ -2,7 +2,7 @@ export interface ValidationErrors {
   [key: string]: string;
 }
 
-export interface RegisterValidationData {
+export interface ProviderRegisterValidationData {
   name?: string;
   email?: string;
   phone?: string;
@@ -178,7 +178,7 @@ const validateLocation = (
  * @returns Object with validation errors by field
  */
 export const validateRegisterForm = (
-  data: RegisterValidationData,
+  data: ProviderRegisterValidationData,
   type: string,
   t: (key: string) => string,
 ): ValidationErrors => {
@@ -256,7 +256,7 @@ export const validateRegisterForm = (
 export const validateField = (
   field: string,
   value: unknown,
-  formData: RegisterValidationData,
+  formData: ProviderRegisterValidationData,
   t: (key: string) => string,
 ): string | null => {
   console.log("isProvider ", formData.role);
@@ -279,10 +279,25 @@ export const validateField = (
       return validateBankName(value as string, t);
     case "ibanNumber":
       return validateIbanNumber(value as string, t);
+    case "address":
+      return validateAddress(value as string, t);
+    case "cityId":
+      return validateCityId(value as string, t);
+    case "categoryIds":
+      return validateCategoryIds(value as string[], t);
     case "terms":
       return validateTerms(value as boolean, t);
     case "document":
       return validateDocument(value as boolean, t);
+    case "avatarFile":
+      return validateAvatarFile(value as File | null, t);
+    case "latitude":
+    case "longitude":
+      validateLocation(
+        formData.latitude ?? null,
+        formData.longitude ?? null,
+        t,
+      );
     default:
       return null;
   }

@@ -53,7 +53,7 @@ export const useManageListing = () => {
       }
       const result = await ListingService.createListing({
         ...rest,
-        cityId: me?.cityId || "",
+        cityId: me?.provider?.cityId || "",
         photos: photos,
         story: story,
         status: ListingStatus.Active,
@@ -112,7 +112,7 @@ export const useManageListing = () => {
       const result = await ListingService.updateListing({
         id: listingId,
         ...rest,
-        cityId: me?.cityId || "",
+        cityId: me?.provider?.cityId || "",
         photos: photos,
         story: story,
       });

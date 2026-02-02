@@ -707,6 +707,10 @@ input DeactivateUserInput {
   reason: String
 }
 
+input DeleteProviderInput {
+  reason: String
+}
+
 input DeleteUserInput {
   reason: String
 }
@@ -920,6 +924,9 @@ type Mutation {
   activateDeliveryCompany(id: ID!): DeliveryCompany!
   activateListing(id: ID!): Listing!
 
+  """Activate provider by ID"""
+  activateProvider(id: ID!): Provider!
+
   """Activate user by ID"""
   activateUser(id: ID!): User!
   adminChangePassword(input: AdminChangePasswordInput!): Boolean!
@@ -1072,7 +1079,7 @@ type Mutation {
   removePermission(id: ID!): Boolean!
 
   """Remove provider"""
-  removeProvider(id: ID!): Provider!
+  removeProvider(id: ID!, input: DeleteProviderInput!): Provider!
 
   """Delete provider avatar by ID"""
   removeProviderAvatar(id: ID!): Boolean!
@@ -1128,9 +1135,6 @@ type Mutation {
 
   """Update provider"""
   updateProvider(updateProviderInput: UpdateProviderInput!): Provider!
-
-  """Update provider status"""
-  updateProviderStatus(id: ID!, status: ProviderStatus!): Provider!
   updateRating(input: UpdateRatingInput!): Rating!
 
   """Update user"""
@@ -1536,9 +1540,9 @@ input ProviderPaginationInput {
 """Provider status enumeration"""
 enum ProviderStatus {
   ACTIVE
-  DEACTIVATED
+  DELETED
+  INACTIVE
   PENDING_APPROVAL
-  REJECTED
   SUSPENDED
 }
 
@@ -1688,13 +1692,16 @@ type RatingStatistics {
 
 input RegisterInput {
   avatarFilename: String
+  bankName: String!
   cityId: String
   countryId: String
   dialCode: String
   email: String!
+  ibanNumber: String!
   name: String!
   password: String!
   phone: String!
+  withAbsher: Boolean
 }
 
 input RegisterProviderInput {
@@ -1820,12 +1827,12 @@ enum SignedContractSortField {
   updatedAt
 }
 
-"""User account status"""
+"""Provider account status"""
 enum SignedContractStatus {
   ACTIVE
   EXPIRED
   TERMINATED_BY_ADMIN
-  TERMINATED_BY_USER
+  TERMINATED_BY_PROVIDER
 }
 
 type SocialMediaLink {
@@ -2037,6 +2044,7 @@ input UpdateUserInput {
   name: String
   password: String
   phone: String
+  withAbsher: Boolean
 }
 
 type User {
@@ -2066,6 +2074,7 @@ type User {
   publicId: Int
   status: UserStatus!
   updatedAt: DateTime!
+  withAbsher: Boolean
 }
 
 input UserPaginationInput {
@@ -2074,7 +2083,6 @@ input UserPaginationInput {
 
   """Page number (1-based)"""
   page: Int! = 1
-  role: UserRole!
   search: String
 
   """Sort field name"""
@@ -2083,12 +2091,6 @@ input UserPaginationInput {
   """Sort order: ASC or DESC"""
   sortOrder: SortOrder = DESC
   status: UserStatus
-}
-
-"""User role enumeration"""
-enum UserRole {
-  PROVIDER
-  USER
 }
 
 """Available fields to sort users by"""
@@ -2105,6 +2107,7 @@ enum UserSortField {
 """User account status"""
 enum UserStatus {
   ACTIVE
+  DELETED
   INACTIVE
   PENDING_APPROVAL
   SUSPENDED

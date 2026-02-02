@@ -39,26 +39,26 @@ export const SignedContract = () => {
   }, []);
 
   return (
-    me && (
+    me?.provider && (
       <div className="grid grid-cols-1 gap-10">
         <div className="grid grid-cols-1 gap-6" ref={contractRef}>
           <div className="grid grid-cols-2 gap-4">
             <FormInput
               label={dict.contract.serviceProviderName}
-              value={me.name || ""}
+              value={me.provider.name || ""}
             />
             <FormInput
               label={dict.contract.commercialName}
-              value={me.commercialName || ""}
+              value={me.provider.commercialName || ""}
             />
             <FormInput
               label={dict.contract.phoneNumber}
-              value={`${me.dialCode}${me.phone}` || ""}
+              value={`${me.provider.dialCode}${me.provider.phone}` || ""}
             />
             <FormInput
               label={dict.contract.category}
               value={
-                me.categories
+                me.provider.categories
                   ?.map((cat) => (lng === "en" ? cat.nameEn : cat.nameAr))
                   .join(", ") || ""
               }
@@ -67,12 +67,12 @@ export const SignedContract = () => {
           <div className="grid grid-cols-1 items-start gap-x-4 gap-y-6 rounded-[16px] border border-[#F2F2F2] bg-[#FBFBFB] p-4">
             <FormInput
               label={dict.profile.commercialRecordNumber}
-              value={me.commercialRegistrationNumber || ""}
+              value={me.provider.commercialRegistrationNumber || ""}
               className="h-max rounded-none border-none p-0"
             />
             <div className="relative h-47.5 w-full">
               <Image
-                src={`${process.env.NEXT_PUBLIC_DATA}/files/${me.commercialRegistrationFilename}`}
+                src={`${process.env.NEXT_PUBLIC_DATA}/files/${me.provider.commercialRegistrationFilename}`}
                 alt="Commercial Record"
                 fill
                 className="object-contain object-left"
@@ -80,7 +80,10 @@ export const SignedContract = () => {
             </div>
           </div>
           <div className="grid grid-cols-[1fr_auto] gap-3">
-            <FormInput label={dict.contract.address} value={me.address || ""} />
+            <FormInput
+              label={dict.contract.address}
+              value={me.provider.address || ""}
+            />
             <Button
               className="h-full rounded-[20px] bg-[#EFF1F6] px-6!"
               variant={"ghost"}
@@ -94,11 +97,13 @@ export const SignedContract = () => {
           </div>
           <FormInput
             label={dict.contract.platformManagerName}
-            value={me.name || ""}
+            value={me.provider.name || ""}
           />
           <div className="grid grid-cols-2 gap-x-4 gap-y-2 rounded-[16px] border border-[#F2F2F2] bg-[#FBFBFB] p-4">
             <SignatureInput
-              initUrl={me.signedContract?.serviceProviderSignature || null}
+              initUrl={
+                me.provider.signedContract?.serviceProviderSignature || null
+              }
               file={form.serviceProviderSignature}
               onChange={(f) => {
                 setServiceProviderSignature(f);
@@ -107,7 +112,9 @@ export const SignedContract = () => {
               isRequired
             />
             <SignatureInput
-              initUrl={me.signedContract?.platformManagerSignature || null}
+              initUrl={
+                me.provider.signedContract?.platformManagerSignature || null
+              }
               file={null}
               onChange={(f) => {
                 setPlatformManagerSignature(f);
@@ -119,7 +126,7 @@ export const SignedContract = () => {
               {dict.contract.signatureAllowedOnce}
             </p>
           </div>
-          {me.withAbsher && <AbsherVerified />}
+          {me.provider.withAbsher && <AbsherVerified />}
           <div className="grid grid-cols-1 rounded-[16px] border border-[#F2F2F2] bg-[#FBFBFB] p-4">
             <h3 className="leading-8 font-medium text-black">
               {dict.contract.commitmentText}
@@ -130,7 +137,7 @@ export const SignedContract = () => {
           </div>
         </div>
 
-        {me.signedContract ? (
+        {me.provider.signedContract ? (
           <div className="grid grid-cols-2 gap-3 justify-self-center px-27">
             <Button
               className="h-12.5 rounded-[20px] px-24 font-semibold text-[#EFF9F0]"

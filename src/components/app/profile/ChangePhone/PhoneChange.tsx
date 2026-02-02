@@ -1,23 +1,11 @@
-import PhoneIcon from "@/assets/icons/phone.outline.svg";
-import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { useDict } from "@/hooks/useDict";
-import { useMe } from "@/hooks/useMe";
 import { useQueryState } from "nuqs";
-import { ReactNode, useState } from "react";
-import { PhoneInput } from "../../shared/inputs/PhoneInput";
-import { useChangePhone } from "@/components/app/profile/ChangePhone/useChangePhone";
+import { ReactNode } from "react";
 import { InitiatePhoneChange } from "./InitiatePhoneChange";
 import { VerifyPhoneChange } from "./VerifyPhoneChange";
 export const PhoneChange = ({ children }: { children: ReactNode }) => {
-  const { me } = useMe();
-  const dict = useDict();
   const [phoneChange, setPhoneChange] = useQueryState("phoneChange");
-  const [phone, setPhone] = useState("");
-  const [countryCode, setCountryCode] = useQueryState("country", {
-    defaultValue: me?.dialCode ?? "+966",
-  });
-  const { initiateChange, busy } = useChangePhone();
+
   return (
     <Dialog
       open={!!phoneChange}

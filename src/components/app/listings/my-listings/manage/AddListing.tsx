@@ -32,7 +32,7 @@ export const AddListing = () => {
   const lng = useLang();
   const { me } = useMe();
   const { createListing, creating } = useManageListing();
-  const categories = me?.categories || [];
+  const categories = me?.provider?.categories || [];
   const {
     form,
     setForm,
