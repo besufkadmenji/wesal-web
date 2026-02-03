@@ -6,6 +6,7 @@ import Cookie from "js-cookie";
 export const useMe = (): {
   me: { user: User | null; provider: Provider | null } | null | undefined;
   isLoading: boolean;
+  isLoggedIn: boolean;
   isError: boolean;
   logout: () => Promise<void>;
 } => {
@@ -32,5 +33,11 @@ export const useMe = (): {
     window.location.reload();
   };
 
-  return { isLoading, isError, me, logout };
+  return {
+    isLoading,
+    isError,
+    me,
+    isLoggedIn: me?.provider || me?.user ? true : false,
+    logout,
+  };
 };

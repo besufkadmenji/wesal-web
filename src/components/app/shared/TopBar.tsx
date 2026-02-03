@@ -20,7 +20,7 @@ import { twMerge } from "tailwind-merge";
 import { SelectLanguage } from "./SelectLanguage";
 export const TopBar = () => {
   const dict = useDict();
-  const { me, isLoading } = useMe();
+  const { me, isLoggedIn, isLoading } = useMe();
   console.log("me in topbar", me);
   return (
     <div className="top-bar-gradient grt grid h-20 grid-cols-2 items-center justify-between px-4 md:grid-cols-[1fr_auto_1fr] md:px-8 xl:px-[7vw]">
@@ -33,7 +33,7 @@ export const TopBar = () => {
       </div>
       {isLoading ? (
         <div />
-      ) : me ? (
+      ) : isLoggedIn ? (
         <LoggedUser />
       ) : (
         <div className="flex gap-4 justify-self-end">
@@ -81,18 +81,20 @@ const LoggedUser = () => {
       <DropdownMenuContent className="min-w-72">
         <OptionItem
           icon={<ProfileIcon className="size-6" />}
-          label={dict.auth.personalProfile}
+          label={me?.provider ? dict.auth.profile : dict.auth.personalProfile}
           onClick={() => {
             router.push("/profile");
           }}
         />
-        <OptionItem
-          icon={<HeartIcon className="size-6" />}
-          label={dict.auth.favorites}
-          onClick={() => {
-            router.push("/favorites");
-          }}
-        />
+        {me?.user && (
+          <OptionItem
+            icon={<HeartIcon className="size-6" />}
+            label={dict.auth.favorites}
+            onClick={() => {
+              router.push("/favorites");
+            }}
+          />
+        )}
         <OptionItem
           icon={<LogoutIcon className="size-6" />}
           label={dict.auth.logout}

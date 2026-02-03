@@ -1,30 +1,21 @@
+import ArrowDownIcon from "@/assets/icons/arrow.down.svg";
+import { CategorySelect } from "@/components/app/categories/Categories";
 import { SmartAnimateText } from "@/components/app/shared/SmartAnimateText";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { useCategories } from "@/hooks/useCategories";
 import { useDict } from "@/hooks/useDict";
 import { useLang } from "@/hooks/useLang";
-import CategoryIcon from "@/assets/icons/category.svg";
-import ChevronDownIcon from "@/assets/icons/chevron.down.svg";
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import ArrowDownIcon from "@/assets/icons/arrow.down.svg";
-import { twMerge } from "tailwind-merge";
-import { useCategories } from "@/hooks/useCategories";
-import { useQueryState } from "nuqs";
 import { usePathname, useRouter } from "next/navigation";
-import { CategorySelect } from "@/components/app/categories/Categories";
+import { useQueryState } from "nuqs";
+import { twMerge } from "tailwind-merge";
 export const Hero = () => {
   const dict = useDict();
   const lng = useLang();
   const router = useRouter();
   const pathname = usePathname();
   const { categories } = useCategories();
-  const [category, setCategory] = useQueryState("category");
+  const [query, setQuery] = useQueryState("query");
   return (
     <div className="mt-10 mb-20 grid grid-cols-1 justify-items-center gap-11">
       <div className="grid grid-cols-1 gap-3">
@@ -54,11 +45,16 @@ export const Hero = () => {
         </p>
       </div>
       <div className="grid w-full grid-cols-[1fr_auto] items-center gap-2 px-8 md:w-[48vw]">
-        <CategorySelect />
+        <CategorySelect
+          onSearch={() => {
+            router.push(`${pathname}/categories?query=${query}`);
+          }}
+          onChange={(v) => setQuery(v)}
+        />
         <Button
           className="h-12.5 rounded-[20px] md:px-16"
           onClick={() => {
-            router.push(`${pathname}/categories?category=${category}`);
+            router.push(`${pathname}/categories?query=${query}`);
           }}
         >
           {dict.home.hero.search}

@@ -9,6 +9,7 @@ import { useLang } from "@/hooks/useLang";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import DownIcon from "@/assets/icons/down.icon.svg";
+import { twMerge } from "tailwind-merge";
 const langMap: {
   [key: string]: { label: string; flag: string };
 } = {
@@ -31,7 +32,12 @@ export const SelectLanguage = () => {
         <div className="relative size-5 overflow-hidden rounded-full lg:size-7">
           <Image src={flag} alt={label} fill className="object-cover" />
         </div>
-        <p className="text-sm leading-7 font-normal text-white lg:text-base">
+        <p
+          className={twMerge(
+            "text-sm leading-7 font-normal text-white lg:text-base",
+            lang === "en" && "lg:text-sm",
+          )}
+        >
           {label}
         </p>
         <DownIcon className="w-2.5" />

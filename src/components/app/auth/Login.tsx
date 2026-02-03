@@ -101,7 +101,7 @@ const LoginWithEmail = () => {
           />
         </div>
         <Link
-          href={"/auth/forgot-password"}
+          href={`/auth/forgot-password?type=${type}`}
           className="text-primary justify-self-end text-sm font-semibold"
         >
           {dict.auth.login.forgotPassword}
@@ -163,7 +163,7 @@ const LoginWithPhone = () => {
           />
         </div>
         <Link
-          href={"/auth/forgot-password"}
+          href={`/auth/forgot-password?type=${type}`}
           className="text-primary justify-self-end text-sm font-semibold"
         >
           {dict.auth.login.forgotPassword}
