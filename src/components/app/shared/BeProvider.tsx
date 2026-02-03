@@ -1,14 +1,15 @@
+import BeProviderIcon from "@/assets/icons/be.provider.svg";
+import { Button } from "@/components/ui/button";
+import { useAppRouter } from "@/hooks/use.app.router";
+import { useDict } from "@/hooks/useDict";
+import { useMe } from "@/hooks/useMe";
 import { Modal, ModalContent } from "@heroui/react";
 import { useQueryState } from "nuqs";
-import UnderReviewIcon from "@/assets/icons/check.circle.border.svg";
-import { useDict } from "@/hooks/useDict";
-import { Button } from "@/components/ui/button";
-import BeProviderIcon from "@/assets/icons/be.provider.svg";
-import { useAppRouter } from "@/hooks/use.app.router";
 export const BeProvider = () => {
   const [beProvider, setBeProvider] = useQueryState("be-provider");
   const dict = useDict();
   const router = useAppRouter();
+  const { logout } = useMe();
   return (
     <Modal
       isOpen={beProvider === "true"}
@@ -35,7 +36,8 @@ export const BeProvider = () => {
               <Button
                 className="h-12.5 rounded-[20px] text-[#EFF9F0]"
                 onClick={() => {
-                  router.push("/auth/login?type=provider");
+                  logout(true);
+                  window.location.href = "/auth/register?type=provider";
                 }}
               >
                 {dict.auth.choose.providerSignUp}
