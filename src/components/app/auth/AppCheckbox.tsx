@@ -1,6 +1,7 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { HTMLAttributeAnchorTarget } from "react";
 
 export const AppCheckbox = ({
   label,
@@ -14,6 +15,7 @@ export const AppCheckbox = ({
   link: {
     url: string;
     text: string;
+    target?: HTMLAttributeAnchorTarget | undefined;
   };
   onChange?: (checked: boolean) => void;
   id?: string;
@@ -31,23 +33,20 @@ export const AppCheckbox = ({
               onCheckedChange={onChange}
               className="size-4.5 border-2 border-[#999999] shadow-none ring-0!"
             />
-            <Label
-              htmlFor={id}
-              className="text-gray text-sm font-medium"
-            >
+            <Label htmlFor={id} className="text-gray text-sm font-medium">
               {label}
             </Label>
           </div>
           <Link
             href={link.url}
-            target="_blank"
+            target={link.target}
             className="text-primary text-sm font-bold underline"
           >
             {link.text}
           </Link>
         </div>
       </div>
-      {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+      {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
     </div>
   );
 };

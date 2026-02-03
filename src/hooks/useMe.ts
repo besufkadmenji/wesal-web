@@ -8,7 +8,7 @@ export const useMe = (): {
   isLoading: boolean;
   isLoggedIn: boolean;
   isError: boolean;
-  logout: () => Promise<void>;
+  logout: (noReload?: boolean) => Promise<void>;
 } => {
   const {
     isLoading,
@@ -28,9 +28,11 @@ export const useMe = (): {
     },
   });
 
-  const logout = async (): Promise<void> => {
+  const logout = async (noReload?: boolean): Promise<void> => {
     Cookie.remove("token");
-    window.location.reload();
+    if (!noReload) {
+      window.location.reload();
+    }
   };
 
   return {

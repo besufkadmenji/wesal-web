@@ -4,7 +4,6 @@ import DocumentIcon from "@/assets/icons/auth/document.svg";
 import EmailIcon from "@/assets/icons/auth/email.svg";
 import NameIcon from "@/assets/icons/auth/name.svg";
 import CheckIcon from "@/assets/icons/check.svg";
-import { useRegister } from "@/components/app/auth/Register/useRegister";
 import type { FormType } from "@/components/app/auth/Register/useRegisterProviderStore";
 import { useRegisterProviderStore } from "@/components/app/auth/Register/useRegisterProviderStore";
 import { PasswordInput } from "@/components/app/shared/inputs/PasswordInput";
@@ -25,9 +24,11 @@ import {
   CitySelect,
 } from "@/components/app/auth/Register/FormSelect";
 import { PickLocation } from "@/components/app/auth/Register/PickLocation";
+import { TermsModal } from "@/components/app/auth/Register/TermsModal";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { use, useEffect } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect } from "react";
 import { useRegisterProvider } from "./useRegisterProvider";
 
 export const RegisterProvider = () => {
@@ -276,79 +277,84 @@ const ProviderForm = ({
   errors: Record<string, { message?: string }>;
 }) => {
   const dict = useDict();
+  const pathname = usePathname();
   const form = useRegisterProviderStore((state) => state.formData);
 
   console.log("ProviderForm rendered");
 
   return (
-    <div className="grid grid-cols-1 gap-5">
-      <CitySelect
-        value={form.cityId || ""}
-        onChange={(value) => handleFieldChange("cityId", value)}
-        error={errors.cityId?.message}
-      />
-      <TextInput
-        icon={<AddressIcon className="size-4" />}
-        placeholder={dict.auth.signup.provider.address}
-        value={form.address || ""}
-        onChange={(value) => handleFieldChange("address", value)}
-        error={errors.address?.message}
-      />
-      <PickLocation
-        error={errors.latitude?.message || errors.longitude?.message}
-        onChange={(lat, lng) => {
-          handleFieldChange("latitude", lat);
-          handleFieldChange("longitude", lng);
-        }}
-        latitude={form.latitude || undefined}
-        longitude={form.longitude || undefined}
-      />
-      <CategorySelect
-        error={errors.categoryIds?.message}
-        value={form.categoryIds || []}
-        onChange={(value) => {
-          handleFieldChange("categoryIds", value);
-        }}
-      />
-      <div className="grid grid-cols-1 gap-2 rounded-[16px] border border-[#F2F2F2] bg-[#FBFBFB] p-4">
-        <div className="flex items-center gap-2">
-          <Checkbox
-            id="verifyWithAbsher"
-            className="size-4.5 border-2 border-[#999999] shadow-none ring-0!"
-            checked={form.withAbsher || false}
-            onCheckedChange={(checked) =>
-              handleCheckboxChange("withAbsher", checked as boolean)
-            }
-          />
-          <div className="flex items-center gap-1">
-            <Label
-              htmlFor="verifyWithAbsher"
-              className="text-base font-medium text-black"
-            >
-              {dict.auth.signup.provider.verifyWithAbsher}
-            </Label>
-            <p className="text-gray text-xs font-normal">
-              {dict.auth.signup.provider.verifyWithAbsherOptional}
-            </p>
-          </div>
-        </div>
-        <p className="text-gray text-base leading-7 font-normal">
-          {dict.auth.signup.provider.verifyWithAbsherDescription}
-        </p>
-      </div>
-      <div className="grid grid-cols-1 px-1">
-        <AppCheckbox
-          label={dict.auth.signup.termsAndConditions}
-          link={{
-            url: "/support/terms",
-            text: dict.auth.signup.termsAndConditionsLink,
-          }}
-          id="terms"
-          checked={form.terms || false}
-          onChange={(value) => handleCheckboxChange("terms", value)}
-          error={errors.terms?.message}
+    <>
+      <div className="grid grid-cols-1 gap-5">
+        <CitySelect
+          value={form.cityId || ""}
+          onChange={(value) => handleFieldChange("cityId", value)}
+          error={errors.cityId?.message}
         />
+        <TextInput
+          icon={<AddressIcon className="size-4" />}
+          placeholder={dict.auth.signup.provider.address}
+          value={form.address || ""}
+          onChange={(value) => handleFieldChange("address", value)}
+          error={errors.address?.message}
+        />
+        <PickLocation
+          error={errors.latitude?.message || errors.longitude?.message}
+          onChange={(lat, lng) => {
+            handleFieldChange("latitude", lat);
+            handleFieldChange("longitude", lng);
+          }}
+          latitude={form.latitude || undefined}
+          longitude={form.longitude || undefined}
+        />
+        <CategorySelect
+          error={errors.categoryIds?.message}
+          value={form.categoryIds || []}
+          onChange={(value) => {
+            handleFieldChange("categoryIds", value);
+          }}
+        />
+        <div className="grid grid-cols-1 gap-2 rounded-[16px] border border-[#F2F2F2] bg-[#FBFBFB] p-4">
+          <div className="flex items-center gap-2">
+            <Checkbox
+              id="verifyWithAbsher"
+              className="size-4.5 border-2 border-[#999999] shadow-none ring-0!"
+              checked={form.withAbsher || false}
+              onCheckedChange={(checked) =>
+                handleCheckboxChange("withAbsher", checked as boolean)
+              }
+            />
+            <div className="flex items-center gap-1">
+              <Label
+                htmlFor="verifyWithAbsher"
+                className="text-base font-medium text-black"
+              >
+                {dict.auth.signup.provider.verifyWithAbsher}
+              </Label>
+              <p className="text-gray text-xs font-normal">
+                {dict.auth.signup.provider.verifyWithAbsherOptional}
+              </p>
+            </div>
+          </div>
+          <p className="text-gray text-base leading-7 font-normal">
+            {dict.auth.signup.provider.verifyWithAbsherDescription}
+          </p>
+        </div>
+        <div className="grid grid-cols-1 px-1">
+          <AppCheckbox
+            label={dict.auth.signup.termsAndConditions}
+            link={{
+              url: `${pathname}?show-terms=true`,
+              text: dict.auth.signup.termsAndConditionsLink,
+              target: "_self",
+            }}
+            id="terms"
+            checked={form.terms || false}
+            onChange={(value) => handleCheckboxChange("terms", value)}
+            error={errors.terms?.message}
+          />
+        </div>
       </div>
-    </div>
+      <TermsModal />
+    </>
   );
 };

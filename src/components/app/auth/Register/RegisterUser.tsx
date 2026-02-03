@@ -1,20 +1,23 @@
-import NameIcon from "@/assets/icons/auth/name.svg";
-import EmailIcon from "@/assets/icons/auth/email.svg";
 import BankIcon from "@/assets/icons/auth/bank.svg";
+import EmailIcon from "@/assets/icons/auth/email.svg";
 import IbanIcon from "@/assets/icons/auth/iban.svg";
+import NameIcon from "@/assets/icons/auth/name.svg";
 import ProfileIcon from "@/assets/icons/auth/profile.picture.svg";
-import { PasswordInput } from "@/components/app/shared/inputs/PasswordInput";
-import { TextInput } from "@/components/app/shared/inputs/TextInput";
-import { PhoneInput } from "@/components/app/shared/inputs/PhoneInput";
 import { AppCheckbox } from "@/components/app/auth/AppCheckbox";
+import { TermsModal } from "@/components/app/auth/Register/TermsModal";
+import { useRegister } from "@/components/app/auth/Register/useRegister";
+import { useRegisterStore } from "@/components/app/auth/Register/useRegisterStore";
+import { PasswordInput } from "@/components/app/shared/inputs/PasswordInput";
+import { PhoneInput } from "@/components/app/shared/inputs/PhoneInput";
+import { TextInput } from "@/components/app/shared/inputs/TextInput";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { useDict } from "@/hooks/useDict";
 import { useRegisterForm } from "@/hooks/useRegisterForm";
-import { useRegisterStore } from "@/components/app/auth/Register/useRegisterStore";
-import { useRegister } from "@/components/app/auth/Register/useRegister";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 export const RegisterUser = () => {
   const dict = useDict();
+  const pathname = usePathname();
   const form = useRegisterStore((state) => state.formData);
   const updateField = useRegisterStore((state) => state.updateField);
   const { register, busy } = useRegister();
@@ -55,130 +58,134 @@ export const RegisterUser = () => {
     }
   };
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="grid grid-cols-1 gap-6 px-6 py-10 xl:px-15"
-    >
-      <div className="grid justify-items-center gap-4 lg:gap-10">
-        <div className="grid justify-items-center gap-3">
-          <h1 className="text-center text-xl font-semibold text-black lg:text-2xl lg:leading-8">
-            {dict.auth.signup.title}
-          </h1>
-          <p className="text-gray text-center text-base lg:text-lg lg:leading-9">
-            {dict.auth.signup.subtitle}
-          </p>
-        </div>
-        <ProfileIcon className="size-20" />
-      </div>
-
-      <div className="grid grid-cols-1 gap-5">
-        {/* Name Field */}
-        <TextInput
-          icon={<NameIcon />}
-          placeholder={dict.auth.signup.name}
-          value={form.name || ""}
-          onChange={(value) => handleFieldChange("name", value)}
-          error={errors.name?.message}
-        />
-
-        {/* Phone Field */}
-        <PhoneInput
-          value={form.phone || ""}
-          onChange={(value) => handleFieldChange("phone", value)}
-          error={errors.phone?.message}
-        />
-
-        {/* Email Field */}
-        <TextInput
-          icon={<EmailIcon />}
-          placeholder={dict.auth.signup.email}
-          value={form.email || ""}
-          onChange={(value) => handleFieldChange("email", value)}
-          error={errors.email?.message}
-        />
-
-        {/* Password Fields */}
-        <div className="grid grid-cols-1 gap-x-3 gap-y-5 lg:grid-cols-2">
-          <PasswordInput
-            placeholder={dict.auth.signup.password}
-            value={form.password || ""}
-            onChange={(value) => handleFieldChange("password", value)}
-            error={errors.password?.message}
-          />
-          <PasswordInput
-            placeholder={dict.auth.signup.confirmPassword}
-            value={form.confirmPassword || ""}
-            onChange={(value) => handleFieldChange("confirmPassword", value)}
-            error={errors.confirmPassword?.message}
-          />
-        </div>
-
-        {/* Bank Name Field */}
-        <TextInput
-          icon={<BankIcon />}
-          placeholder={dict.auth.signup.bankName}
-          value={form.bankName || ""}
-          onChange={(value) => handleFieldChange("bankName", value)}
-          error={errors.bankName?.message}
-        />
-
-        {/* IBAN Field */}
-        <TextInput
-          icon={<IbanIcon />}
-          placeholder={dict.auth.signup.ibanNumber}
-          value={form.ibanNumber || ""}
-          onChange={(value) => handleFieldChange("ibanNumber", value)}
-          error={errors.ibanNumber?.message}
-        />
-      </div>
-
-      {/* Checkboxes */}
-      <div className="grid grid-cols-1 gap-3">
-        <AppCheckbox
-          label={dict.auth.signup.documentLink}
-          link={{
-            url: "/",
-            text: dict.auth.signup.documentLinkText,
-          }}
-          id="document"
-          checked={form.document || false}
-          onChange={(value) => handleCheckboxChange("document", value)}
-          error={errors.document?.message}
-        />
-        <AppCheckbox
-          label={dict.auth.signup.termsAndConditions}
-          link={{
-            url: "/support/terms",
-            text: dict.auth.signup.termsAndConditionsLink,
-          }}
-          id="terms"
-          checked={form.terms || false}
-          onChange={(value) => handleCheckboxChange("terms", value)}
-          error={errors.terms?.message}
-        />
-      </div>
-
-      {/* Submit Button */}
-      <Button
-        className="h-12.5 rounded-[20px] text-base font-semibold"
-        type="submit"
-        disabled={busy}
+    <>
+      <form
+        onSubmit={handleSubmit}
+        className="grid grid-cols-1 gap-6 px-6 py-10 xl:px-15"
       >
-        {dict.auth.signup.submit}
-      </Button>
+        <div className="grid justify-items-center gap-4 lg:gap-10">
+          <div className="grid justify-items-center gap-3">
+            <h1 className="text-center text-xl font-semibold text-black lg:text-2xl lg:leading-8">
+              {dict.auth.signup.title}
+            </h1>
+            <p className="text-gray text-center text-base lg:text-lg lg:leading-9">
+              {dict.auth.signup.subtitle}
+            </p>
+          </div>
+          <ProfileIcon className="size-20" />
+        </div>
 
-      {/* Sign In Link */}
-      <div className="flex items-center justify-center gap-2">
-        <p className="text-gray text-sm leading-6 font-medium">
-          {dict.auth.signup.haveAccount}
-        </p>
-        <Link
-          href={"/auth/choose-type?action=login"}
-          className="text-primary justify-self-end text-base font-semibold"
+        <div className="grid grid-cols-1 gap-5">
+          {/* Name Field */}
+          <TextInput
+            icon={<NameIcon />}
+            placeholder={dict.auth.signup.name}
+            value={form.name || ""}
+            onChange={(value) => handleFieldChange("name", value)}
+            error={errors.name?.message}
+          />
+
+          {/* Phone Field */}
+          <PhoneInput
+            value={form.phone || ""}
+            onChange={(value) => handleFieldChange("phone", value)}
+            error={errors.phone?.message}
+          />
+
+          {/* Email Field */}
+          <TextInput
+            icon={<EmailIcon />}
+            placeholder={dict.auth.signup.email}
+            value={form.email || ""}
+            onChange={(value) => handleFieldChange("email", value)}
+            error={errors.email?.message}
+          />
+
+          {/* Password Fields */}
+          <div className="grid grid-cols-1 gap-x-3 gap-y-5 lg:grid-cols-2">
+            <PasswordInput
+              placeholder={dict.auth.signup.password}
+              value={form.password || ""}
+              onChange={(value) => handleFieldChange("password", value)}
+              error={errors.password?.message}
+            />
+            <PasswordInput
+              placeholder={dict.auth.signup.confirmPassword}
+              value={form.confirmPassword || ""}
+              onChange={(value) => handleFieldChange("confirmPassword", value)}
+              error={errors.confirmPassword?.message}
+            />
+          </div>
+
+          {/* Bank Name Field */}
+          <TextInput
+            icon={<BankIcon />}
+            placeholder={dict.auth.signup.bankName}
+            value={form.bankName || ""}
+            onChange={(value) => handleFieldChange("bankName", value)}
+            error={errors.bankName?.message}
+          />
+
+          {/* IBAN Field */}
+          <TextInput
+            icon={<IbanIcon />}
+            placeholder={dict.auth.signup.ibanNumber}
+            value={form.ibanNumber || ""}
+            onChange={(value) => handleFieldChange("ibanNumber", value)}
+            error={errors.ibanNumber?.message}
+          />
+        </div>
+
+        {/* Checkboxes */}
+        <div className="grid grid-cols-1 gap-3">
+          <AppCheckbox
+            label={dict.auth.signup.documentLink}
+            link={{
+              url: "/",
+              text: dict.auth.signup.documentLinkText,
+            }}
+            id="document"
+            checked={form.document || false}
+            onChange={(value) => handleCheckboxChange("document", value)}
+            error={errors.document?.message}
+          />
+          <AppCheckbox
+            label={dict.auth.signup.termsAndConditions}
+            link={{
+              url: `${pathname}?show-terms=true`,
+              text: dict.auth.signup.termsAndConditionsLink,
+              target: "_self",
+            }}
+            id="terms"
+            checked={form.terms || false}
+            onChange={(value) => handleCheckboxChange("terms", value)}
+            error={errors.terms?.message}
+          />
+        </div>
+
+        {/* Submit Button */}
+        <Button
+          className="h-12.5 rounded-[20px] text-base font-semibold"
+          type="submit"
+          disabled={busy}
         >
-          {dict.auth.signup.signIn}
-        </Link>
-      </div>
-    </form>
+          {dict.auth.signup.submit}
+        </Button>
+
+        {/* Sign In Link */}
+        <div className="flex items-center justify-center gap-2">
+          <p className="text-gray text-sm leading-6 font-medium">
+            {dict.auth.signup.haveAccount}
+          </p>
+          <Link
+            href={"/auth/choose-type?action=login"}
+            className="text-primary justify-self-end text-base font-semibold"
+          >
+            {dict.auth.signup.signIn}
+          </Link>
+        </div>
+      </form>
+      <TermsModal />
+    </>
   );
 };

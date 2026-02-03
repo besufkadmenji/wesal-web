@@ -2,7 +2,6 @@ import ArrowDownIcon from "@/assets/icons/arrow.down.svg";
 import { CategorySelect } from "@/components/app/categories/Categories";
 import { SmartAnimateText } from "@/components/app/shared/SmartAnimateText";
 import { Button } from "@/components/ui/button";
-import { useCategories } from "@/hooks/useCategories";
 import { useDict } from "@/hooks/useDict";
 import { useLang } from "@/hooks/useLang";
 import Image from "next/image";
@@ -14,7 +13,6 @@ export const Hero = () => {
   const lng = useLang();
   const router = useRouter();
   const pathname = usePathname();
-  const { categories } = useCategories();
   const [query, setQuery] = useQueryState("query");
   return (
     <div className="mt-10 mb-20 grid grid-cols-1 justify-items-center gap-11">
