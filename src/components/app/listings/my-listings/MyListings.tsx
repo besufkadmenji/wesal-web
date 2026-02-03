@@ -7,7 +7,6 @@ import { ListingHeader } from "@/components/app/listings/my-listings/ListingHead
 import { NoListing } from "@/components/app/listings/my-listings/NoListing";
 import { useListings } from "@/components/app/listings/my-listings/useListings";
 import { AppWrapper } from "@/components/app/shared/AppWrapper";
-import { UserRole } from "@/gql/graphql";
 import { useMe } from "@/hooks/useMe";
 import { useEffect } from "react";
 
@@ -15,7 +14,7 @@ export const MyListings = () => {
   const { me } = useMe();
   const { isLoading, listings } = useListings();
   useEffect(() => {
-    if (me && me.role !== UserRole.Provider) {
+    if (me && !me?.provider) {
       window.location.href = "/";
     }
     return () => {};

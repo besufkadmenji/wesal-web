@@ -89,7 +89,9 @@ input AdminResetPasswordInput {
 }
 
 input AdminSignContractInput {
-  userId: ID!
+  platformManagerName: String!
+  platformManagerSignature: String!
+  providerId: String!
 }
 
 """Available fields to sort admins by"""
@@ -109,6 +111,11 @@ enum AdminStatus {
   INACTIVE
   PENDING_APPROVAL
   SUSPENDED
+}
+
+input AdminTerminateContractInput {
+  providerId: String!
+  terminationReason: String!
 }
 
 """Admin user types"""
@@ -360,7 +367,7 @@ type Contract {
   createdAt: DateTime!
   downPayment: Float!
   id: ID!
-  provider: User!
+  provider: Provider!
   providerId: String!
   publicId: Int
   signatures: [ContractSignature!]
@@ -650,6 +657,28 @@ input CreatePermissionInput {
   resource: String!
 }
 
+input CreateProviderInput {
+  address: String
+  avatarFilename: String
+  bankName: String
+  categoryIds: [String!]
+  cityId: String
+  commercialName: String
+  commercialRegistrationFilename: String
+  commercialRegistrationNumber: String
+  countryId: String
+  dialCode: String
+  email: String!
+  ibanNumber: String
+  languageCode: String
+  latitude: Float
+  longitude: Float
+  name: String
+  password: String!
+  phone: String!
+  withAbsher: Boolean
+}
+
 input CreateRatingInput {
   comment: String
   listingId: String!
@@ -675,6 +704,10 @@ input DeactivateDeliveryCompanyInput {
 }
 
 input DeactivateUserInput {
+  reason: String
+}
+
+input DeleteProviderInput {
   reason: String
 }
 
@@ -772,13 +805,13 @@ type Listing {
   name: String!
   photos: [ListingMedia!]!
   price: Float!
-  provider: User
+  provider: Provider
+  providerId: String!
   status: ListingStatus!
   story: ListingMedia!
   tags: String!
   type: ListingType!
   updatedAt: DateTime!
-  userId: String!
 }
 
 type ListingMedia {
@@ -836,7 +869,11 @@ enum ListingType {
 input LoginInput {
   emailOrPhone: String!
   password: String!
-  role: UserRole!
+}
+
+input LoginProviderInput {
+  emailOrPhone: String!
+  password: String!
 }
 
 """Media file type"""
@@ -887,6 +924,9 @@ type Mutation {
   activateDeliveryCompany(id: ID!): DeliveryCompany!
   activateListing(id: ID!): Listing!
 
+  """Activate provider by ID"""
+  activateProvider(id: ID!): Provider!
+
   """Activate user by ID"""
   activateUser(id: ID!): User!
   adminChangePassword(input: AdminChangePasswordInput!): Boolean!
@@ -894,11 +934,11 @@ type Mutation {
   adminLogin(input: AdminLoginInput!): AdminAuthResponse!
   adminResetPassword(input: AdminResetPasswordInput!): Boolean!
 
-  """Sign contract as service provider"""
-  adminSignContract(input: AdminSignContractInput!): User!
+  """Admin signs provider contract"""
+  adminSignProviderContract(input: AdminSignContractInput!): Provider!
 
-  """Terminate contract as service provider"""
-  adminTerminateContract(terminationReason: String!, userId: String!): User!
+  """Admin terminates provider contract"""
+  adminTerminateProviderContract(input: AdminTerminateContractInput!): Provider!
   adminVerifyPasswordResetOtp(input: VerifyAdminPasswordResetOtpInput!): VerifyAdminPasswordResetOtpResponse!
   assignPermissionToAdmin(input: AssignPermissionInput!): AdminPermission!
   bulkAssignPermissionsToAdmin(input: BulkAssignPermissionsInput!): [AdminPermission!]!
@@ -909,6 +949,9 @@ type Mutation {
 
   """Change password for authenticated user"""
   changePassword(input: ChangePasswordInput!): Boolean!
+
+  """Change password for authenticated provider"""
+  changeProviderPassword(input: ChangePasswordInput!): Boolean!
   createAdmin(createAdminInput: CreateAdminInput!): Admin!
   createBank(input: CreateBankInput!): Bank!
   createCategory(input: CreateCategoryInput!): Category!
@@ -930,11 +973,17 @@ type Mutation {
   createNotification(input: CreateNotificationInput!): Notification!
   createPayment(input: CreatePaymentInput!): Payment!
   createPermission(createPermissionInput: CreatePermissionInput!): Permission!
+
+  """Create a new provider"""
+  createProvider(createProviderInput: CreateProviderInput!): Provider!
   createRating(input: CreateRatingInput!): Rating!
   deactivateAdmin(id: ID!, input: DeactivateAdminInput!): Admin!
   deactivateBank(id: ID!, input: DeactivateBankInput!): Bank!
   deactivateDeliveryCompany(id: ID!, input: DeactivateDeliveryCompanyInput!): DeliveryCompany!
   deactivateListing(id: ID!, reason: String!): Listing!
+
+  """Deactivate provider"""
+  deactivateProvider(id: ID!, reason: String): Provider!
 
   """Deactivate user by ID"""
   deactivateUser(id: ID!, input: DeactivateUserInput!): User!
@@ -946,6 +995,9 @@ type Mutation {
   """Request password reset OTP"""
   forgotPassword(input: ForgotPasswordInput!): Boolean!
 
+  """Request password reset OTP for provider"""
+  forgotProviderPassword(input: ForgotPasswordInput!): Boolean!
+
   """
   Initiate email change - sends OTP to new email and returns change token
   """
@@ -956,8 +1008,21 @@ type Mutation {
   """
   initiatePhoneChange(input: ChangePhoneInput!): ChangePhoneResponse!
 
+  """
+  Initiate provider email change - sends OTP to new email and returns change token
+  """
+  initiateProviderEmailChange(input: ChangeEmailInput!): ChangeEmailResponse!
+
+  """
+  Initiate provider phone change - sends OTP to new phone and returns change token
+  """
+  initiateProviderPhoneChange(input: ChangePhoneInput!): ChangePhoneResponse!
+
   """Login with email and password"""
   login(input: LoginInput!): AuthResponse!
+
+  """Login as provider with email/phone and password"""
+  loginProvider(input: LoginProviderInput!): ProviderAuthResponse!
 
   """Mark all notifications as read for a user"""
   markAllNotificationsAsRead(userId: String!): Boolean!
@@ -979,6 +1044,9 @@ type Mutation {
 
   """Register a new user and send verification OTPs"""
   register(input: RegisterInput!): User!
+
+  """Register a new provider and send verification OTPs"""
+  registerProvider(input: RegisterProviderInput!): Provider!
 
   """Reject a complaint"""
   rejectComplaint(complaintId: String!, reason: String!, reviewerId: String!): Complaint!
@@ -1009,6 +1077,12 @@ type Mutation {
   removeNotification(id: String!): Notification!
   removePayment(id: String!): Payment!
   removePermission(id: ID!): Boolean!
+
+  """Remove provider"""
+  removeProvider(id: ID!, input: DeleteProviderInput!): Provider!
+
+  """Delete provider avatar by ID"""
+  removeProviderAvatar(id: ID!): Boolean!
   removeRating(id: String!): Rating!
 
   """Delete user by ID"""
@@ -1017,8 +1091,14 @@ type Mutation {
   """Resend OTP for email or phone verification"""
   resendOtp(input: ResendOtpInput!): Boolean!
 
+  """Resend OTP for provider email or phone verification"""
+  resendProviderOtp(input: ResendOtpInput!): Boolean!
+
   """Reset password using reset token"""
   resetPassword(input: ResetPasswordWithTokenInput!): Boolean!
+
+  """Reset provider password using reset token"""
+  resetProviderPassword(input: ResetPasswordWithTokenInput!): Boolean!
 
   """Review and resolve a complaint"""
   reviewComplaint(input: ReviewComplaintInput!): Complaint!
@@ -1028,11 +1108,11 @@ type Mutation {
   """Create or update application settings (admin only)"""
   setSetting(input: SettingInput!): Setting!
 
-  """Sign contract as service provider"""
-  signContract(input: SignContractInput!): User!
+  """Sign contract as provider"""
+  signProviderContract(input: SignContractInput!): Provider!
 
-  """Terminate contract as service provider"""
-  terminateContract(terminationReason: String!): User!
+  """Terminate provider contract"""
+  terminateProviderContract(terminationReason: String!): Provider!
   updateAdmin(id: ID!, updateAdminInput: UpdateAdminInput!): Admin!
   updateBank(input: UpdateBankInput!): Bank!
   updateCategory(input: UpdateCategoryInput!): Category!
@@ -1052,6 +1132,9 @@ type Mutation {
   updateMessage(input: UpdateMessageInput!): Message!
   updatePayment(input: UpdatePaymentInput!): Payment!
   updatePermission(id: ID!, updatePermissionInput: UpdatePermissionInput!): Permission!
+
+  """Update provider"""
+  updateProvider(updateProviderInput: UpdateProviderInput!): Provider!
   updateRating(input: UpdateRatingInput!): Rating!
 
   """Update user"""
@@ -1068,6 +1151,18 @@ type Mutation {
 
   """Verify phone change with OTP and change token"""
   verifyPhoneChange(input: VerifyChangePhoneInput!): Boolean!
+
+  """Verify email change with OTP and change token"""
+  verifyProviderEmailChange(input: VerifyChangeEmailInput!): Boolean!
+
+  """Verify provider email or phone with OTP"""
+  verifyProviderOtp(input: VerifyOtpInput!): Boolean!
+
+  """Verify provider password reset OTP and get reset token"""
+  verifyProviderPasswordResetOtp(input: VerifyPasswordResetOtpInput!): VerifyPasswordResetOtpResponse!
+
+  """Verify phone change with OTP and change token"""
+  verifyProviderPhoneChange(input: VerifyChangePhoneInput!): Boolean!
 }
 
 type Notification {
@@ -1259,6 +1354,11 @@ type PaginatedPaymentResponse {
   meta: PaginationMeta!
 }
 
+type PaginatedProviderResponse {
+  items: [Provider!]!
+  meta: PaginationMeta!
+}
+
 type PaginatedRatingResponse {
   """List of items"""
   items: [Rating!]!
@@ -1388,6 +1488,64 @@ enum PermissionPlatform {
   GLOBAL
 }
 
+type Provider {
+  address: String
+  avatarFilename: String
+  bankName: String
+  categories: [Category!]
+  city: City
+  cityId: String
+  commercialName: String
+  commercialRegistrationFilename: String
+  commercialRegistrationNumber: String
+  country: Country
+  countryId: String
+  createdAt: DateTime!
+  deactivationReason: String
+  deleteReason: String
+  deletedAt: String
+  dialCode: String
+  email: String!
+  emailVerified: Boolean!
+  ibanNumber: String
+  id: ID!
+  isActive: Boolean!
+  languageCode: String
+  latitude: Float
+  longitude: Float
+  name: String
+  phone: String!
+  phoneVerified: Boolean!
+  publicId: Int
+  signedContract: SignedContract
+  status: ProviderStatus!
+  updatedAt: DateTime!
+  withAbsher: Boolean
+}
+
+type ProviderAuthResponse {
+  accessToken: String!
+  provider: Provider!
+}
+
+input ProviderPaginationInput {
+  limit: Int = 10
+  page: Int = 1
+  search: String
+  sortBy: String
+  sortOrder: String = "DESC"
+  status: ProviderStatus
+}
+
+"""Provider status enumeration"""
+enum ProviderStatus {
+  ACTIVE
+  DELETED
+  INACTIVE
+  PENDING_APPROVAL
+  SUSPENDED
+}
+
 type Query {
   admin(id: ID!): Admin!
   adminPermissions(adminId: ID!): [AdminPermission!]!
@@ -1435,10 +1593,13 @@ type Query {
   isFavorite(listingId: String!, userId: String!): Boolean!
   listing(id: ID!): Listing
   listings(paginationInput: ListingPaginationInput!): PaginatedListingResponse!
+  meAdmin: Admin!
+
+  """Get current authenticated provider"""
+  meProvider: Provider!
 
   """Get current authenticated user"""
-  me: User!
-  meAdmin: Admin!
+  meUser: User!
   message(id: String!): Message!
   messages(input: MessagePaginationInput): PaginatedMessageResponse!
   myListings(paginationInput: ListingPaginationInput!): PaginatedListingResponse!
@@ -1452,13 +1613,25 @@ type Query {
   permission(id: ID!): Permission!
   permissionAdmins(permissionId: ID!): [AdminPermission!]!
   permissions: [Permission!]!
+
+  """Get provider by ID"""
+  provider(id: ID!): Provider!
+
+  """Get provider by email"""
+  providerByEmail(email: String!): Provider!
+
+  """Get provider by phone"""
+  providerByPhone(phone: String!): Provider!
+
+  """Get all providers with pagination"""
+  providers(pagination: ProviderPaginationInput!): PaginatedProviderResponse!
   rating(id: String!): Rating!
 
   """Get rating statistics for an listing"""
   ratingStatistics(listingId: String!): RatingStatistics!
   ratings(input: RatingPaginationInput): PaginatedRatingResponse!
   signedContractById(id: String!): SignedContract
-  signedContractByUserId(userId: String!): SignedContract
+  signedContractByProviderId(providerId: String!): SignedContract
   signedContracts(input: SignedContractPaginationInput): PaginatedSignedContractResponse!
 
   """Get user by ID"""
@@ -1518,23 +1691,38 @@ type RatingStatistics {
 }
 
 input RegisterInput {
+  avatarFilename: String
+  bankName: String!
+  cityId: String
+  countryId: String
+  dialCode: String
+  email: String!
+  ibanNumber: String!
+  name: String!
+  password: String!
+  phone: String!
+  withAbsher: Boolean
+}
+
+input RegisterProviderInput {
   address: String
   avatarFilename: String
   bankName: String
   categoryIds: [String!]
   cityId: String
-  commercialName: String
+  commercialName: String!
   commercialRegistrationFilename: String
-  commercialRegistrationNumber: String
+  commercialRegistrationNumber: String!
+  countryId: String
   dialCode: String
   email: String!
   ibanNumber: String
+  languageCode: String
   latitude: Float
   longitude: Float
   name: String!
   password: String!
   phone: String!
-  role: UserRole!
   withAbsher: Boolean
 }
 
@@ -1606,13 +1794,13 @@ type SignedContract {
   id: ID!
   platformManagerName: String
   platformManagerSignature: String
+  provider: Provider
+  providerId: String
   publicId: Int
   serviceProviderSignature: String!
   status: SignedContractStatus!
   terminationReason: String
   updatedAt: DateTime!
-  user: User
-  userId: String!
 }
 
 input SignedContractPaginationInput {
@@ -1621,6 +1809,7 @@ input SignedContractPaginationInput {
 
   """Page number (1-based)"""
   page: Int! = 1
+  providerId: String
   search: String
 
   """Sort field name"""
@@ -1628,23 +1817,22 @@ input SignedContractPaginationInput {
 
   """Sort order: ASC or DESC"""
   sortOrder: SortOrder = DESC
-  userId: String
 }
 
 """Available fields to sort signed contracts by"""
 enum SignedContractSortField {
   createdAt
   id
+  providerId
   updatedAt
-  userId
 }
 
-"""User account status"""
+"""Provider account status"""
 enum SignedContractStatus {
   ACTIVE
   EXPIRED
   TERMINATED_BY_ADMIN
-  TERMINATED_BY_USER
+  TERMINATED_BY_PROVIDER
 }
 
 type SocialMediaLink {
@@ -1809,15 +1997,7 @@ input UpdatePermissionInput {
   resource: String
 }
 
-input UpdateRatingInput {
-  comment: String
-  id: String!
-  listingId: String
-  rating: Int
-  userId: String
-}
-
-input UpdateUserInput {
+input UpdateProviderInput {
   address: String
   avatarFilename: String
   bankName: String
@@ -1830,6 +2010,33 @@ input UpdateUserInput {
   dialCode: String
   email: String
   ibanNumber: String
+  id: String!
+  languageCode: String
+  latitude: Float
+  longitude: Float
+  name: String
+  password: String
+  phone: String
+  withAbsher: Boolean
+}
+
+input UpdateRatingInput {
+  comment: String
+  id: String!
+  listingId: String
+  rating: Int
+  userId: String
+}
+
+input UpdateUserInput {
+  address: String
+  avatarFilename: String
+  bankName: String
+  cityId: String
+  countryId: String
+  dialCode: String
+  email: String
+  ibanNumber: String
   id: ID!
   languageCode: String
   latitude: Float
@@ -1837,7 +2044,6 @@ input UpdateUserInput {
   name: String
   password: String
   phone: String
-  role: UserRole
   withAbsher: Boolean
 }
 
@@ -1845,12 +2051,8 @@ type User {
   address: String
   avatarFilename: String
   bankName: String
-  categories: [Category!]
   city: City
   cityId: String
-  commercialName: String
-  commercialRegistrationFilename: String
-  commercialRegistrationNumber: String
   country: Country
   countryId: String
   createdAt: DateTime!
@@ -1870,8 +2072,6 @@ type User {
   phone: String!
   phoneVerified: Boolean!
   publicId: Int
-  role: UserRole!
-  signedContract: SignedContract
   status: UserStatus!
   updatedAt: DateTime!
   withAbsher: Boolean
@@ -1883,7 +2083,6 @@ input UserPaginationInput {
 
   """Page number (1-based)"""
   page: Int! = 1
-  role: UserRole!
   search: String
 
   """Sort field name"""
@@ -1892,12 +2091,6 @@ input UserPaginationInput {
   """Sort order: ASC or DESC"""
   sortOrder: SortOrder = DESC
   status: UserStatus
-}
-
-"""User role enumeration"""
-enum UserRole {
-  PROVIDER
-  USER
 }
 
 """Available fields to sort users by"""
@@ -1914,6 +2107,7 @@ enum UserSortField {
 """User account status"""
 enum UserStatus {
   ACTIVE
+  DELETED
   INACTIVE
   PENDING_APPROVAL
   SUSPENDED

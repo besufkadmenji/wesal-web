@@ -1,4 +1,6 @@
 import { useDict } from "@/hooks/useDict";
+import { useMe } from "@/hooks/useMe";
+import AuthProviderService from "@/services/auth.provider.service";
 import AuthService from "@/services/auth.service";
 import { queryClient } from "@/utils/query.client";
 import { showErrorMessage, showSuccessMessage } from "@/utils/show.messages";
@@ -7,7 +9,8 @@ import { useState } from "react";
 export const useChangePassword = () => {
   const [busy, setBusy] = useState(false);
   const dict = useDict();
-
+  const { me } = useMe();
+  const isProvider = !!me?.provider;
   const changePassword = async (
     newPassword: string,
     confirmPassword: string,
@@ -18,9 +21,13 @@ export const useChangePassword = () => {
     }
     setBusy(true);
     try {
-      const result = await AuthService.changePassword({
-        newPassword,
-      });
+      const result = await (isProvider
+        ? AuthProviderService.changePassword({
+            newPassword,
+          })
+        : AuthService.changePassword({
+            newPassword,
+          }));
       if (result) {
         showSuccessMessage(dict.profile.passwordChangeSuccessMessage);
         queryClient.invalidateQueries({

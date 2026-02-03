@@ -11,7 +11,7 @@ import { useForgotPassword } from "./useForgotPassword";
 
 export const VerifyForgotPassword = () => {
   const dict = useDict();
-  const [type] = useQueryState("type");
+  const [targetType] = useQueryState("targetType");
   const [target] = useQueryState("target");
   const { remainingSeconds, start, reset, formatTime } = useCountdownTimer(60);
   const { verifyOtp, resendOtp, busy } = useForgotPassword();
@@ -34,11 +34,11 @@ export const VerifyForgotPassword = () => {
           <p
             className="text-gray text-center text-base lg:text-lg lg:leading-9"
             dangerouslySetInnerHTML={{
-              __html: (type === "phone"
+              __html: (targetType === "phone"
                 ? dict.auth.resetPassword.verify.subtitlePhone
                 : dict.auth.resetPassword.verify.subtitleEmail
               ).replace(
-                type === "phone" ? "{phone}" : "{email}",
+                targetType === "phone" ? "{phone}" : "{email}",
                 `<strong class="text-primary">${target}</strong>`,
               ),
             }}

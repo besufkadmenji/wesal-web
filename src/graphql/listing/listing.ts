@@ -5,7 +5,7 @@ export const LISTING_QUERY: TypedDocumentNode<
   ListingQuery,
   ListingQueryVariables
 > = gql`
-query listing($listingId: ID!) {
+  query listing($listingId: ID!) {
     listing(id: $listingId) {
       id
       categoryId
@@ -26,7 +26,7 @@ query listing($listingId: ID!) {
       tags
       type
       updatedAt
-      userId
+      providerId
       photos {
         filename
         id
@@ -46,7 +46,6 @@ query listing($listingId: ID!) {
         phoneVerified
         status
         updatedAt
-        role
       }
     }
   }

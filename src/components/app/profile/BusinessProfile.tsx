@@ -5,8 +5,7 @@ import {
   CitySelect,
 } from "@/components/app/auth/Register/FormSelect";
 import { PickLocation } from "@/components/app/auth/Register/PickLocation";
-import { useProfileStore } from "@/components/app/profile/useProfileForm";
-import { useUpdateProfile } from "@/components/app/profile/useUpdateProfile";
+import { useUpdateProviderProfile } from '@/components/app/profile/useUpdateProviderProfile';
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -14,24 +13,25 @@ import { useDict } from "@/hooks/useDict";
 import { useMe } from "@/hooks/useMe";
 import { useEffect } from "react";
 import { FormInput } from "./FormInput";
+import { useProviderProfileStore } from "./useProviderProfileForm";
 
 export const BusinessProfile = () => {
   const { me } = useMe();
-  const { setInitialData } = useProfileStore();
+  const { setInitialData } = useProviderProfileStore();
 
   useEffect(() => {
-    if (me) {
+    if (me?.provider) {
       setInitialData({
         input: {
-          id: me.id,
-          address: me.address || "",
-          latitude: me.latitude || undefined,
-          longitude: me.longitude || undefined,
-          withAbsher: me.withAbsher || false,
-          cityId: me.cityId || "",
-          categoryIds: (me.categories || []).map((cat) => cat.id),
+          id: me.provider.id,
+          address: me.provider.address || "",
+          latitude: me.provider.latitude || undefined,
+          longitude: me.provider.longitude || undefined,
+          withAbsher: me.provider.withAbsher || false,
+          cityId: me.provider.cityId || "",
+          categoryIds: (me.provider.categories || []).map((cat) => cat.id),
           commercialRegistrationNumber:
-            me.commercialRegistrationNumber || undefined,
+            me.provider.commercialRegistrationNumber || undefined,
         },
       });
     }
@@ -42,10 +42,9 @@ export const BusinessProfile = () => {
 };
 
 export const ProviderForm = () => {
-  const { me } = useMe();
-  const { form, updateInputField } = useProfileStore();
+  const { form, updateInputField } = useProviderProfileStore();
   const dict = useDict();
-  const { updateBusinessProfile, updating } = useUpdateProfile();
+  const { updateBusinessProfile, updating } = useUpdateProviderProfile();
   console.log("ProviderForm rendered");
 
   return (

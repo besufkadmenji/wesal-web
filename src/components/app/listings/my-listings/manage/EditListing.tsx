@@ -35,7 +35,7 @@ export const EditListing = () => {
   const { me } = useMe();
   const { listing, isLoading } = useListing();
   const { updateListing, updating } = useManageListing();
-  const categories = me?.categories || [];
+  const categories = me?.provider?.categories || [];
   const {
     form,
     setForm,

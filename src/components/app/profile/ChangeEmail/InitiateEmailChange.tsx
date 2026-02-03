@@ -2,12 +2,10 @@ import EmailIcon from "@/assets/icons/email.outline.svg";
 import { useChangeEmail } from "@/components/app/profile/ChangeEmail/useChangeEmail";
 import { Button } from "@/components/ui/button";
 import { useDict } from "@/hooks/useDict";
-import { useMe } from "@/hooks/useMe";
 import { useQueryState } from "nuqs";
 import { useState } from "react";
 import { TextInput } from "../../shared/inputs/TextInput";
 export const InitiateEmailChange = () => {
-  const { me } = useMe();
   const dict = useDict();
   const [open, setOpen] = useQueryState("emailChange", {
     defaultValue: "false",

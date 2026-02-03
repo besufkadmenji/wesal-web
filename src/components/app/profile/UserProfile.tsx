@@ -4,17 +4,17 @@ import EmailIcon from "@/assets/icons/auth/email.svg";
 import IbanIcon from "@/assets/icons/auth/iban.svg";
 import NameIcon from "@/assets/icons/auth/name.svg";
 import { PickLocation } from "@/components/app/auth/Register/PickLocation";
+import { EmailChange } from "@/components/app/profile/ChangeEmail/EmailChange";
 import { PhoneChange } from "@/components/app/profile/ChangePhone/PhoneChange";
 import { FormPhoneInput } from "@/components/app/profile/FormInput";
 import { useProfileStore } from "@/components/app/profile/useProfileForm";
 import { useUpdateProfile } from "@/components/app/profile/useUpdateProfile";
 import { Button } from "@/components/ui/button";
-import { User, UserRole } from "@/gql/graphql";
+import { User } from "@/gql/graphql";
 import { useDict } from "@/hooks/useDict";
 import { useMe } from "@/hooks/useMe";
 import Image from "next/image";
 import { FormInput } from "./FormInput";
-import { EmailChange } from "@/components/app/profile/ChangeEmail/EmailChange";
 
 export const UserProfile = () => {
   const { me } = useMe();
@@ -22,9 +22,9 @@ export const UserProfile = () => {
   const dict = useDict();
   const { updateProfile, updating } = useUpdateProfile();
   return (
-    me && (
+    me?.user && (
       <div className="grid auto-rows-max grid-cols-1 items-start justify-items-center gap-6 rounded-[16px] bg-white p-6">
-        <ProfilePicture user={me} />
+        <ProfilePicture user={me.user} />
         <div className="grid w-full grid-cols-1 gap-5">
           <FormInput
             label={dict.profile.name}
@@ -92,27 +92,24 @@ export const UserProfile = () => {
             }}
             icon={<IbanIcon className="size-4.5" />}
           />
-          {me.role === UserRole.User && (
-            <>
-              <FormInput
-                label={dict.profile.address}
-                placeholder={dict.profile.address}
-                value={form.input.address ?? ""}
-                onChange={(v: string): void => {
-                  updateInputField("address", v);
-                }}
-                icon={<AddressIcon className="size-4.5" />}
-              />
-              <PickLocation
-                onChange={(lat, lng) => {
-                  updateInputField("latitude", lat);
-                  updateInputField("longitude", lng);
-                }}
-                latitude={form.input.latitude || undefined}
-                longitude={form.input.longitude || undefined}
-              />
-            </>
-          )}
+
+          <FormInput
+            label={dict.profile.address}
+            placeholder={dict.profile.address}
+            value={form.input.address ?? ""}
+            onChange={(v: string): void => {
+              updateInputField("address", v);
+            }}
+            icon={<AddressIcon className="size-4.5" />}
+          />
+          <PickLocation
+            onChange={(lat, lng) => {
+              updateInputField("latitude", lat);
+              updateInputField("longitude", lng);
+            }}
+            latitude={form.input.latitude || undefined}
+            longitude={form.input.longitude || undefined}
+          />
           <Button
             className="mt-5 h-12.5 justify-self-center rounded-[20px] px-20"
             disabled={updating}

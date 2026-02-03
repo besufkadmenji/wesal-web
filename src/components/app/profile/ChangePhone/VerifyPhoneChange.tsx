@@ -1,14 +1,12 @@
 import OtpIcon from "@/assets/icons/otp.svg";
 import { useChangePhone } from "@/components/app/profile/ChangePhone/useChangePhone";
-import { PhoneInput } from "@/components/app/shared/inputs/PhoneInput";
+import { OtpInput } from "@/components/app/shared/inputs/OtpInput";
 import { Button } from "@/components/ui/button";
+import { useCountdownTimer } from "@/hooks/useCountdownTimer";
 import { useDict } from "@/hooks/useDict";
 import { useMe } from "@/hooks/useMe";
 import { useQueryState } from "nuqs";
-import { useState, useEffect } from "react";
-import { useCountdownTimer } from "@/hooks/useCountdownTimer";
-import { OtpInput } from "@/components/app/shared/inputs/OtpInput";
-import { OtpType } from "@/gql/graphql";
+import { useEffect, useState } from "react";
 export const VerifyPhoneChange = () => {
   const { me } = useMe();
   const dict = useDict();
@@ -16,12 +14,8 @@ export const VerifyPhoneChange = () => {
   const [selectedPhone, setSelectedPhone] = useQueryState("selectedPhone", {
     defaultValue: "false",
   });
-  const [open, setOpen] = useQueryState("phoneChange", {
-    defaultValue: "false",
-  });
-  const [phone, setPhone] = useState("");
   const [countryCode, setCountryCode] = useQueryState("country", {
-    defaultValue: me?.dialCode ?? "+966",
+    defaultValue: me?.user?.dialCode ?? me?.provider?.dialCode ?? "+966",
   });
   const [otp, setOtp] = useState("");
   const { verifyChange, busy } = useChangePhone();

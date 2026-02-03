@@ -14,13 +14,7 @@ export const VerifyEmailChange = () => {
   const [selectedEmail, setSelectedEmail] = useQueryState("selectedEmail", {
     defaultValue: "false",
   });
-  const [open, setOpen] = useQueryState("emailChange", {
-    defaultValue: "false",
-  });
-  const [email, setEmail] = useState("");
-  const [countryCode, setCountryCode] = useQueryState("country", {
-    defaultValue: me?.dialCode ?? "+966",
-  });
+
   const [otp, setOtp] = useState("");
   const { verifyChange, busy } = useChangeEmail();
   useEffect(() => {

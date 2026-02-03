@@ -9,6 +9,7 @@ import { useQueryState } from "nuqs";
 import { useEffect } from "react";
 import { UnderReview } from "./UnderReview";
 import { useRegister } from "./useRegister";
+import { useRegisterProvider } from "./useRegisterProvider";
 
 export const VerifyOtp = () => {
   const dict = useDict();
@@ -20,6 +21,13 @@ export const VerifyOtp = () => {
   const [email, setEmail] = useQueryState("email");
   const { remainingSeconds, start, reset, formatTime } = useCountdownTimer(60);
   const { verifyOtp, resendOtp, otp, setOtp, busy } = useRegister();
+  const {
+    verifyOtp: verifyOtpProvider,
+    resendOtp: resendOtpProvider,
+    otp: otpProvider,
+    setOtp: setOtpProvider,
+    busy: busyProvider,
+  } = useRegisterProvider();
   useEffect(() => {
     start();
   }, [start]);
@@ -52,7 +60,11 @@ export const VerifyOtp = () => {
             />
           </div>
           <div className="grid grid-cols-1 justify-items-center gap-4">
-            <OtpInput value={otp} onChange={setOtp} />
+            {type === "provider" ? (
+              <OtpInput value={otpProvider} onChange={setOtpProvider} />
+            ) : (
+              <OtpInput value={otp} onChange={setOtp} />
+            )}
             <div className="grid grid-cols-1 justify-items-center gap-2">
               <p className="text-primary text-sm font-semibold">
                 {formatTime()}
@@ -66,6 +78,17 @@ export const VerifyOtp = () => {
             <Button
               className="h-12.5 rounded-[20px] text-base font-semibold"
               onClick={() => {
+                if (type === "provider") {
+                  verifyOtpProvider({
+                    code: otpProvider,
+                    target: method === "phone" ? phone! : email!,
+                    type:
+                      method === "phone"
+                        ? OtpType.PhoneVerification
+                        : OtpType.EmailVerification,
+                  });
+                  return;
+                }
                 verifyOtp({
                   code: otp,
                   target: method === "phone" ? phone! : email!,
@@ -81,8 +104,23 @@ export const VerifyOtp = () => {
             <Button
               variant={"secondary"}
               className="text-primary h-12.5 rounded-[20px] bg-[#EFF1F6] text-base font-semibold"
-              disabled={remainingSeconds > 0 || busy}
+              disabled={remainingSeconds > 0 || busy || busyProvider}
               onClick={async () => {
+                if (type === "provider") {
+                  await resendOtpProvider(
+                    method === "phone"
+                      ? {
+                          target: phone!,
+                          type: OtpType.PhoneVerification,
+                        }
+                      : {
+                          target: email!,
+                          type: OtpType.EmailVerification,
+                        },
+                  );
+                  reset();
+                  return;
+                }
                 await resendOtp(
                   method === "phone"
                     ? {

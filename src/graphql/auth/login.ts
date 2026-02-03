@@ -13,9 +13,6 @@ export const LOGIN_MUTATION: TypedDocumentNode<
         avatarFilename
         bankName
         cityId
-        commercialName
-        commercialRegistrationFilename
-        commercialRegistrationNumber
         countryId
         createdAt
         deactivationReason
@@ -33,10 +30,8 @@ export const LOGIN_MUTATION: TypedDocumentNode<
         name
         phone
         phoneVerified
-        role
         status
         updatedAt
-        withAbsher
       }
     }
   }

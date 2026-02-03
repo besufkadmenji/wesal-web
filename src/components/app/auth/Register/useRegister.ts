@@ -1,12 +1,6 @@
-import {
-  RegisterInput,
-  ResendOtpInput,
-  UserRole,
-  VerifyOtpInput,
-} from "@/gql/graphql";
+import { RegisterInput, ResendOtpInput, VerifyOtpInput } from "@/gql/graphql";
 import { useDict } from "@/hooks/useDict";
 import AuthService from "@/services/auth.service";
-import { uploadFile } from "@/utils/file.upload";
 import { showErrorMessage, showSuccessMessage } from "@/utils/show.messages";
 import { usePathname, useRouter } from "next/navigation";
 import { useQueryState } from "nuqs";
@@ -33,26 +27,12 @@ export const useRegister = () => {
   const register = async () => {
     setBusy(true);
     try {
-      const {
-        confirmPassword,
-        terms,
-        document,
-        commercialRegistrationFilename,
-        ...rest
-      } = form;
-      let filename;
-      if (commercialRegistrationFilename) {
-        const uploadResult = await uploadFile(commercialRegistrationFilename);
-        if (uploadResult.url) {
-          filename = uploadResult.filename;
-        }
-      }
+      const { confirmPassword, terms, document, ...rest } = form;
+
       const result = await AuthService.register({
         ...(rest as RegisterInput),
-        role: type === "provider" ? UserRole.Provider : UserRole.User,
         dialCode: country,
         phone: `${country}${form.phone}`,
-        commercialRegistrationFilename: filename,
       });
       if (result) {
         router.push(

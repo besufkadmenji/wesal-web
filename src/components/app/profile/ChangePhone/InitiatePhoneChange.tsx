@@ -12,10 +12,10 @@ export const InitiatePhoneChange = () => {
   const [open, setOpen] = useQueryState("phoneChange", {
     defaultValue: "false",
   });
- 
+
   const [phone, setPhone] = useState("");
   const [countryCode, setCountryCode] = useQueryState("country", {
-    defaultValue: me?.dialCode ?? "+966",
+    defaultValue: me?.user?.dialCode ?? me?.provider?.dialCode ?? "+966",
   });
   const { initiateChange, busy } = useChangePhone();
   return (

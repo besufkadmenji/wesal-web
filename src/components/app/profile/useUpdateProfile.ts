@@ -51,39 +51,6 @@ export const useUpdateProfile = () => {
       setUpdating(false);
     }
   };
-  const updateBusinessProfile = async () => {
-    setUpdating(true);
-    try {
-      const { input } = form;
-
-      const result = await UserService.updateUser({
-        address: input.address,
-        latitude: input.latitude,
-        longitude: input.longitude,
-        cityId: input.cityId,
-        categoryIds: input.categoryIds,
-        commercialRegistrationNumber: input.commercialRegistrationNumber,
-        withAbsher: input.withAbsher,
-        id: input.id!,
-      });
-      if (result) {
-        showSuccessMessage(dict.profile.updateSuccessMessage);
-        queryClient.invalidateQueries({
-          queryKey: ["me"],
-        });
-      }
-      // Handle successful login (e.g., redirect, show message)
-    } catch (error) {
-      console.error("Login error:", error);
-      showErrorMessage(
-        error instanceof Error
-          ? error.message
-          : dict.profile.updateProfileFailed,
-      );
-    } finally {
-      setUpdating(false);
-    }
-  };
 
   const removeAvatar = async (id: string) => {
     setRemoving(true);
@@ -111,7 +78,6 @@ export const useUpdateProfile = () => {
   return {
     updateProfile,
     removeAvatar,
-    updateBusinessProfile,
     removing,
     updating,
   };

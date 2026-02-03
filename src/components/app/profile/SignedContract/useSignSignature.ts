@@ -3,7 +3,7 @@ import { useDict } from "@/hooks/useDict";
 import { useLang } from "@/hooks/useLang";
 import { useMe } from "@/hooks/useMe";
 import { useSetting } from "@/hooks/useSettings";
-import UserService from "@/services/user.service";
+import ProviderService from "@/services/provider.service";
 import { uploadFile } from "@/utils/file.upload";
 import { queryClient } from "@/utils/query.client";
 import { showErrorMessage, showSuccessMessage } from "@/utils/show.messages";
@@ -18,10 +18,10 @@ export const useSignSignature = () => {
   const { setting } = useSetting();
 
   const getRules = () => {
-    if (me?.signedContract) {
+    if (me?.provider?.signedContract) {
       return lng === "ar"
-        ? me.signedContract.acceptedRulesAr
-        : me.signedContract.acceptedRulesEn;
+        ? me.provider.signedContract.acceptedRulesAr
+        : me.provider.signedContract.acceptedRulesEn;
     }
     const rules = new Set<string>();
     if (lng === "ar") {
@@ -29,7 +29,7 @@ export const useSignSignature = () => {
     } else {
       rules.add(setting?.rulesEn || "");
     }
-    const categories = me?.categories?.map((cat) =>
+    const categories = me?.provider?.categories?.map((cat) =>
       lng === "en" ? cat.rulesEn : cat.rulesAr,
     );
     categories
@@ -43,7 +43,7 @@ export const useSignSignature = () => {
     const rulesAr = new Set<string>();
     rulesAr.add(setting?.rulesAr || "");
     rulesEn.add(setting?.rulesEn || "");
-    const categories = me?.categories?.map((cat) => ({
+    const categories = me?.provider?.categories?.map((cat) => ({
       en: cat.rulesEn,
       ar: cat.rulesAr,
     }));
@@ -71,7 +71,7 @@ export const useSignSignature = () => {
         form.serviceProviderSignature!,
       );
 
-      const result = await UserService.signContact({
+      const result = await ProviderService.signContact({
         serviceProviderSignature: serviceProviderSignatureFilename.filename,
         acceptedRulesAr: getRulesObj().ar,
         acceptedRulesEn: getRulesObj().en,
@@ -100,7 +100,7 @@ export const useSignSignature = () => {
     }
     setBusy(true);
     try {
-      const result = await UserService.terminateContact(reason);
+      const result = await ProviderService.terminateContact(reason);
       if (result) {
         showSuccessMessage(dict.contract.contractTerminatedSuccessfully);
         queryClient.invalidateQueries({

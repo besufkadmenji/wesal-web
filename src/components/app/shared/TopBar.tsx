@@ -20,20 +20,20 @@ import { twMerge } from "tailwind-merge";
 import { SelectLanguage } from "./SelectLanguage";
 export const TopBar = () => {
   const dict = useDict();
-  const { me, isLoading } = useMe();
+  const { me, isLoggedIn, isLoading } = useMe();
   console.log("me in topbar", me);
   return (
-    <div className="top-bar-gradient grt grid h-20 grid-cols-2 items-center justify-between px-4 md:px-8 md:grid-cols-[1fr_auto_1fr] xl:px-[7vw]">
+    <div className="top-bar-gradient grt grid h-20 grid-cols-2 items-center justify-between px-4 md:grid-cols-[1fr_auto_1fr] md:px-8 xl:px-[7vw]">
       <SelectLanguage />
       <div className="col-span-2 row-start-2 flex items-center justify-center gap-2 md:col-span-1 md:col-start-2 md:row-start-1">
-        <p className="text-center text-xs md:text-sm font-medium text-white lg:text-lg">
+        <p className="text-center text-xs font-medium text-white md:text-sm lg:text-lg">
           {dict.home.tagline}
         </p>
         <AnnouncementIcon className="size-6" />
       </div>
       {isLoading ? (
         <div />
-      ) : me ? (
+      ) : isLoggedIn ? (
         <LoggedUser />
       ) : (
         <div className="flex gap-4 justify-self-end">
@@ -63,9 +63,10 @@ const LoggedUser = () => {
   const { me, logout } = useMe();
   const dict = useDict();
   const router = useAppRouter();
+  const profile = me?.user || me?.provider;
   const url =
-    me?.avatarFilename && me.avatarFilename !== ""
-      ? `${process.env.NEXT_PUBLIC_DATA}/files/${me.avatarFilename}`
+    profile?.avatarFilename && profile.avatarFilename !== ""
+      ? `${process.env.NEXT_PUBLIC_DATA}/files/${profile.avatarFilename}`
       : "/images/no.avatar.png";
   return (
     <DropdownMenu>
@@ -74,24 +75,26 @@ const LoggedUser = () => {
           <Image src={url} alt="User Avatar" fill className="object-cover" />
         </div>
         <p className="text-sm font-semibold text-[#EFF9F0] lg:text-base">
-          {me?.name}
+          {profile?.name}
         </p>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="min-w-72">
         <OptionItem
           icon={<ProfileIcon className="size-6" />}
-          label={dict.auth.personalProfile}
+          label={me?.provider ? dict.auth.profile : dict.auth.personalProfile}
           onClick={() => {
             router.push("/profile");
           }}
         />
-        <OptionItem
-          icon={<HeartIcon className="size-6" />}
-          label={dict.auth.favorites}
-          onClick={() => {
-            router.push("/favorites");
-          }}
-        />
+        {me?.user && (
+          <OptionItem
+            icon={<HeartIcon className="size-6" />}
+            label={dict.auth.favorites}
+            onClick={() => {
+              router.push("/favorites");
+            }}
+          />
+        )}
         <OptionItem
           icon={<LogoutIcon className="size-6" />}
           label={dict.auth.logout}

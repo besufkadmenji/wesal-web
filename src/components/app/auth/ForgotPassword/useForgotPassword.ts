@@ -10,23 +10,28 @@ import AuthService from "@/services/auth.service";
 import { showErrorMessage } from "@/utils/show.messages";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { useQueryState } from "nuqs";
+import AuthProviderService from "@/services/auth.provider.service";
 
 export const useForgotPassword = () => {
   const [busy, setBusy] = useState(false);
   const dict = useDict();
   const router = useAppRouter();
   const pathname = usePathname();
+  const [type, setType] = useQueryState("type");
 
   const forgotPassword = async (
     input: ForgotPasswordInput,
-    type: "phone" | "email",
+    target: "phone" | "email",
   ) => {
     setBusy(true);
     try {
-      const result = await AuthService.forgotPassword(input);
+      const result = await (type === "provider"
+        ? AuthProviderService.forgotPassword(input)
+        : AuthService.forgotPassword(input));
       if (result) {
         router.push(
-          `${pathname}/verify?target=${encodeURIComponent(input.emailOrPhone)}&type=${type}`,
+          `${pathname}/verify?target=${encodeURIComponent(input.emailOrPhone)}&targetType=${target}&type=${type}`,
         );
       }
       // Handle successful login (e.g., redirect, show message)
@@ -43,11 +48,13 @@ export const useForgotPassword = () => {
   const verifyOtp = async (input: VerifyPasswordResetOtpInput) => {
     setBusy(true);
     try {
-      const result = await AuthService.verifyPasswordResetOtp(input);
+      const result = await (type === "provider"
+        ? AuthProviderService.verifyPasswordResetOtp(input)
+        : AuthService.verifyPasswordResetOtp(input));
       console.log("result", result);
       if (result) {
         router.push(
-          `/auth/reset-password?token=${encodeURIComponent(result.resetToken)}`,
+          `/auth/reset-password?token=${encodeURIComponent(result.resetToken)}&type=${type}`,
         );
       }
       // Handle successful login (e.g., redirect, show message)
@@ -63,7 +70,9 @@ export const useForgotPassword = () => {
   const resetPassword = async (input: ResetPasswordWithTokenInput) => {
     setBusy(true);
     try {
-      const result = await AuthService.resetPassword(input);
+      const result = await (type === "provider"
+        ? AuthProviderService.resetPassword(input)
+        : AuthService.resetPassword(input));
       if (result) {
         window.location.href = "/auth/login";
       }
@@ -81,7 +90,9 @@ export const useForgotPassword = () => {
   const resendOtp = async (input: ResendOtpInput) => {
     setBusy(true);
     try {
-      await AuthService.resendOtp(input);
+      await (type === "provider"
+        ? AuthProviderService.resendOtp(input)
+        : AuthService.resendOtp(input));
     } catch (error) {
       console.error("Login error:", error);
       showErrorMessage(

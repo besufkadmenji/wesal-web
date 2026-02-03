@@ -1,8 +1,7 @@
+import { RegisterInput } from "@/gql/graphql";
 import { create } from "zustand";
-import { RegisterInput, UserRole } from "@/gql/graphql";
 export type FormType = Partial<RegisterInput> & {
   confirmPassword?: string;
-  commercialRegistrationFilename?: File | null;
   terms?: boolean;
   document?: boolean;
 };
@@ -16,22 +15,14 @@ interface RegisterState {
 
 const initialState: FormType = {
   name: "",
-  commercialName: "",
   email: "",
   phone: "",
   password: "",
   confirmPassword: "",
   dialCode: "",
-  address: null,
   cityId: null,
-  categoryIds: [],
-  latitude: null,
-  longitude: null,
-  role: UserRole.User,
   terms: false,
   document: false,
-  commercialRegistrationFilename: null,
-  withAbsher: false,
 };
 
 export const useRegisterStore = create<RegisterState>((set, get) => ({

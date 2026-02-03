@@ -1,9 +1,10 @@
 import acceptLanguage from "accept-language";
 import { NextRequest, NextResponse } from "next/server";
 import { fallbackLng, languages } from "./config/i18n/settings";
-import { ME_QUERY } from "./graphql/user/me";
+import { Provider, User } from "./gql/graphql";
+import { ME_PROVIDER_QUERY } from "./graphql/providers/meProvider";
+import { ME_USER_QUERY } from "./graphql/user/meUser";
 import client from "./utils/apollo.client";
-import { UserRole } from "./gql/graphql";
 acceptLanguage.languages(languages);
 
 export const config = {
@@ -70,7 +71,8 @@ export async function proxy(request: NextRequest) {
     (path) => pathname === path,
   );
 
-  const isLoggedIn = await getUser(request);
+  const result = await getUser(request);
+  const isLoggedIn = result?.user || result?.provider;
   console.log("isLoggedIn", isLoggedIn);
   if (!isLoggedIn) {
     if (!isPreAuthPath) {
@@ -80,9 +82,8 @@ export async function proxy(request: NextRequest) {
     }
   }
   if (
-    isLoggedIn &&
-    isLoggedIn.role === UserRole.Provider &&
-    !isLoggedIn.signedContract &&
+    result?.provider &&
+    !result.provider.signedContract &&
     !pathname.startsWith(`/${currentLocale}/profile/signed-contract`)
   ) {
     return NextResponse.redirect(
@@ -93,18 +94,28 @@ export async function proxy(request: NextRequest) {
   return NextResponse.next();
 }
 
-const getUser = async (req: NextRequest) => {
+const getUser = async (
+  req: NextRequest,
+): Promise<{
+  user?: User;
+  provider?: Provider;
+} | null> => {
   const token = req.cookies.get("token")?.value;
   if (!token) return null;
   try {
-    const meResult = await client(
-      token,
-      `${process.env.API_BASE_URL}/graphql`,
-    ).query({
-      query: ME_QUERY,
-    });
+    const [meUserResult, meProviderResult] = await Promise.all([
+      client(token, `${process.env.API_BASE_URL}/graphql`).query({
+        query: ME_USER_QUERY,
+      }),
+      client(token, `${process.env.API_BASE_URL}/graphql`).query({
+        query: ME_PROVIDER_QUERY,
+      }),
+    ]);
 
-    return meResult.data?.me ?? null;
+    return {
+      user: meUserResult.data?.meUser,
+      provider: meProviderResult.data?.meProvider,
+    };
   } catch (e) {}
   return null;
 };

@@ -12,7 +12,7 @@ export const EmailChange = ({ children }: { children: ReactNode }) => {
   const [emailChange, setEmailChange] = useQueryState("emailChange");
   const [email, setEmail] = useState("");
   const [countryCode, setCountryCode] = useQueryState("country", {
-    defaultValue: me?.dialCode ?? "+966",
+    defaultValue: me?.user?.dialCode ?? me?.provider?.dialCode ?? "+966",
   });
   const { initiateChange, busy } = useChangeEmail();
   return (

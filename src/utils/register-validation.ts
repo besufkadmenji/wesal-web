@@ -1,4 +1,3 @@
-import { UserRole } from "@/gql/graphql";
 export interface ValidationErrors {
   [key: string]: string;
 }
@@ -260,7 +259,6 @@ export const validateField = (
   formData: RegisterValidationData,
   t: (key: string) => string,
 ): string | null => {
-  const isProvider = formData.role === UserRole.Provider;
   console.log("isProvider ", formData.role);
   switch (field) {
     case "name":
@@ -281,28 +279,10 @@ export const validateField = (
       return validateBankName(value as string, t);
     case "ibanNumber":
       return validateIbanNumber(value as string, t);
-    case "address":
-      return isProvider ? validateAddress(value as string, t) : null;
-    case "cityId":
-      return isProvider ? validateCityId(value as string, t) : null;
-    case "categoryIds":
-      return isProvider ? validateCategoryIds(value as string[], t) : null;
     case "terms":
       return validateTerms(value as boolean, t);
     case "document":
       return validateDocument(value as boolean, t);
-    case "avatarFile":
-      console.log("Validating avatarFile for isProvider:", isProvider);
-      return isProvider ? validateAvatarFile(value as File | null, t) : null;
-    case "latitude":
-    case "longitude":
-      return isProvider
-        ? validateLocation(
-            formData.latitude ?? null,
-            formData.longitude ?? null,
-            t,
-          )
-        : null;
     default:
       return null;
   }

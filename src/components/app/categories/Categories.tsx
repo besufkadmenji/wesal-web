@@ -98,7 +98,13 @@ export const Categories = () => {
   );
 };
 
-export const CategorySelect = () => {
+export const CategorySelect = ({
+  onSearch,
+  onChange,
+}: {
+  onSearch?: (search: string) => void;
+  onChange?: (query: string) => void;
+}) => {
   const dict = useDict();
   const lng = useLang();
   const { categories, isLoading } = useCategories();
@@ -123,12 +129,19 @@ export const CategorySelect = () => {
         onChange={(e) => {
           setLocaleQuery(e.target.value);
           clearTimeout(timer.current!);
+          if (onChange) {
+            onChange(e.target.value);
+          }
           timer.current = setTimeout(() => {
             setSearch(e.target.value);
           }, 100);
         }}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
+            if (onSearch) {
+              onSearch(localeQuery);
+              return;
+            }
             setQuery(localeQuery);
             setSearch(null);
           }

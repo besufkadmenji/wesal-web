@@ -15,7 +15,6 @@ export const REGISTER_MUTATION: TypedDocumentNode<
       latitude
       longitude
       phoneVerified
-      role
       updatedAt
       emailVerified
       email
@@ -25,6 +24,9 @@ export const REGISTER_MUTATION: TypedDocumentNode<
       cityId
       countryId
       createdAt
+      withAbsher
+      bankName
+      ibanNumber
     }
   }
 `;
