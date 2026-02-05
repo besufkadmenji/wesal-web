@@ -1,6 +1,9 @@
 import { sar } from "@/assets/fonts/sar";
 import CategoryIcon from "@/assets/icons/category.svg";
+import DownIcon from "@/assets/icons/chevron.down.svg";
 import CityIcon from "@/assets/icons/city.filter.svg";
+import RatingIcon from "@/assets/icons/rating.svg";
+import { useCategory } from "@/components/app/listings/useListings";
 import {
   Select,
   SelectContent,
@@ -12,13 +15,11 @@ import { useCategories, useSearchCategories } from "@/hooks/useCategories";
 import { useCities } from "@/hooks/useCities";
 import { useDict } from "@/hooks/useDict";
 import { useLang } from "@/hooks/useLang";
+import { useWindowSize } from "@/hooks/useWindowSize";
 import { ChevronDownIcon } from "lucide-react";
 import { parseAsInteger, useQueryState } from "nuqs";
 import { useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
-import RatingIcon from "@/assets/icons/rating.svg";
-import { useCategory } from "@/components/app/listings/useListings";
-import FilterIcon from "@/assets/icons/filter.svg";
 export const ListingFilter = () => {
   const dict = useDict();
   const lng = useLang();
@@ -30,13 +31,27 @@ export const ListingFilter = () => {
   const [maxPrice, setMaxPrice] = useQueryState("maxPrice", parseAsInteger);
   const [cityId, setCityId] = useQueryState("city");
   const [search, setSearch] = useQueryState("search");
-
+  const { width } = useWindowSize();
+  const [showFilter, setShowFilter] = useState(false);
+  const shouldShowFilter = width >= 1024 || showFilter;
   return (
-    <div className="lg:w-80 w-full grid-cols-1 gap-6 rounded-[16px] bg-white p-6 grid">
+    <div className="grid w-full grid-cols-1 gap-6 rounded-[16px] bg-white p-6 lg:w-80">
       <div className="flex items-center justify-between">
-        <p className="text-lg font-medium text-[#1A1A1A]">
-          {dict.listingFilter.title}
-        </p>
+        <div
+          className="flex items-center gap-2"
+          onClick={() => setShowFilter(!showFilter)}
+        >
+          <p className="text-lg font-medium text-[#1A1A1A]">
+            {dict.listingFilter.title}
+          </p>
+          <DownIcon
+            className={twMerge(
+              "size-6 duration-150 ease-in lg:hidden",
+              showFilter && "rotate-180",
+            )}
+          />
+        </div>
+
         <button
           className="font-semibold text-[#B3B3B3]"
           onClick={() => {
@@ -50,32 +65,34 @@ export const ListingFilter = () => {
           {dict.listingFilter.reset}
         </button>
       </div>
-      <div className="grid grid-cols-1 gap-6">
-        <CategorySelect key={selectedCategory?.id} />
-        <CitySelect />
-        <div className="grid grid-cols-1 gap-4">
-          <p className="leading-7 text-[#1A1A1A]">
-            {dict.listingFilter.priceRange}
-          </p>
-          <div className="grid grid-cols-2 gap-3">
-            <PriceInput
-              value={`${minPrice || ""}`}
-              onChange={(value: string): void => {
-                setMinPrice(value ? parseInt(value, 10) : null);
-              }}
-              placeholder={"0"}
-            />
-            <PriceInput
-              value={`${maxPrice || ""}`}
-              onChange={(value: string): void => {
-                setMaxPrice(value ? parseInt(value, 10) : null);
-              }}
-              placeholder={dict.listingFilter.priceUnlimited}
-            />
+      {shouldShowFilter && (
+        <div className="grid grid-cols-1 gap-6">
+          <CategorySelect key={selectedCategory?.id} />
+          <CitySelect />
+          <div className="grid grid-cols-1 gap-4">
+            <p className="leading-7 text-[#1A1A1A]">
+              {dict.listingFilter.priceRange}
+            </p>
+            <div className="grid grid-cols-2 gap-3">
+              <PriceInput
+                value={`${minPrice || ""}`}
+                onChange={(value: string): void => {
+                  setMinPrice(value ? parseInt(value, 10) : null);
+                }}
+                placeholder={"0"}
+              />
+              <PriceInput
+                value={`${maxPrice || ""}`}
+                onChange={(value: string): void => {
+                  setMaxPrice(value ? parseInt(value, 10) : null);
+                }}
+                placeholder={dict.listingFilter.priceUnlimited}
+              />
+            </div>
+            <RatingFilter />
           </div>
-          <RatingFilter />
         </div>
-      </div>
+      )}
     </div>
   );
 };
