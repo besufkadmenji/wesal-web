@@ -10,26 +10,28 @@ export const ProviderData = ({ provider }: { provider: Provider }) => {
   return (
     <div className="grid grid-cols-1 gap-6 rounded-[20px] bg-white p-5">
       <p>{dict.listingDetail.serviceProviderData}</p>
-      <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
-        <div className="relative size-14 rounded-full">
-          <Image
-            src={"/images/no.avatar.png"}
-            alt="provider"
-            fill
-            className="object-cover"
-          />
-        </div>
-        <div className="grid grid-cols-1 items-center gap-2">
-          <p className="text-lg leading-5.25 font-medium text-[#1A1A1A]">
-            {provider.name}
-          </p>
-          <Ratings
-            rating={4.5}
-            classNames={{
-              rating: "size-4",
-              info: "text-sm text-gray",
-            }}
-          />
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1fr_auto]">
+        <div className="grid grid-cols-[auto_1fr] items-center gap-4">
+          <div className="relative size-14 rounded-full">
+            <Image
+              src={"/images/no.avatar.png"}
+              alt="provider"
+              fill
+              className="object-cover"
+            />
+          </div>
+          <div className="grid grid-cols-1 items-center gap-2">
+            <p className="text-lg leading-5.25 font-medium text-[#1A1A1A]">
+              {provider.name}
+            </p>
+            <Ratings
+              rating={4.5}
+              classNames={{
+                rating: "size-4",
+                info: "text-sm text-gray",
+              }}
+            />
+          </div>
         </div>
         <Button
           variant={"secondary"}

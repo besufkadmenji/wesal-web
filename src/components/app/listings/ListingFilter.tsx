@@ -18,7 +18,7 @@ import { useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import RatingIcon from "@/assets/icons/rating.svg";
 import { useCategory } from "@/components/app/listings/useListings";
-
+import FilterIcon from "@/assets/icons/filter.svg";
 export const ListingFilter = () => {
   const dict = useDict();
   const lng = useLang();
@@ -32,7 +32,7 @@ export const ListingFilter = () => {
   const [search, setSearch] = useQueryState("search");
 
   return (
-    <div className="grid w-80 grid-cols-1 gap-6 rounded-[16px] bg-white p-6">
+    <div className="lg:w-80 w-full grid-cols-1 gap-6 rounded-[16px] bg-white p-6 grid">
       <div className="flex items-center justify-between">
         <p className="text-lg font-medium text-[#1A1A1A]">
           {dict.listingFilter.title}

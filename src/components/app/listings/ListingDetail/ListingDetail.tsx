@@ -23,11 +23,11 @@ export const ListingDetail = ({ ownerMode }: { ownerMode?: boolean }) => {
         <DetailSkeleton />
       ) : (
         <div className="grid auto-rows-max grid-cols-1 items-start gap-20 px-[7vw] py-10">
-          <div className="grid grid-cols-2 items-start gap-10">
+          <div className="grid grid-cols-1 items-start gap-10 md:grid-cols-2">
             <ListingImages listing={listing} />
             <MainInfo listing={listing} />
           </div>
-          <div className="grid grid-cols-2 items-start gap-10">
+          <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-2">
             <Reviews ownerMode={!!ownerMode} />
             <div className="grid grid-cols-1 gap-10">
               <StoryVideo listing={listing} />
