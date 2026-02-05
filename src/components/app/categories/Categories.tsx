@@ -13,7 +13,6 @@ import { useDict } from "@/hooks/useDict";
 import { useLang } from "@/hooks/useLang";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
 import { parseAsInteger, useQueryState } from "nuqs";
 import { useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
@@ -21,16 +20,11 @@ import { AppPagination } from "../shared/AppPagination";
 
 export const Categories = () => {
   const dict = useDict();
-  const lng = useLang();
-  const router = useRouter();
-  const pathname = usePathname();
   const { categories, isLoading } = useCategories();
-  const [category, setCategory] = useQueryState("category");
   const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
 
   const [search, setSearch] = useQueryState("search");
   const [query, setQuery] = useQueryState("query");
-  const timer = useRef<NodeJS.Timeout | null>(null);
 
   const [localeQuery, setLocaleQuery] = useState(search ?? query ?? "");
   console.log("localeQuery", localeQuery, query);
@@ -59,7 +53,7 @@ export const Categories = () => {
           <CategorySelect />
 
           <Button
-            className="h-12.5 rounded-[20px] px-16"
+            className="z-10 h-12.5 rounded-[20px] px-16"
             onClick={() => {
               setQuery(localeQuery);
               setSearch(null);
@@ -106,60 +100,68 @@ export const CategorySelect = ({
   onChange?: (query: string) => void;
 }) => {
   const dict = useDict();
-  const lng = useLang();
-  const { categories, isLoading } = useCategories();
-  const [category, setCategory] = useQueryState("category");
-  const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
 
   const [search, setSearch] = useQueryState("search");
   const [query, setQuery] = useQueryState("query");
   const timer = useRef<NodeJS.Timeout | null>(null);
 
   const [localeQuery, setLocaleQuery] = useState(search ?? query ?? "");
+  const [open, setOpen] = useState(false);
   return (
-    <div
-      className={twMerge(
-        "relative flex h-14 w-full items-center justify-start gap-2 rounded-[20px] border border-[#F2F2F2] bg-white px-4",
-      )}
-    >
-      <input
-        placeholder={dict.home.hero.selectCategories}
-        className="peer h-full w-full ps-10.5 outline-none"
-        value={localeQuery}
-        onChange={(e) => {
-          setLocaleQuery(e.target.value);
-          clearTimeout(timer.current!);
-          if (onChange) {
-            onChange(e.target.value);
-          }
-          timer.current = setTimeout(() => {
-            setSearch(e.target.value);
-          }, 100);
-        }}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            if (onSearch) {
-              onSearch(localeQuery);
-              return;
+    <>
+      <div
+        className={twMerge(
+          "relative z-10 flex h-14 w-full items-center justify-start gap-2 rounded-[20px] border border-[#F2F2F2] bg-white px-4",
+        )}
+      >
+        <input
+          placeholder={dict.home.hero.selectCategories}
+          className="peer h-full w-full ps-10.5 text-sm outline-none lg:text-base"
+          value={localeQuery}
+          onChange={(e) => {
+            setLocaleQuery(e.target.value);
+            clearTimeout(timer.current!);
+            if (onChange) {
+              onChange(e.target.value);
             }
-            setQuery(localeQuery);
-            setSearch(null);
-          }
-        }}
-      />
-      <CategoryIcon className="absolute size-6 ltr:left-4 rtl:right-4" />
+            timer.current = setTimeout(() => {
+              setSearch(e.target.value);
+            }, 100);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              if (onSearch) {
+                onSearch(localeQuery);
+                return;
+              }
+              setQuery(localeQuery);
+              setSearch(null);
+            }
+          }}
+          onFocus={() => setOpen(true)}
+        />
+        <CategoryIcon className="absolute size-6 ltr:left-4 rtl:right-4" />
 
-      <ChevronDownIcon className="absolute size-6 ltr:right-4 rtl:left-4" />
-      <CategorySuggestions />
-    </div>
+        <ChevronDownIcon className="absolute size-6 ltr:right-4 rtl:left-4" />
+        <CategorySuggestions open={open} />
+      </div>
+      {open && (
+        <div className="fixed inset-0 z-0" onClick={() => setOpen(false)}></div>
+      )}
+    </>
   );
 };
 
-const CategorySuggestions = () => {
+const CategorySuggestions = ({ open }: { open: boolean }) => {
   const { categories } = useSearchCategories();
   const lng = useLang();
   return (
-    <div className="absolute top-14 right-0 left-0 z-10 hidden w-full grid-cols-1 gap-1 overflow-hidden rounded-b-2xl bg-white shadow peer-focus:grid hover:grid">
+    <div
+      className={twMerge(
+        "absolute top-14 right-0 left-0 z-10 hidden w-full grid-cols-1 gap-1 overflow-hidden rounded-b-2xl bg-white shadow peer-focus:grid hover:grid",
+        open && "grid",
+      )}
+    >
       {categories?.items.map((category) => (
         <Link
           href={`/listings?category=${category.id}`}

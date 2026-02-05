@@ -739,10 +739,10 @@
     "saveChanges": "Save Changes"
   },
   "listing": {
-    "sections": "الأقسام"
+    "sections": "Sections"
   },
   "listingFilter": {
-    "title": "Filter Announcements",
+    "title": "Ad filtering",
     "reset": "Reset",
     "category": "Electronics and Devices",
     "categoryPlaceholder": "Electronics and Devices",

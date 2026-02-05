@@ -5,6 +5,7 @@ import { Provider, User } from "./gql/graphql";
 import { ME_PROVIDER_QUERY } from "./graphql/providers/meProvider";
 import { ME_USER_QUERY } from "./graphql/user/meUser";
 import client from "./utils/apollo.client";
+
 acceptLanguage.languages(languages);
 
 export const config = {
@@ -13,17 +14,30 @@ export const config = {
   ],
 };
 
+/* -------------------------------------------------------------------------- */
+/*                                   Locale                                   */
+/* -------------------------------------------------------------------------- */
+
 function getLocale(req: NextRequest) {
   const { pathname } = req.nextUrl;
-  console.log("pathname lang", pathname);
-  if (req.cookies.has("lang")) return req.cookies.get("lang")?.value;
-  console.log("No lang cookie");
+
+  if (req.cookies.has("lang")) {
+    return req.cookies.get("lang")?.value;
+  }
+
   if (pathname.startsWith("/en")) return "en";
   if (pathname.startsWith("/ar")) return "ar";
+
   return acceptLanguage.get(req.headers.get("Accept-Language")) || fallbackLng;
 }
 
+/* -------------------------------------------------------------------------- */
+/*                                   Paths                                    */
+/* -------------------------------------------------------------------------- */
+
 const preAuthPaths = (locale: string) => [
+  `/${locale}`,
+  "/",
   `/${locale}/auth`,
   `/${locale}/auth/choose-type`,
   `/${locale}/auth/forgot-password`,
@@ -32,8 +46,6 @@ const preAuthPaths = (locale: string) => [
   `/${locale}/auth/login`,
   `/${locale}/auth/register`,
   `/${locale}/auth/register/verify`,
-  `/${locale}`,
-  "/",
 ];
 
 const publicPaths = (locale: string) => [
@@ -43,44 +55,53 @@ const publicPaths = (locale: string) => [
   `/${locale}/support/contact-us`,
   `/${locale}/support/faq`,
   `/${locale}/categories`,
+  `/${locale}/listings`, // ⬅ listings index + subtree
 ];
-export async function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-  const currentLocale = getLocale(request);
-  const pathnameHasLocale =
-    pathname.startsWith(`/${currentLocale}/`) ||
-    pathname === `/${currentLocale}`;
 
+/* -------------------------------------------------------------------------- */
+/*                                   Proxy                                    */
+/* -------------------------------------------------------------------------- */
+
+export async function proxy(request: NextRequest) {
+  const { pathname, search } = request.nextUrl;
+  const currentLocale = getLocale(request);
+
+  const pathnameHasLocale =
+    pathname === `/${currentLocale}` ||
+    pathname.startsWith(`/${currentLocale}/`);
+
+  /* -------------------------- Force locale prefix -------------------------- */
   if (!pathnameHasLocale) {
     return NextResponse.redirect(
-      new URL(
-        `/${currentLocale}${pathname}${request.nextUrl.search}`,
-        request.url,
-      ),
+      new URL(`/${currentLocale}${pathname}${search}`, request.url),
     );
   }
 
-  const isPublicPath = publicPaths(currentLocale ?? "ar").some(
-    (path) => pathname === path,
+  /* ------------------------------ Public paths ----------------------------- */
+  const isPublicPath = publicPaths(currentLocale!).some(
+    (path) => pathname === path || pathname.startsWith(`${path}/`),
   );
+
   if (isPublicPath) {
     return NextResponse.next();
   }
 
-  const isPreAuthPath = preAuthPaths(currentLocale ?? "ar").some(
+  /* ------------------------------ Pre-auth paths --------------------------- */
+  const isPreAuthPath = preAuthPaths(currentLocale!).some(
     (path) => pathname === path,
   );
 
+  /* ------------------------------ Auth check ------------------------------- */
   const result = await getUser(request);
-  const isLoggedIn = result?.user || result?.provider;
-  console.log("isLoggedIn", isLoggedIn);
-  if (!isLoggedIn) {
-    if (!isPreAuthPath) {
-      return NextResponse.redirect(
-        new URL(`/${currentLocale}/auth?action=login`, request.url),
-      );
-    }
+  const isLoggedIn = Boolean(result?.user || result?.provider);
+
+  if (!isLoggedIn && !isPreAuthPath) {
+    return NextResponse.redirect(
+      new URL(`/${currentLocale}/auth?action=login`, request.url),
+    );
   }
+
+  /* ----------------------- Provider contract enforcement ------------------- */
   if (
     result?.provider &&
     !result.provider.signedContract &&
@@ -94,6 +115,10 @@ export async function proxy(request: NextRequest) {
   return NextResponse.next();
 }
 
+/* -------------------------------------------------------------------------- */
+/*                                   User API                                 */
+/* -------------------------------------------------------------------------- */
+
 const getUser = async (
   req: NextRequest,
 ): Promise<{
@@ -102,20 +127,20 @@ const getUser = async (
 } | null> => {
   const token = req.cookies.get("token")?.value;
   if (!token) return null;
+
   try {
+    const apiUrl = `${process.env.API_BASE_URL}/graphql`;
+
     const [meUserResult, meProviderResult] = await Promise.all([
-      client(token, `${process.env.API_BASE_URL}/graphql`).query({
-        query: ME_USER_QUERY,
-      }),
-      client(token, `${process.env.API_BASE_URL}/graphql`).query({
-        query: ME_PROVIDER_QUERY,
-      }),
+      client(token, apiUrl).query({ query: ME_USER_QUERY }),
+      client(token, apiUrl).query({ query: ME_PROVIDER_QUERY }),
     ]);
 
     return {
       user: meUserResult.data?.meUser,
       provider: meProviderResult.data?.meProvider,
     };
-  } catch (e) {}
-  return null;
+  } catch {
+    return null;
+  }
 };

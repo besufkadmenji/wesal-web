@@ -6,6 +6,7 @@ import type { Dictionary } from "@/config/i18n/types";
 
 export const useDict = (): Dictionary => {
   const lng = useLang();
+  console.log("useDict", lng);
   const dict = getDictionary(lng.toString());
   return dict;
 };

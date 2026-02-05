@@ -16,7 +16,7 @@ export const ListingCard = ({ listing }: { listing: Listing }) => {
   return (
     <Link
       href={`${pathname}/${listing.id}`}
-      className="grid cursor-pointer grid-cols-1 rounded-[20px] bg-white"
+      className="grid w-full cursor-pointer grid-cols-1 rounded-[20px] bg-white"
     >
       <div className="relative h-44 overflow-hidden rounded-[20px]">
         <Image
