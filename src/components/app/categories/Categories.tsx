@@ -107,6 +107,7 @@ export const CategorySelect = ({
 
   const [localeQuery, setLocaleQuery] = useState(search ?? query ?? "");
   const [open, setOpen] = useState(false);
+  const input = useRef<HTMLInputElement | null>(null);
   return (
     <>
       <div
@@ -115,6 +116,7 @@ export const CategorySelect = ({
         )}
       >
         <input
+          ref={input}
           placeholder={dict.home.hero.selectCategories}
           className="peer h-full w-full ps-10.5 text-sm outline-none lg:text-base"
           value={localeQuery}
@@ -130,6 +132,9 @@ export const CategorySelect = ({
           }}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
+              setOpen(false);
+              input.current?.blur();
+
               if (onSearch) {
                 onSearch(localeQuery);
                 return;
