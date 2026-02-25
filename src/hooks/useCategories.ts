@@ -51,7 +51,7 @@ export const useSearchCategories = (
     queryFn: () =>
       CategoryService.categories({
         page: 1,
-        limit: 10,
+        limit: 9999,
         ...(search && { search }),
         ...(input || {}),
       }),

@@ -17,6 +17,7 @@ export const Header = () => {
   const { me } = useMe();
   const router = useRouter();
   const [beProvider, setBeProvider] = useQueryState("be-provider");
+  const isLoggedIn = !!me?.user || !!me?.provider;
   return (
     <header className="flex h-25.5 items-center justify-between gap-4 border-b border-b-[#F2F2F2] bg-white px-4 md:px-8 xl:px-[7vw]">
       <div className="flex h-full grow items-center gap-6 lg:gap-11">
@@ -27,7 +28,9 @@ export const Header = () => {
           {me?.provider && (
             <NavItem label={dict.home.nav.myListings} href={"/my-listings"} />
           )}
-          <NavItem label={dict.home.nav.contracts} href={"/contracts"} />
+          {isLoggedIn && (
+            <NavItem label={dict.home.nav.contracts} href={"/contracts"} />
+          )}
           <NavItem
             label={dict.home.nav.goodConnections}
             href={"/good-connections"}
@@ -39,8 +42,12 @@ export const Header = () => {
         </nav>
       </div>
       <div className="flex items-center gap-4 lg:gap-6">
-        <NotificationPopover />
-        <ChatPopover />
+        {isLoggedIn && (
+          <>
+            <NotificationPopover />
+            <ChatPopover />
+          </>
+        )}
         <Button
           variant={"secondary"}
           className="h-9.5 w-9.5 rounded-[12px]! text-base font-semibold xl:h-12.5 xl:w-auto xl:rounded-[20px]! xl:px-6!"

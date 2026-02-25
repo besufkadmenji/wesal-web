@@ -25,6 +25,16 @@ export const useLogin = () => {
           });
 
           window.location.href = "/";
+        } else if (!result.user.emailVerified || !result.user.phoneVerified) {
+          const lang = window.location.pathname.split("/")[1] || "en";
+          const method = !result.user.phoneVerified ? "phone" : "email";
+          const params = new URLSearchParams({
+            email: result.user.email ?? "",
+            phone: result.user.phone ?? "",
+            method,
+            type: "user",
+          });
+          window.location.href = `/${lang}/auth/register/verify?${params.toString()}`;
         } else if (result.user.status === UserStatus.PendingApproval) {
           showInfoMessage(dict.auth.underReview);
         } else {
@@ -57,6 +67,19 @@ export const useLogin = () => {
           });
 
           window.location.href = "/";
+        } else if (
+          !result.provider.emailVerified ||
+          !result.provider.phoneVerified
+        ) {
+          const lang = window.location.pathname.split("/")[1] || "en";
+          const method = !result.provider.phoneVerified ? "phone" : "email";
+          const params = new URLSearchParams({
+            email: result.provider.email ?? "",
+            phone: result.provider.phone ?? "",
+            method,
+            type: "provider",
+          });
+          window.location.href = `/${lang}/auth/register/verify?${params.toString()}`;
         } else if (result.provider.status === ProviderStatus.PendingApproval) {
           showInfoMessage(dict.auth.underReview);
         } else {

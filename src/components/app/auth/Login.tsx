@@ -187,7 +187,7 @@ const LoginWithPhone = () => {
             {dict.auth.login.noAccount}
           </p>
           <Link
-            href={"/auth/choose-type?action=register"}
+            href={`/auth/register?type=${type}`}
             className="text-primary justify-self-end text-base font-semibold"
           >
             {dict.auth.login.createAccount}

@@ -366,6 +366,7 @@
     "requestUnderReviewDescription": "Your request is under review by the administration, and you will be contacted or notified once the review is complete.",
     "continueBrowsing": "Continue browsing",
     "registerFailed": "Registration failed. Please try again",
+    "otpResent": "Verification code resent successfully",
     "forgotPasswordFailed": "Failed to process forgot password. Please try again",
     "personalProfile": "Personal Profile",
     "profile":"الملف الشخصى",
@@ -458,7 +459,16 @@
         "name": "Name",
         "phoneNumber": "Phone Number",
         "email": "Email",
-        "messageType": "Message Type",
+        "messageType": {
+          "placeholder": "Message Type",
+          "options": {
+            "request": "Request",
+            "inquiry": "Inquiry",
+            "complaint": "Complaint",
+            "suggestion": "Suggestion",
+            "other": "Other"
+          }
+        },
         "messageContent": "Message Content",
         "image": "Complaint Image",
         "submit": "Send Message"

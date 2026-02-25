@@ -360,6 +360,7 @@
     "requestUnderReviewDescription": "طلبك قيد المراجعة من قبل الإدارة، وسيتم التواصل معك أو إشعارك بمجرد الانتهاء من المراجعة.",
     "continueBrowsing": "الاستمرار في التصفح",
     "registerFailed": "فشل التسجيل. يرجى المحاولة مرة أخرى",
+    "otpResent": "تم إعادة إرسال رمز التحقق بنجاح",
     "forgotPasswordFailed": "فشل في معالجة استعادة كلمة المرور. يرجى المحاولة مرة أخرى",
     "personalProfile": "الملف الشخصى",
     "profile": "الملف الشخصى",
@@ -453,7 +454,16 @@
         "name": "الاسم",
         "phoneNumber": "رقم الجوال",
         "email": "البريد الإلكتروني",
-        "messageType": "نوع الرسالة",
+        "messageType": {
+          "placeholder": "نوع الرسالة",
+          "options": {
+            "request": "طلب",
+            "inquiry": "استفسار",
+            "complaint": "شكوى",
+            "suggestion": "اقتراح",
+            "other": "أخرى"
+          }
+        },
         "messageContent": "نص الرسالة",
         "image": "صورة الشكوى",
         "submit": "إرسال الرسالة"

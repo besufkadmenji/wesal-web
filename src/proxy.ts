@@ -73,7 +73,10 @@ export async function proxy(request: NextRequest) {
   /* -------------------------- Force locale prefix -------------------------- */
   if (!pathnameHasLocale) {
     return NextResponse.redirect(
-      new URL(`/${currentLocale}${pathname}${search}`, request.url),
+      new URL(
+        `/${currentLocale}${pathname.replace("/en", "").replace("/ar", "")}${search}`,
+        request.url,
+      ),
     );
   }
 

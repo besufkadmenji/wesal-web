@@ -3,26 +3,29 @@ import ArrowRight from "@/assets/icons/arrow.right.svg";
 import DotLine from "@/assets/icons/dot.line.svg";
 import ScrollArrow from "@/assets/icons/scroll.arrow.svg";
 import { Button } from "@/components/ui/button";
+import { Category } from "@/gql/graphql";
 import { useDict } from "@/hooks/useDict";
+import { useLang } from "@/hooks/useLang";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import type { Swiper as SwiperType } from "swiper";
 import { FreeMode, Mousewheel } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { dataUrl } from "@/config/url";
+import { useAppRouter } from "@/hooks/use.app.router";
 
 export const AdsCarousel = ({
   title,
   subtitle,
-  items,
+  categories,
 }: {
   title: string;
   subtitle: string;
-  items: Array<{
-    name: string;
-    description: string;
-  }>;
+  categories: Category[];
 }) => {
   const dict = useDict();
+  const lng = useLang();
+  const router = useAppRouter();
   const [swiper, setSwiper] = useState<SwiperType | null>(null);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(true);
@@ -56,10 +59,10 @@ export const AdsCarousel = ({
           <div className="flex items-center gap-4">
             <p className="text-app-green text-base leading-5.25 font-semibold md:text-lg">
               {subtitle}
-              <DotLine className="md:mx-4 mx-1 inline-block h-5 w-14.5" />
+              <DotLine className="mx-1 inline-block h-5 w-14.5 md:mx-4" />
             </p>
           </div>
-          <p className="text-primary text-lg leading-6 md:leading-7.75 font-bold md:text-2xl">
+          <p className="text-primary text-lg leading-6 font-bold md:text-2xl md:leading-7.75">
             {title}
           </p>
         </div>
@@ -120,12 +123,19 @@ export const AdsCarousel = ({
             }}
             slidesOffsetAfter={window.innerWidth * 0.07}
           >
-            {items.map((category, index) => (
+            {categories.map((category, index) => (
               <SwiperSlide key={index}>
                 <CategoryCard
-                  title={category.name}
-                  image={`/images/category.${(index % dict.home.popularCategories.categories.length) + 1}.jpg`}
-                  desc={category.description}
+                  title={lng === "ar" ? category.nameAr : category.nameEn}
+                  image={`${dataUrl}/files/${category.image}`}
+                  desc={
+                    lng === "ar"
+                      ? category.descriptionAr
+                      : category.descriptionEn
+                  }
+                  onClick={() => {
+                    router.push(`/listings?category=${category.id}`);
+                  }}
                 />
               </SwiperSlide>
             ))}
@@ -140,10 +150,12 @@ const CategoryCard = ({
   title,
   image,
   desc,
+  onClick,
 }: {
   title: string;
   image: string;
   desc: string;
+  onClick: () => void;
 }) => {
   const dict = useDict();
   return (
@@ -163,7 +175,10 @@ const CategoryCard = ({
           </div>
         </div>
         <div className="flex items-end">
-          <Button className="bg-secondary group-hover:bg-primary h-12.5 shrink-0 justify-self-start rounded-[20px] px-6 text-base font-semibold text-[#4D4D4D] transition-colors duration-300 ease-out group-hover:text-white ltr:rounded-br-none group-hover:ltr:rounded-br-[20px] rtl:rounded-bl-none group-hover:rtl:rounded-bl-[20px]">
+          <Button
+            className="bg-secondary group-hover:bg-primary h-12.5 shrink-0 justify-self-start rounded-[20px] px-6 text-base font-semibold text-[#4D4D4D] transition-colors duration-300 ease-out group-hover:text-white ltr:rounded-br-none group-hover:ltr:rounded-br-[20px] rtl:rounded-bl-none group-hover:rtl:rounded-bl-[20px]"
+            onClick={onClick}
+          >
             {dict.home.popularCategories.viewDetails}
           </Button>
           <div className="relative h-4 grow">

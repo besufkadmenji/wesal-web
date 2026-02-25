@@ -15,7 +15,7 @@ const removeTypenameLink = new RemoveTypenameFromVariablesLink();
 
 const client = (token?: string, url?: string) => {
   const httpLink = new HttpLink({
-    uri: url ?? "/api/proxy/graphql",
+    uri: process.env.GRAPHQL_API_URL ?? url ?? "/api/proxy/graphql",
   });
 
   const authLink = new SetContextLink(({ headers }) => {
@@ -36,6 +36,10 @@ const client = (token?: string, url?: string) => {
       ? new GraphQLWsLink(
           createClient({
             url: process.env.NEXT_PUBLIC_SOCKET ?? "",
+            connectionParams: () => {
+              const token = Cookies.get("token");
+              return token ? { Authorization: `Bearer ${token}` } : {};
+            },
           }),
         )
       : authLink.concat(httpLink);

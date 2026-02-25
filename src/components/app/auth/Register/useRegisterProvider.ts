@@ -6,7 +6,7 @@ import {
 import { useDict } from "@/hooks/useDict";
 import AuthProviderService from "@/services/auth.provider.service";
 import { uploadFile } from "@/utils/file.upload";
-import { showErrorMessage } from "@/utils/show.messages";
+import { showErrorMessage, showSuccessMessage } from "@/utils/show.messages";
 import { usePathname, useRouter } from "next/navigation";
 import { useQueryState } from "nuqs";
 import { useState } from "react";
@@ -96,6 +96,7 @@ export const useRegisterProvider = () => {
     setBusy(true);
     try {
       await AuthProviderService.resendOtp(input);
+      showSuccessMessage(dict.auth.otpResent);
     } catch (error) {
       console.error("Login error:", error);
       showErrorMessage(

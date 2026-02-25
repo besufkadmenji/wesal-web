@@ -16,6 +16,7 @@ import { twMerge } from "tailwind-merge";
 export const PhoneInput = ({
   value,
   onChange,
+  onCountryChange,
   error,
   isDisabled,
   countryCode,
@@ -24,6 +25,7 @@ export const PhoneInput = ({
 }: {
   value?: string;
   onChange?: (value: string) => void;
+  onCountryChange?: (code: string) => void;
   error?: string;
   isDisabled?: boolean;
   readonly?: boolean;
@@ -58,6 +60,7 @@ export const PhoneInput = ({
           isDisabled={isDisabled || readonly}
           defaultValue={countryCode}
           queryKey={queryKey}
+          onCountryChange={onCountryChange}
         />
       </div>
       {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
@@ -69,10 +72,12 @@ const CountrySelect = ({
   isDisabled,
   defaultValue,
   queryKey = "showCountries",
+  onCountryChange,
 }: {
   isDisabled?: boolean;
   defaultValue?: string;
   queryKey?: string;
+  onCountryChange?: (code: string) => void;
 }) => {
   const lang = useLang();
   const [country, setCountry] = useQueryState("country", {
@@ -115,6 +120,7 @@ const CountrySelect = ({
                 country={country}
                 onSelect={() => {
                   setCountry(country.code);
+                  onCountryChange?.(country.code);
                   setShowCountries(null);
                   setQuery(null);
                 }}
