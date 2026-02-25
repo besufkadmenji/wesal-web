@@ -163,7 +163,7 @@ const CategorySuggestions = ({ open }: { open: boolean }) => {
   return (
     <div
       className={twMerge(
-        "absolute top-14 right-0 left-0 z-10 hidden w-full grid-cols-1 gap-1 overflow-hidden rounded-b-2xl bg-white shadow peer-focus:grid hover:grid",
+        "absolute top-14 right-0 left-0 z-10 hidden max-h-[50vh] w-full grid-cols-1 gap-1 overflow-x-hidden overflow-y-auto rounded-b-2xl bg-white shadow peer-focus:grid hover:grid",
         open && "grid",
       )}
     >
