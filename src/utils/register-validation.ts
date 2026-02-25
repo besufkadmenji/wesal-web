@@ -22,8 +22,22 @@ export interface RegisterValidationData {
 
 // Validation rules and patterns
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const phoneRegex = /^\d{9}$/;
 const ibanRegex = /^[A-Z]{2}[0-9]{2}[A-Z0-9]{1,30}$/;
+
+// Phone number rules (subscriber number, excluding country dial code)
+const PHONE_RULES_BY_DIAL_CODE: Record<
+  string,
+  { min: number; max: number; startsWith?: string[] }
+> = {
+  "+966": { min: 9, max: 9, startsWith: ["5"] }, // Saudi Arabia — 05x
+  "+20": { min: 10, max: 10, startsWith: ["10", "11", "12", "15"] }, // Egypt
+  "+212": { min: 9, max: 9, startsWith: ["6", "7"] }, // Morocco
+  "+962": { min: 8, max: 9, startsWith: ["7"] }, // Jordan
+  "+961": { min: 7, max: 8, startsWith: ["3", "7", "81"] }, // Lebanon
+  "+965": { min: 8, max: 8, startsWith: ["5", "6", "9"] }, // Kuwait
+  "+971": { min: 9, max: 9, startsWith: ["5"] }, // UAE
+};
+const DEFAULT_PHONE_LENGTH = { min: 7, max: 15 };
 const passwordRegex =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/;
 
@@ -50,9 +64,21 @@ const validateEmail = (
 const validatePhone = (
   value: string,
   t: (key: string) => string,
+  dialCode?: string,
 ): string | null => {
   if (!value || value.trim() === "") return t("auth.validation.phone.required");
-  if (!phoneRegex.test(value)) return t("auth.validation.phone.invalid");
+  if (!/^\d+$/.test(value)) return t("auth.validation.phone.invalid");
+  const rules =
+    (dialCode && PHONE_RULES_BY_DIAL_CODE[dialCode]) || DEFAULT_PHONE_LENGTH;
+  if (value.length < rules.min || value.length > rules.max)
+    return t("auth.validation.phone.invalid");
+  const allowedPrefixes =
+    "startsWith" in rules ? (rules.startsWith as string[]) : undefined;
+  if (
+    allowedPrefixes &&
+    !allowedPrefixes.some((prefix) => value.startsWith(prefix))
+  )
+    return t("auth.validation.phone.invalid");
   return null;
 };
 
@@ -196,7 +222,7 @@ export const validateRegisterForm = (
   }
 
   if (data.phone !== undefined) {
-    const phoneError = validatePhone(data.phone, t);
+    const phoneError = validatePhone(data.phone, t, data.dialCode);
     if (phoneError) errors.phone = phoneError;
   }
 
@@ -266,7 +292,7 @@ export const validateField = (
     case "email":
       return validateEmail(value as string, t);
     case "phone":
-      return validatePhone(value as string, t);
+      return validatePhone(value as string, t, formData.dialCode);
     case "password":
       return validatePassword(value as string, t);
     case "confirmPassword":

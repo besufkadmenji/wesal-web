@@ -119,7 +119,7 @@ export const RegisterProvider = () => {
           {dict.auth.signup.haveAccount}
         </p>
         <Link
-          href={"/auth/choose-type?action=login"}
+          href={"/auth/login?type=provider"}
           className="text-primary justify-self-end text-base font-semibold"
         >
           {dict.auth.signup.signIn}
@@ -212,6 +212,7 @@ const BasicInfoForm = ({
       <PhoneInput
         value={form.phone || ""}
         onChange={(value) => handleFieldChange("phone", value)}
+        onCountryChange={(code) => handleFieldChange("dialCode", code)}
         error={errors.phone?.message}
       />
 

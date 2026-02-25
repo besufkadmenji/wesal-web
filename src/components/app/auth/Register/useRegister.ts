@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useQueryState } from "nuqs";
 import { useState } from "react";
 import { useRegisterStore } from "./useRegisterStore";
+import { uploadFile } from "@/utils/file.upload";
 
 export const useRegister = () => {
   const [busy, setBusy] = useState(false);
@@ -27,10 +28,18 @@ export const useRegister = () => {
   const register = async () => {
     setBusy(true);
     try {
-      const { confirmPassword, terms, document, ...rest } = form;
+      const { confirmPassword, terms, document, avatar, ...rest } = form;
+      let avatarFilename;
+      if (avatar) {
+        const uploadResult = await uploadFile(avatar);
+        if (uploadResult.url) {
+          avatarFilename = uploadResult.filename;
+        }
+      }
 
       const result = await AuthService.register({
         ...(rest as RegisterInput),
+        avatarFilename,
         dialCode: country,
         phone: `${country}${form.phone}`,
       });
@@ -41,6 +50,7 @@ export const useRegister = () => {
           )}&method=phone&type=${type}`,
         );
       }
+
       // Handle successful login (e.g., redirect, show message)
     } catch (error) {
       console.error("Login error:", error);
@@ -63,7 +73,7 @@ export const useRegister = () => {
           if (type === "user") {
             showSuccessMessage(dict.auth.register.successMessage);
             setTimeout(() => {
-              window.location.href = "/auth/login";
+              window.location.href = "/";
             }, 1500);
           } else {
             setUnderReview("true");
@@ -85,6 +95,7 @@ export const useRegister = () => {
     setBusy(true);
     try {
       await AuthService.resendOtp(input);
+      showSuccessMessage(dict.auth.otpResent);
     } catch (error) {
       console.error("Login error:", error);
       showErrorMessage(

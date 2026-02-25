@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useDict } from "@/hooks/useDict";
 import { validateContactForm } from "@/utils/contact-form-validation";
 import { PhoneInput } from "../../shared/inputs/PhoneInput";
+import { SelectInput } from "../../shared/inputs/SelectInput";
 import { TextInput } from "../../shared/inputs/TextInput";
 import { useSendMessage } from "./useSendMessage";
 
@@ -72,14 +73,17 @@ export const ContactForm = () => {
         error={validationErrors.email}
       />
 
-      <TextInput
-        icon={<MessageIcon />}
-        placeholder={dict.support.contactUs.form.messageType}
+      <SelectInput
+        icon={<MessageIcon className="peer-focus-visible:text-primary" />}
+        placeholder={dict.support.contactUs.form.messageType.placeholder}
         value={form.messageType}
         onChange={(v) => {
           setForm({ messageType: v });
           setValidationErrors({ ...validationErrors, messageType: undefined });
         }}
+        options={Object.entries(dict.support.contactUs.form.messageType.options).map(
+          ([key, label]) => ({ value: key, label }),
+        )}
         error={validationErrors.messageType}
       />
 

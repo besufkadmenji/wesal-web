@@ -7,8 +7,9 @@ import { AdsCarousel } from "./AdsCarousel";
 import { Join } from "@/components/app/home/Join";
 import { TopListing } from "@/components/app/home/TopListing";
 import { ContactUs } from "@/components/app/home/ContactUs";
+import { Category } from "@/gql/graphql";
 
-export const Home = () => {
+export const Home = ({ categories }: { categories: Category[] }) => {
   const dict = useDict();
   return (
     <AppWrapper>
@@ -17,13 +18,13 @@ export const Home = () => {
         <AdsCarousel
           title={dict.home.popularCategories.title}
           subtitle={dict.home.popularCategories.subtitle}
-          items={dict.home.popularCategories.categories}
+          categories={categories}
         />
         <Trusted />
         <AdsCarousel
           title={dict.home.bestSelling.title}
           subtitle={dict.home.bestSelling.subtitle}
-          items={dict.home.bestSelling.categories}
+          categories={categories}
         />
         <Join />
         <TopListing />

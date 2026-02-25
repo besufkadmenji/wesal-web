@@ -4,6 +4,7 @@ export type FormType = Partial<RegisterInput> & {
   confirmPassword?: string;
   terms?: boolean;
   document?: boolean;
+  avatar?: File | null;
 };
 interface RegisterState {
   formData: FormType;
@@ -19,10 +20,12 @@ const initialState: FormType = {
   phone: "",
   password: "",
   confirmPassword: "",
-  dialCode: "",
+  dialCode: "+966",
   cityId: null,
   terms: false,
   document: false,
+  avatarFilename: null,
+  avatar: null,
 };
 
 export const useRegisterStore = create<RegisterState>((set, get) => ({

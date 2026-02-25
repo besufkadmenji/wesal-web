@@ -13,8 +13,10 @@ import { TextInput } from "@/components/app/shared/inputs/TextInput";
 import { Button } from "@/components/ui/button";
 import { useDict } from "@/hooks/useDict";
 import { useRegisterForm } from "@/hooks/useRegisterForm";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import RemoveIcon from "@/assets/icons/remove.svg";
 export const RegisterUser = () => {
   const dict = useDict();
   const pathname = usePathname();
@@ -72,7 +74,7 @@ export const RegisterUser = () => {
               {dict.auth.signup.subtitle}
             </p>
           </div>
-          <ProfileIcon className="size-20" />
+          <UploadAvatar />
         </div>
 
         <div className="grid grid-cols-1 gap-5">
@@ -89,6 +91,7 @@ export const RegisterUser = () => {
           <PhoneInput
             value={form.phone || ""}
             onChange={(value) => handleFieldChange("phone", value)}
+            onCountryChange={(code) => handleFieldChange("dialCode", code)}
             error={errors.phone?.message}
           />
 
@@ -178,7 +181,7 @@ export const RegisterUser = () => {
             {dict.auth.signup.haveAccount}
           </p>
           <Link
-            href={"/auth/choose-type?action=login"}
+            href={"/auth/login?type=user"}
             className="text-primary justify-self-end text-base font-semibold"
           >
             {dict.auth.signup.signIn}
@@ -187,5 +190,49 @@ export const RegisterUser = () => {
       </form>
       <TermsModal />
     </>
+  );
+};
+
+const UploadAvatar = () => {
+  const form = useRegisterStore((state) => state.formData);
+  const updateField = useRegisterStore((state) => state.updateField);
+  const avatarUrl = form.avatar ? URL.createObjectURL(form.avatar) : null;
+  return (
+    <div className="relative size-20">
+      <label className="relative grid size-20 grid-cols-1">
+        {avatarUrl ? (
+          <>
+            <Image
+              src={avatarUrl}
+              alt="avatar"
+              fill
+              className="overflow-hidden rounded-full"
+            />
+          </>
+        ) : (
+          <ProfileIcon className="size-20" />
+        )}
+        <input
+          type="file"
+          hidden
+          onChange={(e) => {
+            if (e.target.files && e.target.files.length > 0) {
+              const file = e.target.files[0];
+              updateField("avatar", file);
+            }
+          }}
+          accept="image/png, image/jpeg, image/jpg"
+        />
+      </label>
+      {avatarUrl && (
+        <Button
+          variant={"ghost"}
+          className="absolute top-0 right-0 size-6! min-h-0! min-w-0! rounded-full bg-white p-0"
+          onClick={() => updateField("avatar", null)}
+        >
+          <RemoveIcon className="size-6" />
+        </Button>
+      )}
+    </div>
   );
 };

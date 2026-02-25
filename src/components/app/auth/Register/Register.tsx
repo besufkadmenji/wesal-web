@@ -6,7 +6,7 @@ import { RegisterUser } from "./RegisterUser";
 
 export const Register = () => {
   const [type] = useQueryState("type");
-
+console.log("Register type:", type);
   return (
     <Wrapper
       classNames={{

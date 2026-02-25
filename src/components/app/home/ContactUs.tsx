@@ -5,8 +5,10 @@ import { useDict } from "@/hooks/useDict";
 import { Button } from "@/components/ui/button";
 import ContactPhone from "@/assets/icons/contact.call.svg";
 import ContactMessage from "@/assets/icons/contact.message.svg";
+import { useAppRouter } from "@/hooks/use.app.router";
 export const ContactUs = () => {
   const dict = useDict();
+  const router = useAppRouter();
   return (
     <div className="relative grid w-full grid-cols-1 justify-items-center px-4 sm:px-8 xl:h-104.5 xl:px-[15vw]">
       <Image
@@ -34,7 +36,10 @@ export const ContactUs = () => {
           </p>
         </div>
         <div className="grid grid-cols-2 gap-4 xl:w-[40vw]">
-          <Button className="h-12.5 gap-2 rounded-[20px] px-6 font-semibold">
+          <Button
+            className="h-12.5 gap-2 rounded-[20px] px-6 font-semibold"
+            onClick={() => router.push("/support/contact-us")}
+          >
             <ContactMessage className="size-5" />
             {dict.home.contactUs.contactButton}
           </Button>

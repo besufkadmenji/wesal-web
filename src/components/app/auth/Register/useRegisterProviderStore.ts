@@ -21,7 +21,7 @@ const initialState: FormType = {
   phone: "",
   password: "",
   confirmPassword: "",
-  dialCode: "",
+  dialCode: "+966",
   address: null,
   cityId: null,
   categoryIds: [],
