@@ -28,6 +28,8 @@ export const CITIES: TypedDocumentNode<CitiesQuery, CitiesQueryVariables> = gql`
           nameAr
           updatedAt
         }
+        publicId
+        status
       }
     }
   }

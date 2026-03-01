@@ -25,8 +25,8 @@ interface ContractFormStore {
 const initialState: ContactFormState = {
   input: {
     serviceProviderSignature: "",
-    acceptedRulesAr: "",
-    acceptedRulesEn: "",
+    acceptedRulesAr: [],
+    acceptedRulesEn: [],
   },
   serviceProviderSignature: null,
 };

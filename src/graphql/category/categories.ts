@@ -26,6 +26,8 @@ export const CATEGORIES_QUERY: TypedDocumentNode<
         updatedAt
         rulesEn
         rulesAr
+        status
+        publicId
       }
     }
   }

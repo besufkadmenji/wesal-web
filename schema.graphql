@@ -1120,6 +1120,9 @@ type Mutation {
   removeFavoriteByUserAndListing(listingId: String!, userId: String!): Favorite!
   removeListing(id: ID!): RemoveListingResponse!
   removeMessage(id: String!): Message!
+
+  """Remove own avatar (self-service)"""
+  removeMyAvatar: Boolean!
   removeNotification(id: String!): Notification!
   removePayment(id: String!): Payment!
   removePermission(id: ID!): Boolean!
@@ -1179,6 +1182,9 @@ type Mutation {
   """Update FAQ (admin only)"""
   updateFaq(updateFaqInput: UpdateFaqInput!): Faq!
   updateListing(updateListingInput: UpdateListingInput!): Listing!
+
+  """Update own profile (self-service)"""
+  updateMe(updateMeInput: UpdateMeInput!): User!
   updateMessage(input: UpdateMessageInput!): Message!
   updatePayment(input: UpdatePaymentInput!): Payment!
   updatePermission(id: ID!, updatePermissionInput: UpdatePermissionInput!): Permission!
@@ -1638,7 +1644,7 @@ type Query {
   favorite(id: String!): Favorite!
   favorites(input: FavoritePaginationInput): PaginatedFavoriteResponse!
 
-  """Get application settings (admin only)"""
+  """Get application settings"""
   getSetting: Setting!
 
   """Check if listing is favorited by user"""
@@ -2054,6 +2060,24 @@ input UpdateListingInput {
   status: ListingStatus
   story: CreateListingMediaInput
   type: ListingType
+}
+
+input UpdateMeInput {
+  address: String
+  avatarFilename: String
+  bankName: String
+  cityId: String
+  countryId: String
+  dialCode: String
+  email: String
+  ibanNumber: String
+  languageCode: String
+  latitude: Float
+  longitude: Float
+  name: String
+  password: String
+  phone: String
+  withAbsher: Boolean
 }
 
 input UpdateMessageInput {

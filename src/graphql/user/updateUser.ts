@@ -1,12 +1,12 @@
-import { UpdateUserMutation, UpdateUserMutationVariables } from "@/gql/graphql";
+import { UpdateMeMutation, UpdateMeMutationVariables } from "@/gql/graphql";
 import { gql, TypedDocumentNode } from "@apollo/client";
 
 export const UPDATE_USER_MUTATION: TypedDocumentNode<
-  UpdateUserMutation,
-  UpdateUserMutationVariables
+  UpdateMeMutation,
+  UpdateMeMutationVariables
 > = gql`
-  mutation updateUser($updateUserInput: UpdateUserInput!) {
-    updateUser(updateUserInput: $updateUserInput) {
+  mutation updateMe($updateMeInput: UpdateMeInput!) {
+    updateMe(updateMeInput: $updateMeInput) {
       id
     }
   }

@@ -18,6 +18,7 @@ export const CATEGORY_QUERY: TypedDocumentNode<
       rulesAr
       rulesEn
       updatedAt
+      status
     }
   }
 `;
