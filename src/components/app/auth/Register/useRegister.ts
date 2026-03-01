@@ -2,6 +2,7 @@ import { RegisterInput, ResendOtpInput, VerifyOtpInput } from "@/gql/graphql";
 import { useDict } from "@/hooks/useDict";
 import AuthService from "@/services/auth.service";
 import { showErrorMessage, showSuccessMessage } from "@/utils/show.messages";
+import Cookie from "js-cookie";
 import { usePathname, useRouter } from "next/navigation";
 import { useQueryState } from "nuqs";
 import { useState } from "react";
@@ -71,6 +72,16 @@ export const useRegister = () => {
           setOtp("");
         } else {
           if (type === "user") {
+            const loginResult = await AuthService.login({
+              emailOrPhone: form.email ?? form.phone ?? "",
+              password: form.password ?? "",
+            });
+            if (loginResult?.accessToken) {
+              Cookie.set("token", loginResult.accessToken, {
+                sameSite: "Lax",
+                expires: 7,
+              });
+            }
             showSuccessMessage(dict.auth.register.successMessage);
             setTimeout(() => {
               window.location.href = "/";
