@@ -1,4 +1,4 @@
-import { UpdateUserInput, User } from "@/gql/graphql";
+import { UpdateMeInput, UpdateUserInput, User } from "@/gql/graphql";
 import { ME_USER_QUERY } from "@/graphql/user/meUser";
 import { REMOVE_AVATAR_MUTATION } from "@/graphql/user/removeAvatar";
 import { UPDATE_USER_MUTATION } from "@/graphql/user/updateUser";
@@ -18,7 +18,7 @@ class UserService {
     return null;
   };
 
-  static updateUser = async (input: UpdateUserInput) => {
+  static updateUser = async (input: UpdateMeInput) => {
     try {
       const removeAvatarResponse = await client().mutate({
         mutation: UPDATE_USER_MUTATION,

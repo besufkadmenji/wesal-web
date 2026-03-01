@@ -31,7 +31,6 @@ export const useUpdateProfile = () => {
         address: input.address,
         latitude: input.latitude,
         longitude: input.longitude,
-        id: input.id!,
       });
       if (result) {
         showSuccessMessage(dict.profile.updateSuccessMessage);
