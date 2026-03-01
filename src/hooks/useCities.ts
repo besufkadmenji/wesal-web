@@ -12,7 +12,11 @@ export const useCities = (): {
     data: cities,
   } = useQuery({
     queryKey: ["cities"],
-    queryFn: () => CityService.cities(),
+    queryFn: () =>
+      CityService.cities({
+        page: 1,
+        limit: 1000,
+      }),
   });
 
   return { isLoading, isError, cities };

@@ -31,6 +31,8 @@ const initialState: FormType = {
   document: false,
   commercialRegistrationFilename: null,
   withAbsher: false,
+  bankName: "",
+  ibanNumber: "",
 };
 
 export const useRegisterProviderStore = create<RegisterState>((set, get) => ({

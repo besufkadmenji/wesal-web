@@ -104,6 +104,8 @@ export const useRegisterProviderForm = <T extends FieldValues>({
       "email",
       "password",
       "confirmPassword",
+      "bankName",
+      "ibanNumber",
     ];
 
     let allValid = true;

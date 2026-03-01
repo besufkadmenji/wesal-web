@@ -18,6 +18,8 @@ import { parseAsInteger, useQueryState } from "nuqs";
 import { twMerge } from "tailwind-merge";
 
 import AddressIcon from "@/assets/icons/address.svg";
+import BankIcon from "@/assets/icons/auth/bank.svg";
+import IbanIcon from "@/assets/icons/auth/iban.svg";
 import { AppCheckbox } from "@/components/app/auth/AppCheckbox";
 import {
   CategorySelect,
@@ -261,6 +263,20 @@ const BasicInfoForm = ({
         placeholder={dict.auth.signup.provider.uploadCommercialRegistration}
         error={errors.commercialRegistrationFilename?.message}
       />
+      <TextInput
+        icon={<BankIcon className="size-4" />}
+        placeholder={dict.auth.signup.bankName}
+        value={form.bankName || ""}
+        onChange={(value) => handleFieldChange("bankName", value)}
+        error={errors.bankName?.message}
+      />
+      <TextInput
+        icon={<IbanIcon className="size-4" />}
+        placeholder={dict.auth.signup.ibanNumber}
+        value={form.ibanNumber || ""}
+        onChange={(value) => handleFieldChange("ibanNumber", value)}
+        error={errors.ibanNumber?.message}
+      />
     </div>
   );
 };
@@ -314,6 +330,7 @@ const ProviderForm = ({
             handleFieldChange("categoryIds", value);
           }}
         />
+
         <div className="grid grid-cols-1 gap-2 rounded-[16px] border border-[#F2F2F2] bg-[#FBFBFB] p-4">
           <div className="flex items-center gap-2">
             <Checkbox

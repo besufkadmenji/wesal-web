@@ -75,7 +75,9 @@ export const CategorySelect = ({
   error?: string;
 }) => {
   const dict = useDict();
-  const { categories } = useCategories();
+  const { categories } = useCategories({
+    limit: 1000,
+  });
   const lng = useLang();
   return (
     <div className="grid grid-cols-1 gap-2.5">
@@ -92,8 +94,8 @@ export const CategorySelect = ({
               </span>
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="max-h-[90vh] w-80 overflow-y-auto">
-            <div className="grid grid-cols-1">
+          <PopoverContent className="w-80 p-0!">
+            <div className="grid grid-cols-1 max-h-[60vh] p-4 overflow-y-scroll">
               {categories?.items.map((category) => (
                 <div key={category.id} className="flex h-10 items-center gap-4">
                   <Checkbox
@@ -122,7 +124,7 @@ export const CategorySelect = ({
         </Popover>
         {error && <p className="text-xs text-red-500">{error}</p>}
       </div>
-      <div className="flex flex-wrap lg:flex-nowrap gap-2 overflow-x-auto pb-4">
+      <div className="flex flex-wrap gap-2 overflow-x-auto pb-4 lg:flex-nowrap">
         {value &&
           value.length > 0 &&
           categories?.items
