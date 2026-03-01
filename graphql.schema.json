@@ -16547,7 +16547,7 @@
           },
           {
             "name": "getSetting",
-            "description": "Get application settings (admin only)",
+            "description": "Get application settings",
             "args": [],
             "type": {
               "kind": "NON_NULL",

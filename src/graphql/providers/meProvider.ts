@@ -15,6 +15,7 @@ export const ME_PROVIDER_QUERY: TypedDocumentNode<MeProviderQuery> = gql`
         nameEn
         publicId
         updatedAt
+        status
       }
       categories {
         createdAt
@@ -28,6 +29,7 @@ export const ME_PROVIDER_QUERY: TypedDocumentNode<MeProviderQuery> = gql`
         rulesAr
         rulesEn
         updatedAt
+        status
       }
       cityId
       commercialName

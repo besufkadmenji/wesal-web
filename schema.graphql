@@ -1638,7 +1638,7 @@ type Query {
   favorite(id: String!): Favorite!
   favorites(input: FavoritePaginationInput): PaginatedFavoriteResponse!
 
-  """Get application settings (admin only)"""
+  """Get application settings"""
   getSetting: Setting!
 
   """Check if listing is favorited by user"""
