@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useForm, FieldValues, FieldErrors } from "react-hook-form";
 import { useDict } from "@/hooks/useDict";
-import { validateField } from "@/utils/register-validation";
+import { validateField } from "@/utils/provider-register-validation";
 
 interface UseRegisterProviderFormProps<T extends FieldValues> {
   form: T;

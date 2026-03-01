@@ -4,6 +4,7 @@ export interface ValidationErrors {
 
 export interface ProviderRegisterValidationData {
   name?: string;
+  commercialName?: string;
   email?: string;
   phone?: string;
   password?: string;
@@ -35,6 +36,17 @@ const validateName = (
   if (!value || value.trim() === "") return t("auth.validation.name.required");
   if (value.length < 2) return t("auth.validation.name.minLength");
   if (value.length > 50) return t("auth.validation.name.maxLength");
+  return null;
+};
+
+const validateCommercialName = (
+  value: string,
+  t: (key: string) => string,
+): string | null => {
+  if (!value || value.trim() === "")
+    return t("auth.validation.commercialName.required");
+  if (value.length < 2) return t("auth.validation.commercialName.minLength");
+  if (value.length > 100) return t("auth.validation.commercialName.maxLength");
   return null;
 };
 
@@ -263,6 +275,8 @@ export const validateField = (
   switch (field) {
     case "name":
       return validateName(value as string, t);
+    case "commercialName":
+      return validateCommercialName(value as string, t);
     case "email":
       return validateEmail(value as string, t);
     case "phone":
@@ -292,12 +306,9 @@ export const validateField = (
     case "avatarFile":
       return validateAvatarFile(value as File | null, t);
     case "latitude":
+      return validateLocation(value as number, formData.longitude ?? null, t);
     case "longitude":
-      validateLocation(
-        formData.latitude ?? null,
-        formData.longitude ?? null,
-        t,
-      );
+      return validateLocation(formData.latitude ?? null, value as number, t);
     default:
       return null;
   }
