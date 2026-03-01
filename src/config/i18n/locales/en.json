@@ -646,6 +646,7 @@
     "address": "Address",
     "platformManagerName": "Platform Manager Name",
     "locationOnMap": "Location on Map",
+    "hideMap": "Hide Map",
     "serviceProviderSignature": "Electronic Signature of Service Provider",
     "platformManagerSignature": "Electronic Signature of Platform Manager",
     "signatureAllowedOnce": "Signature is only allowed once",

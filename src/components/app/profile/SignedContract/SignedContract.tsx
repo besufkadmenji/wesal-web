@@ -1,7 +1,9 @@
 "use client";
 import CheckGreenIcon from "@/assets/icons/check.green.svg";
+import DefaultMarkerIcon from "@/assets/icons/user.marker.svg";
 import DownloadIcon from "@/assets/icons/download.svg";
 import MapPointIcon from "@/assets/icons/map.point.svg";
+import GoogleMapReact from "google-map-react";
 import { useContractStore } from "@/components/app/profile/SignedContract/useForm";
 import { useSignSignature } from "@/components/app/profile/SignedContract/useSignSignature";
 import { Button } from "@/components/ui/button";
@@ -16,6 +18,16 @@ import { SignatureInput } from "./SignatureInput";
 import { downloadPDF } from "@/utils/download.pdf";
 import { CancelContract } from "@/components/app/profile/SignedContract/CancelContact";
 import { useSetting } from "@/hooks/useSettings";
+
+const defaultProps = {
+  center: { lat: 21.636981, lng: 39.181078 },
+  zoom: 14,
+};
+
+const Marker = ({}: { lat: number; lng: number }) => (
+  <DefaultMarkerIcon className="size-16 origin-center -translate-y-[80%] ltr:-translate-x-1/2 rtl:translate-x-1/2" />
+);
+
 export const SignedContract = () => {
   const dict = useDict();
   const lng = useLang();
@@ -85,6 +97,7 @@ export const SignedContract = () => {
               value={me.provider.address || ""}
             />
             <Button
+              data-html2canvas-ignore
               className="h-full rounded-[20px] bg-[#EFF1F6] px-6!"
               variant={"ghost"}
               onClick={() => {
@@ -92,9 +105,42 @@ export const SignedContract = () => {
               }}
             >
               <MapPointIcon className="size-5" />
-              {dict.contract.locationOnMap}
+              {showMap ? dict.contract.hideMap : dict.contract.locationOnMap}
             </Button>
           </div>
+          {showMap && (
+            <div
+              data-html2canvas-ignore
+              className="grid h-80 grid-cols-1 overflow-hidden rounded-[16px]"
+            >
+              <GoogleMapReact
+                bootstrapURLKeys={{
+                  key: process.env.NEXT_PUBLIC_MAPS_API_KEY || "",
+                }}
+                center={{
+                  lat: me.provider.latitude ?? defaultProps.center.lat,
+                  lng: me.provider.longitude ?? defaultProps.center.lng,
+                }}
+                zoom={defaultProps.zoom}
+                options={{
+                  fullscreenControl: false,
+                  mapTypeControl: false,
+                  streetViewControl: false,
+                  zoomControl: false,
+                  disableDefaultUI: true,
+                  draggable: false,
+                }}
+                yesIWantToUseGoogleMapApiInternals
+              >
+                {me.provider.latitude && me.provider.longitude && (
+                  <Marker
+                    lat={me.provider.latitude}
+                    lng={me.provider.longitude}
+                  />
+                )}
+              </GoogleMapReact>
+            </div>
+          )}
           <FormInput
             label={dict.contract.platformManagerName}
             value={me.provider.name || ""}

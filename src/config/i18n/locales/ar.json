@@ -640,6 +640,7 @@
     "address": "العنوان",
     "platformManagerName": "اسم مدير المنصة",
     "locationOnMap": "الموقع على الخريطة",
+    "hideMap": "إخفاء الخريطة",
     "serviceProviderSignature": "التوقيع الإلكتروني لمقدم الخدمة",
     "platformManagerSignature": "التوقيع الإلكتروني لمدير المنصة",
     "signatureAllowedOnce": "لا يمكن التوقيع سوى لمرة واحدة فقط",
