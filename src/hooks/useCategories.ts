@@ -13,7 +13,7 @@ export const useCategories = (
   isError: boolean;
 } => {
   const [page] = useQueryState("page", parseAsInteger.withDefault(1));
-  const [limit] = useQueryState("limit", parseAsInteger.withDefault(20));
+  const [limit] = useQueryState("limit", parseAsInteger.withDefault(10));
   const [search] = useQueryState("query", parseAsString.withDefault(""));
 
   const {

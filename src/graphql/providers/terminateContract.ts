@@ -53,8 +53,14 @@ export const TERMINATE_CONTRACT_MUTATION: TypedDocumentNode<
         status
         platformManagerName
         terminationReason
-        acceptedRulesAr
-        acceptedRulesEn
+        acceptedRulesAr {
+          label
+          value
+        }
+        acceptedRulesEn {
+          label
+          value
+        }
         id
         createdAt
         publicId

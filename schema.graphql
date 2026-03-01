@@ -9,7 +9,14 @@ directive @specifiedBy(
   url: String!
 ) on SCALAR
 
+"""Type of user action (view or click)"""
+enum ActionType {
+  CLICK
+  VIEW
+}
+
 type Admin {
+  adminPermissions: [AdminPermission!]
   avatarFilename: String
   createdAt: DateTime!
   deactivationReason: String
@@ -64,7 +71,7 @@ input AdminPaginationInput {
 }
 
 type AdminPermission {
-  admin: Admin!
+  admin: Admin
   adminId: ID!
   createdAt: DateTime!
   id: ID!
@@ -89,8 +96,6 @@ input AdminResetPasswordInput {
 }
 
 input AdminSignContractInput {
-  platformManagerName: String!
-  platformManagerSignature: String!
   providerId: String!
 }
 
@@ -183,6 +188,7 @@ type Category {
   publicId: Int
   rulesAr: String!
   rulesEn: String!
+  status: CategoryStatus!
   updatedAt: DateTime!
 }
 
@@ -196,6 +202,13 @@ input CategoryPaginationInput {
 
   """Sort order: ASC or DESC"""
   sortOrder: SortOrder = DESC
+  status: CategoryStatus
+}
+
+"""Category publication status"""
+enum CategoryStatus {
+  ACTIVE
+  INACTIVE
 }
 
 input ChangeEmailInput {
@@ -223,10 +236,12 @@ type City {
   country: Country
   countryId: String!
   createdAt: DateTime!
+  geoBoundary: JSON
   id: ID!
   nameAr: String!
   nameEn: String!
   publicId: Int
+  status: CityStatus!
   updatedAt: DateTime!
 }
 
@@ -243,6 +258,7 @@ input CityPaginationInput {
 
   """Sort order: ASC or DESC"""
   sortOrder: SortOrder = DESC
+  status: CityStatus
 }
 
 """Available fields to sort cities by"""
@@ -253,6 +269,12 @@ enum CitySortField {
   nameAr
   nameEn
   updatedAt
+}
+
+"""City activation status"""
+enum CityStatus {
+  ACTIVE
+  INACTIVE
 }
 
 type Complaint {
@@ -333,6 +355,7 @@ type ContactMessage {
   name: String!
   phone: String!
   publicId: Int
+  reply: String!
   updatedAt: DateTime!
 }
 
@@ -392,6 +415,16 @@ input ContractPaginationInput {
   """Sort order: ASC or DESC"""
   sortOrder: SortOrder = DESC
   status: ContractStatus
+}
+
+type ContractRule {
+  label: String!
+  value: String!
+}
+
+input ContractRuleInput {
+  label: String!
+  value: String!
 }
 
 type ContractSignature {
@@ -536,6 +569,7 @@ input CreateCategoryInput {
 
 input CreateCityInput {
   countryId: ID!
+  geoBoundary: JSON
   nameAr: String!
   nameEn: String!
 }
@@ -793,6 +827,11 @@ input ForgotPasswordInput {
   emailOrPhone: String!
 }
 
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
 type Listing {
   category: Category
   categoryId: String!
@@ -921,6 +960,8 @@ enum MessageSortField {
 type Mutation {
   activateAdmin(id: ID!): Admin!
   activateBank(id: ID!): Bank!
+  activateCategory(id: ID!): Category!
+  activateCity(id: ID!): City!
   activateDeliveryCompany(id: ID!): DeliveryCompany!
   activateListing(id: ID!): Listing!
 
@@ -979,6 +1020,8 @@ type Mutation {
   createRating(input: CreateRatingInput!): Rating!
   deactivateAdmin(id: ID!, input: DeactivateAdminInput!): Admin!
   deactivateBank(id: ID!, input: DeactivateBankInput!): Bank!
+  deactivateCategory(id: ID!): Category!
+  deactivateCity(id: ID!): City!
   deactivateDeliveryCompany(id: ID!, input: DeactivateDeliveryCompanyInput!): DeliveryCompany!
   deactivateListing(id: ID!, reason: String!): Listing!
 
@@ -1050,6 +1093,9 @@ type Mutation {
 
   """Reject a complaint"""
   rejectComplaint(complaintId: String!, reason: String!, reviewerId: String!): Complaint!
+
+  """Reject a pending provider join request"""
+  rejectProviderJoinRequest(id: ID!, reason: String!): Provider!
   removeAdmin(id: ID!): Boolean!
 
   """Delete user avatar by ID"""
@@ -1088,6 +1134,9 @@ type Mutation {
   """Delete user by ID"""
   removeUser(id: ID!, input: DeleteUserInput!): User!
 
+  """Reply to contact message (admin only)"""
+  replyToContactMessage(id: ID!, message: String!): ContactMessage!
+
   """Resend OTP for email or phone verification"""
   resendOtp(input: ResendOtpInput!): Boolean!
 
@@ -1113,6 +1162,7 @@ type Mutation {
 
   """Terminate provider contract"""
   terminateProviderContract(terminationReason: String!): Provider!
+  trackAction(input: TrackActionInput!): Tracking!
   updateAdmin(id: ID!, updateAdminInput: UpdateAdminInput!): Admin!
   updateBank(input: UpdateBankInput!): Bank!
   updateCategory(input: UpdateCategoryInput!): Category!
@@ -1517,6 +1567,7 @@ type Provider {
   phone: String!
   phoneVerified: Boolean!
   publicId: Int
+  rejectionReason: String
   signedContract: SignedContract
   status: ProviderStatus!
   updatedAt: DateTime!
@@ -1543,6 +1594,7 @@ enum ProviderStatus {
   DELETED
   INACTIVE
   PENDING_APPROVAL
+  REJECTED
   SUSPENDED
 }
 
@@ -1603,6 +1655,8 @@ type Query {
   message(id: String!): Message!
   messages(input: MessagePaginationInput): PaginatedMessageResponse!
   myListings(paginationInput: ListingPaginationInput!): PaginatedListingResponse!
+  myPopularCategories(limit: Float = 10): [String!]!
+  myPopularListings(limit: Float = 10): [String!]!
   notification(id: String!): Notification!
 
   """Get notification statistics for a user"""
@@ -1780,14 +1834,14 @@ input SettingInput {
 }
 
 input SignContractInput {
-  acceptedRulesAr: String
-  acceptedRulesEn: String
+  acceptedRulesAr: [ContractRuleInput!]
+  acceptedRulesEn: [ContractRuleInput!]
   serviceProviderSignature: String!
 }
 
 type SignedContract {
-  acceptedRulesAr: String
-  acceptedRulesEn: String
+  acceptedRulesAr: [ContractRule!]
+  acceptedRulesEn: [ContractRule!]
   contractExpiresAt: String
   contractSignedAt: String!
   createdAt: DateTime!
@@ -1851,6 +1905,38 @@ enum SortOrder {
   DESC
 }
 
+type Subscription {
+  """Subscribe to real-time updates for the authenticated provider"""
+  providerUpdated: Provider!
+
+  """Subscribe to real-time updates for the authenticated user"""
+  userUpdated: User!
+}
+
+"""Type of target being tracked (category or listing)"""
+enum TargetType {
+  CATEGORY
+  LISTING
+}
+
+input TrackActionInput {
+  actionType: ActionType!
+  targetId: String!
+  targetType: TargetType!
+}
+
+type Tracking {
+  actionType: ActionType!
+  count: Int!
+  createdAt: DateTime!
+  id: ID!
+  targetId: String!
+  targetType: TargetType!
+  updatedAt: DateTime!
+  user: User!
+  userId: String!
+}
+
 input UpdateAdminInput {
   avatarFilename: String
   email: String
@@ -1884,6 +1970,7 @@ input UpdateCategoryInput {
 
 input UpdateCityInput {
   countryId: ID
+  geoBoundary: JSON
   id: ID!
   nameAr: String
   nameEn: String

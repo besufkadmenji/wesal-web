@@ -62,8 +62,14 @@ export const ME_PROVIDER_QUERY: TypedDocumentNode<MeProviderQuery> = gql`
       updatedAt
       status
       signedContract {
-        acceptedRulesAr
-        acceptedRulesEn
+        acceptedRulesAr {
+          label
+          value
+        }
+        acceptedRulesEn {
+          label
+          value
+        }
         contractExpiresAt
         contractSignedAt
         createdAt

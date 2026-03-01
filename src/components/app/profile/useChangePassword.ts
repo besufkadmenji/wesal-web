@@ -17,7 +17,7 @@ export const useChangePassword = () => {
   ) => {
     if (newPassword !== confirmPassword) {
       showErrorMessage(dict.auth.resetPassword.setNewPassword.passwordMismatch);
-      return;
+      throw new Error(dict.auth.resetPassword.setNewPassword.passwordMismatch);
     }
     setBusy(true);
     try {
