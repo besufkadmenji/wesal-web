@@ -30,12 +30,15 @@ export const VerifyEmailChange = () => {
           <h3 className="text-xl leading-8 font-semibold text-black">
             {dict.profile.emailVerification.title}
           </h3>
-          <p className="text-gray leading-7">
-            {dict.profile.emailVerification.description.replace(
-              "{email}",
-              `<strong class="text-primary">${selectedEmail}</strong>`,
-            )}
-          </p>
+          <p
+            className="text-gray leading-7"
+            dangerouslySetInnerHTML={{
+              __html: dict.profile.emailVerification.description.replace(
+                "{email}",
+                `<strong class="text-primary">${selectedEmail}</strong>`,
+              ),
+            }}
+          />
         </div>
       </div>
       <div className="grid grid-cols-1 justify-items-center gap-4">

@@ -32,12 +32,15 @@ export const VerifyPhoneChange = () => {
           <h3 className="text-xl leading-8 font-semibold text-black">
             {dict.profile.phoneVerification.title}
           </h3>
-          <p className="text-gray leading-7">
-            {dict.profile.phoneVerification.description.replace(
-              "{phone}",
-              `<strong class="text-primary">${selectedPhone}</strong>`,
-            )}
-          </p>
+          <p
+            className="text-gray leading-7"
+            dangerouslySetInnerHTML={{
+              __html: dict.profile.phoneVerification.description.replace(
+                "{phone}",
+                `<strong class="text-primary">${selectedPhone}</strong>`,
+              ),
+            }}
+          />
         </div>
       </div>
       <div className="grid grid-cols-1 justify-items-center gap-4">
