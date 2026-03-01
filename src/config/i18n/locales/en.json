@@ -378,6 +378,11 @@
         "minLength": "Name must be at least 2 characters",
         "maxLength": "Name must not exceed 50 characters"
       },
+      "commercialName": {
+        "required": "Business name is required",
+        "minLength": "Business name must be at least 2 characters",
+        "maxLength": "Business name must not exceed 100 characters"
+      },
       "email": {
         "required": "Email is required",
         "invalid": "Please enter a valid email address"
