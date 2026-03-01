@@ -56,8 +56,8 @@ type Documents = {
     "\n  mutation updateProvider($updateProviderInput: UpdateProviderInput!) {\n    updateProvider(updateProviderInput: $updateProviderInput) {\n      id\n    }\n  }\n": typeof types.UpdateProviderDocument,
     "\n  query getSetting {\n    getSetting {\n      aboutAr\n      aboutEn\n      email\n      phones\n      privacyPolicyAr\n      privacyPolicyEn\n      socialMediaLinks {\n        link\n        name\n      }\n      termsAr\n      termsEn\n      whatsappNumber\n      rulesAr\n      rulesEn\n    }\n  }\n": typeof types.GetSettingDocument,
     "\n  query meUser {\n    meUser {\n      id\n      name\n      isActive\n      languageCode\n      address\n      avatarFilename\n      cityId\n      countryId\n      createdAt\n      dialCode\n      email\n      emailVerified\n      latitude\n      longitude\n      phone\n      phoneVerified\n      updatedAt\n      ibanNumber\n      bankName\n      status\n      deactivationReason\n      deleteReason\n      deletedAt\n      publicId\n      withAbsher\n    }\n  }\n": typeof types.MeUserDocument,
-    "\n  mutation removeAvatar($removeAvatarId: ID!) {\n    removeAvatar(id: $removeAvatarId)\n  }\n": typeof types.RemoveAvatarDocument,
-    "\n  mutation updateUser($updateUserInput: UpdateUserInput!) {\n    updateUser(updateUserInput: $updateUserInput) {\n      id\n    }\n  }\n": typeof types.UpdateUserDocument,
+    "\n  mutation removeMyAvatar {\n    removeMyAvatar\n  }\n": typeof types.RemoveMyAvatarDocument,
+    "\n  mutation updateMe($updateMeInput: UpdateMeInput!) {\n    updateMe(updateMeInput: $updateMeInput) {\n      id\n    }\n  }\n": typeof types.UpdateMeDocument,
     "\n  subscription UserUpdated {\n    userUpdated {\n      id\n      status\n    }\n  }\n": typeof types.UserUpdatedDocument,
 };
 const documents: Documents = {
@@ -103,8 +103,8 @@ const documents: Documents = {
     "\n  mutation updateProvider($updateProviderInput: UpdateProviderInput!) {\n    updateProvider(updateProviderInput: $updateProviderInput) {\n      id\n    }\n  }\n": types.UpdateProviderDocument,
     "\n  query getSetting {\n    getSetting {\n      aboutAr\n      aboutEn\n      email\n      phones\n      privacyPolicyAr\n      privacyPolicyEn\n      socialMediaLinks {\n        link\n        name\n      }\n      termsAr\n      termsEn\n      whatsappNumber\n      rulesAr\n      rulesEn\n    }\n  }\n": types.GetSettingDocument,
     "\n  query meUser {\n    meUser {\n      id\n      name\n      isActive\n      languageCode\n      address\n      avatarFilename\n      cityId\n      countryId\n      createdAt\n      dialCode\n      email\n      emailVerified\n      latitude\n      longitude\n      phone\n      phoneVerified\n      updatedAt\n      ibanNumber\n      bankName\n      status\n      deactivationReason\n      deleteReason\n      deletedAt\n      publicId\n      withAbsher\n    }\n  }\n": types.MeUserDocument,
-    "\n  mutation removeAvatar($removeAvatarId: ID!) {\n    removeAvatar(id: $removeAvatarId)\n  }\n": types.RemoveAvatarDocument,
-    "\n  mutation updateUser($updateUserInput: UpdateUserInput!) {\n    updateUser(updateUserInput: $updateUserInput) {\n      id\n    }\n  }\n": types.UpdateUserDocument,
+    "\n  mutation removeMyAvatar {\n    removeMyAvatar\n  }\n": types.RemoveMyAvatarDocument,
+    "\n  mutation updateMe($updateMeInput: UpdateMeInput!) {\n    updateMe(updateMeInput: $updateMeInput) {\n      id\n    }\n  }\n": types.UpdateMeDocument,
     "\n  subscription UserUpdated {\n    userUpdated {\n      id\n      status\n    }\n  }\n": types.UserUpdatedDocument,
 };
 
@@ -293,11 +293,11 @@ export function graphql(source: "\n  query meUser {\n    meUser {\n      id\n   
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation removeAvatar($removeAvatarId: ID!) {\n    removeAvatar(id: $removeAvatarId)\n  }\n"): (typeof documents)["\n  mutation removeAvatar($removeAvatarId: ID!) {\n    removeAvatar(id: $removeAvatarId)\n  }\n"];
+export function graphql(source: "\n  mutation removeMyAvatar {\n    removeMyAvatar\n  }\n"): (typeof documents)["\n  mutation removeMyAvatar {\n    removeMyAvatar\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  mutation updateUser($updateUserInput: UpdateUserInput!) {\n    updateUser(updateUserInput: $updateUserInput) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation updateUser($updateUserInput: UpdateUserInput!) {\n    updateUser(updateUserInput: $updateUserInput) {\n      id\n    }\n  }\n"];
+export function graphql(source: "\n  mutation updateMe($updateMeInput: UpdateMeInput!) {\n    updateMe(updateMeInput: $updateMeInput) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation updateMe($updateMeInput: UpdateMeInput!) {\n    updateMe(updateMeInput: $updateMeInput) {\n      id\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

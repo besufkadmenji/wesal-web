@@ -52,10 +52,10 @@ export const useUpdateProfile = () => {
     }
   };
 
-  const removeAvatar = async (id: string) => {
+  const removeAvatar = async () => {
     setRemoving(true);
     try {
-      const result = await UserService.removeAvatar(id);
+      const result = await UserService.removeAvatar();
       if (result) {
         showSuccessMessage(dict.profile.removeAvatarSuccessMessage);
         queryClient.invalidateQueries({

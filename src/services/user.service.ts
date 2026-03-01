@@ -23,25 +23,23 @@ class UserService {
       const removeAvatarResponse = await client().mutate({
         mutation: UPDATE_USER_MUTATION,
         variables: {
-          updateUserInput: input,
+          updateMeInput: input,
         },
       });
-      return removeAvatarResponse.data?.updateUser ?? null;
+      return removeAvatarResponse.data?.updateMe ?? null;
     } catch (error) {
       // Parse and throw the error with a readable message
       const errorMessage = parseGraphQLError(error);
       throw new Error(errorMessage);
     }
   };
-  static removeAvatar = async (removeAvatarId: string) => {
+  static removeAvatar = async () => {
     try {
       const removeAvatarResponse = await client().mutate({
         mutation: REMOVE_AVATAR_MUTATION,
-        variables: {
-          removeAvatarId,
-        },
+        variables: {},
       });
-      return removeAvatarResponse.data?.removeAvatar ?? null;
+      return removeAvatarResponse.data?.removeMyAvatar ?? null;
     } catch (error) {
       // Parse and throw the error with a readable message
       const errorMessage = parseGraphQLError(error);

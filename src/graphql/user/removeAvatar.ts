@@ -1,14 +1,14 @@
 import {
-    RemoveAvatarMutation,
-    RemoveAvatarMutationVariables,
+  RemoveMyAvatarMutation,
+  RemoveMyAvatarMutationVariables,
 } from "@/gql/graphql";
 import { gql, TypedDocumentNode } from "@apollo/client";
 
 export const REMOVE_AVATAR_MUTATION: TypedDocumentNode<
-  RemoveAvatarMutation,
-  RemoveAvatarMutationVariables
+  RemoveMyAvatarMutation,
+  RemoveMyAvatarMutationVariables
 > = gql`
-  mutation removeAvatar($removeAvatarId: ID!) {
-    removeAvatar(id: $removeAvatarId)
+  mutation removeMyAvatar {
+    removeMyAvatar
   }
 `;

@@ -155,7 +155,7 @@ const ProfilePicture = ({ user }: { user: User }) => {
         disabled={!url || removing}
         onClick={() => {
           if (user.avatarFilename) {
-            removeAvatar(user.id);
+            removeAvatar();
           } else if (form.avatarFile) {
             setAvatarFile(null);
           }
