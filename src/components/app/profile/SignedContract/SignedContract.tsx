@@ -131,9 +131,27 @@ export const SignedContract = () => {
             <h3 className="leading-8 font-medium text-black">
               {dict.contract.commitmentText}
             </h3>
-            <p className="text-gray leading-7 whitespace-pre-line">
-              {getRules()}
-            </p>
+            <div className="grid grid-cols-1">
+              {getRules()?.map((rule, index) =>
+                rule.label === "general" ? (
+                  <p
+                    key={index}
+                    className="text-gray leading-7 whitespace-pre-line"
+                  >
+                    {rule.value}
+                  </p>
+                ) : (
+                  <div key={index} className="mt-4 grid grid-cols-1 gap-1">
+                    <h4 className="text-sm font-medium text-black">
+                      {rule.label}
+                    </h4>
+                    <p className="text-gray leading-7 whitespace-pre-line">
+                      {rule.value}
+                    </p>
+                  </div>
+                ),
+              )}
+            </div>
           </div>
         </div>
 

@@ -1,4 +1,5 @@
 import { useContractStore } from "@/components/app/profile/SignedContract/useForm";
+import { ContractRule } from "@/gql/graphql";
 import { useDict } from "@/hooks/useDict";
 import { useLang } from "@/hooks/useLang";
 import { useMe } from "@/hooks/useMe";
@@ -23,40 +24,55 @@ export const useSignSignature = () => {
         ? me.provider.signedContract.acceptedRulesAr
         : me.provider.signedContract.acceptedRulesEn;
     }
-    const rules = new Set<string>();
+    const rules = new Set<ContractRule>();
+    console.log("Provider rules:", setting?.rulesAr, setting?.rulesEn);
     if (lng === "ar") {
-      rules.add(setting?.rulesAr || "");
+      rules.add({
+        label: "general",
+        value: setting?.rulesAr || "",
+      });
     } else {
-      rules.add(setting?.rulesEn || "");
+      rules.add({
+        label: "general",
+        value: setting?.rulesEn || "",
+      });
     }
     const categories = me?.provider?.categories?.map((cat) =>
-      lng === "en" ? cat.rulesEn : cat.rulesAr,
+      lng === "en"
+        ? { label: cat.nameEn, value: cat.rulesEn }
+        : { label: cat.nameAr, value: cat.rulesAr },
     );
     categories
-      ?.filter((cat) => cat.length > 0)
+      ?.filter((cat) => cat.value.length > 0)
       .forEach((cat) => rules.add(cat));
 
-    return Array.from(rules).join("\n");
+    return Array.from(rules);
   };
   const getRulesObj = () => {
-    const rulesEn = new Set<string>();
-    const rulesAr = new Set<string>();
-    rulesAr.add(setting?.rulesAr || "");
-    rulesEn.add(setting?.rulesEn || "");
+    const rulesEn = new Set<ContractRule>();
+    const rulesAr = new Set<ContractRule>();
+    rulesAr.add({
+      label: "general",
+      value: setting?.rulesAr || "",
+    });
+    rulesEn.add({
+      label: "general",
+      value: setting?.rulesEn || "",
+    });
     const categories = me?.provider?.categories?.map((cat) => ({
-      en: cat.rulesEn,
-      ar: cat.rulesAr,
+      en: { label: cat.nameEn, value: cat.rulesEn },
+      ar: { label: cat.nameAr, value: cat.rulesAr },
     }));
     categories
-      ?.filter((cat) => cat.en.length > 0 || cat.ar.length > 0)
+      ?.filter((cat) => cat.en.value.length > 0 || cat.ar.value.length > 0)
       .forEach((cat) => {
         rulesEn.add(cat.en);
         rulesAr.add(cat.ar);
       });
 
     return {
-      en: Array.from(rulesEn).join("\n"),
-      ar: Array.from(rulesAr).join("\n"),
+      en: Array.from(rulesEn),
+      ar: Array.from(rulesAr),
     };
   };
 
