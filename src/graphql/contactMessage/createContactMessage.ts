@@ -19,12 +19,16 @@ export const CREATE_CONTACT_MESSAGE_MUTATION: TypedDocumentNode<
       dialCode
       email
       id
-      isRead
       messageContent
       messageType
       name
       phone
       updatedAt
+      publicId
+      reply
+      senderId
+      senderType
+      status
     }
   }
 `;

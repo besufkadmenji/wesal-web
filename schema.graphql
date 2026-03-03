@@ -349,18 +349,24 @@ type ContactMessage {
   dialCode: String
   email: String!
   id: ID!
-  isRead: Boolean!
   messageContent: String!
   messageType: String!
   name: String!
   phone: String!
   publicId: Int
   reply: String!
+  senderId: String
+  senderType: SenderType!
+  status: ContactMessageStatus!
   updatedAt: DateTime!
 }
 
 input ContactMessagePaginationInput {
-  isRead: Boolean
+  """Filter messages from this date"""
+  dateFrom: DateTime
+
+  """Filter messages until this date"""
+  dateTo: DateTime
 
   """Number of items per page"""
   limit: Int! = 10
@@ -368,17 +374,29 @@ input ContactMessagePaginationInput {
 
   """Page number (1-based)"""
   page: Int! = 1
+
+  """Search across name, email, phone, and message content"""
+  search: String
+  senderType: SenderType
   sortBy: ContactMessageSortField
 
   """Sort order: ASC or DESC"""
   sortOrder: SortOrder = DESC
+  status: ContactMessageStatus
 }
 
 """Fields to sort contact messages by"""
 enum ContactMessageSortField {
   createdAt
   id
-  isRead
+  status
+}
+
+"""Status of a contact message"""
+enum ContactMessageStatus {
+  READ
+  REPLIED
+  SENT
 }
 
 type Contract {
@@ -1806,6 +1824,13 @@ input ReviewComplaintInput {
   adminResponse: String!
   complaintId: String!
   reviewerId: String!
+}
+
+"""Type of contact message sender"""
+enum SenderType {
+  GUEST
+  PROVIDER
+  USER
 }
 
 type Setting {
