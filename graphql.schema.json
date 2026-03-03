@@ -2756,8 +2756,8 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
+                "kind": "ENUM",
+                "name": "MessageType",
                 "ofType": null
               }
             },
@@ -2941,8 +2941,8 @@
             "name": "messageType",
             "description": null,
             "type": {
-              "kind": "SCALAR",
-              "name": "String",
+              "kind": "ENUM",
+              "name": "MessageType",
               "ofType": null
             },
             "defaultValue": null,
@@ -4974,12 +4974,12 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
+                "kind": "ENUM",
+                "name": "MessageType",
                 "ofType": null
               }
             },
-            "defaultValue": null,
+            "defaultValue": "REQUEST",
             "isDeprecated": false,
             "deprecationReason": null
           },
@@ -8342,6 +8342,48 @@
           },
           {
             "name": "updatedAt",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "MessageType",
+        "description": "Type of contact message",
+        "isOneOf": null,
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "COMPLAINT",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "INQUIRY",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "OTHER",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "REQUEST",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "SUGGESTION",
             "description": null,
             "isDeprecated": false,
             "deprecationReason": null
@@ -20625,11 +20667,11 @@
             "name": "messageType",
             "description": null,
             "type": {
-              "kind": "SCALAR",
-              "name": "String",
+              "kind": "ENUM",
+              "name": "MessageType",
               "ofType": null
             },
-            "defaultValue": null,
+            "defaultValue": "REQUEST",
             "isDeprecated": false,
             "deprecationReason": null
           },

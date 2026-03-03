@@ -348,7 +348,7 @@ export type ContactMessage = {
   email: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   messageContent: Scalars['String']['output'];
-  messageType: Scalars['String']['output'];
+  messageType: MessageType;
   name: Scalars['String']['output'];
   phone: Scalars['String']['output'];
   publicId?: Maybe<Scalars['Int']['output']>;
@@ -366,7 +366,7 @@ export type ContactMessagePaginationInput = {
   dateTo?: InputMaybe<Scalars['DateTime']['input']>;
   /** Number of items per page */
   limit?: Scalars['Int']['input'];
-  messageType?: InputMaybe<Scalars['String']['input']>;
+  messageType?: InputMaybe<MessageType>;
   /** Page number (1-based) */
   page?: Scalars['Int']['input'];
   /** Search across name, email, phone, and message content */
@@ -587,7 +587,7 @@ export type CreateContactMessageInput = {
   dialCode?: InputMaybe<Scalars['String']['input']>;
   email: Scalars['String']['input'];
   messageContent: Scalars['String']['input'];
-  messageType: Scalars['String']['input'];
+  messageType?: MessageType;
   name: Scalars['String']['input'];
   phone: Scalars['String']['input'];
 };
@@ -932,6 +932,15 @@ export enum MessageSortField {
   CreatedAt = 'createdAt',
   Id = 'id',
   UpdatedAt = 'updatedAt'
+}
+
+/** Type of contact message */
+export enum MessageType {
+  Complaint = 'COMPLAINT',
+  Inquiry = 'INQUIRY',
+  Other = 'OTHER',
+  Request = 'REQUEST',
+  Suggestion = 'SUGGESTION'
 }
 
 export type Mutation = {
@@ -2785,7 +2794,7 @@ export type UpdateContactMessageInput = {
   email?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
   messageContent?: InputMaybe<Scalars['String']['input']>;
-  messageType?: InputMaybe<Scalars['String']['input']>;
+  messageType?: InputMaybe<MessageType>;
   name?: InputMaybe<Scalars['String']['input']>;
   phone?: InputMaybe<Scalars['String']['input']>;
 };
@@ -3238,7 +3247,7 @@ export type CreateContactMessageMutationVariables = Exact<{
 }>;
 
 
-export type CreateContactMessageMutation = { createContactMessage: { attachmentFilename?: string | null, createdAt: any, dialCode?: string | null, email: string, id: string, messageContent: string, messageType: string, name: string, phone: string, updatedAt: any, publicId?: number | null, reply: string, senderId?: string | null, senderType: SenderType, status: ContactMessageStatus } };
+export type CreateContactMessageMutation = { createContactMessage: { attachmentFilename?: string | null, createdAt: any, dialCode?: string | null, email: string, id: string, messageContent: string, messageType: MessageType, name: string, phone: string, updatedAt: any, publicId?: number | null, reply: string, senderId?: string | null, senderType: SenderType, status: ContactMessageStatus } };
 
 export type CreateListingMutationVariables = Exact<{
   createListingInput: CreateListingInput;

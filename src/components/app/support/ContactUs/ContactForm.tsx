@@ -11,6 +11,7 @@ import { PhoneInput } from "../../shared/inputs/PhoneInput";
 import { SelectInput } from "../../shared/inputs/SelectInput";
 import { TextInput } from "../../shared/inputs/TextInput";
 import { useSendMessage } from "./useSendMessage";
+import { MessageType } from "@/gql/graphql";
 
 export const ContactForm = () => {
   const dict = useDict();
@@ -23,7 +24,28 @@ export const ContactForm = () => {
     (state) => state.setValidationErrors,
   );
   const { sendMessage, busy } = useSendMessage();
-
+  const messageTypeMap = [
+    {
+      label: dict.support.contactUs.form.messageType.options.REQUEST,
+      value: MessageType.Request,
+    },
+    {
+      label: dict.support.contactUs.form.messageType.options.INQUIRY,
+      value: MessageType.Inquiry,
+    },
+    {
+      label: dict.support.contactUs.form.messageType.options.COMPLAINT,
+      value: MessageType.Complaint,
+    },
+    {
+      label: dict.support.contactUs.form.messageType.options.SUGGESTION,
+      value: MessageType.Suggestion,
+    },
+    {
+      label: dict.support.contactUs.form.messageType.options.OTHER,
+      value: MessageType.Other,
+    },
+  ];
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -78,12 +100,10 @@ export const ContactForm = () => {
         placeholder={dict.support.contactUs.form.messageType.placeholder}
         value={form.messageType}
         onChange={(v) => {
-          setForm({ messageType: v });
+          setForm({ messageType: v as MessageType });
           setValidationErrors({ ...validationErrors, messageType: undefined });
         }}
-        options={Object.entries(dict.support.contactUs.form.messageType.options).map(
-          ([key, label]) => ({ value: key, label }),
-        )}
+        options={messageTypeMap}
         error={validationErrors.messageType}
       />
 
