@@ -196,7 +196,7 @@ const BasicInfoForm = ({
       {/* Name Field */}
       <TextInput
         icon={<NameIcon />}
-        placeholder={dict.auth.signup.name}
+        placeholder={`${dict.auth.signup.name}*`}
         value={form.name || ""}
         onChange={(value) => handleFieldChange("name", value)}
         error={errors.name?.message}
@@ -204,7 +204,7 @@ const BasicInfoForm = ({
       {/* Name Field */}
       <TextInput
         icon={<BusinessIcon />}
-        placeholder={dict.auth.signup.provider.commercialName}
+        placeholder={`${dict.auth.signup.provider.commercialName}*`}
         value={form.commercialName || ""}
         onChange={(value) => handleFieldChange("commercialName", value)}
         error={errors.commercialName?.message}
@@ -221,7 +221,7 @@ const BasicInfoForm = ({
       {/* Email Field */}
       <TextInput
         icon={<EmailIcon />}
-        placeholder={dict.auth.signup.email}
+        placeholder={`${dict.auth.signup.email}*`}
         value={form.email || ""}
         onChange={(value) => handleFieldChange("email", value)}
         error={errors.email?.message}
@@ -230,13 +230,13 @@ const BasicInfoForm = ({
       {/* Password Fields */}
       <div className="grid grid-cols-1 gap-x-3 gap-y-5 lg:grid-cols-2">
         <PasswordInput
-          placeholder={dict.auth.signup.password}
+          placeholder={`${dict.auth.signup.password}*`}
           value={form.password || ""}
           onChange={(value) => handleFieldChange("password", value)}
           error={errors.password?.message}
         />
         <PasswordInput
-          placeholder={dict.auth.signup.confirmPassword}
+          placeholder={`${dict.auth.signup.confirmPassword}*`}
           value={form.confirmPassword || ""}
           onChange={(value) => handleFieldChange("confirmPassword", value)}
           error={errors.confirmPassword?.message}
@@ -265,14 +265,14 @@ const BasicInfoForm = ({
       />
       <TextInput
         icon={<BankIcon className="size-4" />}
-        placeholder={dict.auth.signup.bankName}
+        placeholder={`${dict.auth.signup.bankName}*`}
         value={form.bankName || ""}
         onChange={(value) => handleFieldChange("bankName", value)}
         error={errors.bankName?.message}
       />
       <TextInput
         icon={<IbanIcon className="size-4" />}
-        placeholder={dict.auth.signup.ibanNumber}
+        placeholder={`${dict.auth.signup.ibanNumber}*`}
         value={form.ibanNumber || ""}
         onChange={(value) => handleFieldChange("ibanNumber", value)}
         error={errors.ibanNumber?.message}
@@ -309,7 +309,7 @@ const ProviderForm = ({
         />
         <TextInput
           icon={<AddressIcon className="size-4" />}
-          placeholder={dict.auth.signup.provider.address}
+          placeholder={`${dict.auth.signup.provider.address}*`}
           value={form.address || ""}
           onChange={(value) => handleFieldChange("address", value)}
           error={errors.address?.message}

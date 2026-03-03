@@ -49,7 +49,7 @@ export const CitySelect = ({
         <SelectTrigger className="relative flex h-14! w-full rounded-[20px]! border-[#F2F2F2]! p-0! shadow-none! ring-0! ltr:pr-4! rtl:pl-4!">
           <CityIcon className="absolute right-auto left-4 size-4.5 text-[#999999] rtl:right-4 rtl:left-auto" />
           <span className="flex grow justify-start ltr:pl-10.5 rtl:pr-10.5">
-            <SelectValue placeholder={dict.auth.signup.provider.city} />
+            <SelectValue placeholder={`${dict.auth.signup.provider.city}*`} />
           </span>
         </SelectTrigger>
         <SelectContent>
@@ -90,7 +90,7 @@ export const CategorySelect = ({
             >
               <CategoryIcon className="absolute right-auto left-4 size-4.5 text-[#999999] rtl:right-4 rtl:left-auto" />
               <span className="text-gray flex grow justify-start text-sm font-normal ltr:pl-10.5 rtl:pr-10.5">
-                {dict.auth.signup.provider.category}
+                {dict.auth.signup.provider.category}*
               </span>
             </Button>
           </PopoverTrigger>

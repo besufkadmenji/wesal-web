@@ -81,7 +81,7 @@ export const RegisterUser = () => {
           {/* Name Field */}
           <TextInput
             icon={<NameIcon />}
-            placeholder={dict.auth.signup.name}
+            placeholder={`${dict.auth.signup.name}*`}
             value={form.name || ""}
             onChange={(value) => handleFieldChange("name", value)}
             error={errors.name?.message}
@@ -98,7 +98,7 @@ export const RegisterUser = () => {
           {/* Email Field */}
           <TextInput
             icon={<EmailIcon />}
-            placeholder={dict.auth.signup.email}
+            placeholder={`${dict.auth.signup.email}*`}
             value={form.email || ""}
             onChange={(value) => handleFieldChange("email", value)}
             error={errors.email?.message}
@@ -107,13 +107,13 @@ export const RegisterUser = () => {
           {/* Password Fields */}
           <div className="grid grid-cols-1 gap-x-3 gap-y-5 lg:grid-cols-2">
             <PasswordInput
-              placeholder={dict.auth.signup.password}
+              placeholder={`${dict.auth.signup.password}*`}
               value={form.password || ""}
               onChange={(value) => handleFieldChange("password", value)}
               error={errors.password?.message}
             />
             <PasswordInput
-              placeholder={dict.auth.signup.confirmPassword}
+              placeholder={`${dict.auth.signup.confirmPassword}*`}
               value={form.confirmPassword || ""}
               onChange={(value) => handleFieldChange("confirmPassword", value)}
               error={errors.confirmPassword?.message}
@@ -123,7 +123,7 @@ export const RegisterUser = () => {
           {/* Bank Name Field */}
           <TextInput
             icon={<BankIcon />}
-            placeholder={dict.auth.signup.bankName}
+            placeholder={`${dict.auth.signup.bankName}*`}
             value={form.bankName || ""}
             onChange={(value) => handleFieldChange("bankName", value)}
             error={errors.bankName?.message}
@@ -132,7 +132,7 @@ export const RegisterUser = () => {
           {/* IBAN Field */}
           <TextInput
             icon={<IbanIcon />}
-            placeholder={dict.auth.signup.ibanNumber}
+            placeholder={`${dict.auth.signup.ibanNumber}*`}
             value={form.ibanNumber || ""}
             onChange={(value) => handleFieldChange("ibanNumber", value)}
             error={errors.ibanNumber?.message}
