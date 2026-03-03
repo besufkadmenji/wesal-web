@@ -467,11 +467,11 @@
         "messageType": {
           "placeholder": "Message Type",
           "options": {
-            "request": "Request",
-            "inquiry": "Inquiry",
-            "complaint": "Complaint",
-            "suggestion": "Suggestion",
-            "other": "Other"
+            "REQUEST": "Request",
+            "INQUIRY": "Inquiry",
+            "COMPLAINT": "Complaint",
+            "SUGGESTION": "Suggestion",
+            "OTHER": "Other"
           }
         },
         "messageContent": "Message Content",

@@ -350,7 +350,7 @@ type ContactMessage {
   email: String!
   id: ID!
   messageContent: String!
-  messageType: String!
+  messageType: MessageType!
   name: String!
   phone: String!
   publicId: Int
@@ -370,7 +370,7 @@ input ContactMessagePaginationInput {
 
   """Number of items per page"""
   limit: Int! = 10
-  messageType: String
+  messageType: MessageType
 
   """Page number (1-based)"""
   page: Int! = 1
@@ -605,7 +605,7 @@ input CreateContactMessageInput {
   dialCode: String
   email: String!
   messageContent: String!
-  messageType: String!
+  messageType: MessageType! = REQUEST
   name: String!
   phone: String!
 }
@@ -973,6 +973,15 @@ enum MessageSortField {
   createdAt
   id
   updatedAt
+}
+
+"""Type of contact message"""
+enum MessageType {
+  COMPLAINT
+  INQUIRY
+  OTHER
+  REQUEST
+  SUGGESTION
 }
 
 type Mutation {
@@ -2022,7 +2031,7 @@ input UpdateContactMessageInput {
   email: String
   id: ID!
   messageContent: String
-  messageType: String
+  messageType: MessageType = REQUEST
   name: String
   phone: String
 }

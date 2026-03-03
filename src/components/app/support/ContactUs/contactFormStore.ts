@@ -1,12 +1,13 @@
-import { create } from "zustand";
+import { MessageType } from "@/gql/graphql";
 import type { ContactFormErrors } from "@/utils/contact-form-validation";
+import { create } from "zustand";
 
 export interface ContactForm {
   name: string;
   phoneNumber: string;
   countryCode: string;
   email: string;
-  messageType: string;
+  messageType?: MessageType;
   messageContent: string;
   image: File | null;
 }
@@ -32,7 +33,7 @@ const initialFormState: ContactForm = {
   phoneNumber: "",
   countryCode: "+966",
   email: "",
-  messageType: "",
+  messageType: undefined,
   messageContent: "",
   image: null,
 };

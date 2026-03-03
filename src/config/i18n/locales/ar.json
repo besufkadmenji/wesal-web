@@ -462,11 +462,11 @@
         "messageType": {
           "placeholder": "نوع الرسالة",
           "options": {
-            "request": "طلب",
-            "inquiry": "استفسار",
-            "complaint": "شكوى",
-            "suggestion": "اقتراح",
-            "other": "أخرى"
+            "REQUEST": "طلب",
+            "INQUIRY": "استفسار",
+            "COMPLAINT": "شكوى",
+            "SUGGESTION": "اقتراح",
+            "OTHER": "أخرى"
           }
         },
         "messageContent": "نص الرسالة",
