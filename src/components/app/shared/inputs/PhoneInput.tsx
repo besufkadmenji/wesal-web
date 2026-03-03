@@ -39,7 +39,7 @@ export const PhoneInput = ({
         <div className="relative grid h-14 grow grid-cols-1 items-center">
           <Input
             type={isDisabled || readonly ? "text" : "tel"}
-            placeholder={dict.auth.login.phone}
+            placeholder={`${dict.auth.login.phone}*`}
             className={twMerge(
               "focus-visible:border-primary peer border-border h-full rounded-[20px] shadow-none ring-0! ltr:pl-10.5 ltr:placeholder:text-left rtl:pr-10.5 rtl:placeholder:text-right",
               readonly && "focus-visible:border-border! cursor-not-allowed",
