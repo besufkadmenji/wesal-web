@@ -9,9 +9,19 @@ import FacebookIcon from "@/assets/icons/facebook.svg";
 import InstagramIcon from "@/assets/icons/instagram.svg";
 import TwitterIcon from "@/assets/icons/twitter.svg";
 import LinkedinIcon from "@/assets/icons/linkedin.svg";
+import { useSetting } from "@/hooks/useSettings";
+import { SocialMediaPlatform } from "@/gql/graphql";
 
 export const Summary = () => {
   const dict = useDict();
+  const { setting } = useSetting();
+  const iconsMap: Record<SocialMediaPlatform, ReactNode> = {
+    [SocialMediaPlatform.Facebook]: <FacebookIcon className="size-4" />,
+    [SocialMediaPlatform.Instagram]: <InstagramIcon className="size-4" />,
+    [SocialMediaPlatform.Twitter]: <TwitterIcon className="size-4" />,
+    [SocialMediaPlatform.Linkedin]: <LinkedinIcon className="size-4" />,
+    [SocialMediaPlatform.Tiktok]: <TikTokIcon className="size-4" />,
+  };
   return (
     <div className="contact-gradient grid grid-cols-1 gap-6 rounded-[16px] p-6">
       <div className="grid grid-cols-1 justify-items-start gap-3">
@@ -22,60 +32,50 @@ export const Summary = () => {
           {dict.support.contactUs.subtitle}
         </p>
       </div>
-      <div className="grid grid-cols-1 border-b-[0.25px] gap-3 border-b-[#F2F2F2] pb-8">
-        <ContactMethod
-          label={dict.footer.mobileNumber}
-          icon={<PhoneIcon className="size-5" />}
-          link={{
-            href: "tel:+966123456789",
-            text: "+966 123456789",
-            dir: "ltr",
-          }}
-        />
-        <ContactMethod
-          label={dict.footer.email}
-          icon={<EmailIcon className="size-5" />}
-          link={{
-            href: "mailto:wesal2025@gmail.com",
-            text: "wesal2025@gmail.com",
-          }}
-        />
-        <ContactMethod
-          label={dict.footer.whatsapp}
-          icon={<WhatsappIcon className="size-5" />}
-          link={{
-            href: "https://wa.me/+966123456789",
-            text: "+966 123456789",
-            dir: "ltr",
-          }}
-        />
+      <div className="grid grid-cols-1 gap-3 border-b-[0.25px] border-b-[#F2F2F2] pb-8">
+        {setting?.phones.map((phone, index) => (
+          <ContactMethod
+            key={index}
+            label={dict.footer.mobileNumber}
+            icon={<PhoneIcon className="size-5" />}
+            link={{
+              href: `tel:+966${phone}`,
+              text: `+966${phone}`,
+              dir: "ltr",
+            }}
+          />
+        ))}
+        {setting?.email && setting?.email !== "" && (
+          <ContactMethod
+            label={dict.footer.email}
+            icon={<EmailIcon className="size-5" />}
+            link={{
+              href: `mailto:${setting.email}`,
+              text: setting.email,
+            }}
+          />
+        )}
+        {setting?.whatsappNumber && setting?.whatsappNumber !== "" && (
+          <ContactMethod
+            label={dict.footer.whatsapp}
+            icon={<WhatsappIcon className="size-5" />}
+            link={{
+              href: `https://wa.me/+966${setting.whatsappNumber}`,
+              text: `+966${setting.whatsappNumber}`,
+              dir: "ltr",
+            }}
+          />
+        )}
       </div>
-      <div className="flex justify-between">
-        <SocialLink
-          icon={<TikTokIcon className="size-4" />}
-          title={"TikTok"}
-          href={"https://www.tiktok.com"}
-        />
-        <SocialLink
-          icon={<LinkedinIcon className="size-4" />}
-          title={"Linkedin"}
-          href={"https://www.linkedin.com"}
-        />
-        <SocialLink
-          icon={<InstagramIcon className="size-4" />}
-          title={"Instagram"}
-          href={"https://www.instagram.com"}
-        />
-        <SocialLink
-          icon={<TwitterIcon className="size-4" />}
-          title={"Twitter"}
-          href={"https://www.twitter.com"}
-        />
-        <SocialLink
-          icon={<FacebookIcon className="size-4" />}
-          title={"Facebook"}
-          href={"https://www.facebook.com"}
-        />
+      <div className="flex justify-start gap-7 flex-wrap">
+        {setting?.socialMediaLinks?.map((link, index) => (
+          <SocialLink
+            key={index}
+            icon={iconsMap[link.name as SocialMediaPlatform]}
+            title={link.name}
+            href={link.link}
+          />
+        ))}
       </div>
     </div>
   );

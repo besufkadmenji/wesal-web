@@ -33,6 +33,7 @@ const initialState: FormType = {
   withAbsher: false,
   bankName: "",
   ibanNumber: "",
+  commercialRegistrationNumber: "",
 };
 
 export const useRegisterProviderStore = create<RegisterState>((set, get) => ({

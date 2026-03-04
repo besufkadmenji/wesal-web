@@ -1794,7 +1794,7 @@ input RegisterProviderInput {
   cityId: String
   commercialName: String!
   commercialRegistrationFilename: String
-  commercialRegistrationNumber: String!
+  commercialRegistrationNumber: String
   countryId: String
   dialCode: String
   email: String!
