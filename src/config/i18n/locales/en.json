@@ -369,7 +369,7 @@
     "otpResent": "Verification code resent successfully",
     "forgotPasswordFailed": "Failed to process forgot password. Please try again",
     "personalProfile": "Personal Profile",
-    "profile":"الملف الشخصى",
+    "profile": "الملف الشخصى",
     "favorites": "Favorites",
     "logout": "Logout",
     "validation": {
@@ -437,7 +437,10 @@
     "continue": "Continue",
     "skip": "Skip",
     "somethingWentWrong": "Something went wrong. Please try again.",
-    "unexpectedError": "An unexpected error occurred. Please try again later."
+    "unexpectedError": "An unexpected error occurred. Please try again later.",
+    "address": "Address",
+    "chooseLocation": "Choose your location on the map",
+    "searchPlaces": "Search for the address or building."
   },
   "support": {
     "addListing": {
