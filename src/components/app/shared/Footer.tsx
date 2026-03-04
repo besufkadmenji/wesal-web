@@ -11,9 +11,14 @@ import PhoneIcon from "@/assets/icons/phone.outline.svg";
 import EmailIcon from "@/assets/icons/email.outline.svg";
 import WhatsappIcon from "@/assets/icons/whatsapp.svg";
 import { twMerge } from "tailwind-merge";
+import { useSetting } from "@/hooks/useSettings";
+import { SocialMediaPlatform } from "@/gql/graphql";
+import { useLang } from "@/hooks/useLang";
 
 export const Footer = () => {
   const dict = useDict();
+  const { setting } = useSetting();
+
   return (
     <footer className="footer-gradient grid-cols-1 items-start px-[7vw] py-10 md:py-20">
       <div className="relative grid grid-cols-2 items-start gap-13 border-b-[.25px] border-b-[#F2F2F2] pb-8 md:grid-cols-3 xl:grid-cols-[1.5fr_1fr_1fr_1fr]">
@@ -52,34 +57,44 @@ export const Footer = () => {
             },
           ]}
         />
-        <FooterLinks title={dict.footer.contactMethods} className="col-span-2 md:col-span-1">
+        <FooterLinks
+          title={dict.footer.contactMethods}
+          className="col-span-2 md:col-span-1"
+        >
           <div className="grid grid-cols-1 gap-6">
-            <ContactMethod
-              label={dict.footer.mobileNumber}
-              icon={<PhoneIcon className="size-5" />}
-              link={{
-                href: "tel:+966123456789",
-                text: "+966 123456789",
-                dir: "ltr",
-              }}
-            />
-            <ContactMethod
-              label={dict.footer.email}
-              icon={<EmailIcon className="size-5" />}
-              link={{
-                href: "mailto:wesal2025@gmail.com",
-                text: "wesal2025@gmail.com",
-              }}
-            />
-            <ContactMethod
-              label={dict.footer.whatsapp}
-              icon={<WhatsappIcon className="size-5" />}
-              link={{
-                href: "https://wa.me/+966123456789",
-                text: "+966 123456789",
-                dir: "ltr",
-              }}
-            />
+            {setting?.phones.map((phone, index) => (
+              <ContactMethod
+                key={index}
+                label={dict.footer.mobileNumber}
+                icon={<PhoneIcon className="size-5" />}
+                link={{
+                  href: `tel:+966${phone}`,
+                  text: `+966${phone}`,
+                  dir: "ltr",
+                }}
+              />
+            ))}
+            {setting?.email && setting?.email !== "" && (
+              <ContactMethod
+                label={dict.footer.email}
+                icon={<EmailIcon className="size-5" />}
+                link={{
+                  href: `mailto:${setting.email}`,
+                  text: setting.email,
+                }}
+              />
+            )}
+            {setting?.whatsappNumber && setting?.whatsappNumber !== "" && (
+              <ContactMethod
+                label={dict.footer.whatsapp}
+                icon={<WhatsappIcon className="size-5" />}
+                link={{
+                  href: `https://wa.me/+966${setting.whatsappNumber}`,
+                  text: `+966${setting.whatsappNumber}`,
+                  dir: "ltr",
+                }}
+              />
+            )}
           </div>
         </FooterLinks>
       </div>
@@ -139,38 +154,32 @@ const FooterLinks = ({
 
 const AboutUsSummary = () => {
   const dict = useDict();
+  const lng = useLang();
+  const { setting } = useSetting();
+  const iconsMap: Record<SocialMediaPlatform, ReactNode> = {
+    [SocialMediaPlatform.Facebook]: <FacebookIcon className="size-4" />,
+    [SocialMediaPlatform.Instagram]: <InstagramIcon className="size-4" />,
+    [SocialMediaPlatform.Twitter]: <TwitterIcon className="size-4" />,
+    [SocialMediaPlatform.Linkedin]: <LinkedinIcon className="size-4" />,
+    [SocialMediaPlatform.Tiktok]: <TikTokIcon className="size-4" />,
+  };
   return (
     <div className="col-span-2 grid grid-cols-1 gap-9 md:col-span-3 xl:col-span-1">
       <div className="grid grid-cols-1 gap-5">
         <LogoIcon className="size-20 text-white" />
-        <p className="text-base leading-7 text-white">{dict.footer.aboutUs}</p>
+        <p className="text-base leading-7 text-white">
+          {lng === "en" ? setting?.aboutEn : setting?.aboutAr}
+        </p>
       </div>
       <div className="flex items-center gap-4">
-        <SocialLink
-          icon={<TikTokIcon className="size-4" />}
-          title={"TikTok"}
-          href={"https://www.tiktok.com"}
-        />
-        <SocialLink
-          icon={<LinkedinIcon className="size-4" />}
-          title={"Linkedin"}
-          href={"https://www.linkedin.com"}
-        />
-        <SocialLink
-          icon={<InstagramIcon className="size-4" />}
-          title={"Instagram"}
-          href={"https://www.instagram.com"}
-        />
-        <SocialLink
-          icon={<TwitterIcon className="size-4" />}
-          title={"Twitter"}
-          href={"https://www.twitter.com"}
-        />
-        <SocialLink
-          icon={<FacebookIcon className="size-4" />}
-          title={"Facebook"}
-          href={"https://www.facebook.com"}
-        />
+        {setting?.socialMediaLinks?.map((link, index) => (
+          <SocialLink
+            key={index}
+            icon={iconsMap[link.name as SocialMediaPlatform]}
+            title={link.name}
+            href={link.link}
+          />
+        ))}
       </div>
     </div>
   );

@@ -1933,12 +1933,20 @@ enum SignedContractStatus {
 
 type SocialMediaLink {
   link: String!
-  name: String!
+  name: SocialMediaPlatform!
 }
 
 input SocialMediaLinkInput {
   link: String!
-  name: String!
+  name: SocialMediaPlatform!
+}
+
+enum SocialMediaPlatform {
+  FACEBOOK
+  INSTAGRAM
+  LINKEDIN
+  TIKTOK
+  TWITTER
 }
 
 """Sort order direction"""
