@@ -26,7 +26,6 @@ type Admin {
   organizationName: String!
   permissionType: AdminPermissionType!
   phoneNumber: String!
-  platformManagerSignature: String
   publicId: Int
   roleName: String!
   status: AdminStatus!
@@ -93,10 +92,6 @@ enum AdminPermissionType {
 input AdminResetPasswordInput {
   newPassword: String!
   resetToken: String!
-}
-
-input AdminSignContractInput {
-  providerId: String!
 }
 
 """Available fields to sort admins by"""
@@ -1000,10 +995,10 @@ type Mutation {
   adminChangePassword(input: AdminChangePasswordInput!): Boolean!
   adminForgotPassword(input: AdminForgotPasswordInput!): Boolean!
   adminLogin(input: AdminLoginInput!): AdminAuthResponse!
-  adminResetPassword(input: AdminResetPasswordInput!): Boolean!
 
-  """Admin signs provider contract"""
-  adminSignProviderContract(input: AdminSignContractInput!): Provider!
+  """Admin reactivates a provider whose contract was terminated by admin"""
+  adminReactivateProvider(providerId: ID!): Provider!
+  adminResetPassword(input: AdminResetPasswordInput!): Boolean!
 
   """Admin terminates provider contract"""
   adminTerminateProviderContract(input: AdminTerminateContractInput!): Provider!
@@ -1847,6 +1842,8 @@ type Setting {
   aboutEn: String!
   email: String!
   phones: [String!]!
+  platformManagerName: String
+  platformManagerSignature: String
   privacyPolicyAr: String!
   privacyPolicyEn: String!
   publicId: Int
@@ -1863,6 +1860,8 @@ input SettingInput {
   aboutEn: String
   email: String
   phones: [String!]
+  platformManagerName: String
+  platformManagerSignature: String
   privacyPolicyAr: String
   privacyPolicyEn: String
   rulesAr: String
@@ -1885,6 +1884,8 @@ type SignedContract {
   contractExpiresAt: String
   contractSignedAt: String!
   createdAt: DateTime!
+  deleteReason: String
+  deletedAt: String
   id: ID!
   platformManagerName: String
   platformManagerSignature: String
@@ -1925,6 +1926,7 @@ enum SignedContractSortField {
 enum SignedContractStatus {
   ACTIVE
   EXPIRED
+  PENDING
   TERMINATED_BY_ADMIN
   TERMINATED_BY_PROVIDER
 }
@@ -1984,7 +1986,6 @@ input UpdateAdminInput {
   organizationName: String
   permissionType: AdminPermissionType
   phoneNumber: String!
-  platformManagerSignature: String
   roleName: String
   status: AdminStatus
   userType: AdminUserType

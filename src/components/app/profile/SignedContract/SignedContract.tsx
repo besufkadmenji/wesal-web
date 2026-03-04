@@ -1,23 +1,24 @@
 "use client";
 import CheckGreenIcon from "@/assets/icons/check.green.svg";
-import DefaultMarkerIcon from "@/assets/icons/user.marker.svg";
 import DownloadIcon from "@/assets/icons/download.svg";
 import MapPointIcon from "@/assets/icons/map.point.svg";
-import GoogleMapReact from "google-map-react";
+import DefaultMarkerIcon from "@/assets/icons/user.marker.svg";
+import { CancelContract } from "@/components/app/profile/SignedContract/CancelContact";
 import { useContractStore } from "@/components/app/profile/SignedContract/useForm";
 import { useSignSignature } from "@/components/app/profile/SignedContract/useSignSignature";
 import { Button } from "@/components/ui/button";
+import { SignedContractStatus } from "@/gql/graphql";
 import { useDict } from "@/hooks/useDict";
 import { useLang } from "@/hooks/useLang";
 import { useMe } from "@/hooks/useMe";
+import { useSetting } from "@/hooks/useSettings";
+import { downloadPDF } from "@/utils/download.pdf";
+import GoogleMapReact from "google-map-react";
 import Image from "next/image";
 import { parseAsBoolean, useQueryState } from "nuqs";
 import { useEffect, useRef } from "react";
 import { FormInput } from "./FormInput";
 import { SignatureInput } from "./SignatureInput";
-import { downloadPDF } from "@/utils/download.pdf";
-import { CancelContract } from "@/components/app/profile/SignedContract/CancelContact";
-import { useSetting } from "@/hooks/useSettings";
 
 const defaultProps = {
   center: { lat: 21.636981, lng: 39.181078 },
@@ -143,7 +144,11 @@ export const SignedContract = () => {
           )}
           <FormInput
             label={dict.contract.platformManagerName}
-            value={me.provider.name || ""}
+            value={
+              me.provider.signedContract?.platformManagerName ||
+              setting?.platformManagerName ||
+              ""
+            }
           />
           <div className="grid grid-cols-2 gap-x-4 gap-y-2 rounded-[16px] border border-[#F2F2F2] bg-[#FBFBFB] p-4">
             <SignatureInput
@@ -159,7 +164,9 @@ export const SignedContract = () => {
             />
             <SignatureInput
               initUrl={
-                me.provider.signedContract?.platformManagerSignature || null
+                me.provider.signedContract?.platformManagerSignature ||
+                setting?.platformManagerSignature ||
+                null
               }
               file={null}
               onChange={(f) => {
@@ -202,26 +209,38 @@ export const SignedContract = () => {
         </div>
 
         {me.provider.signedContract ? (
-          <div className="grid grid-cols-2 gap-3 justify-self-center px-27">
+          me.provider.signedContract.status === SignedContractStatus.Pending ? (
             <Button
-              className="h-12.5 rounded-[20px] px-24 font-semibold text-[#EFF9F0]"
+              className="h-12.5 justify-self-center rounded-[20px] px-24 font-semibold text-[#EFF9F0]"
               onClick={() => {
-                downloadPDF(contractRef);
+                saveSignature();
               }}
+              disabled={busy}
             >
-              <DownloadIcon className="size-5" />
-              {dict.contract.exportPDF}
+              {dict.contract.signContract}
             </Button>
-            <CancelContract>
+          ) : (
+            <div className="grid grid-cols-2 gap-3 justify-self-center px-27">
               <Button
-                className="h-12.5 rounded-[20px] bg-[#FBEAE9]! px-24 font-semibold text-[#B3251E]!"
-                onClick={() => {}}
-                variant={"ghost"}
+                className="h-12.5 rounded-[20px] px-24 font-semibold text-[#EFF9F0]"
+                onClick={() => {
+                  downloadPDF(contractRef);
+                }}
               >
-                {dict.contract.cancelContract}
+                <DownloadIcon className="size-5" />
+                {dict.contract.exportPDF}
               </Button>
-            </CancelContract>
-          </div>
+              <CancelContract>
+                <Button
+                  className="h-12.5 rounded-[20px] bg-[#FBEAE9]! px-24 font-semibold text-[#B3251E]!"
+                  onClick={() => {}}
+                  variant={"ghost"}
+                >
+                  {dict.contract.cancelContract}
+                </Button>
+              </CancelContract>
+            </div>
+          )
         ) : (
           <Button
             className="h-12.5 justify-self-center rounded-[20px] px-24 font-semibold text-[#EFF9F0]"

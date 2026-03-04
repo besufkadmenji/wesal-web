@@ -77,15 +77,21 @@ export const useSignSignature = () => {
   };
 
   const saveSignature = async () => {
-    if (!form.serviceProviderSignature) {
+    if (
+      !form.serviceProviderSignature &&
+      !me?.provider?.signedContract?.serviceProviderSignature
+    ) {
       showErrorMessage(dict.contract.error.serviceProviderSignatureRequired);
       return;
     }
     setBusy(true);
     try {
-      const serviceProviderSignatureFilename = await uploadFile(
-        form.serviceProviderSignature!,
-      );
+      const serviceProviderSignatureFilename = form.serviceProviderSignature
+        ? await uploadFile(form.serviceProviderSignature!)
+        : {
+            filename:
+              me?.provider?.signedContract?.serviceProviderSignature || "",
+          };
 
       const result = await ProviderService.signContact({
         serviceProviderSignature: serviceProviderSignatureFilename.filename,

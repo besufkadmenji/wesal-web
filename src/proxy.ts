@@ -1,7 +1,7 @@
 import acceptLanguage from "accept-language";
 import { NextRequest, NextResponse } from "next/server";
 import { fallbackLng, languages } from "./config/i18n/settings";
-import { Provider, User } from "./gql/graphql";
+import { Provider, SignedContractStatus, User } from "./gql/graphql";
 import { ME_PROVIDER_QUERY } from "./graphql/providers/meProvider";
 import { ME_USER_QUERY } from "./graphql/user/meUser";
 import client from "./utils/apollo.client";
@@ -107,7 +107,8 @@ export async function proxy(request: NextRequest) {
   /* ----------------------- Provider contract enforcement ------------------- */
   if (
     result?.provider &&
-    !result.provider.signedContract &&
+    (!result.provider.signedContract ||
+      result.provider.signedContract.status === SignedContractStatus.Pending) &&
     !pathname.startsWith(`/${currentLocale}/profile/signed-contract`)
   ) {
     return NextResponse.redirect(
