@@ -2561,7 +2561,7 @@ export type RegisterProviderInput = {
   cityId?: InputMaybe<Scalars['String']['input']>;
   commercialName: Scalars['String']['input'];
   commercialRegistrationFilename?: InputMaybe<Scalars['String']['input']>;
-  commercialRegistrationNumber: Scalars['String']['input'];
+  commercialRegistrationNumber?: InputMaybe<Scalars['String']['input']>;
   countryId?: InputMaybe<Scalars['String']['input']>;
   dialCode?: InputMaybe<Scalars['String']['input']>;
   email: Scalars['String']['input'];

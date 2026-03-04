@@ -242,7 +242,7 @@ const BasicInfoForm = ({
           error={errors.confirmPassword?.message}
         />
       </div>
-      <TextInput
+      {/* <TextInput
         icon={<DocumentIcon />}
         placeholder={dict.auth.signup.provider.commercialRegistrationNumber}
         value={form.commercialRegistrationNumber || ""}
@@ -250,7 +250,7 @@ const BasicInfoForm = ({
           handleFieldChange("commercialRegistrationNumber", value)
         }
         error={errors.commercialRegistrationNumber?.message}
-      />
+      /> */}
       <UploadImage
         file={form.commercialRegistrationFilename ?? null}
         onChange={(f: File) => {

@@ -9,18 +9,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Category } from "@/gql/graphql";
 import { useCategories } from "@/hooks/useCategories";
 import { useCities } from "@/hooks/useCities";
 import { useDict } from "@/hooks/useDict";
 import { useLang } from "@/hooks/useLang";
+import { useState } from "react";
+import ChevronDownIcon from "@/assets/icons/auth/chevron.down.svg";
 export const CitySelect = ({
   value,
   onChange,
@@ -35,6 +30,15 @@ export const CitySelect = ({
   const dict = useDict();
   const { cities } = useCities();
   const lng = useLang();
+  const [open, setOpen] = useState(false);
+
+  const selectedCity = cities?.items.find((city) => city.id === value);
+  const selectedLabel = selectedCity
+    ? lng === "ar"
+      ? selectedCity.nameAr
+      : selectedCity.nameEn
+    : null;
+
   return (
     <div className="relative grid grid-cols-1 gap-1">
       {label && (
@@ -42,24 +46,39 @@ export const CitySelect = ({
           {label}
         </Label>
       )}
-      <Select
-        value={value || undefined}
-        onValueChange={(value) => onChange?.(value)}
-      >
-        <SelectTrigger className="relative flex h-14! w-full rounded-[20px]! border-[#F2F2F2]! p-0! shadow-none! ring-0! ltr:pr-4! rtl:pl-4!">
-          <CityIcon className="absolute right-auto left-4 size-4.5 text-[#999999] rtl:right-4 rtl:left-auto" />
-          <span className="flex grow justify-start ltr:pl-10.5 rtl:pr-10.5">
-            <SelectValue placeholder={`${dict.auth.signup.provider.city}*`} />
-          </span>
-        </SelectTrigger>
-        <SelectContent>
-          {cities?.items.map((city) => (
-            <SelectItem value={city.id} key={city.id}>
-              {lng === "ar" ? city.nameAr : city.nameEn}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            className="relative h-14 w-full rounded-[20px]! border border-[#F2F2F2]! p-0! shadow-none! ring-0! ltr:pr-4! rtl:pl-4!"
+          >
+            <CityIcon className="absolute right-auto left-4 size-4.5 text-[#999999] rtl:right-4 rtl:left-auto" />
+            <span
+              className={`flex grow justify-start text-sm font-normal ltr:pl-10.5 rtl:pr-10.5 ${selectedLabel ? "text-black" : "text-gray"}`}
+            >
+              {selectedLabel ?? `${dict.auth.signup.provider.city}*`}
+            </span>
+            <ChevronDownIcon className="size-4.5" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="min-w-[30vw] p-0!">
+          <div className="grid max-h-[50vh] w-full grid-cols-1 overflow-y-auto p-2">
+            {cities?.items.map((city) => (
+              <button
+                key={city.id}
+                type="button"
+                className={`hover:bg-accent flex h-10 cursor-pointer items-center rounded-md px-2 text-sm ${city.id === value ? "font-medium text-black" : "text-gray-700"}`}
+                onClick={() => {
+                  onChange(city.id);
+                  setOpen(false);
+                }}
+              >
+                {lng === "ar" ? city.nameAr : city.nameEn}
+              </button>
+            ))}
+          </div>
+        </PopoverContent>
+      </Popover>
       {error && <p className="text-xs text-red-500">{error}</p>}
     </div>
   );
@@ -92,10 +111,11 @@ export const CategorySelect = ({
               <span className="text-gray flex grow justify-start text-sm font-normal ltr:pl-10.5 rtl:pr-10.5">
                 {dict.auth.signup.provider.category}*
               </span>
+              <ChevronDownIcon className="size-4.5" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-80 p-0!">
-            <div className="grid grid-cols-1 max-h-[60vh] p-4 overflow-y-scroll">
+          <PopoverContent className="min-w-[30vw] p-0!">
+            <div className="grid max-h-[50vh] grid-cols-1 overflow-y-scroll p-4">
               {categories?.items.map((category) => (
                 <div key={category.id} className="flex h-10 items-center gap-4">
                   <Checkbox
