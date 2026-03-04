@@ -19,6 +19,8 @@ export const GET_SETTING_QUERY: TypedDocumentNode<GetSettingQuery> = gql`
       whatsappNumber
       rulesAr
       rulesEn
+      platformManagerName
+      platformManagerSignature
     }
   }
 `;
