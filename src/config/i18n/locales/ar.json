@@ -431,7 +431,10 @@
     "continue": "متابعة",
     "skip": "تخطي",
     "somethingWentWrong": "حدث خطأ ما. يرجى المحاولة مجددا.",
-    "unexpectedError": "حدث خطأ غير متوقع. يرجى المحاولة لاحقاً."
+    "unexpectedError": "حدث خطأ غير متوقع. يرجى المحاولة لاحقاً.",
+    "address": "الموقع",
+    "chooseLocation": "اختر موقعك على الخريطة",
+    "searchPlaces":"إبحث عن العنوان او المبني.."
   },
 
   "support": {
