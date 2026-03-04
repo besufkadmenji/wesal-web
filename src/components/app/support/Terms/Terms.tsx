@@ -1,17 +1,16 @@
 "use client";
+import { Setting } from "@/gql/graphql";
 import { useLang } from "@/hooks/useLang";
 import { SupportPageType, Wrapper } from "../Wrapper";
-import { termsAr } from "./terms.ar";
-import { termsEn } from "./terms.en";
 
-export const Terms = () => {
+export const Terms = ({ setting }: { setting: Setting }) => {
   const lang = useLang();
   return (
     <Wrapper variant={SupportPageType.TERMS}>
       <div
-        className="grid grid-cols-1 px-[7vw] py-20"
+        className="prose grid grid-cols-1 px-[7vw] py-20"
         dangerouslySetInnerHTML={{
-          __html: lang === "ar" ? termsAr : termsEn,
+          __html: lang === "ar" ? setting.termsAr : setting.termsEn,
         }}
       />
     </Wrapper>

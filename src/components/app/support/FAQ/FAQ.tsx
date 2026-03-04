@@ -10,9 +10,12 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { useState } from "react";
+import { Faq } from "@/gql/graphql";
+import { useLang } from "@/hooks/useLang";
 
-export const FAQ = () => {
+export const FAQ = ({ faqs }: { faqs: Faq[] }) => {
   const dict = useDict();
+  const lng = useLang();
   const [value, setValue] = useState<string[]>([]);
   return (
     <Wrapper variant={SupportPageType.FAQ}>
@@ -36,22 +39,24 @@ export const FAQ = () => {
             console.log("value", v);
             setValue(v);
           }}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-x-4 gap-y-6"
+          className="grid grid-cols-1 gap-x-4 gap-y-6 lg:grid-cols-2"
         >
-          {dict.support.faq.faqs.map((item, index) => (
+          {faqs.map((item, index) => (
             <AccordionItem
-              value={item.question}
+              value={lng === "en" ? item.questionEn : item.questionAr}
               key={index}
               className="border-border self-start rounded-[16px] border p-4 pt-0"
             >
               <AccordionTrigger
-                isActive={value.includes(item.question)}
+                isActive={value.includes(
+                  lng === "en" ? item.questionEn : item.questionAr,
+                )}
                 className="text-xl leading-8 font-medium"
               >
-                {item.question}
+                {lng === "en" ? item.questionEn : item.questionAr}
               </AccordionTrigger>
               <AccordionContent className="text-gray text-base leading-7">
-                {item.answer}
+                {lng === "en" ? item.answerEn : item.answerAr}
               </AccordionContent>
             </AccordionItem>
           ))}
