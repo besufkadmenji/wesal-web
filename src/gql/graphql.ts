@@ -558,8 +558,8 @@ export type CreateCategoryInput = {
   image: Scalars['String']['input'];
   nameAr: Scalars['String']['input'];
   nameEn: Scalars['String']['input'];
-  rulesAr: Scalars['String']['input'];
-  rulesEn: Scalars['String']['input'];
+  rulesAr?: InputMaybe<Scalars['String']['input']>;
+  rulesEn?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type CreateCityInput = {
@@ -857,6 +857,7 @@ export type ListingPaginationInput = {
   /** Sort order: ASC or DESC */
   sortOrder?: InputMaybe<SortOrder>;
   status?: InputMaybe<ListingStatus>;
+  type?: InputMaybe<ListingType>;
 };
 
 /** Available fields to sort listings by */

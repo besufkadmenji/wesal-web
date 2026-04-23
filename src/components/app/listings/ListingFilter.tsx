@@ -31,6 +31,8 @@ export const ListingFilter = () => {
   const [maxPrice, setMaxPrice] = useQueryState("maxPrice", parseAsInteger);
   const [cityId, setCityId] = useQueryState("city");
   const [search, setSearch] = useQueryState("search");
+  const [selectedRating, setSelectedRating] = useQueryState("rating", parseAsInteger);
+
   const { width } = useWindowSize();
   const [showFilter, setShowFilter] = useState(false);
   const shouldShowFilter = width >= 1024 || showFilter;
@@ -53,13 +55,14 @@ export const ListingFilter = () => {
         </div>
 
         <button
-          className="font-semibold text-[#B3B3B3]"
+          className="font-semibold text-primary cursor-pointer"
           onClick={() => {
             setCategoryId(null);
             setMinPrice(null);
             setMaxPrice(null);
             setCityId(null);
             setSearch(null);
+            setSelectedRating(null);
           }}
         >
           {dict.listingFilter.reset}
@@ -227,7 +230,9 @@ const CategorySuggestions = () => {
 
 const RatingFilter = () => {
   const dict = useDict();
-  const [selectedRating, setSelectedRating] = useState<number | null>(null);
+
+  const [selectedRating, setSelectedRating] = useQueryState("rating", parseAsInteger);
+
   return (
     <div className="grid grid-cols-1 gap-4">
       <p>{dict.listingFilter.rating}</p>

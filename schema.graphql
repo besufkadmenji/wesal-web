@@ -576,8 +576,8 @@ input CreateCategoryInput {
   image: String!
   nameAr: String!
   nameEn: String!
-  rulesAr: String!
-  rulesEn: String!
+  rulesAr: String
+  rulesEn: String
 }
 
 input CreateCityInput {
@@ -894,6 +894,7 @@ input ListingPaginationInput {
   """Sort order: ASC or DESC"""
   sortOrder: SortOrder = DESC
   status: ListingStatus
+  type: ListingType
 }
 
 """Available fields to sort listings by"""
