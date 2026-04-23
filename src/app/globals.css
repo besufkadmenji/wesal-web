@@ -1,5 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "swiper/css";
+
 @plugin "@tailwindcss/typography";
 @plugin "./hero.ts";
 /* Note: You may need to change the path to fit your project structure */
