@@ -765,6 +765,7 @@
     "reset": "Reset",
     "category": "Electronics and Devices",
     "categoryPlaceholder": "Electronics and Devices",
+    "searchPlaceholder": "Search ads by name",
     "city": "City",
     "priceRange": "Price from - to",
     "priceFrom": "From",
