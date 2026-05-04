@@ -1,9 +1,7 @@
 import { sar } from "@/assets/fonts/sar";
-import CategoryIcon from "@/assets/icons/category.svg";
 import DownIcon from "@/assets/icons/chevron.down.svg";
 import CityIcon from "@/assets/icons/city.filter.svg";
 import RatingIcon from "@/assets/icons/rating.svg";
-import { useCategory } from "@/components/app/listings/useListings";
 import {
   Select,
   SelectContent,
@@ -11,27 +9,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useCategories, useSearchCategories } from "@/hooks/useCategories";
 import { useCities } from "@/hooks/useCities";
 import { useDict } from "@/hooks/useDict";
 import { useLang } from "@/hooks/useLang";
 import { useWindowSize } from "@/hooks/useWindowSize";
-import { ChevronDownIcon } from "lucide-react";
+import { SearchIcon } from "lucide-react";
 import { parseAsInteger, useQueryState } from "nuqs";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 export const ListingFilter = () => {
   const dict = useDict();
-  const lng = useLang();
 
-  const [categoryId, setCategoryId] = useQueryState("category");
-  const { category: selectedCategory } = useCategory(categoryId ?? undefined);
+  const [, setCategoryId] = useQueryState("category");
 
   const [minPrice, setMinPrice] = useQueryState("minPrice", parseAsInteger);
   const [maxPrice, setMaxPrice] = useQueryState("maxPrice", parseAsInteger);
   const [cityId, setCityId] = useQueryState("city");
-  const [search, setSearch] = useQueryState("search");
-  const [selectedRating, setSelectedRating] = useQueryState("rating", parseAsInteger);
+  const [, setQuery] = useQueryState("query");
+  const [, setSelectedRating] = useQueryState("rating", parseAsInteger);
 
   const { width } = useWindowSize();
   const [showFilter, setShowFilter] = useState(false);
@@ -55,13 +50,13 @@ export const ListingFilter = () => {
         </div>
 
         <button
-          className="font-semibold text-primary cursor-pointer"
+          className="text-primary cursor-pointer font-semibold"
           onClick={() => {
             setCategoryId(null);
             setMinPrice(null);
             setMaxPrice(null);
             setCityId(null);
-            setSearch(null);
+            setQuery(null);
             setSelectedRating(null);
           }}
         >
@@ -70,7 +65,7 @@ export const ListingFilter = () => {
       </div>
       {shouldShowFilter && (
         <div className="grid grid-cols-1 gap-6">
-          <CategorySelect key={selectedCategory?.id} />
+          <ListingSearchInput />
           <CitySelect />
           <div className="grid grid-cols-1 gap-4">
             <p className="leading-7 text-[#1A1A1A]">
@@ -157,21 +152,30 @@ export const CitySelect = () => {
   );
 };
 
-export const CategorySelect = () => {
+export const ListingSearchInput = () => {
   const dict = useDict();
-  const lng = useLang();
-  const { categories, isLoading } = useCategories({
-    limit: 5,
-  });
-  const [category, setCategory] = useQueryState("category");
-  const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
-
-  const [search, setSearch] = useQueryState("search");
+  const [query, setQuery] = useQueryState("query");
+  const [, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
   const timer = useRef<NodeJS.Timeout | null>(null);
-  const { category: selectedCategory } = useCategory(category ?? undefined);
-  const categoryName =
-    lng === "en" ? selectedCategory?.nameEn : selectedCategory?.nameAr;
-  const [localeQuery, setLocaleQuery] = useState(search ?? categoryName ?? "");
+  const [localQuery, setLocalQuery] = useState(query ?? "");
+
+  useEffect(() => {
+    setLocalQuery(query ?? "");
+  }, [query]);
+
+  useEffect(() => {
+    return () => {
+      if (timer.current) {
+        clearTimeout(timer.current);
+      }
+    };
+  }, []);
+
+  const updateSearch = (value: string) => {
+    const nextQuery = value.trim();
+    setPage(1);
+    setQuery(nextQuery || null);
+  };
 
   return (
     <div
@@ -179,51 +183,30 @@ export const CategorySelect = () => {
         "relative flex h-14 w-full items-center justify-start gap-2 rounded-[20px] border border-[#F2F2F2] bg-white px-4",
       )}
     >
+      <SearchIcon className="absolute size-4.5 text-[#999999] ltr:left-4 rtl:right-4" />
       <input
-        placeholder={dict.home.hero.selectCategories}
-        className="peer h-full w-full ps-6.5 outline-none"
-        value={localeQuery}
+        placeholder={dict.listingFilter.searchPlaceholder}
+        className="h-full w-full ps-6.5 outline-none"
+        value={localQuery}
         onChange={(e) => {
-          setLocaleQuery(e.target.value);
-          clearTimeout(timer.current!);
+          const value = e.target.value;
+          setLocalQuery(value);
+          if (timer.current) {
+            clearTimeout(timer.current);
+          }
           timer.current = setTimeout(() => {
-            setSearch(e.target.value);
-          }, 100);
+            updateSearch(value);
+          }, 250);
         }}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
-            setSearch(localeQuery);
+            if (timer.current) {
+              clearTimeout(timer.current);
+            }
+            updateSearch(localQuery);
           }
         }}
       />
-      <CategoryIcon className="absolute size-4.5 ltr:left-4 rtl:right-4" />
-      <ChevronDownIcon className="text-muted-foreground absolute size-4 opacity-50 ltr:right-4 rtl:left-4" />
-      <CategorySuggestions />
-    </div>
-  );
-};
-
-const CategorySuggestions = () => {
-  const { categories } = useSearchCategories({
-    limit: 5,
-  });
-  const [categoryId, setCategoryId] = useQueryState("category");
-  const [search, setSearch] = useQueryState("search");
-  const lng = useLang();
-  return (
-    <div className="absolute top-14 right-0 left-0 z-10 hidden w-full grid-cols-1 gap-1 overflow-hidden rounded-b-2xl bg-white shadow peer-focus:grid hover:grid">
-      {categories?.items.map((category) => (
-        <div
-          onClick={() => {
-            setSearch(lng === "ar" ? category.nameAr : category.nameEn);
-            setCategoryId(category.id);
-          }}
-          key={category.id}
-          className="hover:text-primary hover:bg-primary/10 px-4 py-2 font-medium text-black"
-        >
-          {lng === "ar" ? category.nameAr : category.nameEn}
-        </div>
-      ))}
     </div>
   );
 };
@@ -231,7 +214,10 @@ const CategorySuggestions = () => {
 const RatingFilter = () => {
   const dict = useDict();
 
-  const [selectedRating, setSelectedRating] = useQueryState("rating", parseAsInteger);
+  const [selectedRating, setSelectedRating] = useQueryState(
+    "rating",
+    parseAsInteger,
+  );
 
   return (
     <div className="grid grid-cols-1 gap-4">
