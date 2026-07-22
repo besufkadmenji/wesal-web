@@ -5,6 +5,7 @@ import { Provider, SignedContractStatus, User } from "./gql/graphql";
 import { ME_PROVIDER_QUERY } from "./graphql/providers/meProvider";
 import { ME_USER_QUERY } from "./graphql/user/meUser";
 import client from "./utils/apollo.client";
+import { canAccessParticipantPath } from "./utils/participant.policy";
 
 acceptLanguage.languages(languages);
 
@@ -104,6 +105,16 @@ export async function proxy(request: NextRequest) {
     );
   }
 
+  const participantRole = result?.provider
+    ? "provider"
+    : result?.user
+      ? "user"
+      : null;
+  const localizedPath = pathname.replace(`/${currentLocale}`, "") || "/";
+  if (!canAccessParticipantPath(participantRole, localizedPath)) {
+    return NextResponse.redirect(new URL(`/${currentLocale}`, request.url));
+  }
+
   /* ----------------------- Provider contract enforcement ------------------- */
   if (
     result?.provider &&
@@ -129,6 +140,28 @@ const getUser = async (
   user?: User;
   provider?: Provider;
 } | null> => {
+  if (process.env.E2E_AUTH_BYPASS === "true") {
+    const role = req.cookies.get("e2e-role")?.value;
+    if (role === "provider") {
+      return {
+        provider: {
+          id: "provider-e2e",
+          name: "E2E Provider",
+          status: "ACTIVE",
+          signedContract: { status: SignedContractStatus.Active },
+        } as unknown as Provider,
+      };
+    }
+    if (role === "user") {
+      return {
+        user: {
+          id: "user-e2e",
+          name: "E2E Customer",
+          status: "ACTIVE",
+        } as unknown as User,
+      };
+    }
+  }
   const token = req.cookies.get("token")?.value;
   if (!token) return null;
 
