@@ -4,6 +4,13 @@ import { gql, TypedDocumentNode } from "@apollo/client";
 export const GET_SETTING_QUERY: TypedDocumentNode<GetSettingQuery> = gql`
   query getSetting {
     getSetting {
+      contractAcceptanceWindowDays
+      contractAcceptanceWindowEnabled
+      premiumAdDurationDays
+      premiumAdEnabled
+      premiumAdFee
+      vatEnabled
+      vatRate
       aboutAr
       aboutEn
       email

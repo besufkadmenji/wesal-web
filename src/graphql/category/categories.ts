@@ -16,6 +16,22 @@ export const CATEGORIES_QUERY: TypedDocumentNode<
         totalPages
       }
       items {
+        commissionEnabled
+        commissionPercent
+        contractDocumentEnabled
+        contractDocumentText
+        customerConversationFee
+        customerConversationFeeEnabled
+        depositEnabled
+        depositPercent
+        maxCompletionDays
+        maxCompletionDaysEnabled
+        maxTerminationDays
+        maxTerminationDaysEnabled
+        minCommissionAmount
+        minCommissionEnabled
+        providerConversationFee
+        providerConversationFeeEnabled
         createdAt
         descriptionAr
         descriptionEn

@@ -26,6 +26,10 @@ export const LISTINGS_QUERY: TypedDocumentNode<
         id
         name
         status
+        promotionStatus
+        promotionCycle
+        featuredStartsAt
+        featuredEndsAt
         price
         story {
           filename
