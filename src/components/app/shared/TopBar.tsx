@@ -91,7 +91,7 @@ const LoggedUser = () => {
             icon={<HeartIcon className="size-6" />}
             label={dict.auth.favorites}
             onClick={() => {
-              router.push("/favorites");
+            router.push("/profile/favorites");
             }}
           />
         )}
