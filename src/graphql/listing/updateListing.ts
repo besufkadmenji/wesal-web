@@ -18,6 +18,10 @@ export const UPDATE_LISTING_MUTATION: TypedDocumentNode<
       name
       price
       status
+      promotionStatus
+      promotionCycle
+      featuredStartsAt
+      featuredEndsAt
       story {
         filename
         id

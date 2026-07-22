@@ -29,6 +29,7 @@ export const ME_USER_QUERY: TypedDocumentNode<MeUserQuery> = gql`
       deletedAt
       publicId
       withAbsher
+      contractSignature
     }
   }
 `;

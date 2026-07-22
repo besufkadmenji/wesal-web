@@ -43,7 +43,10 @@ export const ListingDetail = ({ ownerMode }: { ownerMode?: boolean }) => {
                   <EditAdIcon className="size-5" />
                 </Button>
               ) : (
-                <ProviderData provider={listing.provider!} />
+                <ProviderData
+                  provider={listing.provider!}
+                  listingId={listing.id}
+                />
               )}
             </div>
           </div>

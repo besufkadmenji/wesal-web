@@ -9,6 +9,12 @@ directive @specifiedBy(
   url: String!
 ) on SCALAR
 
+input AcceptContractInput {
+  contractId: String!
+  deliveryTimeDays: Int!
+  signatureData: String!
+}
+
 """Type of user action (view or click)"""
 enum ActionType {
   CLICK
@@ -173,13 +179,29 @@ input BulkUpdateFaqOrderInput {
 }
 
 type Category {
+  commissionEnabled: Boolean!
+  commissionPercent: Float
+  contractDocumentEnabled: Boolean!
+  contractDocumentText: String!
   createdAt: DateTime!
+  customerConversationFee: Float
+  customerConversationFeeEnabled: Boolean!
+  depositEnabled: Boolean!
+  depositPercent: Float
   descriptionAr: String!
   descriptionEn: String!
   id: ID!
   image: String!
+  maxCompletionDays: Int
+  maxCompletionDaysEnabled: Boolean!
+  maxTerminationDays: Int
+  maxTerminationDaysEnabled: Boolean!
+  minCommissionAmount: Float
+  minCommissionEnabled: Boolean!
   nameAr: String!
   nameEn: String!
+  providerConversationFee: Float
+  providerConversationFeeEnabled: Boolean!
   publicId: Int
   rulesAr: String!
   rulesEn: String!
@@ -273,58 +295,65 @@ enum CityStatus {
 }
 
 type Complaint {
-  adminResponse: String
+  attachments: JSON!
+  contract: Contract
+  contractId: ID
+  conversation: Conversation!
+  conversationId: ID!
   createdAt: DateTime!
   description: String!
   id: ID!
   listing: Listing!
-  listingId: String!
+  listingId: ID!
+  messages: [ComplaintMessage!]!
   publicId: Int
-  reason: ComplaintReason!
+  reporterId: ID!
+  reporterType: ComplaintReporterType!
   reviewedAt: DateTime
-  reviewedBy: String
-  reviewer: User
+  reviewedByAdminId: ID
+  reviewer: Admin
   status: ComplaintStatus!
+  title: String!
   updatedAt: DateTime!
-  user: User!
-  userId: String!
+}
+
+type ComplaintMessage {
+  authorId: ID!
+  authorType: ComplaintMessageAuthorType!
+  complaintId: ID!
+  content: String!
+  createdAt: DateTime!
+  id: ID!
+}
+
+enum ComplaintMessageAuthorType {
+  ADMIN
+  REPORTER
 }
 
 input ComplaintPaginationInput {
+  conversationId: String
+
   """Number of items per page"""
   limit: Int! = 10
-  listingId: String
 
   """Page number (1-based)"""
   page: Int! = 1
-  reason: ComplaintReason
-  reviewedBy: String
-
-  """Sort field name"""
+  search: String
   sortBy: ComplaintSortField
 
   """Sort order: ASC or DESC"""
   sortOrder: SortOrder = DESC
   status: ComplaintStatus
-  userId: String
 }
 
-"""Reason for complaint"""
-enum ComplaintReason {
-  COPYRIGHT_VIOLATION
-  FRAUD
-  INAPPROPRIATE_CONTENT
-  MISLEADING_INFORMATION
-  OFFENSIVE
-  OTHER
-  SPAM
+enum ComplaintReporterType {
+  PROVIDER
+  USER
 }
 
-"""Available fields to sort complaints by"""
 enum ComplaintSortField {
   createdAt
-  id
-  reason
   status
   updatedAt
 }
@@ -336,6 +365,10 @@ enum ComplaintStatus {
   REJECTED
   RESOLVED
   UNDER_REVIEW
+}
+
+input CompleteContractInput {
+  contractId: String!
 }
 
 type ContactMessage {
@@ -395,20 +428,51 @@ enum ContactMessageStatus {
 }
 
 type Contract {
+  acceptedAt: DateTime
   agreedPrice: Float!
+  categoryId: String!
+  categoryRulesAr: String!
+  categoryRulesEn: String!
   client: User!
   clientId: String!
+  commissionAmount: Float!
+  commissionPercent: Float!
+  contractDocumentText: String!
   conversation: Conversation!
   conversationId: String!
   createdAt: DateTime!
+  customerAddress: String!
+  customerLatitude: Float
+  customerLongitude: Float
+  deliveryCompanyId: ID
+  deliveryCompanyNameAr: String
+  deliveryCompanyNameEn: String
+  deliveryTimeDays: Int
+  depositPercent: Float!
   downPayment: Float!
   id: ID!
+  listingId: String!
+  maxCompletionDays: Int
+  maxTerminationDays: Int
+  pricingVersion: Int!
   provider: Provider!
+  providerAddress: String
   providerId: String!
+  providerLatitude: Float
+  providerLongitude: Float
+  providerNetAmount: Float!
   publicId: Int
-  signatures: [ContractSignature!]
+  rejectedAt: DateTime
+  rejectionReason: String
+  signatures: [ContractSignature!]!
   status: ContractStatus!
+  supersedesContract: Contract
+  supersedesContractId: ID
+  totalPayable: Float!
   updatedAt: DateTime!
+  vatAmount: Float!
+  vatRate: Float!
+  version: Int!
 }
 
 input ContractPaginationInput {
@@ -430,6 +494,31 @@ input ContractPaginationInput {
   status: ContractStatus
 }
 
+type ContractPaymentResponse {
+  contract: Contract!
+  payment: Payment!
+}
+
+type ContractQuote {
+  agreedPrice: Float!
+  commissionAmount: Float!
+  commissionPercent: Float!
+  contractDocumentText: String!
+  depositPercent: Float!
+  downPayment: Float!
+  maxCompletionDays: Int
+  maxTerminationDays: Int
+  providerNetAmount: Float!
+  totalPayable: Float!
+  vatAmount: Float!
+  vatRate: Float!
+}
+
+input ContractQuoteInput {
+  agreedPrice: Float!
+  conversationId: String!
+}
+
 type ContractRule {
   label: String!
   value: String!
@@ -445,14 +534,23 @@ type ContractSignature {
   contractId: String!
   id: ID!
   signatureData: String!
+  signatureType: ContractSignatureType!
   signedAt: DateTime!
-  user: User!
-  userId: String!
+  signerId: String!
+  signerType: ContractSignerType!
 }
 
-input ContractSignatureInput {
-  signatureData: String!
-  userId: String!
+"""Sprint 3 contract signature purpose"""
+enum ContractSignatureType {
+  CUSTOMER_ACCEPTANCE
+  CUSTOMER_COMPLETION
+  PROVIDER_ACCEPTANCE
+}
+
+"""Entity type of the contract signer"""
+enum ContractSignerType {
+  PROVIDER
+  USER
 }
 
 """Available fields to sort contracts by"""
@@ -470,29 +568,73 @@ enum ContractStatus {
   ACCEPTED
   CANCELLED
   COMPLETED
+  DRAFT
   IN_PROGRESS
   PENDING
   REJECTED
 }
 
 type Conversation {
+  access: ConversationAccess
+  closeReason: String
+  closedAt: DateTime
   createdAt: DateTime!
+  customerFeePaidAt: DateTime
+  customerLastReadAt: DateTime
+  expiresAt: DateTime
+  feeCycle: Int!
   id: ID!
-  isPaid: Boolean!
+  lastActivityAt: DateTime!
+  lastMessage: Message
   listing: Listing!
   listingId: String!
   messages: [Message!]
-  provider: User!
+  provider: Provider!
+  providerFeePaidAt: DateTime
   providerId: String!
+  providerLastReadAt: DateTime
   publicId: Int
+  status: ConversationStatus!
+  unreadCount: Int!
   updatedAt: DateTime!
   user: User!
   userId: String!
 }
 
-input ConversationPaginationInput {
-  isPaid: Boolean
+type ConversationAccess {
+  canSend: Boolean!
+  expiresAt: DateTime
+  feeAmount: Float!
+  feeCycle: Float!
+  feeRequired: Boolean!
+  paidAt: DateTime
+}
 
+type ConversationFeePaymentResponse {
+  access: ConversationAccess!
+  conversation: Conversation!
+  payment: Payment
+}
+
+type ConversationFeeReport {
+  items: [ConversationFeeReportRow!]!
+  meta: ReportPageMeta!
+  totalCustomerFees: Float!
+  totalProviderFees: Float!
+}
+
+type ConversationFeeReportRow {
+  conversationId: String!
+  createdAt: DateTime!
+  customerFee: Float!
+  customerName: String
+  paymentId: String!
+  providerFee: Float!
+  providerName: String
+  status: String!
+}
+
+input ConversationPaginationInput {
   """Number of items per page"""
   limit: Int! = 10
   listingId: String
@@ -506,15 +648,30 @@ input ConversationPaginationInput {
 
   """Sort order: ASC or DESC"""
   sortOrder: SortOrder = DESC
+  status: ConversationStatus
   userId: String
+}
+
+"""Whether a message sender is a User, Provider, or the platform"""
+enum ConversationSenderType {
+  PROVIDER
+  SYSTEM
+  USER
 }
 
 """Available fields to sort conversations by"""
 enum ConversationSortField {
   createdAt
   id
-  isPaid
+  lastActivityAt
+  status
   updatedAt
+}
+
+"""Conversation lifecycle status"""
+enum ConversationStatus {
+  ACTIVE
+  CLOSED
 }
 
 type Country {
@@ -571,11 +728,27 @@ input CreateBankInput {
 }
 
 input CreateCategoryInput {
+  commissionEnabled: Boolean
+  commissionPercent: Float
+  contractDocumentEnabled: Boolean
+  contractDocumentText: String
+  customerConversationFee: Float
+  customerConversationFeeEnabled: Boolean
+  depositEnabled: Boolean
+  depositPercent: Float
   descriptionAr: String!
   descriptionEn: String!
   image: String!
+  maxCompletionDays: Int
+  maxCompletionDaysEnabled: Boolean
+  maxTerminationDays: Int
+  maxTerminationDaysEnabled: Boolean
+  minCommissionAmount: Float
+  minCommissionEnabled: Boolean
   nameAr: String!
   nameEn: String!
+  providerConversationFee: Float
+  providerConversationFeeEnabled: Boolean
   rulesAr: String
   rulesEn: String
 }
@@ -588,11 +761,10 @@ input CreateCityInput {
 }
 
 input CreateComplaintInput {
+  contractId: ID
+  conversationId: ID!
   description: String!
-  listingId: String!
-  reason: ComplaintReason!
-  status: ComplaintStatus
-  userId: String!
+  title: String!
 }
 
 input CreateContactMessageInput {
@@ -607,19 +779,17 @@ input CreateContactMessageInput {
 
 input CreateContractInput {
   agreedPrice: Float!
-  clientId: String!
+  contractId: String
   conversationId: String!
-  downPayment: Float!
-  providerId: String!
-  signatures: [ContractSignatureInput!]
-  status: ContractStatus
+  customerAddress: String!
+  customerLatitude: Float
+  customerLongitude: Float
+  deliveryCompanyId: String
+  signatureData: String
 }
 
 input CreateConversationInput {
-  isPaid: Boolean
   listingId: String!
-  providerId: String!
-  userId: String!
 }
 
 input CreateCountryInput {
@@ -640,11 +810,6 @@ input CreateFaqInput {
   order: Float
   questionAr: String!
   questionEn: String!
-}
-
-input CreateFavoriteInput {
-  listingId: String!
-  userId: String!
 }
 
 input CreateListingInput {
@@ -671,7 +836,6 @@ input CreateListingMediaInput {
 input CreateMessageInput {
   content: String!
   conversationId: String!
-  senderId: String!
 }
 
 input CreateNotificationInput {
@@ -681,16 +845,6 @@ input CreateNotificationInput {
   relatedEntityType: String
   title: String!
   type: NotificationType!
-  userId: String!
-}
-
-input CreatePaymentInput {
-  amount: Float!
-  contractId: String!
-  notes: String
-  paymentMethod: PaymentMethod!
-  status: PaymentStatus
-  transactionReference: String
   userId: String!
 }
 
@@ -807,8 +961,8 @@ type Faq {
 type Favorite {
   createdAt: DateTime!
   id: ID!
-  listing: Listing!
-  listingId: String!
+  provider: Provider!
+  providerId: String!
   publicId: Int
   user: User!
   userId: String!
@@ -817,7 +971,6 @@ type Favorite {
 input FavoritePaginationInput {
   """Number of items per page"""
   limit: Int! = 10
-  listingId: String
 
   """Page number (1-based)"""
   page: Int! = 1
@@ -827,7 +980,6 @@ input FavoritePaginationInput {
 
   """Sort order: ASC or DESC"""
   sortOrder: SortOrder = DESC
-  userId: String
 }
 
 """Available fields to sort favorites by"""
@@ -836,8 +988,33 @@ enum FavoriteSortField {
   id
 }
 
+input FeeReportInput {
+  categoryId: String
+  conversationId: String
+  customerId: String
+  from: DateTime
+
+  """Number of items per page"""
+  limit: Int! = 10
+  listingId: String
+
+  """Page number (1-based)"""
+  page: Int! = 1
+  providerId: String
+  search: String
+
+  """Sort order: ASC or DESC"""
+  sortOrder: SortOrder = DESC
+  status: String
+  to: DateTime
+}
+
 input ForgotPasswordInput {
   emailOrPhone: String!
+}
+
+input InitializeContractInput {
+  conversationId: String!
 }
 
 """
@@ -853,10 +1030,14 @@ type Listing {
   createdAt: DateTime!
   deactivationReason: String
   description: String!
+  featuredEndsAt: DateTime
+  featuredStartsAt: DateTime
   id: String!
   name: String!
   photos: [ListingMedia!]!
   price: Float!
+  promotionCycle: Int!
+  promotionStatus: PromotionStatus!
   provider: Provider
   providerId: String!
   status: ListingStatus!
@@ -911,6 +1092,7 @@ enum ListingSortField {
 enum ListingStatus {
   ACTIVE
   INACTIVE
+  PENDING_PAYMENT
 }
 
 """Listing type (free or featured)"""
@@ -941,10 +1123,27 @@ type Message {
   conversationId: String!
   createdAt: DateTime!
   id: ID!
+  kind: MessageKind!
+  metadata: JSON
   publicId: Int
-  sender: User!
-  senderId: String!
+
+  """The message sender, either a User (customer) or a Provider"""
+  sender: MessageSender
+  senderId: ID
+  senderType: ConversationSenderType!
   updatedAt: DateTime!
+}
+
+"""User text or a typed system event in a conversation"""
+enum MessageKind {
+  CHAT_FEE_PAID
+  CONTRACT_ACCEPTED
+  CONTRACT_COMPLETED
+  CONTRACT_CREATED
+  CONTRACT_PAID
+  CONTRACT_REJECTED
+  CONTRACT_RESENT
+  TEXT
 }
 
 input MessagePaginationInput {
@@ -964,6 +1163,8 @@ input MessagePaginationInput {
   sortOrder: SortOrder = DESC
 }
 
+union MessageSender = Provider | User
+
 """Available fields to sort messages by"""
 enum MessageSortField {
   createdAt
@@ -981,6 +1182,8 @@ enum MessageType {
 }
 
 type Mutation {
+  """Provider accepts a pending contract"""
+  acceptContract(input: AcceptContractInput!): Contract!
   activateAdmin(id: ID!): Admin!
   activateBank(id: ID!): Bank!
   activateCategory(id: ID!): Category!
@@ -993,13 +1196,16 @@ type Mutation {
 
   """Activate user by ID"""
   activateUser(id: ID!): User!
+  addComplaintMessage(complaintId: String!, content: String!): ComplaintMessage!
   adminChangePassword(input: AdminChangePasswordInput!): Boolean!
   adminForgotPassword(input: AdminForgotPasswordInput!): Boolean!
   adminLogin(input: AdminLoginInput!): AdminAuthResponse!
 
   """Admin reactivates a provider whose contract was terminated by admin"""
   adminReactivateProvider(providerId: ID!): Provider!
+  adminReplyToComplaint(complaintId: String!, content: String!): ComplaintMessage!
   adminResetPassword(input: AdminResetPasswordInput!): Boolean!
+  adminSetComplaintStatus(complaintId: String!, status: ComplaintStatus!): Complaint!
 
   """Admin terminates provider contract"""
   adminTerminateProviderContract(input: AdminTerminateContractInput!): Provider!
@@ -1016,11 +1222,14 @@ type Mutation {
 
   """Change password for authenticated provider"""
   changeProviderPassword(input: ChangePasswordInput!): Boolean!
+
+  """Customer signs and completes an in-progress contract"""
+  completeContract(input: CompleteContractInput!): Contract!
   createAdmin(createAdminInput: CreateAdminInput!): Admin!
   createBank(input: CreateBankInput!): Bank!
   createCategory(input: CreateCategoryInput!): Category!
   createCity(input: CreateCityInput!): City!
-  createComplaint(input: CreateComplaintInput!): Complaint!
+  createComplaint(evidence: [Upload!], input: CreateComplaintInput!): Complaint!
 
   """Create contact message (public)"""
   createContactMessage(createContactMessageInput: CreateContactMessageInput!): ContactMessage!
@@ -1031,11 +1240,9 @@ type Mutation {
 
   """Create FAQ (admin only)"""
   createFaq(createFaqInput: CreateFaqInput!): Faq!
-  createFavorite(input: CreateFavoriteInput!): Favorite!
   createListing(createListingInput: CreateListingInput!): Listing!
   createMessage(input: CreateMessageInput!): Message!
   createNotification(input: CreateNotificationInput!): Notification!
-  createPayment(input: CreatePaymentInput!): Payment!
   createPermission(createPermissionInput: CreatePermissionInput!): Permission!
 
   """Create a new provider"""
@@ -1063,6 +1270,12 @@ type Mutation {
 
   """Request password reset OTP for provider"""
   forgotProviderPassword(input: ForgotPasswordInput!): Boolean!
+
+  """
+  Creates or returns the customer draft for a conversation so the contract ID
+  and public number are available before submission
+  """
+  initializeContract(input: InitializeContractInput!): Contract!
 
   """
   Initiate email change - sends OTP to new email and returns change token
@@ -1096,6 +1309,9 @@ type Mutation {
   """Mark message as read (admin only)"""
   markAsRead(id: ID!): ContactMessage!
 
+  """Mark the conversation as read for the authenticated side"""
+  markConversationRead(conversationId: String!): Conversation!
+
   """Mark multiple notifications as read"""
   markMultipleNotificationsAsRead(ids: [String!]!): Boolean!
 
@@ -1105,8 +1321,14 @@ type Mutation {
   """Mark a notification as unread"""
   markNotificationAsUnread(id: String!): Notification!
 
-  """Process a refund for a completed payment"""
-  refundPayment(id: String!): Payment!
+  """Settle an accepted contract using the Sprint 3 mock"""
+  payContract(contractId: String!): ContractPaymentResponse!
+
+  """Settle the authenticated participant conversation fee"""
+  payConversationFee(conversationId: String!): ConversationFeePaymentResponse!
+
+  """Settle and activate a featured advertisement using the mock"""
+  payPremiumAd(listingId: String!): PremiumAdPaymentResponse!
 
   """Register a new user and send verification OTPs"""
   register(input: RegisterInput!): User!
@@ -1114,8 +1336,8 @@ type Mutation {
   """Register a new provider and send verification OTPs"""
   registerProvider(input: RegisterProviderInput!): Provider!
 
-  """Reject a complaint"""
-  rejectComplaint(complaintId: String!, reason: String!, reviewerId: String!): Complaint!
+  """Provider rejects a pending contract"""
+  rejectContract(input: RejectContractInput!): Contract!
 
   """Reject a pending provider join request"""
   rejectProviderJoinRequest(id: ID!, reason: String!): Provider!
@@ -1126,28 +1348,19 @@ type Mutation {
   removeBank(id: ID!): Bank!
   removeCategory(id: String!): Category!
   removeCity(id: ID!): City!
-  removeComplaint(id: String!): Complaint!
 
   """Delete contact message (admin only)"""
   removeContactMessage(id: ID!): Boolean!
-  removeContract(id: String!): Contract!
-  removeConversation(id: String!): Conversation!
   removeCountry(id: ID!): Country!
   removeDeliveryCompany(id: ID!): DeliveryCompany!
 
   """Remove FAQ (admin only)"""
   removeFaq(id: ID!): Boolean!
-  removeFavorite(id: String!): Favorite!
-
-  """Remove favorite by user and listing IDs"""
-  removeFavoriteByUserAndListing(listingId: String!, userId: String!): Favorite!
   removeListing(id: ID!): RemoveListingResponse!
-  removeMessage(id: String!): Message!
 
   """Remove own avatar (self-service)"""
   removeMyAvatar: Boolean!
   removeNotification(id: String!): Notification!
-  removePayment(id: String!): Payment!
   removePermission(id: ID!): Boolean!
 
   """Remove provider"""
@@ -1162,6 +1375,10 @@ type Mutation {
 
   """Reply to contact message (admin only)"""
   replyToContactMessage(id: ID!, message: String!): ContactMessage!
+  requestFeaturedPromotion(listingId: ID!): Listing!
+
+  """Customer resends a rejected contract as a new version"""
+  resendContract(input: ResendContractInput!): Contract!
 
   """Resend OTP for email or phone verification"""
   resendOtp(input: ResendOtpInput!): Boolean!
@@ -1175,10 +1392,11 @@ type Mutation {
   """Reset provider password using reset token"""
   resetProviderPassword(input: ResetPasswordWithTokenInput!): Boolean!
 
-  """Review and resolve a complaint"""
-  reviewComplaint(input: ReviewComplaintInput!): Complaint!
+  """Restart an expired conversation using a new fee cycle"""
+  restartConversation(conversationId: String!): Conversation!
   revokeAllPermissionsFromAdmin(adminId: ID!): Boolean!
   revokePermissionFromAdmin(adminId: ID!, permissionId: ID!): Boolean!
+  setProviderFavorite(favorite: Boolean!, providerId: String!): Boolean!
 
   """Create or update application settings (admin only)"""
   setSetting(input: SettingInput!): Setting!
@@ -1193,12 +1411,9 @@ type Mutation {
   updateBank(input: UpdateBankInput!): Bank!
   updateCategory(input: UpdateCategoryInput!): Category!
   updateCity(input: UpdateCityInput!): City!
-  updateComplaint(input: UpdateComplaintInput!): Complaint!
 
   """Update contact message (admin only)"""
   updateContactMessage(updateContactMessageInput: UpdateContactMessageInput!): ContactMessage!
-  updateContract(input: UpdateContractInput!): Contract!
-  updateConversation(input: UpdateConversationInput!): Conversation!
   updateCountry(input: UpdateCountryInput!): Country!
   updateDeliveryCompany(input: UpdateDeliveryCompanyInput!): DeliveryCompany!
 
@@ -1208,8 +1423,6 @@ type Mutation {
 
   """Update own profile (self-service)"""
   updateMe(updateMeInput: UpdateMeInput!): User!
-  updateMessage(input: UpdateMessageInput!): Message!
-  updatePayment(input: UpdatePaymentInput!): Payment!
   updatePermission(id: ID!, updatePermissionInput: UpdatePermissionInput!): Permission!
 
   """Update provider"""
@@ -1482,21 +1695,39 @@ type PaginationMeta {
   totalPages: Int!
 }
 
+"""Entity type that owns the payment"""
+enum PayerType {
+  PROVIDER
+  USER
+}
+
 type Payment {
   amount: Float!
-  contract: Contract!
-  contractId: String!
+  categoryId: ID
+  commissionAmount: Float!
+  commissionPercent: Float!
+  configSnapshot: JSON
+  contract: Contract
+  contractId: ID
+  conversation: Conversation
+  conversationId: ID
   createdAt: DateTime!
   gatewayResponse: String
   id: ID!
+  listing: Listing
+  listingId: ID
   notes: String
+  payer: PaymentPayer
+  payerId: String!
+  payerType: PayerType!
   paymentMethod: PaymentMethod!
   publicId: Int
+  purpose: PaymentPurpose!
   status: PaymentStatus!
   transactionReference: String
   updatedAt: DateTime!
-  user: User!
-  userId: String!
+  vatAmount: Float!
+  vatRate: Float!
 }
 
 """Payment method"""
@@ -1505,11 +1736,13 @@ enum PaymentMethod {
   CASH
   CREDIT_CARD
   DEBIT_CARD
+  MOCK
   WALLET
 }
 
 input PaymentPaginationInput {
   contractId: String
+  conversationId: String
 
   """Number of items per page"""
   limit: Int! = 10
@@ -1517,6 +1750,7 @@ input PaymentPaginationInput {
   """Page number (1-based)"""
   page: Int! = 1
   paymentMethod: PaymentMethod
+  purpose: PaymentPurpose
 
   """Sort field name"""
   sortBy: PaymentSortField
@@ -1524,7 +1758,16 @@ input PaymentPaginationInput {
   """Sort order: ASC or DESC"""
   sortOrder: SortOrder = DESC
   status: PaymentStatus
-  userId: String
+}
+
+union PaymentPayer = Provider | User
+
+"""Business obligation settled by a payment"""
+enum PaymentPurpose {
+  CHAT_CUSTOMER
+  CHAT_PROVIDER
+  CONTRACT
+  PREMIUM_AD
 }
 
 """Available fields to sort payments by"""
@@ -1565,6 +1808,36 @@ type Permission {
 enum PermissionPlatform {
   ADMIN
   GLOBAL
+}
+
+type PremiumAdFeeReport {
+  items: [PremiumAdFeeReportRow!]!
+  meta: ReportPageMeta!
+  totalFees: Float!
+}
+
+type PremiumAdFeeReportRow {
+  createdAt: DateTime!
+  fee: Float!
+  listingId: String!
+  listingName: String!
+  paymentId: String!
+  providerName: String
+  providerPhone: String
+  status: String!
+}
+
+type PremiumAdPaymentResponse {
+  listing: Listing!
+  payment: Payment!
+}
+
+"""Featured advertisement payment and expiry state"""
+enum PromotionStatus {
+  ACTIVE
+  EXPIRED
+  NONE
+  PENDING_PAYMENT
 }
 
 type Provider {
@@ -1628,7 +1901,15 @@ enum ProviderStatus {
 }
 
 type Query {
+  """Active delivery companies available to authenticated users"""
+  activeDeliveryCompanies: [DeliveryCompany!]!
   admin(id: ID!): Admin!
+  adminComplaint(id: String!): Complaint!
+  adminComplaints(input: ComplaintPaginationInput): PaginatedComplaintResponse!
+  adminContract(id: String!): Contract!
+  adminContracts(input: ContractPaginationInput): PaginatedContractResponse!
+  adminConversation(id: String!): Conversation!
+  adminConversations(input: ConversationPaginationInput): PaginatedConversationResponse!
   adminPermissions(adminId: ID!): [AdminPermission!]!
   admins(paginationInput: AdminPaginationInput): PaginatedAdminResponse!
   bank(id: ID!): Bank!
@@ -1642,8 +1923,6 @@ type Query {
   """Get cities by country with pagination"""
   citiesByCountry(countryId: ID!, pagination: CityPaginationInput): PaginatedCityResponse!
   city(id: ID!): City!
-  complaint(id: String!): Complaint!
-  complaints(input: ComplaintPaginationInput): PaginatedComplaintResponse!
 
   """Get single contact message (admin only)"""
   contactMessage(id: ID!): ContactMessage!
@@ -1651,8 +1930,12 @@ type Query {
   """Get contact messages (admin only) with pagination"""
   contactMessages(paginationInput: ContactMessagePaginationInput): PaginatedContactMessageResponse!
   contract(id: String!): Contract!
+
+  """Preview server-calculated contract financial terms"""
+  contractQuote(input: ContractQuoteInput!): ContractQuote!
   contracts(input: ContractPaginationInput): PaginatedContractResponse!
   conversation(id: String!): Conversation!
+  conversationFeeReport(input: FeeReportInput): ConversationFeeReport!
   conversations(input: ConversationPaginationInput): PaginatedConversationResponse!
 
   """Get all countries with pagination"""
@@ -1664,14 +1947,10 @@ type Query {
 
   """Get all active FAQs (or all if admin)"""
   faqs: [Faq!]!
-  favorite(id: String!): Favorite!
-  favorites(input: FavoritePaginationInput): PaginatedFavoriteResponse!
 
   """Get application settings"""
   getSetting: Setting!
-
-  """Check if listing is favorited by user"""
-  isFavorite(listingId: String!, userId: String!): Boolean!
+  isProviderFavorite(providerId: String!): Boolean!
   listing(id: ID!): Listing
   listings(paginationInput: ListingPaginationInput!): PaginatedListingResponse!
   meAdmin: Admin!
@@ -1683,6 +1962,9 @@ type Query {
   meUser: User!
   message(id: String!): Message!
   messages(input: MessagePaginationInput): PaginatedMessageResponse!
+  myComplaint(id: String!): Complaint!
+  myComplaints(input: ComplaintPaginationInput): PaginatedComplaintResponse!
+  myFavoriteProviders(input: FavoritePaginationInput): PaginatedFavoriteResponse!
   myListings(paginationInput: ListingPaginationInput!): PaginatedListingResponse!
   myPopularCategories(limit: Float = 10): [String!]!
   myPopularListings(limit: Float = 10): [String!]!
@@ -1696,6 +1978,7 @@ type Query {
   permission(id: ID!): Permission!
   permissionAdmins(permissionId: ID!): [AdminPermission!]!
   permissions: [Permission!]!
+  premiumAdFeeReport(input: FeeReportInput): PremiumAdFeeReport!
 
   """Get provider by ID"""
   provider(id: ID!): Provider!
@@ -1809,9 +2092,30 @@ input RegisterProviderInput {
   withAbsher: Boolean
 }
 
+input RejectContractInput {
+  contractId: String!
+  reason: String!
+}
+
 type RemoveListingResponse {
   message: String!
   success: Boolean!
+}
+
+type ReportPageMeta {
+  limit: Int!
+  page: Int!
+  total: Int!
+}
+
+input ResendContractInput {
+  agreedPrice: Float!
+  customerAddress: String!
+  customerLatitude: Float
+  customerLongitude: Float
+  deliveryCompanyId: String
+  rejectedContractId: String!
+  signatureData: String
 }
 
 input ResendOtpInput {
@@ -1824,13 +2128,6 @@ input ResetPasswordWithTokenInput {
   resetToken: String!
 }
 
-input ReviewComplaintInput {
-  action: String
-  adminResponse: String!
-  complaintId: String!
-  reviewerId: String!
-}
-
 """Type of contact message sender"""
 enum SenderType {
   GUEST
@@ -1841,10 +2138,15 @@ enum SenderType {
 type Setting {
   aboutAr: String!
   aboutEn: String!
+  contractAcceptanceWindowDays: Int!
+  contractAcceptanceWindowEnabled: Boolean!
   email: String!
   phones: [String!]!
   platformManagerName: String
   platformManagerSignature: String
+  premiumAdDurationDays: Int!
+  premiumAdEnabled: Boolean!
+  premiumAdFee: Float!
   privacyPolicyAr: String!
   privacyPolicyEn: String!
   publicId: Int
@@ -1853,16 +2155,23 @@ type Setting {
   socialMediaLinks: [SocialMediaLink!]!
   termsAr: String!
   termsEn: String!
+  vatEnabled: Boolean!
+  vatRate: Float!
   whatsappNumber: String!
 }
 
 input SettingInput {
   aboutAr: String
   aboutEn: String
+  contractAcceptanceWindowDays: Int
+  contractAcceptanceWindowEnabled: Boolean
   email: String
   phones: [String!]
   platformManagerName: String
   platformManagerSignature: String
+  premiumAdDurationDays: Int
+  premiumAdEnabled: Boolean
+  premiumAdFee: Float
   privacyPolicyAr: String
   privacyPolicyEn: String
   rulesAr: String
@@ -1870,6 +2179,8 @@ input SettingInput {
   socialMediaLinks: [SocialMediaLinkInput!]
   termsAr: String
   termsEn: String
+  vatEnabled: Boolean
+  vatRate: Float
   whatsappNumber: String
 }
 
@@ -1957,6 +2268,9 @@ enum SortOrder {
 }
 
 type Subscription {
+  """Subscribe to new messages in a conversation (participants only)"""
+  messageAdded(conversationId: String!): Message!
+
   """Subscribe to real-time updates for the authenticated provider"""
   providerUpdated: Provider!
 
@@ -2008,12 +2322,28 @@ input UpdateBankInput {
 }
 
 input UpdateCategoryInput {
+  commissionEnabled: Boolean
+  commissionPercent: Float
+  contractDocumentEnabled: Boolean
+  contractDocumentText: String
+  customerConversationFee: Float
+  customerConversationFeeEnabled: Boolean
+  depositEnabled: Boolean
+  depositPercent: Float
   descriptionAr: String
   descriptionEn: String
   id: String!
   image: String
+  maxCompletionDays: Int
+  maxCompletionDaysEnabled: Boolean
+  maxTerminationDays: Int
+  maxTerminationDaysEnabled: Boolean
+  minCommissionAmount: Float
+  minCommissionEnabled: Boolean
   nameAr: String
   nameEn: String
+  providerConversationFee: Float
+  providerConversationFeeEnabled: Boolean
   rulesAr: String
   rulesEn: String
 }
@@ -2026,15 +2356,6 @@ input UpdateCityInput {
   nameEn: String
 }
 
-input UpdateComplaintInput {
-  description: String
-  id: String!
-  listingId: String
-  reason: ComplaintReason
-  status: ComplaintStatus
-  userId: String
-}
-
 input UpdateContactMessageInput {
   attachmentFilename: String
   dialCode: String
@@ -2044,25 +2365,6 @@ input UpdateContactMessageInput {
   messageType: MessageType = REQUEST
   name: String
   phone: String
-}
-
-input UpdateContractInput {
-  agreedPrice: Float
-  clientId: String
-  conversationId: String
-  downPayment: Float
-  id: String!
-  providerId: String
-  signatures: [ContractSignatureInput!]
-  status: ContractStatus
-}
-
-input UpdateConversationInput {
-  id: String!
-  isPaid: Boolean
-  listingId: String
-  providerId: String
-  userId: String
 }
 
 input UpdateCountryInput {
@@ -2122,24 +2424,6 @@ input UpdateMeInput {
   password: String
   phone: String
   withAbsher: Boolean
-}
-
-input UpdateMessageInput {
-  content: String
-  conversationId: String
-  id: String!
-  senderId: String
-}
-
-input UpdatePaymentInput {
-  amount: Float
-  contractId: String
-  id: String!
-  notes: String
-  paymentMethod: PaymentMethod
-  status: PaymentStatus
-  transactionReference: String
-  userId: String
 }
 
 input UpdatePermissionInput {
@@ -2202,12 +2486,16 @@ input UpdateUserInput {
   withAbsher: Boolean
 }
 
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
 type User {
   address: String
   avatarFilename: String
   bankName: String
   city: City
   cityId: String
+  contractSignature: String
   country: Country
   countryId: String
   createdAt: DateTime!

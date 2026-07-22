@@ -17,7 +17,7 @@ export const SignatureInput = ({
   isRequired?: boolean;
   initUrl?: string | null;
   file: File | null;
-  onChange?: (file: File) => void;
+  onChange?: (file: File | null) => void;
   error?: string;
   disabled?: boolean;
 }) => {

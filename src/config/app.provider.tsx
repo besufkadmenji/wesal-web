@@ -7,6 +7,12 @@ import { HeroUIProvider } from "@heroui/react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { UserStatusWatcher } from "@/components/app/UserStatusWatcher";
+import { useRealtimeRefresh } from "@/hooks/useConversations";
+
+const RealtimeQueryBridge = () => {
+  useRealtimeRefresh();
+  return null;
+};
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -14,6 +20,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       <QueryClientProvider client={queryClient}>
         <HeroUIProvider>
           <UserStatusWatcher />
+          <RealtimeQueryBridge />
           {children}
         </HeroUIProvider>
         <ReactQueryDevtools initialIsOpen={false} />

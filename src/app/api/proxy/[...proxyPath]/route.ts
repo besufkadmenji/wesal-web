@@ -1,16 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
+import { buildProxyRequestHeaders } from "@/utils/proxy.request.headers";
 export const dynamic = "force-dynamic";
 
 const API_BASE_URL =
   process.env.API_BASE_URL ?? process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const FORWARD_BODY_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
-
-const DISALLOWED_REQUEST_HEADERS = new Set([
-  "connection",
-  "content-length",
-  "host",
-]);
 
 const HOP_BY_HOP_HEADERS = new Set([
   "connection",
@@ -47,12 +42,10 @@ async function proxy(
     targetUrl.search = search;
   }
 
-  const headers = new Headers();
-  request.headers.forEach((value, key) => {
-    if (!DISALLOWED_REQUEST_HEADERS.has(key.toLowerCase())) {
-      headers.set(key, value);
-    }
-  });
+  const headers = buildProxyRequestHeaders(
+    request.headers,
+    request.cookies.get("token")?.value,
+  );
 
   const init: RequestInit = {
     method: request.method,
@@ -83,7 +76,7 @@ async function proxy(
       status: upstream.status,
       headers: responseHeaders,
     });
-  } catch (error) {
+  } catch {
     return Response.json(
       { message: "Unable to reach upstream service." },
       { status: 502 },

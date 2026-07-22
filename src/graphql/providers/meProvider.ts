@@ -18,6 +18,22 @@ export const ME_PROVIDER_QUERY: TypedDocumentNode<MeProviderQuery> = gql`
         status
       }
       categories {
+        commissionEnabled
+        commissionPercent
+        contractDocumentEnabled
+        contractDocumentText
+        customerConversationFee
+        customerConversationFeeEnabled
+        depositEnabled
+        depositPercent
+        maxCompletionDays
+        maxCompletionDaysEnabled
+        maxTerminationDays
+        maxTerminationDaysEnabled
+        minCommissionAmount
+        minCommissionEnabled
+        providerConversationFee
+        providerConversationFeeEnabled
         createdAt
         descriptionAr
         descriptionEn

@@ -24,8 +24,8 @@ export const ListingFilter = () => {
 
   const [minPrice, setMinPrice] = useQueryState("minPrice", parseAsInteger);
   const [maxPrice, setMaxPrice] = useQueryState("maxPrice", parseAsInteger);
-  const [cityId, setCityId] = useQueryState("city");
-  const [, setQuery] = useQueryState("query");
+  const [, setCityId] = useQueryState("city");
+  const [query, setQuery] = useQueryState("query");
   const [, setSelectedRating] = useQueryState("rating", parseAsInteger);
 
   const { width } = useWindowSize();
@@ -65,7 +65,7 @@ export const ListingFilter = () => {
       </div>
       {shouldShowFilter && (
         <div className="grid grid-cols-1 gap-6">
-          <ListingSearchInput />
+          <ListingSearchInput key={query ?? ""} />
           <CitySelect />
           <div className="grid grid-cols-1 gap-4">
             <p className="leading-7 text-[#1A1A1A]">
@@ -158,10 +158,6 @@ export const ListingSearchInput = () => {
   const [, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
   const timer = useRef<NodeJS.Timeout | null>(null);
   const [localQuery, setLocalQuery] = useState(query ?? "");
-
-  useEffect(() => {
-    setLocalQuery(query ?? "");
-  }, [query]);
 
   useEffect(() => {
     return () => {
