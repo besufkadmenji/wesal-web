@@ -8,6 +8,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { twMerge } from "tailwind-merge";
+import { PromotionStatus } from "@/gql/graphql";
+import { StatusBadge } from "@/components/app/shared/ParticipantUI";
 export const ListingCard = ({ listing }: { listing: Listing }) => {
   const dict = useDict();
   const pathname = usePathname();
@@ -25,6 +27,12 @@ export const ListingCard = ({ listing }: { listing: Listing }) => {
           fill
           className="object-cover"
         />
+        {listing.promotionStatus !== PromotionStatus.None && (
+          <StatusBadge
+            status={listing.promotionStatus}
+            className="absolute top-3 start-3"
+          />
+        )}
       </div>
       <div className="grid grid-cols-1 gap-3 px-3 py-4">
         <div className="grid grid-cols-1 gap-2.5">

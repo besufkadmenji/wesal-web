@@ -9,6 +9,7 @@ import { useListings } from "@/components/app/listings/my-listings/useListings";
 import { AppWrapper } from "@/components/app/shared/AppWrapper";
 import { useMe } from "@/hooks/useMe";
 import { useEffect } from "react";
+import { PromotionAction } from "@/components/app/listings/my-listings/promotion/PromotionPage";
 
 export const MyListings = () => {
   const { me } = useMe();
@@ -27,7 +28,7 @@ export const MyListings = () => {
           <ListingHeader />
           <div className="grid grid-cols-1 px-[7vw] py-20">
             {isLoading ? (
-              <div className="grid grid-cols-4 gap-x-8 gap-y-10">
+              <div className="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
                 {Array.from({ length: 16 }).map((_, index) => (
                   <ListingCardSkeleton key={index} />
                 ))}
@@ -36,9 +37,12 @@ export const MyListings = () => {
               <NoListing />
             ) : (
               <div className="grid grid-cols-1">
-                <div className="grid grid-cols-4 gap-x-8 gap-y-10">
+                <div className="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
                   {listings.items.map((listing) => (
-                    <ListingCard key={listing.id} listing={listing} />
+                    <div key={listing.id}>
+                      <ListingCard listing={listing} />
+                      <PromotionAction listing={listing} />
+                    </div>
                   ))}
                 </div>
               </div>

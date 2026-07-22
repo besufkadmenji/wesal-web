@@ -26,11 +26,13 @@ import { useMe } from "@/hooks/useMe";
 import { twMerge } from "tailwind-merge";
 import { FormInput } from "./FormInput";
 import { useFormValidation } from "./useFormValidation";
+import { useSetting } from "@/hooks/useSettings";
 
 export const AddListing = () => {
   const dict = useDict();
   const lng = useLang();
   const { me } = useMe();
+  const { setting } = useSetting();
   const { createListing, creating } = useManageListing();
   const categories = me?.provider?.categories || [];
   const {
@@ -73,10 +75,18 @@ export const AddListing = () => {
                 {
                   label: dict.addListing.form.featuredListing,
                   value: ListingType.Featured,
-                  isDisabled: true,
+                  isDisabled: !setting?.premiumAdEnabled,
                 },
               ]}
             />
+            {setting?.premiumAdEnabled && (
+              <p className="text-gray text-sm">
+                {dict.promotion.fee}: {setting.premiumAdFee}{" "}
+                {dict.common.sar} · {dict.promotion.duration}:{" "}
+                {setting.premiumAdDurationDays}{" "}
+                {dict.common.days}
+              </p>
+            )}
             <div className="grid grid-cols-3 gap-3">
               <FormInput
                 label={dict.addListing.form.listingName}

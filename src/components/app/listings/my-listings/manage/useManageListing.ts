@@ -1,4 +1,4 @@
-import { ListingMedia, ListingStatus, MediaType } from "@/gql/graphql";
+import { ListingMedia, ListingType, MediaType } from "@/gql/graphql";
 import { useDict } from "@/hooks/useDict";
 import { useMe } from "@/hooks/useMe";
 import ListingService from "@/services/listing.service";
@@ -56,12 +56,15 @@ export const useManageListing = () => {
         cityId: me?.provider?.cityId || "",
         photos: photos,
         story: story,
-        status: ListingStatus.Active,
       });
       if (result) {
         showSuccessMessage(dict.addListing.listingCreatedSuccessfully);
         reset();
-        router.push("/my-listings");
+        router.push(
+          result.type === ListingType.Featured
+            ? `/my-listings/${result.id}/promotion`
+            : "/my-listings",
+        );
       }
       // Handle successful login (e.g., redirect, show message)
     } catch (error) {
