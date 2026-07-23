@@ -39,13 +39,10 @@ class ProviderService {
       throw new Error(errorMessage);
     }
   };
-  static removeAvatar = async (removeProviderAvatarId: string) => {
+  static removeAvatar = async () => {
     try {
       const removeAvatarResponse = await client().mutate({
         mutation: REMOVE_PROVIDER_AVATAR_MUTATION,
-        variables: {
-          removeProviderAvatarId,
-        },
       });
       return removeAvatarResponse.data?.removeProviderAvatar ?? null;
     } catch (error) {

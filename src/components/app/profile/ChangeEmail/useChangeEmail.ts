@@ -1,18 +1,21 @@
 import { useDict } from "@/hooks/useDict";
-import AuthService from "@/services/auth.service";
+import { useMe } from "@/hooks/useMe";
 import { queryClient } from "@/utils/query.client";
 import { showErrorMessage, showSuccessMessage } from "@/utils/show.messages";
 import { useRouter } from "next/navigation";
 import { useQueryState } from "nuqs";
 import { useState } from "react";
+import { getProfileAuthService } from "../profileAuthService";
 
 export const useChangeEmail = () => {
   const [busy, setBusy] = useState(false);
   const dict = useDict();
-  const [open, setOpen] = useQueryState("emailChange", {
+  const { me } = useMe();
+  const authService = getProfileAuthService(Boolean(me?.provider));
+  const [, setOpen] = useQueryState("emailChange", {
     defaultValue: "false",
   });
-  const [selectedEmail, setSelectedEmail] = useQueryState("selectedEmail", {
+  const [, setSelectedEmail] = useQueryState("selectedEmail", {
     defaultValue: "false",
   });
   const router = useRouter();
@@ -20,7 +23,7 @@ export const useChangeEmail = () => {
   const initiateChange = async (newEmail: string) => {
     setBusy(true);
     try {
-      const result = await AuthService.initiateEmailChange({
+      const result = await authService.initiateEmailChange({
         newEmail,
       });
       setSelectedEmail(newEmail);
@@ -28,9 +31,7 @@ export const useChangeEmail = () => {
         setOpen("verify");
         setChangeToken(result.changeToken);
       }
-      // Handle successful login (e.g., redirect, show message)
     } catch (error) {
-      console.error("Login error:", error);
       showErrorMessage(
         error instanceof Error ? error.message : dict.common.somethingWentWrong,
       );
@@ -41,7 +42,7 @@ export const useChangeEmail = () => {
   const verifyChange = async (code: string) => {
     setBusy(true);
     try {
-      const result = await AuthService.verifyChangeEmail({
+      const result = await authService.verifyChangeEmail({
         changeToken: changeToken || "",
         code: code,
       });
@@ -52,9 +53,7 @@ export const useChangeEmail = () => {
         });
         router.replace("/profile");
       }
-      // Handle successful login (e.g., redirect, show message)
     } catch (error) {
-      console.error("Login error:", error);
       showErrorMessage(
         error instanceof Error ? error.message : dict.common.somethingWentWrong,
       );

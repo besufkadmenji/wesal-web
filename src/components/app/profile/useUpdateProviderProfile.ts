@@ -85,10 +85,10 @@ export const useUpdateProviderProfile = () => {
     }
   };
 
-  const removeAvatar = async (id: string) => {
+  const removeAvatar = async () => {
     setRemoving(true);
     try {
-      const result = await ProviderService.removeAvatar(id);
+      const result = await ProviderService.removeAvatar();
       if (result) {
         showSuccessMessage(dict.profile.removeAvatarSuccessMessage);
         queryClient.invalidateQueries({

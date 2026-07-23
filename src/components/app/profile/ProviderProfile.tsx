@@ -136,7 +136,7 @@ const ProfilePicture = ({ provider }: { provider: Provider }) => {
         disabled={!url || removing}
         onClick={() => {
           if (provider.avatarFilename) {
-            removeAvatar(provider.id);
+            removeAvatar();
           } else if (form.avatarFile) {
             setAvatarFile(null);
           }
