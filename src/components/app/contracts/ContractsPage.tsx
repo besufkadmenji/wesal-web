@@ -3,7 +3,13 @@
 import DocumentIcon from "@/assets/icons/contracts/document.svg";
 import { ContractHero } from "@/components/app/contracts/ContractHero";
 import { MoneyValue } from "@/components/app/contracts/MoneyValue";
-import { CustomerContractDialog } from "@/components/app/contracts/PendingAcceptanceDialog";
+import { CustomerContractDialog } from "@/components/app/contracts/CustomerContractDialog";
+import { ContractStatusPill } from "@/components/app/contracts/ContractStatusPill";
+import { SignaturePreview } from "@/components/app/contracts/SignaturePreview";
+import {
+  CONTRACT_DATE_FORMATTER,
+  formatContractReference,
+} from "@/components/app/contracts/formatContract";
 import {
   ContractCardSkeleton,
   ContractDetailSkeleton,
@@ -46,18 +52,10 @@ import {
   ArrowRight,
   CalendarCheck2,
   CalendarDays,
-  CircleCheck,
   CircleDollarSign,
-  CircleX,
-  Clock3,
-  FilePenLine,
-  Hourglass,
   MessagesSquare,
-  Truck,
-  WalletCards,
   type LucideIcon,
 } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -128,7 +126,7 @@ export const ContractsPage = () => {
                   >
                     <span>{dict.contracts[filter.label]}</span>
                     {isActive && contracts.data && (
-                      <span className="bg-primary grid size-6 place-content-center rounded-full text-xs text-white">
+                      <span className="bg-primary grid size-6 shrink-0 place-content-center rounded-full text-xs text-white">
                         {contracts.data.meta.total}
                       </span>
                     )}
@@ -186,7 +184,6 @@ const ContractCard = ({
   onOpenContract?: (contract: Contract) => void;
 }) => {
   const dict = useDict();
-  const visualStatus = getContractVisualStatus(contract);
   const opensCustomerDialog = Boolean(
     onOpenContract &&
     contract.status !== ContractStatus.Draft &&
@@ -208,7 +205,7 @@ const ContractCard = ({
             </p>
           </div>
         </div>
-        <ContractStatusPill status={visualStatus} />
+        <ContractStatusPill status={contract.status} />
       </header>
 
       <div className="mt-4 flex items-center gap-1 px-3">
@@ -225,7 +222,7 @@ const ContractCard = ({
           />
         </div>
       </div>
-      <ContractCardDates contract={contract} status={visualStatus} />
+      <ContractCardDates contract={contract} />
     </>
   );
 
@@ -256,37 +253,13 @@ const ContractCard = ({
   );
 };
 
-const formatContractReference = (contract: Contract) =>
-  contract.publicId
-    ? `TX-${contract.publicId}`
-    : `TX-${contract.id.slice(0, 8).toUpperCase()}`;
-
-type ContractVisualStatus = ContractStatus | "OUT_FOR_DELIVERY";
-
-const getContractVisualStatus = (contract: Contract): ContractVisualStatus =>
-  (contract.status as ContractVisualStatus) === "OUT_FOR_DELIVERY"
-    ? "OUT_FOR_DELIVERY"
-    : contract.status;
-
-const CONTRACT_DATE_FORMATTER = new Intl.DateTimeFormat("en-GB", {
-  day: "2-digit",
-  month: "2-digit",
-  year: "numeric",
-});
-
-const ContractCardDates = ({
-  contract,
-  status,
-}: {
-  contract: Contract;
-  status: ContractVisualStatus;
-}) => {
+const ContractCardDates = ({ contract }: { contract: Contract }) => {
   const dict = useDict();
+  const status = contract.status;
   const showsAcceptance = [
     ContractStatus.Accepted,
     ContractStatus.InProgress,
     ContractStatus.Completed,
-    "OUT_FOR_DELIVERY",
   ].includes(status);
 
   if (!showsAcceptance) {
@@ -349,59 +322,6 @@ const ContractCardDate = ({
     </time>
   </div>
 );
-
-const ContractStatusPill = ({ status }: { status: ContractVisualStatus }) => {
-  const dict = useDict();
-  const statusLabels: Partial<Record<ContractVisualStatus, string>> = {
-    [ContractStatus.Pending]: dict.contracts.pendingAcceptance,
-    [ContractStatus.Accepted]: dict.contracts.pendingPayment,
-    [ContractStatus.InProgress]: dict.contracts.inProgress,
-    [ContractStatus.Completed]: dict.contracts.completed,
-    [ContractStatus.Rejected]: dict.contracts.rejected,
-    [ContractStatus.Cancelled]: dict.contracts.cancelled,
-    OUT_FOR_DELIVERY: dict.contracts.outForDelivery,
-  };
-  const statusIcons: Record<ContractVisualStatus, LucideIcon> = {
-    [ContractStatus.Draft]: FilePenLine,
-    [ContractStatus.Pending]: Clock3,
-    [ContractStatus.Accepted]: WalletCards,
-    [ContractStatus.InProgress]: Hourglass,
-    [ContractStatus.Completed]: CircleCheck,
-    [ContractStatus.Rejected]: CircleX,
-    [ContractStatus.Cancelled]: CircleX,
-    OUT_FOR_DELIVERY: Truck,
-  };
-  const StatusIcon = statusIcons[status];
-
-  return (
-    <span
-      className={cn(
-        "inline-flex h-10 shrink-0 items-center gap-1 rounded-xl border px-3 text-base leading-8 font-medium",
-        status === ContractStatus.Draft &&
-          "border-slate-400 bg-slate-50 text-slate-600",
-        status === ContractStatus.Pending &&
-          "border-[#f59e0b] bg-amber-50 text-[#d48003]",
-        status === ContractStatus.Accepted &&
-          "border-blue-500 bg-blue-50 text-blue-600",
-        status === ContractStatus.InProgress &&
-          "border-violet-500 bg-violet-50 text-violet-600",
-        status === ContractStatus.Completed &&
-          "border-emerald-500 bg-emerald-50 text-emerald-600",
-        status === ContractStatus.Rejected &&
-          "border-rose-500 bg-rose-50 text-rose-600",
-        status === ContractStatus.Cancelled &&
-          "border-[#b3251e] bg-[#fbeae9] text-[#b3251e]",
-        status === "OUT_FOR_DELIVERY" &&
-          "border-cyan-500 bg-cyan-50 text-cyan-500",
-      )}
-    >
-      <StatusIcon className="size-[18px]" />
-      {statusLabels[status] ||
-        (dict.status as Record<string, string>)[status] ||
-        status.replaceAll("_", " ")}
-    </span>
-  );
-};
 
 export const ContractDetailPage = ({ id }: { id: string }) => {
   const dict = useDict();
@@ -536,15 +456,18 @@ export const ContractDetailPage = ({ id }: { id: string }) => {
             <FinancialSummary contract={item} />
             <div className="grid gap-4 md:grid-cols-2">
               <SignaturePreview
+                variant="detail"
                 label={dict.contracts.signature}
                 filename={customerSignature?.signatureData}
               />
               <SignaturePreview
+                variant="detail"
                 label={dict.contracts.providerAcceptanceSignature}
                 filename={providerSignature?.signatureData}
               />
               {completionSignature && (
                 <SignaturePreview
+                  variant="detail"
                   label={dict.contracts.completionSignature}
                   filename={completionSignature.signatureData}
                 />
@@ -700,28 +623,3 @@ export const FinancialSummary = ({
   );
 };
 
-const SignaturePreview = ({
-  label,
-  filename,
-}: {
-  label: string;
-  filename?: string | null;
-}) => (
-  <div className="grid gap-2">
-    <p className="text-sm font-medium">{label}</p>
-    <div className="relative h-32 overflow-hidden rounded-[14px] border border-dashed border-[#d6d9e0] bg-white">
-      {filename ? (
-        <Image
-          src={`${process.env.NEXT_PUBLIC_DATA}/files/${filename}`}
-          alt={label}
-          fill
-          className="object-contain p-2"
-        />
-      ) : (
-        <span className="text-gray absolute inset-0 grid place-content-center text-sm">
-          —
-        </span>
-      )}
-    </div>
-  </div>
-);

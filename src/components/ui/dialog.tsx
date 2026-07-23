@@ -69,7 +69,7 @@ function DialogContent({
         {showCloseButton && (
           <DialogPrimitive.Close
             data-slot="dialog-close"
-            className="absolute top-4 right-4 grid size-8 items-center justify-items-center rounded-full border border-[#F2F2F2] cursor-pointer focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+            className="absolute top-6 right-6 rtl:left-6 grid size-8 items-center justify-items-center rounded-full border border-[#F2F2F2] cursor-pointer focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
           >
             <CloseIcon className="size-4 rounded-full" />
             <span className="sr-only">Close</span>

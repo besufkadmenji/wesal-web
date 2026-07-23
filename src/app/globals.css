@@ -65,13 +65,6 @@
   --color-light-primary: #eff1f6;
   --color-border: #f2f2f2;
   --color-app-green: #389441;
-  --radius-sm: calc(0.625rem - 4px);
-  --radius-md: calc(0.625rem - 2px);
-  --radius-lg: 0.625rem;
-  --radius-xl: calc(0.625rem + 4px);
-  --radius-2xl: calc(0.625rem + 8px);
-  --radius-3xl: calc(0.625rem + 12px);
-  --radius-4xl: calc(0.625rem + 16px);
   --animate-word: word-fade 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 

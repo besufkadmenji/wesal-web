@@ -19,6 +19,7 @@ import { ContractService } from "@/services/contract.service";
 import { showErrorMessage, showSuccessMessage } from "@/utils/show.messages";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { X } from "lucide-react";
+import ContractCompletionIcon from "@/assets/icons/contracts/popup/contract.completion.svg";
 
 export const ContractCompletionDialog = ({
   contract,
@@ -67,17 +68,22 @@ export const ContractCompletionDialog = ({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="gap-7 rounded-[20px] border-0 bg-white px-6 py-10 shadow-xl sm:max-w-[657px]"
+        className="gap-7 rounded-[20px] border-0 bg-white px-6 py-10 shadow-xl sm:max-w-[42vw]"
       >
         <div className="flex items-start gap-6">
           <div className="min-w-0 flex-1">
-            <div className="grid gap-2 text-start">
-              <DialogTitle className="text-xl leading-8 font-semibold text-[#1a1a1a]">
-                {dict.contracts.completionTitle}
-              </DialogTitle>
-              <DialogDescription className="text-gray text-base leading-[1.7]">
-                {dict.contracts.completionDescription}
-              </DialogDescription>
+            <div className="flex items-start gap-6">
+              <span className="text-primary grid size-14 shrink-0 place-content-center rounded-2xl bg-[#eff1f6]">
+                <ContractCompletionIcon className="size-7" />
+              </span>
+              <div className="grid gap-2 text-start">
+                <DialogTitle className="text-xl leading-8 font-semibold text-black">
+                  {dict.contracts.completionTitle}
+                </DialogTitle>
+                <DialogDescription className="text-gray text-base leading-[1.7]">
+                  {dict.contracts.completionDescription}
+                </DialogDescription>
+              </div>
             </div>
 
             <div className="mt-4 grid gap-8">
@@ -94,10 +100,6 @@ export const ContractCompletionDialog = ({
               </div>
             </div>
           </div>
-
-          <span className="text-primary grid size-[60px] shrink-0 place-content-center rounded-2xl bg-[#eff1f6]">
-            <ContractIcon className="size-[30px]" />
-          </span>
         </div>
 
         <div dir="ltr" className="grid grid-cols-2 gap-4">
@@ -105,7 +107,7 @@ export const ContractCompletionDialog = ({
             <Button
               type="button"
               disabled={complete.isPending}
-              className="h-[50px] rounded-[20px] bg-[#f2f2f2] text-base font-semibold text-[#4d4d4d] shadow-none hover:bg-[#e9e9e9]"
+              className="bg-border h-12.5 rounded-[20px] text-base font-semibold text-[#4d4d4d] shadow-none hover:bg-[#e9e9e9]"
             >
               {dict.common.cancel}
             </Button>
@@ -114,7 +116,7 @@ export const ContractCompletionDialog = ({
             type="button"
             disabled={complete.isPending}
             onClick={() => complete.mutate()}
-            className="bg-primary h-[50px] rounded-[20px] text-base font-semibold text-white"
+            className="bg-primary h-12.5 rounded-[20px] text-base font-semibold text-white"
           >
             {complete.isPending
               ? dict.contracts.completionSubmitting
@@ -124,7 +126,7 @@ export const ContractCompletionDialog = ({
 
         <DialogClose
           disabled={complete.isPending}
-          className="text-gray absolute end-6 top-6 grid size-8 place-content-center rounded-full border border-[#f2f2f2] bg-white transition hover:bg-[#f8f9fb] disabled:cursor-not-allowed disabled:opacity-50"
+          className="text-gray border-border absolute inset-e-6 top-6 grid size-8 place-content-center rounded-full border bg-white transition hover:bg-[#f8f9fb] disabled:cursor-not-allowed disabled:opacity-50"
         >
           <X className="size-4" />
           <span className="sr-only">{dict.common.cancel}</span>
