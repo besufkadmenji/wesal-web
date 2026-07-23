@@ -23,7 +23,6 @@ export const Wrapper = ({
   variant: SupportPageType;
 }) => {
   const dict = useDict();
-  console.log("type", variant);
   const title = dict.support[variant]?.title;
   const breadcrumb = dict.support[variant]?.breadcrumb;
   return (

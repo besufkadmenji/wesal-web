@@ -446,7 +446,8 @@
     "payNow": "Pay now",
     "sar": "SAR",
     "days": "days",
-    "empty": "Nothing here yet"
+    "empty": "Nothing here yet",
+    "menu": "Menu"
   },
   "support": {
     "addListing": {
@@ -959,11 +960,9 @@
     "free": "Free listing",
     "fee": "Promotion fee",
     "duration": "Promotion duration",
-    "pending": "Waiting for payment",
+    "createFeeDescription": "Featured listings are published immediately. The admin fee is recorded as a mock payment for this listing.",
     "active": "Featured and active",
     "expired": "Promotion expired",
-    "promote": "Promote listing",
-    "success": "Your listing is now featured",
     "disabled": "Featured advertisements are currently unavailable"
   },
   "status": {
