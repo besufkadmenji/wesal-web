@@ -151,7 +151,6 @@
       ],
       "viewDetails": "تفاصيل القسم"
     },
-
     "join": {
       "subtitle": "ابدأ نجاحك مع آلاف المعلنين",
       "title": "انضم إلى آلاف المعلنين الناجحين",
@@ -446,7 +445,6 @@
     "days": "أيام",
     "empty": "لا يوجد محتوى بعد"
   },
-
   "support": {
     "addListing": {
       "title": "إضافة إعلان",
@@ -568,7 +566,6 @@
       "breadcrumb": "سياسة الخصوصية"
     }
   },
-
   "profile": {
     "personalInfo": "بيانات الحساب الشخصى",
     "changePassword": "تغيير كلمة المرور",
@@ -736,7 +733,6 @@
     "listingCreatedSuccessfully": "تم إنشاء الإعلان بنجاح",
     "listingUpdatedSuccessfully": "تم تحديث الإعلان بنجاح"
   },
-
   "listingDetail": {
     "about": "عن الإعلان",
     "viewAll": "عرض الكل",
@@ -760,7 +756,6 @@
   "editListing": {
     "saveChanges": "حفظ التغييرات"
   },
-
   "listing": {
     "sections": "الأقسام"
   },
@@ -847,7 +842,7 @@
     "pendingPayment": "قيد الدفع",
     "inProgress": "جاري التنفيذ",
     "outForDelivery": "جاري التوصيل",
-    "completed": "منتهية",
+    "completed": "مكتمل",
     "rejected": "مرفوض",
     "cancelled": "ملغى",
     "conversation": "المحادثة",
@@ -923,9 +918,9 @@
     "viewDetails": "عرض التفاصيل",
     "rejectDelivery": "رفض الاستلام",
     "ratingTitle": "التقييم",
-    "ratingPrompt": "شكراً لتقييمك للإعلان",
+    "ratingPrompt": "شاركنا تقييمك للإعلان",
     "ratingDescription": "من خلال تقييمك، تساعد المستخدمين الآخرين على اختيار الإعلان الأنسب لهم.",
-    "rateContract": "تقييم الإعلان",
+    "rateContract": "أضف تقييمك",
     "deliveryDays": "مدة التسليم بالأيام",
     "accept": "قبول التعاقد",
     "reject": "رفض التعاقد",
@@ -940,7 +935,20 @@
     "continuePayment": "متابعة الدفع",
     "paymentProcessing": "جاري الدفع",
     "version": "الإصدار",
-    "paid": "تم دفع قيمة التعاقد"
+    "paid": "تم دفع قيمة التعاقد",
+    "exportPdf": "تصدير التعاقد PDF",
+    "providerCompletionSignature": "توقيع إتمام التعاقد لمقدم الخدمة",
+    "acceptTitle": "قبول التعاقد",
+    "acceptanceTitle": "تأكيد قبول التعاقد",
+    "acceptanceDescription": "أدخل زمن التوصيل بالأيام لقبول هذا التعاقد وتفعيل الاتفاق بشكل رسمي.",
+    "confirmAcceptance": "تأكيد القبول",
+    "accepting": "جارٍ قبول التعاقد",
+    "accepted": "تم قبول التعاقد بنجاح",
+    "maxDeliveryDays": "الحد الأقصى لزمن التوصيل هو {days} يوم",
+    "providerSignatures": "توقيعات مقدم الخدمة",
+    "rejecting": "جارٍ الإرسال",
+    "rejectionTitle": "سبب رفض التعاقد",
+    "rejectionDescription": "يرجى توضيح سبب رفض التعاقد، حيث تساعدنا هذه المعلومات على تحسين تجربة المستخدم وضمان جودة الخدمة."
   },
   "promotion": {
     "title": "الإعلان المميز",
