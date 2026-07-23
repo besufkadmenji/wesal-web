@@ -104,26 +104,37 @@ export const SkeletonBlock = ({ className }: { className?: string }) => (
   />
 );
 
-export const useRemainingTime = (date?: string | Date | null) => {
+export const useRemainingTime = (date?: unknown) => {
   const [now, setNow] = useState(() => Date.now());
+  const parsed = useMemo(() => {
+    if (date == null || date === "") return null;
+    if (date instanceof Date) {
+      return Number.isNaN(date.getTime()) ? null : date;
+    }
+    if (typeof date === "string" || typeof date === "number") {
+      const next = new Date(date);
+      return Number.isNaN(next.getTime()) ? null : next;
+    }
+    return null;
+  }, [date]);
   useEffect(() => {
-    if (!date) return;
+    if (!parsed) return;
     const timer = window.setInterval(() => setNow(Date.now()), 1_000);
     return () => window.clearInterval(timer);
-  }, [date]);
+  }, [parsed]);
   return useMemo(() => {
-    if (!date) return null;
-    const milliseconds = Math.max(new Date(date).getTime() - now, 0);
+    if (!parsed) return null;
+    const milliseconds = Math.max(parsed.getTime() - now, 0);
     const totalSeconds = Math.floor(milliseconds / 1_000);
     const days = Math.floor(totalSeconds / 86_400);
     const hours = Math.floor((totalSeconds % 86_400) / 3_600);
     const minutes = Math.floor((totalSeconds % 3_600) / 60);
     const seconds = totalSeconds % 60;
     return { days, hours, minutes, seconds, expired: milliseconds === 0 };
-  }, [date, now]);
+  }, [parsed, now]);
 };
 
-export const Countdown = ({ date }: { date?: string | Date | null }) => {
+export const Countdown = ({ date }: { date?: unknown }) => {
   const remaining = useRemainingTime(date);
   if (!remaining) return null;
   const totalHours = remaining.days * 24 + remaining.hours;
@@ -139,26 +150,50 @@ export const Countdown = ({ date }: { date?: string | Date | null }) => {
   );
 };
 
+const toFormatDate = (value: unknown): Date | null => {
+  if (value == null || value === "") return null;
+  if (value instanceof Date) {
+    return Number.isNaN(value.getTime()) ? null : value;
+  }
+  if (typeof value === "string" || typeof value === "number") {
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? null : date;
+  }
+  return null;
+};
+
 export const useLocalizedFormat = () => {
   const lang = useLang();
   const locale = lang === "ar" ? "ar-SA" : "en-SA";
   return {
-    date: (value: string | Date) =>
-      new Intl.DateTimeFormat(locale, {
-        dateStyle: "medium",
-        timeStyle: "short",
-      }).format(new Date(value)),
-    dateOnly: (value: string | Date) =>
-      new Intl.DateTimeFormat(locale, {
-        day: "numeric",
-        month: "numeric",
-        year: "numeric",
-      }).format(new Date(value)),
-    timeOnly: (value: string | Date) =>
-      new Intl.DateTimeFormat(locale, {
-        hour: "2-digit",
-        minute: "2-digit",
-      }).format(new Date(value)),
+    date: (value: unknown) => {
+      const date = toFormatDate(value);
+      return date
+        ? new Intl.DateTimeFormat(locale, {
+            dateStyle: "medium",
+            timeStyle: "short",
+          }).format(date)
+        : "—";
+    },
+    dateOnly: (value: unknown) => {
+      const date = toFormatDate(value);
+      return date
+        ? new Intl.DateTimeFormat(locale, {
+            day: "numeric",
+            month: "numeric",
+            year: "numeric",
+          }).format(date)
+        : "—";
+    },
+    timeOnly: (value: unknown) => {
+      const date = toFormatDate(value);
+      return date
+        ? new Intl.DateTimeFormat(locale, {
+            hour: "2-digit",
+            minute: "2-digit",
+          }).format(date)
+        : "—";
+    },
     money: (value: number) =>
       new Intl.NumberFormat(locale, {
         style: "currency",

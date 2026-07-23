@@ -87,7 +87,7 @@ export const ConversationThread = ({
       </header>
 
       <div className="border-border flex flex-wrap items-center justify-between gap-3 border-b px-4 py-3 md:px-6">
-        {showCountdown && countdownDate && (
+        {showCountdown && countdownDate != null && countdownDate !== "" ? (
           <div
             dir="ltr"
             className="flex items-center justify-end gap-3"
@@ -114,7 +114,7 @@ export const ConversationThread = ({
               <MessageTimeIcon className="size-6" aria-hidden="true" />
             </span>
           </div>
-        )}
+        ) : null}
         <div className="flex items-center gap-2">
           <span className="text-gray text-xs">
             {dict.conversations.cycle}: {item.access?.feeCycle ?? item.feeCycle}

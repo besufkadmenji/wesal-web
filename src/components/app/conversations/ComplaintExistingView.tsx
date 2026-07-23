@@ -13,10 +13,7 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  ComplaintMessageAuthorType,
-  type Complaint,
-} from "@/gql/graphql";
+import { ComplaintMessageAuthorType, type Complaint } from "@/gql/graphql";
 import { useDict } from "@/hooks/useDict";
 import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
