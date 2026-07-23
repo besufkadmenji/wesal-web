@@ -10,6 +10,7 @@ export const downloadPDF = async (ref: RefObject<HTMLDivElement | null>) => {
     scale: 2,
     useCORS: true,
     allowTaint: false,
+    ignoreElements: (element) => element.hasAttribute("data-pdf-exclude"),
   });
 
   const pdf = new jsPDF("p", "mm", "a4");
