@@ -1327,9 +1327,6 @@ type Mutation {
   """Settle the authenticated participant conversation fee"""
   payConversationFee(conversationId: String!): ConversationFeePaymentResponse!
 
-  """Settle and activate a featured advertisement using the mock"""
-  payPremiumAd(listingId: String!): PremiumAdPaymentResponse!
-
   """Register a new user and send verification OTPs"""
   register(input: RegisterInput!): User!
 
@@ -1366,8 +1363,8 @@ type Mutation {
   """Remove provider"""
   removeProvider(id: ID!, input: DeleteProviderInput!): Provider!
 
-  """Delete provider avatar by ID"""
-  removeProviderAvatar(id: ID!): Boolean!
+  """Remove own provider avatar"""
+  removeProviderAvatar: Boolean!
   removeRating(id: String!): Rating!
 
   """Delete user by ID"""
@@ -1375,7 +1372,6 @@ type Mutation {
 
   """Reply to contact message (admin only)"""
   replyToContactMessage(id: ID!, message: String!): ContactMessage!
-  requestFeaturedPromotion(listingId: ID!): Listing!
 
   """Customer resends a rejected contract as a new version"""
   resendContract(input: ResendContractInput!): Contract!
@@ -1827,11 +1823,6 @@ type PremiumAdFeeReportRow {
   status: String!
 }
 
-type PremiumAdPaymentResponse {
-  listing: Listing!
-  payment: Payment!
-}
-
 """Featured advertisement payment and expiry state"""
 enum PromotionStatus {
   ACTIVE
@@ -1965,6 +1956,7 @@ type Query {
   myComplaint(id: String!): Complaint!
   myComplaints(input: ComplaintPaginationInput): PaginatedComplaintResponse!
   myFavoriteProviders(input: FavoritePaginationInput): PaginatedFavoriteResponse!
+  myListing(id: ID!): Listing!
   myListings(paginationInput: ListingPaginationInput!): PaginatedListingResponse!
   myPopularCategories(limit: Float = 10): [String!]!
   myPopularListings(limit: Float = 10): [String!]!

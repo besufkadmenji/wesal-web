@@ -11,7 +11,7 @@ import { getMainDefinition } from "@apollo/client/utilities";
 import { createClient } from "graphql-ws";
 import Cookies from "js-cookie";
 
-const defaultOptions: ApolloClient.DefaultOptions = {
+const defaultOptions: ApolloClient.DefaultOptions.Input = {
   watchQuery: { fetchPolicy: "no-cache", errorPolicy: "all" },
   query: { fetchPolicy: "no-cache", errorPolicy: "all" },
   mutate: { errorPolicy: "all" },

@@ -1,31 +1,30 @@
 "use client";
 
 import DocumentIcon from "@/assets/icons/contracts/document.svg";
+import { CompletedContractDetailPage } from "@/components/app/contracts/CompletedContractDetailPage";
 import { ContractHero } from "@/components/app/contracts/ContractHero";
 import { MoneyValue } from "@/components/app/contracts/MoneyValue";
-import { CustomerContractDialog } from "@/components/app/contracts/PendingAcceptanceDialog";
+import { CustomerContractDialog } from "@/components/app/contracts/CustomerContractDialog";
+import { ContractStatusPill } from "@/components/app/contracts/ContractStatusPill";
+import { ProviderContractAcceptPage } from "@/components/app/contracts/ProviderContractAcceptPage";
+import { ProviderContractDialog } from "@/components/app/contracts/ProviderContractDialog";
+import { SignaturePreview } from "@/components/app/contracts/SignaturePreview";
+import {
+  CONTRACT_DATE_FORMATTER,
+  formatContractReference,
+} from "@/components/app/contracts/formatContract";
 import {
   ContractCardSkeleton,
   ContractDetailSkeleton,
 } from "@/components/app/contracts/ContractSkeletons";
 import { AppPagination } from "@/components/app/shared/AppPagination";
 import { AppWrapper } from "@/components/app/shared/AppWrapper";
-import { SignatureInput } from "@/components/app/profile/SignedContract/SignatureInput";
 import {
   EmptyState,
   StatusBadge,
   useLocalizedFormat,
 } from "@/components/app/shared/ParticipantUI";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   ContractSignatureType,
   ContractStatus,
@@ -38,7 +37,6 @@ import { useDict } from "@/hooks/useDict";
 import { useMe } from "@/hooks/useMe";
 import { cn } from "@/lib/utils";
 import { ContractService } from "@/services/contract.service";
-import { uploadFile } from "@/utils/file.upload";
 import { showErrorMessage, showSuccessMessage } from "@/utils/show.messages";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -46,18 +44,10 @@ import {
   ArrowRight,
   CalendarCheck2,
   CalendarDays,
-  CircleCheck,
   CircleDollarSign,
-  CircleX,
-  Clock3,
-  FilePenLine,
-  Hourglass,
   MessagesSquare,
-  Truck,
-  WalletCards,
   type LucideIcon,
 } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -128,7 +118,7 @@ export const ContractsPage = () => {
                   >
                     <span>{dict.contracts[filter.label]}</span>
                     {isActive && contracts.data && (
-                      <span className="bg-primary grid size-6 place-content-center rounded-full text-xs text-white">
+                      <span className="bg-primary grid size-6 shrink-0 place-content-center rounded-full text-xs text-white">
                         {contracts.data.meta.total}
                       </span>
                     )}
@@ -152,7 +142,12 @@ export const ContractsPage = () => {
                   <ContractCard
                     key={contract.id}
                     contract={contract}
-                    onOpenContract={me?.user ? setSelectedContract : undefined}
+                    isProvider={Boolean(me?.provider)}
+                    onOpenContract={
+                      me?.user || me?.provider
+                        ? setSelectedContract
+                        : undefined
+                    }
                   />
                 ))}
               </div>
@@ -167,30 +162,42 @@ export const ContractsPage = () => {
           )}
         </div>
       </main>
-      <CustomerContractDialog
-        contract={selectedContract}
-        open={Boolean(selectedContract)}
-        onOpenChange={(open) => {
-          if (!open) setSelectedContract(null);
-        }}
-      />
+      {me?.user ? (
+        <CustomerContractDialog
+          contract={selectedContract}
+          open={Boolean(selectedContract)}
+          onOpenChange={(open) => {
+            if (!open) setSelectedContract(null);
+          }}
+        />
+      ) : (
+        <ProviderContractDialog
+          contract={selectedContract}
+          open={Boolean(selectedContract)}
+          onOpenChange={(open) => {
+            if (!open) setSelectedContract(null);
+          }}
+        />
+      )}
     </AppWrapper>
   );
 };
 
 const ContractCard = ({
   contract,
+  isProvider,
   onOpenContract,
 }: {
   contract: Contract;
+  isProvider?: boolean;
   onOpenContract?: (contract: Contract) => void;
 }) => {
   const dict = useDict();
-  const visualStatus = getContractVisualStatus(contract);
-  const opensCustomerDialog = Boolean(
+  // Detail page is only for provider pending acceptance; all other statuses open a popup.
+  const opensContractDialog = Boolean(
     onOpenContract &&
     contract.status !== ContractStatus.Draft &&
-    contract.status !== ContractStatus.Rejected,
+    !(isProvider && contract.status === ContractStatus.Pending),
   );
   const cardDetails = (
     <>
@@ -208,7 +215,7 @@ const ContractCard = ({
             </p>
           </div>
         </div>
-        <ContractStatusPill status={visualStatus} />
+        <ContractStatusPill status={contract.status} />
       </header>
 
       <div className="mt-4 flex items-center gap-1 px-3">
@@ -225,13 +232,13 @@ const ContractCard = ({
           />
         </div>
       </div>
-      <ContractCardDates contract={contract} status={visualStatus} />
+      <ContractCardDates contract={contract} />
     </>
   );
 
   return (
     <article className="group flex h-[254px] flex-col gap-4 overflow-hidden rounded-[20px] border border-[#f2f2f2] bg-white pb-3 transition hover:-translate-y-0.5 hover:shadow-sm">
-      {opensCustomerDialog ? (
+      {opensContractDialog ? (
         <button
           type="button"
           className="block w-full cursor-pointer text-start"
@@ -256,37 +263,13 @@ const ContractCard = ({
   );
 };
 
-const formatContractReference = (contract: Contract) =>
-  contract.publicId
-    ? `TX-${contract.publicId}`
-    : `TX-${contract.id.slice(0, 8).toUpperCase()}`;
-
-type ContractVisualStatus = ContractStatus | "OUT_FOR_DELIVERY";
-
-const getContractVisualStatus = (contract: Contract): ContractVisualStatus =>
-  (contract.status as ContractVisualStatus) === "OUT_FOR_DELIVERY"
-    ? "OUT_FOR_DELIVERY"
-    : contract.status;
-
-const CONTRACT_DATE_FORMATTER = new Intl.DateTimeFormat("en-GB", {
-  day: "2-digit",
-  month: "2-digit",
-  year: "numeric",
-});
-
-const ContractCardDates = ({
-  contract,
-  status,
-}: {
-  contract: Contract;
-  status: ContractVisualStatus;
-}) => {
+const ContractCardDates = ({ contract }: { contract: Contract }) => {
   const dict = useDict();
+  const status = contract.status;
   const showsAcceptance = [
     ContractStatus.Accepted,
     ContractStatus.InProgress,
     ContractStatus.Completed,
-    "OUT_FOR_DELIVERY",
   ].includes(status);
 
   if (!showsAcceptance) {
@@ -350,59 +333,6 @@ const ContractCardDate = ({
   </div>
 );
 
-const ContractStatusPill = ({ status }: { status: ContractVisualStatus }) => {
-  const dict = useDict();
-  const statusLabels: Partial<Record<ContractVisualStatus, string>> = {
-    [ContractStatus.Pending]: dict.contracts.pendingAcceptance,
-    [ContractStatus.Accepted]: dict.contracts.pendingPayment,
-    [ContractStatus.InProgress]: dict.contracts.inProgress,
-    [ContractStatus.Completed]: dict.contracts.completed,
-    [ContractStatus.Rejected]: dict.contracts.rejected,
-    [ContractStatus.Cancelled]: dict.contracts.cancelled,
-    OUT_FOR_DELIVERY: dict.contracts.outForDelivery,
-  };
-  const statusIcons: Record<ContractVisualStatus, LucideIcon> = {
-    [ContractStatus.Draft]: FilePenLine,
-    [ContractStatus.Pending]: Clock3,
-    [ContractStatus.Accepted]: WalletCards,
-    [ContractStatus.InProgress]: Hourglass,
-    [ContractStatus.Completed]: CircleCheck,
-    [ContractStatus.Rejected]: CircleX,
-    [ContractStatus.Cancelled]: CircleX,
-    OUT_FOR_DELIVERY: Truck,
-  };
-  const StatusIcon = statusIcons[status];
-
-  return (
-    <span
-      className={cn(
-        "inline-flex h-10 shrink-0 items-center gap-1 rounded-xl border px-3 text-base leading-8 font-medium",
-        status === ContractStatus.Draft &&
-          "border-slate-400 bg-slate-50 text-slate-600",
-        status === ContractStatus.Pending &&
-          "border-[#f59e0b] bg-amber-50 text-[#d48003]",
-        status === ContractStatus.Accepted &&
-          "border-blue-500 bg-blue-50 text-blue-600",
-        status === ContractStatus.InProgress &&
-          "border-violet-500 bg-violet-50 text-violet-600",
-        status === ContractStatus.Completed &&
-          "border-emerald-500 bg-emerald-50 text-emerald-600",
-        status === ContractStatus.Rejected &&
-          "border-rose-500 bg-rose-50 text-rose-600",
-        status === ContractStatus.Cancelled &&
-          "border-[#b3251e] bg-[#fbeae9] text-[#b3251e]",
-        status === "OUT_FOR_DELIVERY" &&
-          "border-cyan-500 bg-cyan-50 text-cyan-500",
-      )}
-    >
-      <StatusIcon className="size-[18px]" />
-      {statusLabels[status] ||
-        (dict.status as Record<string, string>)[status] ||
-        status.replaceAll("_", " ")}
-    </span>
-  );
-};
-
 export const ContractDetailPage = ({ id }: { id: string }) => {
   const dict = useDict();
   const router = useAppRouter();
@@ -410,10 +340,6 @@ export const ContractDetailPage = ({ id }: { id: string }) => {
   const format = useLocalizedFormat();
   const queryClient = useQueryClient();
   const contract = useContract(id);
-  const [signature, setSignature] = useState<File | null>(null);
-  const [deliveryDays, setDeliveryDays] = useState("1");
-  const [rejectOpen, setRejectOpen] = useState(false);
-  const [reason, setReason] = useState("");
 
   const refresh = () => {
     queryClient.invalidateQueries({ queryKey: queryKeys.contract(id) });
@@ -424,28 +350,6 @@ export const ContractDetailPage = ({ id }: { id: string }) => {
       });
     }
   };
-  const accept = useMutation({
-    mutationFn: async () => {
-      if (!signature) throw new Error(dict.contracts.signature);
-      const uploaded = await uploadFile(signature);
-      return ContractService.accept({
-        contractId: id,
-        signatureData: uploaded.filename,
-        deliveryTimeDays: Number(deliveryDays),
-      });
-    },
-    onSuccess: refresh,
-    onError: (error) => showErrorMessage(error.message),
-  });
-  const reject = useMutation({
-    mutationFn: () =>
-      ContractService.reject({ contractId: id, reason: reason.trim() }),
-    onSuccess: () => {
-      setRejectOpen(false);
-      refresh();
-    },
-    onError: (error) => showErrorMessage(error.message),
-  });
   const pay = useMutation({
     mutationFn: () => ContractService.pay(id),
     onSuccess: () => {
@@ -477,6 +381,31 @@ export const ContractDetailPage = ({ id }: { id: string }) => {
   const completionSignature = item.signatures.find(
     (entry) => entry.signatureType === ContractSignatureType.CustomerCompletion,
   );
+  const isProvider = Boolean(
+    me?.provider && me.provider.id === item.providerId,
+  );
+  const isCustomer = Boolean(me?.user && me.user.id === item.clientId);
+
+  if (isProvider && item.status === ContractStatus.Pending) {
+    return (
+      <AppWrapper>
+        <main className="bg-[#fcfdfe]">
+          <ProviderContractAcceptPage contract={item} />
+        </main>
+      </AppWrapper>
+    );
+  }
+
+  if (item.status === ContractStatus.Completed) {
+    return (
+      <AppWrapper>
+        <main className="bg-[#fcfdfe]">
+          <CompletedContractDetailPage contract={item} />
+        </main>
+      </AppWrapper>
+    );
+  }
+
   return (
     <AppWrapper>
       <main className="bg-[#fcfdfe] px-4 py-12 md:px-8 xl:px-[7vw] xl:py-20">
@@ -536,15 +465,18 @@ export const ContractDetailPage = ({ id }: { id: string }) => {
             <FinancialSummary contract={item} />
             <div className="grid gap-4 md:grid-cols-2">
               <SignaturePreview
+                variant="detail"
                 label={dict.contracts.signature}
                 filename={customerSignature?.signatureData}
               />
               <SignaturePreview
+                variant="detail"
                 label={dict.contracts.providerAcceptanceSignature}
                 filename={providerSignature?.signatureData}
               />
               {completionSignature && (
                 <SignaturePreview
+                  variant="detail"
                   label={dict.contracts.completionSignature}
                   filename={completionSignature.signatureData}
                 />
@@ -570,45 +502,7 @@ export const ContractDetailPage = ({ id }: { id: string }) => {
             )}
           </section>
 
-          {me?.provider && item.status === ContractStatus.Pending && (
-            <section className="grid gap-5 rounded-[20px] bg-white p-5 md:grid-cols-2 md:p-7">
-              <SignatureInput
-                label={dict.contracts.signature}
-                isRequired
-                file={signature}
-                onChange={setSignature}
-              />
-              <div className="grid content-start gap-4">
-                <Input
-                  type="number"
-                  min={1}
-                  value={deliveryDays}
-                  onChange={(event) => setDeliveryDays(event.target.value)}
-                  className="h-12 rounded-[14px]"
-                  placeholder={dict.contracts.deliveryDays}
-                />
-                <div className="flex gap-3">
-                  <Button
-                    className="grow rounded-[14px]"
-                    disabled={
-                      accept.isPending || !signature || Number(deliveryDays) < 1
-                    }
-                    onClick={() => accept.mutate()}
-                  >
-                    {dict.contracts.accept}
-                  </Button>
-                  <Button
-                    variant="destructive"
-                    className="grow rounded-[14px]"
-                    onClick={() => setRejectOpen(true)}
-                  >
-                    {dict.contracts.reject}
-                  </Button>
-                </div>
-              </div>
-            </section>
-          )}
-          {me?.user && item.status === ContractStatus.Accepted && (
+          {isCustomer && item.status === ContractStatus.Accepted && (
             <Button
               className="h-13 justify-self-end rounded-[16px] px-8"
               disabled={pay.isPending}
@@ -617,7 +511,7 @@ export const ContractDetailPage = ({ id }: { id: string }) => {
               {dict.contracts.pay} · {format.money(item.totalPayable)}
             </Button>
           )}
-          {me?.user && item.status === ContractStatus.Rejected && (
+          {isCustomer && item.status === ContractStatus.Rejected && (
             <Button
               asChild
               className="h-13 justify-self-end rounded-[16px] px-8"
@@ -629,32 +523,6 @@ export const ContractDetailPage = ({ id }: { id: string }) => {
           )}
         </div>
       </main>
-
-      <Dialog open={rejectOpen} onOpenChange={setRejectOpen}>
-        <DialogContent className="rounded-[20px]">
-          <DialogHeader>
-            <DialogTitle>{dict.contracts.reject}</DialogTitle>
-          </DialogHeader>
-          <Textarea
-            value={reason}
-            onChange={(event) => setReason(event.target.value)}
-            placeholder={dict.contracts.rejectionReason}
-            className="min-h-32 rounded-[14px]"
-          />
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setRejectOpen(false)}>
-              {dict.common.cancel}
-            </Button>
-            <Button
-              variant="destructive"
-              disabled={!reason.trim() || reject.isPending}
-              onClick={() => reject.mutate()}
-            >
-              {dict.contracts.reject}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </AppWrapper>
   );
 };
@@ -699,29 +567,3 @@ export const FinancialSummary = ({
     </div>
   );
 };
-
-const SignaturePreview = ({
-  label,
-  filename,
-}: {
-  label: string;
-  filename?: string | null;
-}) => (
-  <div className="grid gap-2">
-    <p className="text-sm font-medium">{label}</p>
-    <div className="relative h-32 overflow-hidden rounded-[14px] border border-dashed border-[#d6d9e0] bg-white">
-      {filename ? (
-        <Image
-          src={`${process.env.NEXT_PUBLIC_DATA}/files/${filename}`}
-          alt={label}
-          fill
-          className="object-contain p-2"
-        />
-      ) : (
-        <span className="text-gray absolute inset-0 grid place-content-center text-sm">
-          —
-        </span>
-      )}
-    </div>
-  </div>
-);

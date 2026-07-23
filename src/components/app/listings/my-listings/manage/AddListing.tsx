@@ -48,13 +48,13 @@ export const AddListing = () => {
     photoFiles,
     storyVideoFile,
   });
+  const isFeatured = form.type === ListingType.Featured;
 
   const handleSubmit = async () => {
     if (validateForm()) {
       await createListing();
     }
   };
-  console.log("errors", errors);
   return (
     <AppWrapper>
       <Wrapper variant={SupportPageType.ADD_LISTING}>
@@ -79,13 +79,26 @@ export const AddListing = () => {
                 },
               ]}
             />
-            {setting?.premiumAdEnabled && (
-              <p className="text-gray text-sm">
-                {dict.promotion.fee}: {setting.premiumAdFee}{" "}
-                {dict.common.sar} · {dict.promotion.duration}:{" "}
-                {setting.premiumAdDurationDays}{" "}
-                {dict.common.days}
-              </p>
+            {isFeatured && setting?.premiumAdEnabled && (
+              <div className="border-border flex flex-wrap items-center justify-between gap-4 rounded-[16px] border bg-[#fbfbfb] p-5">
+                <div className="grid gap-1">
+                  <strong className="text-primary text-base">
+                    {dict.promotion.featured}
+                  </strong>
+                  <p className="text-gray text-sm">
+                    {dict.promotion.createFeeDescription}
+                  </p>
+                </div>
+                <div className="text-end">
+                  <p className="text-primary text-2xl font-semibold">
+                    {setting.premiumAdFee} {dict.common.sar}
+                  </p>
+                  <p className="text-gray text-xs">
+                    {dict.promotion.duration}: {setting.premiumAdDurationDays}{" "}
+                    {dict.common.days}
+                  </p>
+                </div>
+              </div>
             )}
             <div className="grid grid-cols-3 gap-3">
               <FormInput

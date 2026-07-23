@@ -1,6 +1,5 @@
 "use client";
 
-import MessageFileIcon from "@/assets/icons/message.file.svg";
 import MessageTimeIcon from "@/assets/icons/message.time.svg";
 import { ComplaintDialog } from "@/components/app/conversations/ComplaintDialog";
 import { MessageBubble } from "@/components/app/conversations/MessageBubble";
@@ -13,16 +12,14 @@ import { useConversationComposer } from "@/components/app/conversations/useConve
 import { useConversationThread } from "@/components/app/conversations/useConversationThread";
 import { FavoriteButton } from "@/components/app/favorites/FavoriteButton";
 import {
-  Countdown,
   EmptyState,
   ParticipantAvatar,
   StatusBadge,
 } from "@/components/app/shared/ParticipantUI";
 import { Button } from "@/components/ui/button";
-import { ConversationStatus } from "@/gql/graphql";
 import { useAppRouter } from "@/hooks/use.app.router";
 import { useDict } from "@/hooks/useDict";
-import { Send } from "lucide-react";
+import { ChevronLeft, Send } from "lucide-react";
 import Link from "next/link";
 import TextareaAutosize from "react-textarea-autosize";
 
@@ -40,15 +37,21 @@ export const ConversationThread = ({
     counterparty,
     canSend,
     isExpired,
+    isFeeBlocked,
+    canPayFee,
+    countdownDate,
+    remainingTime,
+    showCountdown,
     contractHref,
     isRecreateContract,
+    isProviderContractReview,
     canShowContractAction,
+    latestContract,
     isLoading,
   } = useConversationThread(conversationId);
   const { payFee, restart } = useConversationActions(conversationId);
   const { content, setContent, submitMessage, canSubmit } =
     useConversationComposer(conversationId, canSend);
-  console.log("item", item);
   if (isLoading) return <ConversationThreadSkeleton />;
   if (!item || !counterparty)
     return <EmptyState title={dict.conversations.empty} />;
@@ -56,6 +59,16 @@ export const ConversationThread = ({
   return (
     <div className="grid h-full grid-rows-[auto_auto_1fr_auto] overflow-hidden rounded-[20px] bg-white">
       <header className="border-border flex items-center gap-3 border-b p-4 md:p-6">
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="shrink-0 md:hidden"
+          aria-label={dict.common.back}
+          onClick={() => router.push("/conversations")}
+        >
+          <ChevronLeft className="size-5 rtl:rotate-180" />
+        </Button>
         <ParticipantAvatar
           filename={counterparty.avatarFilename}
           name={counterparty.name}
@@ -67,11 +80,14 @@ export const ConversationThread = ({
         {!me?.provider && (
           <FavoriteButton providerId={item.providerId} iconOnly />
         )}
-        <ComplaintDialog conversationId={conversationId} />
+        <ComplaintDialog
+          conversationId={conversationId}
+          contractId={latestContract?.id}
+        />
       </header>
 
       <div className="border-border flex flex-wrap items-center justify-between gap-3 border-b px-4 py-3 md:px-6">
-        {item.expiresAt && (
+        {showCountdown && countdownDate && (
           <div
             dir="ltr"
             className="flex items-center justify-end gap-3"
@@ -81,7 +97,18 @@ export const ConversationThread = ({
               <span dir="auto" className="text-sm leading-[1.7] text-[#666]">
                 {dict.conversations.remaining}
               </span>
-              <Countdown date={item.expiresAt} />
+              {remainingTime && (
+                <span
+                  dir="ltr"
+                  className="text-base leading-8 font-medium text-[#1a1a1a] tabular-nums"
+                >
+                  {String(
+                    remainingTime.days * 24 + remainingTime.hours,
+                  ).padStart(2, "0")}
+                  :{String(remainingTime.minutes).padStart(2, "0")}:
+                  {String(remainingTime.seconds).padStart(2, "0")}
+                </span>
+              )}
             </div>
             <span className="flex size-[38px] shrink-0 items-center justify-center rounded-xl bg-[#eff1f6]">
               <MessageTimeIcon className="size-6" aria-hidden="true" />
@@ -90,20 +117,23 @@ export const ConversationThread = ({
         )}
         <div className="flex items-center gap-2">
           <span className="text-gray text-xs">
-            {dict.conversations.cycle}: {item.feeCycle}
+            {dict.conversations.cycle}: {item.access?.feeCycle ?? item.feeCycle}
           </span>
           <StatusBadge status={item.status} />
-          {me?.user &&
-            item.status === ConversationStatus.Active &&
-            canShowContractAction && (
-              <Button asChild className="rounded-xl">
-                <Link href={contractHref}>
-                  {isRecreateContract
+          {canShowContractAction && (
+            <Button
+              asChild
+              className="h-[50px] rounded-[20px] px-6 text-base font-semibold"
+            >
+              <Link href={contractHref}>
+                {isProviderContractReview
+                  ? dict.contracts.accept
+                  : isRecreateContract
                     ? dict.conversations.recreateContract
                     : dict.conversations.createContract}
-                </Link>
-              </Button>
-            )}
+              </Link>
+            </Button>
+          )}
         </div>
       </div>
 
@@ -127,19 +157,19 @@ export const ConversationThread = ({
             <p className="font-medium">
               {isExpired
                 ? dict.conversations.expired
-                : item.access?.feeRequired && !item.access.paidAt
+                : isFeeBlocked
                   ? dict.conversations.feeTitle
                   : dict.conversations.closed}
             </p>
-            {item.access?.feeRequired && !item.access.paidAt && !isExpired && (
+            {canPayFee && (
               <>
                 <p className="text-gray text-sm">
-                  {dict.conversations.feeDescription} ({item.access.feeAmount}{" "}
+                  {dict.conversations.feeDescription} ({item.access?.feeAmount}{" "}
                   {dict.common.sar})
                 </p>
                 <Button
                   className="justify-self-center rounded-xl"
-                  disabled={payFee.isPending}
+                  disabled={payFee.isPending || restart.isPending}
                   onClick={() => payFee.mutate()}
                 >
                   {dict.common.payNow}
@@ -149,7 +179,7 @@ export const ConversationThread = ({
             {isExpired && (
               <Button
                 className="justify-self-center rounded-xl"
-                disabled={restart.isPending}
+                disabled={restart.isPending || payFee.isPending}
                 onClick={() => restart.mutate()}
               >
                 {dict.conversations.restart}
@@ -158,7 +188,7 @@ export const ConversationThread = ({
           </div>
         ) : (
           <div className="flex gap-4">
-            <div className="relative grid grow grid-cols-1 items-end rounded-[16px] bg-[#f6f7fa]">
+            <div className="grid grow grid-cols-1 items-end rounded-[16px] bg-[#f6f7fa]">
               <TextareaAutosize
                 value={content}
                 onChange={(event) => setContent(event.target.value)}
@@ -166,10 +196,6 @@ export const ConversationThread = ({
                 className="min-h-14 w-full resize-none border-0 bg-transparent p-4 shadow-none outline-none"
                 maxLength={2_000}
               />
-              <label className="absolute top-4 right-4 grid size-6 cursor-pointer items-center justify-items-center rtl:left-4">
-                <MessageFileIcon className="size-4" />
-                <input type="file" hidden />
-              </label>
             </div>
             <Button
               size="icon"

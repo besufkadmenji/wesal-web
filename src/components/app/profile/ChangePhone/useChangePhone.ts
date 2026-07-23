@@ -1,18 +1,21 @@
 import { useDict } from "@/hooks/useDict";
-import AuthService from "@/services/auth.service";
+import { useMe } from "@/hooks/useMe";
+import { queryClient } from "@/utils/query.client";
 import { showErrorMessage, showSuccessMessage } from "@/utils/show.messages";
 import { useRouter } from "next/navigation";
 import { useQueryState } from "nuqs";
 import { useState } from "react";
-import { queryClient } from "@/utils/query.client";
+import { getProfileAuthService } from "../profileAuthService";
 
 export const useChangePhone = () => {
   const [busy, setBusy] = useState(false);
   const dict = useDict();
-  const [open, setOpen] = useQueryState("phoneChange", {
+  const { me } = useMe();
+  const authService = getProfileAuthService(Boolean(me?.provider));
+  const [, setOpen] = useQueryState("phoneChange", {
     defaultValue: "false",
   });
-  const [selectedPhone, setSelectedPhone] = useQueryState("selectedPhone", {
+  const [, setSelectedPhone] = useQueryState("selectedPhone", {
     defaultValue: "false",
   });
   const router = useRouter();
@@ -24,7 +27,7 @@ export const useChangePhone = () => {
     }
     setBusy(true);
     try {
-      const result = await AuthService.initiatePhoneChange({
+      const result = await authService.initiatePhoneChange({
         newPhone: `${countryCode}${newPhone}`,
         countryCode,
       });
@@ -33,9 +36,7 @@ export const useChangePhone = () => {
         setOpen("verify");
         setChangeToken(result.changeToken);
       }
-      // Handle successful login (e.g., redirect, show message)
     } catch (error) {
-      console.error("Login error:", error);
       showErrorMessage(
         error instanceof Error ? error.message : dict.common.somethingWentWrong,
       );
@@ -46,7 +47,7 @@ export const useChangePhone = () => {
   const verifyChange = async (code: string, countryCode: string) => {
     setBusy(true);
     try {
-      const result = await AuthService.verifyChangePhone({
+      const result = await authService.verifyChangePhone({
         changeToken: changeToken || "",
         code: code,
         countryCode: countryCode,
@@ -58,9 +59,7 @@ export const useChangePhone = () => {
         });
         router.replace("/profile");
       }
-      // Handle successful login (e.g., redirect, show message)
     } catch (error) {
-      console.error("Login error:", error);
       showErrorMessage(
         error instanceof Error ? error.message : dict.common.somethingWentWrong,
       );

@@ -3,6 +3,7 @@ export const formatPhone = (
   phone?: string | null,
 ) => {
   if (!phone) return "—";
+  if (phone.startsWith("+")) return phone;
   const dial = dialCode?.startsWith("+")
     ? dialCode
     : dialCode
