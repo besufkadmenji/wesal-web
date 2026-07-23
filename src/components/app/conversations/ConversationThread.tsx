@@ -43,6 +43,7 @@ export const ConversationThread = ({
     contractHref,
     isRecreateContract,
     canShowContractAction,
+    latestContract,
     isLoading,
   } = useConversationThread(conversationId);
   const { payFee, restart } = useConversationActions(conversationId);
@@ -67,7 +68,10 @@ export const ConversationThread = ({
         {!me?.provider && (
           <FavoriteButton providerId={item.providerId} iconOnly />
         )}
-        <ComplaintDialog conversationId={conversationId} />
+        <ComplaintDialog
+          conversationId={conversationId}
+          contractId={latestContract?.id}
+        />
       </header>
 
       <div className="border-border flex flex-wrap items-center justify-between gap-3 border-b px-4 py-3 md:px-6">
