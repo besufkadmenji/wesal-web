@@ -6,8 +6,22 @@ export const CONTRACT_DATE_FORMATTER = new Intl.DateTimeFormat("en-GB", {
   year: "numeric",
 });
 
-export const formatContractDate = (value: string | Date | null | undefined) =>
-  value ? CONTRACT_DATE_FORMATTER.format(new Date(value)) : "—";
+export const toContractDate = (value: unknown): Date | null => {
+  if (value == null || value === "") return null;
+  if (value instanceof Date) {
+    return Number.isNaN(value.getTime()) ? null : value;
+  }
+  if (typeof value === "string" || typeof value === "number") {
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? null : date;
+  }
+  return null;
+};
+
+export const formatContractDate = (value: unknown) => {
+  const date = toContractDate(value);
+  return date ? CONTRACT_DATE_FORMATTER.format(date) : "—";
+};
 
 export const formatDays = (value: number | null | undefined, unit: string) =>
   value ? `${value} ${unit}` : "—";
