@@ -51,7 +51,7 @@ export const ChatPopover = () => {
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80 overflow-hidden p-0">
-        <div className="grid max-h-96 overflow-y-auto">
+        <div className="grid max-h-[80vh] overflow-y-auto">
           {conversations.data?.items.slice(0, 5).map((conversation) => {
             const party = me?.provider
               ? conversation.user
@@ -60,7 +60,7 @@ export const ChatPopover = () => {
               <Link
                 key={conversation.id}
                 href={`/conversations/${conversation.id}`}
-                className="grid grid-cols-[auto_1fr] gap-3 border-b border-[#f2f2f2] p-4 hover:bg-[#f8f9fc]"
+                className="border-border grid grid-cols-[auto_1fr] gap-3 border-b p-4 hover:bg-[#f8f9fc]"
               >
                 <ParticipantAvatar
                   filename={party.avatarFilename}

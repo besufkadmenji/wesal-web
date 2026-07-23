@@ -1,5 +1,6 @@
 "use client";
 
+import MessageHeartFilledIcon from "@/assets/icons/message.heart.filled.svg";
 import MessageHeartIcon from "@/assets/icons/message.heart.svg";
 import { Button } from "@/components/ui/button";
 import { queryKeys } from "@/hooks/queryKeys";
@@ -47,9 +48,11 @@ export const FavoriteButton = ({
       onClick={() => mutation.mutate(!active)}
       className={cn("size-9.5 rounded-[12px] bg-white", className)}
     >
-      <MessageHeartIcon
-        className={cn("size-6", active && "fill-[#b3251e] text-[#b3251e]")}
-      />
+      {active ? (
+        <MessageHeartFilledIcon className="size-6" />
+      ) : (
+        <MessageHeartIcon className="size-6" />
+      )}
       {!iconOnly && label}
     </Button>
   );

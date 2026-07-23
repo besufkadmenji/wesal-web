@@ -36,7 +36,7 @@ export const Footer = () => {
             },
             {
               label: dict.footer.myContracts,
-              href: "/my-contracts",
+              href: "/contracts",
             },
           ]}
         />
@@ -153,7 +153,6 @@ const FooterLinks = ({
 };
 
 const AboutUsSummary = () => {
-  const dict = useDict();
   const lng = useLang();
   const { setting } = useSetting();
   const iconsMap: Record<SocialMediaPlatform, ReactNode> = {

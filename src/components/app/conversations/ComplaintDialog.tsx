@@ -1,45 +1,71 @@
 "use client";
 
+import MessageComplaintIcon from "@/assets/icons/message.complaint.svg";
+import { ComplaintDialogSkeleton } from "@/components/app/conversations/ComplaintDialogSkeleton";
+import { ComplaintEvidenceUpload } from "@/components/app/conversations/ComplaintEvidenceUpload";
+import { ComplaintExistingView } from "@/components/app/conversations/ComplaintExistingView";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
-  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useComplaints } from "@/hooks/useComplaints";
-import { useContracts } from "@/hooks/useContracts";
 import { queryKeys } from "@/hooks/queryKeys";
 import { useDict } from "@/hooks/useDict";
+import { cn } from "@/lib/utils";
 import { ComplaintService } from "@/services/complaint.service";
 import { showErrorMessage, showSuccessMessage } from "@/utils/show.messages";
 import { validateComplaintEvidence } from "@/utils/participant.policy";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { FileWarning } from "lucide-react";
-import Link from "next/link";
+import { X } from "lucide-react";
 import { useState } from "react";
-import MessageComplaintIcon from "@/assets/icons/message.complaint.svg";
+
+const fieldClassName =
+  "h-14 rounded-[20px] border-[#f2f2f2] px-4 text-sm text-[#1a1a1a] shadow-none placeholder:text-[#666] focus-visible:border-[#f2f2f2] focus-visible:ring-0";
 
 export const ComplaintDialog = ({
   conversationId,
+  contractId,
 }: {
   conversationId: string;
+  contractId?: string;
 }) => {
   const dict = useDict();
   const queryClient = useQueryClient();
-  const existing = useComplaints({ conversationId, page: 1, limit: 1 });
-  const contracts = useContracts({ conversationId, page: 1, limit: 20 });
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [contractId, setContractId] = useState("");
   const [files, setFiles] = useState<File[]>([]);
+
+  const existing = useComplaints(
+    { conversationId, page: 1, limit: 1 },
+    {
+      enabled: open,
+      refetchInterval: (query) =>
+        open && (query.state.data?.items.length ?? 0) > 0 ? 15_000 : false,
+    },
+  );
   const current = existing.data?.items[0];
+
+  const resetForm = () => {
+    setTitle("");
+    setDescription("");
+    setFiles([]);
+  };
+
+  const handleOpenChange = (nextOpen: boolean) => {
+    setOpen(nextOpen);
+    if (!nextOpen) {
+      resetForm();
+    }
+  };
+
   const mutation = useMutation({
     mutationFn: () =>
       ComplaintService.create(
@@ -47,15 +73,32 @@ export const ComplaintDialog = ({
           conversationId,
           title: title.trim(),
           description: description.trim(),
-          contractId: contractId || undefined,
+          contractId,
         },
         files,
       ),
-    onSuccess: (complaint) => {
+    onSuccess: async (complaint) => {
       showSuccessMessage(dict.complaints.created);
-      queryClient.invalidateQueries({ queryKey: queryKeys.complaints });
-      setOpen(false);
-      window.location.href = `/complaints/${complaint.id}`;
+      resetForm();
+      queryClient.setQueryData(
+        [...queryKeys.complaints, { conversationId, page: 1, limit: 1 }],
+        (
+          currentData: Awaited<
+            ReturnType<typeof ComplaintService.findAll>
+          > | undefined,
+        ) => ({
+          items: [complaint],
+          meta: currentData?.meta ?? {
+            total: 1,
+            page: 1,
+            limit: 1,
+            totalPages: 1,
+            hasNext: false,
+            hasPrevious: false,
+          },
+        }),
+      );
+      await queryClient.invalidateQueries({ queryKey: queryKeys.complaints });
     },
     onError: (error) => showErrorMessage(error.message),
   });
@@ -68,102 +111,100 @@ export const ComplaintDialog = ({
     setFiles(selected);
   };
 
+  const showExisting = open && !existing.isLoading && Boolean(current);
+  const showCreate = open && !existing.isLoading && !current;
+  const showLoading = open && existing.isLoading;
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button
           variant="outline"
           size="icon"
-          className="size-9.5 rounded-[12px]"
+          className="size-9.5 rounded-xl"
           aria-label={dict.conversations.complain}
         >
           <MessageComplaintIcon className="size-6" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-xl rounded-[20px]">
-        {current ? (
+      <DialogContent
+        showCloseButton={false}
+        className="gap-7 rounded-[20px] border-0 bg-white px-6 py-10 shadow-xl sm:max-w-[42vw]"
+      >
+        {showLoading && <ComplaintDialogSkeleton />}
+        {showExisting && current && <ComplaintExistingView complaint={current} />}
+        {showCreate && (
           <>
-            <DialogHeader>
-              <DialogTitle>{dict.complaints.duplicate}</DialogTitle>
-              <DialogDescription>{current.title}</DialogDescription>
-            </DialogHeader>
-            <Button asChild className="justify-self-start rounded-xl">
-              <Link href={`/complaints/${current.id}`}>
-                {dict.complaints.title}
-              </Link>
-            </Button>
-          </>
-        ) : (
-          <>
-            <DialogHeader>
-              <DialogTitle>{dict.complaints.new}</DialogTitle>
-              <DialogDescription>
-                {dict.complaints.evidenceHint}
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4">
-              <Input
-                value={title}
-                onChange={(event) => setTitle(event.target.value)}
-                placeholder={dict.complaints.subject}
-                maxLength={200}
-                className="h-12 rounded-xl"
-              />
-              <Textarea
-                value={description}
-                onChange={(event) => setDescription(event.target.value)}
-                placeholder={dict.complaints.description}
-                className="min-h-32 rounded-[14px]"
-              />
-              {!!contracts.data?.items.length && (
-                <select
-                  value={contractId}
-                  onChange={(event) => setContractId(event.target.value)}
-                  className="h-12 rounded-[14px] border border-[#e5e7eb] px-3"
-                >
-                  <option value="">{dict.contracts.details}</option>
-                  {contracts.data.items.map((contract) => (
-                    <option key={contract.id} value={contract.id}>
-                      #{contract.publicId || contract.id.slice(0, 8)} · v
-                      {contract.version}
-                    </option>
-                  ))}
-                </select>
-              )}
-              <label className="grid cursor-pointer gap-2 rounded-[14px] border border-dashed border-[#d6d9e0] p-4 text-sm">
-                <span>{dict.complaints.evidence}</span>
-                <span className="text-gray text-xs">
-                  {dict.complaints.evidenceHint}
-                </span>
-                <input
-                  type="file"
-                  className="text-sm"
-                  accept="image/png,image/jpeg"
-                  multiple
-                  onChange={(event) =>
-                    updateFiles(Array.from(event.target.files || []))
-                  }
-                />
-              </label>
+            <div className="flex items-start gap-6">
+              <span className="text-primary grid size-15 shrink-0 place-content-center rounded-2xl bg-[#eff1f6]">
+                <MessageComplaintIcon className="size-6" />
+              </span>
+              <div className="grid grow grid-cols-1">
+                <div className="min-w-0 flex-1">
+                  <div className="grid gap-2 text-start">
+                    <DialogTitle className="text-xl leading-[1.6] font-semibold text-black">
+                      {dict.complaints.new}
+                    </DialogTitle>
+                    <DialogDescription className="text-gray text-base leading-[1.7]">
+                      {dict.complaints.intro}
+                    </DialogDescription>
+                  </div>
+
+                  <div className="mt-4 grid gap-5">
+                    <Input
+                      value={title}
+                      onChange={(event) => setTitle(event.target.value)}
+                      placeholder={dict.complaints.subject}
+                      maxLength={200}
+                      className={fieldClassName}
+                    />
+                    <Textarea
+                      value={description}
+                      onChange={(event) => setDescription(event.target.value)}
+                      placeholder={dict.complaints.description}
+                      className={cn(
+                        fieldClassName,
+                        "min-h-30 resize-none py-4",
+                      )}
+                    />
+                    <ComplaintEvidenceUpload
+                      files={files}
+                      evidenceLabel={dict.complaints.evidence}
+                      evidenceFormats={dict.complaints.evidenceFormats}
+                      evidenceMaxSize={dict.complaints.evidenceMaxSize}
+                      removeLabel={dict.complaints.removeEvidence}
+                      onChange={updateFiles}
+                    />
+                  </div>
+                </div>
+                <div className="mt-7 grid grid-cols-2 gap-4">
+                  <DialogClose asChild>
+                    <Button
+                      type="button"
+                      disabled={mutation.isPending}
+                      className="bg-border h-12.5 rounded-[20px] text-base font-semibold text-[#4d4d4d] shadow-none hover:bg-[#e9e9e9]"
+                    >
+                      {dict.common.cancel}
+                    </Button>
+                  </DialogClose>
+                  <Button
+                    type="button"
+                    disabled={
+                      mutation.isPending || !title.trim() || !description.trim()
+                    }
+                    onClick={() => mutation.mutate()}
+                    className="bg-primary h-12.5 rounded-[20px] text-base font-semibold text-white"
+                  >
+                    {dict.complaints.submit}
+                  </Button>
+                </div>
+              </div>
             </div>
-            <DialogFooter>
-              <Button
-                variant="outline"
-                className="rounded-[14px]"
-                onClick={() => setOpen(false)}
-              >
-                {dict.common.cancel}
-              </Button>
-              <Button
-                className="rounded-[14px]"
-                disabled={
-                  mutation.isPending || !title.trim() || !description.trim()
-                }
-                onClick={() => mutation.mutate()}
-              >
-                {dict.common.submit}
-              </Button>
-            </DialogFooter>
+
+            <DialogClose className="text-gray border-border absolute inset-e-6 top-6 grid size-8 place-content-center rounded-2xl border bg-white transition hover:bg-[#f8f9fb]">
+              <X className="size-4" />
+              <span className="sr-only">{dict.common.cancel}</span>
+            </DialogClose>
           </>
         )}
       </DialogContent>

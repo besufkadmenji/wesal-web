@@ -1,15 +1,11 @@
-import { PaginatedListingResponse } from "@/gql/graphql";
 import ListingService from "@/services/listing.service";
 import { useQuery } from "@tanstack/react-query";
 import { parseAsInteger, useQueryState } from "nuqs";
-export const useListings = (): {
-  listings: PaginatedListingResponse | null | undefined;
-  isLoading: boolean;
-  isError: boolean;
-} => {
-  const [page] = useQueryState("page", parseAsInteger.withDefault(1));
+
+export const useListings = () => {
+  const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
   const [limit] = useQueryState("limit", parseAsInteger.withDefault(16));
-  const [query, setQuery] = useQueryState("query");
+  const [query] = useQueryState("query");
 
   const {
     isLoading,
@@ -25,5 +21,5 @@ export const useListings = (): {
       }),
   });
 
-  return { isLoading, isError, listings };
+  return { isLoading, isError, listings, page, setPage };
 };

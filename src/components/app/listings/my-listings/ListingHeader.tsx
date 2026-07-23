@@ -1,18 +1,23 @@
 import BreadcrumbIcon from "@/assets/icons/breadcrumb.svg";
 import { Button } from "@/components/ui/button";
 import { useDict } from "@/hooks/useDict";
-import { useLang } from "@/hooks/useLang";
 import Image from "next/image";
 import Link from "next/link";
 import SearchIcon from "@/assets/icons/search.svg";
 import { Input } from "@heroui/react";
-import { useQueryState } from "nuqs";
+import { parseAsInteger, useQueryState } from "nuqs";
 import { useState } from "react";
+
 export const ListingHeader = () => {
   const dict = useDict();
-  const lng = useLang();
   const [query, setQuery] = useQueryState("query");
+  const [, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
   const [localQuery, setLocalQuery] = useState(query ?? "");
+  const applySearch = () => {
+    void setPage(1);
+    void setQuery(localQuery || null);
+  };
+
   return (
     <div className="relative grid h-50 grid-cols-1">
       <Image src={"/images/support.bg.png"} fill alt="Support Background" />
@@ -48,16 +53,11 @@ export const ListingHeader = () => {
           onChange={(e) => setLocalQuery(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
-              setQuery(localQuery);
+              applySearch();
             }
           }}
         />
-        <Button
-          className="h-12.5 rounded-[20px] px-16"
-          onClick={() => {
-            setQuery(localQuery);
-          }}
-        >
+        <Button className="h-12.5 rounded-[20px] px-16" onClick={applySearch}>
           {dict.home.hero.search}
         </Button>
       </div>

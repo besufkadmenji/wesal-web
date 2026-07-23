@@ -14,7 +14,6 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
-import { FileWarning } from "lucide-react";
 export const Nav = () => {
   const { me, logout } = useMe();
   const dict = useDict();
@@ -91,14 +90,6 @@ export const Nav = () => {
               isActive={pathname === `/${lng}/profile/favorites`}
             />
           )}
-          <NavItem
-            icon={<FileWarning className="size-5 shrink-0" />}
-            label={dict.complaints.title}
-            onClick={(): void => {
-              router.push("/complaints");
-            }}
-            isActive={pathname.startsWith(`/${lng}/complaints`)}
-          />
           <ConfirmLogout>
             <NavItem
               icon={<LogoutIcon className="size-5 shrink-0" />}

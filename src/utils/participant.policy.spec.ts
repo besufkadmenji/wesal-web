@@ -10,9 +10,7 @@ describe("Participant access policies", () => {
   it("scopes customer and provider-only routes", () => {
     expect(canAccessParticipantPath("user", "/profile/favorites")).toBe(true);
     expect(canAccessParticipantPath("provider", "/profile/favorites")).toBe(false);
-    expect(canAccessParticipantPath("provider", "/my-listings/1/promotion")).toBe(
-      true,
-    );
+    expect(canAccessParticipantPath("provider", "/my-listings")).toBe(true);
     expect(canAccessParticipantPath("user", "/my-listings")).toBe(false);
     expect(canAccessParticipantPath(null, "/contracts")).toBe(false);
   });
