@@ -1,7 +1,9 @@
 "use client";
 
 import MessageComplaintIcon from "@/assets/icons/message.complaint.svg";
+import { ComplaintDialogSkeleton } from "@/components/app/conversations/ComplaintDialogSkeleton";
 import { ComplaintEvidenceUpload } from "@/components/app/conversations/ComplaintEvidenceUpload";
+import { ComplaintExistingView } from "@/components/app/conversations/ComplaintExistingView";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -22,7 +24,6 @@ import { showErrorMessage, showSuccessMessage } from "@/utils/show.messages";
 import { validateComplaintEvidence } from "@/utils/participant.policy";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { X } from "lucide-react";
-import Link from "next/link";
 import { useState } from "react";
 
 const fieldClassName =
@@ -37,11 +38,19 @@ export const ComplaintDialog = ({
 }) => {
   const dict = useDict();
   const queryClient = useQueryClient();
-  const existing = useComplaints({ conversationId, page: 1, limit: 1 });
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [files, setFiles] = useState<File[]>([]);
+
+  const existing = useComplaints(
+    { conversationId, page: 1, limit: 1 },
+    {
+      enabled: open,
+      refetchInterval: (query) =>
+        open && (query.state.data?.items.length ?? 0) > 0 ? 15_000 : false,
+    },
+  );
   const current = existing.data?.items[0];
 
   const resetForm = () => {
@@ -68,11 +77,28 @@ export const ComplaintDialog = ({
         },
         files,
       ),
-    onSuccess: (complaint) => {
+    onSuccess: async (complaint) => {
       showSuccessMessage(dict.complaints.created);
-      queryClient.invalidateQueries({ queryKey: queryKeys.complaints });
-      handleOpenChange(false);
-      window.location.href = `/complaints/${complaint.id}`;
+      resetForm();
+      queryClient.setQueryData(
+        [...queryKeys.complaints, { conversationId, page: 1, limit: 1 }],
+        (
+          currentData: Awaited<
+            ReturnType<typeof ComplaintService.findAll>
+          > | undefined,
+        ) => ({
+          items: [complaint],
+          meta: currentData?.meta ?? {
+            total: 1,
+            page: 1,
+            limit: 1,
+            totalPages: 1,
+            hasNext: false,
+            hasPrevious: false,
+          },
+        }),
+      );
+      await queryClient.invalidateQueries({ queryKey: queryKeys.complaints });
     },
     onError: (error) => showErrorMessage(error.message),
   });
@@ -84,6 +110,10 @@ export const ComplaintDialog = ({
     }
     setFiles(selected);
   };
+
+  const showExisting = open && !existing.isLoading && Boolean(current);
+  const showCreate = open && !existing.isLoading && !current;
+  const showLoading = open && existing.isLoading;
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -98,33 +128,12 @@ export const ComplaintDialog = ({
         </Button>
       </DialogTrigger>
       <DialogContent
-        showCloseButton={true}
+        showCloseButton={false}
         className="gap-7 rounded-[20px] border-0 bg-white px-6 py-10 shadow-xl sm:max-w-[42vw]"
       >
-        {current ? (
-          <>
-            <div className="grid gap-2 text-start">
-              <DialogTitle className="text-xl leading-[1.6] font-semibold text-black">
-                {dict.complaints.duplicate}
-              </DialogTitle>
-              <DialogDescription className="text-gray text-base leading-[1.7]">
-                {current.title}
-              </DialogDescription>
-            </div>
-            <Button
-              asChild
-              className="bg-primary h-12.5 rounded-[20px] text-base font-semibold text-white"
-            >
-              <Link href={`/complaints/${current.id}`}>
-                {dict.complaints.title}
-              </Link>
-            </Button>
-            <DialogClose className="text-gray border-border absolute inset-e-6 top-6 grid size-8 place-content-center rounded-2xl border bg-white transition hover:bg-[#f8f9fb]">
-              <X className="size-4" />
-              <span className="sr-only">{dict.common.cancel}</span>
-            </DialogClose>
-          </>
-        ) : (
+        {showLoading && <ComplaintDialogSkeleton />}
+        {showExisting && current && <ComplaintExistingView complaint={current} />}
+        {showCreate && (
           <>
             <div className="flex items-start gap-6">
               <span className="text-primary grid size-15 shrink-0 place-content-center rounded-2xl bg-[#eff1f6]">
@@ -191,6 +200,11 @@ export const ComplaintDialog = ({
                 </div>
               </div>
             </div>
+
+            <DialogClose className="text-gray border-border absolute inset-e-6 top-6 grid size-8 place-content-center rounded-2xl border bg-white transition hover:bg-[#f8f9fb]">
+              <X className="size-4" />
+              <span className="sr-only">{dict.common.cancel}</span>
+            </DialogClose>
           </>
         )}
       </DialogContent>

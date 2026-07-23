@@ -840,6 +840,8 @@
     "submit": "Submit complaint",
     "created": "Complaint submitted",
     "duplicate": "A complaint already exists for this conversation",
+    "awaitingResponse": "We will review your complaint and respond soon.",
+    "adminResponse": "Support response",
     "threadClosed": "This support thread is closed",
     "replyPlaceholder": "Write a reply",
     "empty": "No support requests yet"
