@@ -1,4 +1,4 @@
-import { ListingMedia, ListingType, MediaType } from "@/gql/graphql";
+import { ListingMedia, MediaType } from "@/gql/graphql";
 import { useDict } from "@/hooks/useDict";
 import { useMe } from "@/hooks/useMe";
 import ListingService from "@/services/listing.service";
@@ -60,15 +60,10 @@ export const useManageListing = () => {
       if (result) {
         showSuccessMessage(dict.addListing.listingCreatedSuccessfully);
         reset();
-        router.push(
-          result.type === ListingType.Featured
-            ? `/my-listings/${result.id}/promotion`
-            : "/my-listings",
-        );
+        router.push("/my-listings");
       }
-      // Handle successful login (e.g., redirect, show message)
     } catch (error) {
-      console.error("Login error:", error);
+      console.error("Create listing error:", error);
       showErrorMessage(
         error instanceof Error
           ? error.message

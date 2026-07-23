@@ -8,6 +8,7 @@ import {
 import { CREATE_LISTING_MUTATION } from "@/graphql/listing/createListing";
 import { LISTING_QUERY } from "@/graphql/listing/listing";
 import { LISTINGS_QUERY } from "@/graphql/listing/listings";
+import { MY_LISTING_QUERY } from "@/graphql/listing/myListing";
 import { MY_LISTINGS_QUERY } from "@/graphql/listing/myListings";
 import { REMOVE_LISTING_MUTATION } from "@/graphql/listing/removeListing";
 import { UPDATE_LISTING_MUTATION } from "@/graphql/listing/updateListing";
@@ -61,6 +62,22 @@ class ListingService {
       console.error("listingResult", e);
     }
     return null;
+  };
+
+  static ownerListing = async (id: string): Promise<Listing | null> => {
+    try {
+      const listingResult = await client().query<{
+        myListing: Listing | null;
+      }>({
+        query: MY_LISTING_QUERY,
+        variables: { id },
+        fetchPolicy: "network-only",
+      });
+      return listingResult.data?.myListing ?? null;
+    } catch (error) {
+      const errorMessage = parseGraphQLError(error);
+      throw new Error(errorMessage);
+    }
   };
 
   static createListing = async (input: CreateListingInput) => {
