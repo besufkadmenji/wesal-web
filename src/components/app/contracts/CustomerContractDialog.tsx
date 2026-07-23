@@ -7,7 +7,6 @@ import TitleIcon from "@/assets/icons/contracts/popup/title.svg";
 import { ContractCompletionDialog } from "@/components/app/contracts/ContractCompletionDialog";
 import { ContractFinancialSection } from "@/components/app/contracts/ContractFinancialSection";
 import { ContractPaymentDialog } from "@/components/app/contracts/ContractPaymentDialog";
-import { ContractRatingPrompt } from "@/components/app/contracts/ContractRatingPrompt";
 import { ContractSectionTitle } from "@/components/app/contracts/ContractSectionTitle";
 import { ContractSignaturesSection } from "@/components/app/contracts/ContractSignaturesSection";
 import {
@@ -63,18 +62,15 @@ export const CustomerContractDialog = ({
   const customerSignature = contract.signatures.find(
     (entry) => entry.signatureType === ContractSignatureType.CustomerAcceptance,
   );
-  const providerSignature = contract.signatures.find(
-    (entry) => entry.signatureType === ContractSignatureType.ProviderAcceptance,
-  );
-  const completionSignature = contract.signatures.find(
-    (entry) => entry.signatureType === ContractSignatureType.CustomerCompletion,
-  );
   // The API does not expose a provider completion-time field yet, so the
   // provider and expected-completion metrics can only show a placeholder
   // once the contract leaves the pending state.
   const pendingTimelineValue = isPending
     ? dict.contracts.awaitingProviderInput
     : "—";
+  const deliveryTimelineValue = isPending
+    ? pendingTimelineValue
+    : formatDays(contract.deliveryTimeDays, dict.contracts.dayUnit);
 
   return (
     <>
@@ -128,14 +124,7 @@ export const CustomerContractDialog = ({
                     <TimelineMetric
                       icon={ClockIcon}
                       label={dict.contracts.deliveryTime}
-                      value={
-                        isPending
-                          ? pendingTimelineValue
-                          : formatDays(
-                              contract.deliveryTimeDays,
-                              dict.contracts.dayUnit,
-                            )
-                      }
+                      value={deliveryTimelineValue}
                     />
                     <TimelineMetric
                       icon={ClockIcon}
@@ -165,17 +154,11 @@ export const CustomerContractDialog = ({
 
               <ContractFinancialSection contract={contract} />
 
-              <ContractSignaturesSection
-                customerSignature={customerSignature?.signatureData}
-                providerSignature={
-                  isCompleted ? providerSignature?.signatureData : undefined
-                }
-                completionSignature={
-                  isCompleted ? completionSignature?.signatureData : undefined
-                }
-              />
-
-              {isCompleted && <ContractRatingPrompt />}
+              {isPending && (
+                <ContractSignaturesSection
+                  customerSignature={customerSignature?.signatureData}
+                />
+              )}
             </div>
           </div>
 

@@ -1,10 +1,13 @@
 "use client";
 
 import DocumentIcon from "@/assets/icons/contracts/document.svg";
+import { CompletedContractDetailPage } from "@/components/app/contracts/CompletedContractDetailPage";
 import { ContractHero } from "@/components/app/contracts/ContractHero";
 import { MoneyValue } from "@/components/app/contracts/MoneyValue";
 import { CustomerContractDialog } from "@/components/app/contracts/CustomerContractDialog";
 import { ContractStatusPill } from "@/components/app/contracts/ContractStatusPill";
+import { ProviderContractAcceptPage } from "@/components/app/contracts/ProviderContractAcceptPage";
+import { ProviderContractDialog } from "@/components/app/contracts/ProviderContractDialog";
 import { SignaturePreview } from "@/components/app/contracts/SignaturePreview";
 import {
   CONTRACT_DATE_FORMATTER,
@@ -16,22 +19,12 @@ import {
 } from "@/components/app/contracts/ContractSkeletons";
 import { AppPagination } from "@/components/app/shared/AppPagination";
 import { AppWrapper } from "@/components/app/shared/AppWrapper";
-import { SignatureInput } from "@/components/app/profile/SignedContract/SignatureInput";
 import {
   EmptyState,
   StatusBadge,
   useLocalizedFormat,
 } from "@/components/app/shared/ParticipantUI";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   ContractSignatureType,
   ContractStatus,
@@ -44,7 +37,6 @@ import { useDict } from "@/hooks/useDict";
 import { useMe } from "@/hooks/useMe";
 import { cn } from "@/lib/utils";
 import { ContractService } from "@/services/contract.service";
-import { uploadFile } from "@/utils/file.upload";
 import { showErrorMessage, showSuccessMessage } from "@/utils/show.messages";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -150,7 +142,12 @@ export const ContractsPage = () => {
                   <ContractCard
                     key={contract.id}
                     contract={contract}
-                    onOpenContract={me?.user ? setSelectedContract : undefined}
+                    isProvider={Boolean(me?.provider)}
+                    onOpenContract={
+                      me?.user || me?.provider
+                        ? setSelectedContract
+                        : undefined
+                    }
                   />
                 ))}
               </div>
@@ -165,29 +162,42 @@ export const ContractsPage = () => {
           )}
         </div>
       </main>
-      <CustomerContractDialog
-        contract={selectedContract}
-        open={Boolean(selectedContract)}
-        onOpenChange={(open) => {
-          if (!open) setSelectedContract(null);
-        }}
-      />
+      {me?.user ? (
+        <CustomerContractDialog
+          contract={selectedContract}
+          open={Boolean(selectedContract)}
+          onOpenChange={(open) => {
+            if (!open) setSelectedContract(null);
+          }}
+        />
+      ) : (
+        <ProviderContractDialog
+          contract={selectedContract}
+          open={Boolean(selectedContract)}
+          onOpenChange={(open) => {
+            if (!open) setSelectedContract(null);
+          }}
+        />
+      )}
     </AppWrapper>
   );
 };
 
 const ContractCard = ({
   contract,
+  isProvider,
   onOpenContract,
 }: {
   contract: Contract;
+  isProvider?: boolean;
   onOpenContract?: (contract: Contract) => void;
 }) => {
   const dict = useDict();
-  const opensCustomerDialog = Boolean(
+  // Detail page is only for provider pending acceptance; all other statuses open a popup.
+  const opensContractDialog = Boolean(
     onOpenContract &&
     contract.status !== ContractStatus.Draft &&
-    contract.status !== ContractStatus.Rejected,
+    !(isProvider && contract.status === ContractStatus.Pending),
   );
   const cardDetails = (
     <>
@@ -228,7 +238,7 @@ const ContractCard = ({
 
   return (
     <article className="group flex h-[254px] flex-col gap-4 overflow-hidden rounded-[20px] border border-[#f2f2f2] bg-white pb-3 transition hover:-translate-y-0.5 hover:shadow-sm">
-      {opensCustomerDialog ? (
+      {opensContractDialog ? (
         <button
           type="button"
           className="block w-full cursor-pointer text-start"
@@ -330,10 +340,6 @@ export const ContractDetailPage = ({ id }: { id: string }) => {
   const format = useLocalizedFormat();
   const queryClient = useQueryClient();
   const contract = useContract(id);
-  const [signature, setSignature] = useState<File | null>(null);
-  const [deliveryDays, setDeliveryDays] = useState("1");
-  const [rejectOpen, setRejectOpen] = useState(false);
-  const [reason, setReason] = useState("");
 
   const refresh = () => {
     queryClient.invalidateQueries({ queryKey: queryKeys.contract(id) });
@@ -344,28 +350,6 @@ export const ContractDetailPage = ({ id }: { id: string }) => {
       });
     }
   };
-  const accept = useMutation({
-    mutationFn: async () => {
-      if (!signature) throw new Error(dict.contracts.signature);
-      const uploaded = await uploadFile(signature);
-      return ContractService.accept({
-        contractId: id,
-        signatureData: uploaded.filename,
-        deliveryTimeDays: Number(deliveryDays),
-      });
-    },
-    onSuccess: refresh,
-    onError: (error) => showErrorMessage(error.message),
-  });
-  const reject = useMutation({
-    mutationFn: () =>
-      ContractService.reject({ contractId: id, reason: reason.trim() }),
-    onSuccess: () => {
-      setRejectOpen(false);
-      refresh();
-    },
-    onError: (error) => showErrorMessage(error.message),
-  });
   const pay = useMutation({
     mutationFn: () => ContractService.pay(id),
     onSuccess: () => {
@@ -397,6 +381,31 @@ export const ContractDetailPage = ({ id }: { id: string }) => {
   const completionSignature = item.signatures.find(
     (entry) => entry.signatureType === ContractSignatureType.CustomerCompletion,
   );
+  const isProvider = Boolean(
+    me?.provider && me.provider.id === item.providerId,
+  );
+  const isCustomer = Boolean(me?.user && me.user.id === item.clientId);
+
+  if (isProvider && item.status === ContractStatus.Pending) {
+    return (
+      <AppWrapper>
+        <main className="bg-[#fcfdfe]">
+          <ProviderContractAcceptPage contract={item} />
+        </main>
+      </AppWrapper>
+    );
+  }
+
+  if (item.status === ContractStatus.Completed) {
+    return (
+      <AppWrapper>
+        <main className="bg-[#fcfdfe]">
+          <CompletedContractDetailPage contract={item} />
+        </main>
+      </AppWrapper>
+    );
+  }
+
   return (
     <AppWrapper>
       <main className="bg-[#fcfdfe] px-4 py-12 md:px-8 xl:px-[7vw] xl:py-20">
@@ -493,45 +502,7 @@ export const ContractDetailPage = ({ id }: { id: string }) => {
             )}
           </section>
 
-          {me?.provider && item.status === ContractStatus.Pending && (
-            <section className="grid gap-5 rounded-[20px] bg-white p-5 md:grid-cols-2 md:p-7">
-              <SignatureInput
-                label={dict.contracts.signature}
-                isRequired
-                file={signature}
-                onChange={setSignature}
-              />
-              <div className="grid content-start gap-4">
-                <Input
-                  type="number"
-                  min={1}
-                  value={deliveryDays}
-                  onChange={(event) => setDeliveryDays(event.target.value)}
-                  className="h-12 rounded-[14px]"
-                  placeholder={dict.contracts.deliveryDays}
-                />
-                <div className="flex gap-3">
-                  <Button
-                    className="grow rounded-[14px]"
-                    disabled={
-                      accept.isPending || !signature || Number(deliveryDays) < 1
-                    }
-                    onClick={() => accept.mutate()}
-                  >
-                    {dict.contracts.accept}
-                  </Button>
-                  <Button
-                    variant="destructive"
-                    className="grow rounded-[14px]"
-                    onClick={() => setRejectOpen(true)}
-                  >
-                    {dict.contracts.reject}
-                  </Button>
-                </div>
-              </div>
-            </section>
-          )}
-          {me?.user && item.status === ContractStatus.Accepted && (
+          {isCustomer && item.status === ContractStatus.Accepted && (
             <Button
               className="h-13 justify-self-end rounded-[16px] px-8"
               disabled={pay.isPending}
@@ -540,7 +511,7 @@ export const ContractDetailPage = ({ id }: { id: string }) => {
               {dict.contracts.pay} · {format.money(item.totalPayable)}
             </Button>
           )}
-          {me?.user && item.status === ContractStatus.Rejected && (
+          {isCustomer && item.status === ContractStatus.Rejected && (
             <Button
               asChild
               className="h-13 justify-self-end rounded-[16px] px-8"
@@ -552,32 +523,6 @@ export const ContractDetailPage = ({ id }: { id: string }) => {
           )}
         </div>
       </main>
-
-      <Dialog open={rejectOpen} onOpenChange={setRejectOpen}>
-        <DialogContent className="rounded-[20px]">
-          <DialogHeader>
-            <DialogTitle>{dict.contracts.reject}</DialogTitle>
-          </DialogHeader>
-          <Textarea
-            value={reason}
-            onChange={(event) => setReason(event.target.value)}
-            placeholder={dict.contracts.rejectionReason}
-            className="min-h-32 rounded-[14px]"
-          />
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setRejectOpen(false)}>
-              {dict.common.cancel}
-            </Button>
-            <Button
-              variant="destructive"
-              disabled={!reason.trim() || reject.isPending}
-              onClick={() => reject.mutate()}
-            >
-              {dict.contracts.reject}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </AppWrapper>
   );
 };
@@ -622,4 +567,3 @@ export const FinancialSummary = ({
     </div>
   );
 };
-
