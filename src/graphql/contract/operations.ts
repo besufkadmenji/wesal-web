@@ -53,11 +53,26 @@ const CONTRACT_FRAGMENT = gql`
     categoryRulesAr
     categoryRulesEn
     contractDocumentText
+    undertakingTextAr
+    undertakingTextEn
+    refundPolicyAr
+    refundPolicyEn
     maxCompletionDays
     maxTerminationDays
     rejectionReason
+    cancellationReason
+    disputeReason
+    paidAt
     acceptedAt
     rejectedAt
+    providerCompletedAt
+    deliveryStartedAt
+    deliveryEstimateDays
+    confirmationDeadlineAt
+    cancellationRequestedAt
+    disputedAt
+    completedAt
+    cancelledAt
     createdAt
     updatedAt
     signatures {
@@ -81,6 +96,28 @@ const CONTRACT_FRAGMENT = gql`
       version
       status
       rejectionReason
+      createdAt
+    }
+    settlements {
+      id
+      type
+      amount
+      reason
+      createdAt
+    }
+    audits {
+      id
+      actorType
+      action
+      previousStatus
+      newStatus
+      reason
+      createdAt
+    }
+    document {
+      id
+      version
+      sha256
       createdAt
     }
   }
@@ -205,6 +242,33 @@ export const PAY_CONTRACT_MUTATION = gql`
 export const COMPLETE_CONTRACT_MUTATION = gql`
   mutation CompleteContract($input: CompleteContractInput!) {
     completeContract(input: $input) {
+      ...ContractFields
+    }
+  }
+  ${CONTRACT_FRAGMENT}
+`;
+
+export const PROVIDER_COMPLETE_CONTRACT_MUTATION = gql`
+  mutation ProviderCompleteContract($input: ProviderCompleteContractInput!) {
+    providerCompleteContract(input: $input) {
+      ...ContractFields
+    }
+  }
+  ${CONTRACT_FRAGMENT}
+`;
+
+export const REQUEST_CONTRACT_CANCELLATION_MUTATION = gql`
+  mutation RequestContractCancellation($input: CancelContractInput!) {
+    requestContractCancellation(input: $input) {
+      ...ContractFields
+    }
+  }
+  ${CONTRACT_FRAGMENT}
+`;
+
+export const REFUSE_CONTRACT_DELIVERY_MUTATION = gql`
+  mutation RefuseContractDelivery($input: RefuseDeliveryInput!) {
+    refuseContractDelivery(input: $input) {
       ...ContractFields
     }
   }

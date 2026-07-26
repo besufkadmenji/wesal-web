@@ -11,6 +11,9 @@ import type {
   PaginatedContractResponse,
   RejectContractInput,
   ResendContractInput,
+  ProviderCompleteContractInput,
+  CancelContractInput,
+  RefuseDeliveryInput,
 } from "@/gql/graphql";
 import {
   ACCEPT_CONTRACT_MUTATION,
@@ -23,6 +26,9 @@ import {
   PAY_CONTRACT_MUTATION,
   REJECT_CONTRACT_MUTATION,
   RESEND_CONTRACT_MUTATION,
+  PROVIDER_COMPLETE_CONTRACT_MUTATION,
+  REQUEST_CONTRACT_CANCELLATION_MUTATION,
+  REFUSE_CONTRACT_DELIVERY_MUTATION,
 } from "@/graphql/contract/operations";
 import { requireData } from "@/utils/apollo.result";
 import client from "@/utils/apollo.client";
@@ -119,5 +125,36 @@ export class ContractService {
       variables: { input },
     });
     return requireData(result, "Complete contract").completeContract;
+  }
+
+  static async providerComplete(input: ProviderCompleteContractInput) {
+    const result = await client().mutate<{
+      providerCompleteContract: Contract;
+    }>({
+      mutation: PROVIDER_COMPLETE_CONTRACT_MUTATION,
+      variables: { input },
+    });
+    return requireData(result, "Provider completion").providerCompleteContract;
+  }
+
+  static async requestCancellation(input: CancelContractInput) {
+    const result = await client().mutate<{
+      requestContractCancellation: Contract;
+    }>({
+      mutation: REQUEST_CONTRACT_CANCELLATION_MUTATION,
+      variables: { input },
+    });
+    return requireData(result, "Contract cancellation")
+      .requestContractCancellation;
+  }
+
+  static async refuseDelivery(input: RefuseDeliveryInput) {
+    const result = await client().mutate<{
+      refuseContractDelivery: Contract;
+    }>({
+      mutation: REFUSE_CONTRACT_DELIVERY_MUTATION,
+      variables: { input },
+    });
+    return requireData(result, "Delivery refusal").refuseContractDelivery;
   }
 }

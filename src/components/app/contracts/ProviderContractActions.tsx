@@ -1,11 +1,18 @@
 "use client";
 
-import { InactiveAction } from "@/components/app/contracts/InactiveAction";
+import { Button } from "@/components/ui/button";
 import { ContractStatus, type Contract } from "@/gql/graphql";
 import { useDict } from "@/hooks/useDict";
+import { queryKeys } from "@/hooks/queryKeys";
 import { cn } from "@/lib/utils";
+import { ContractService } from "@/services/contract.service";
+import { showErrorMessage, showSuccessMessage } from "@/utils/show.messages";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { MessagesSquare } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
+import { ProviderCompletionDialog } from "./ProviderCompletionDialog";
+import { ContractSignatureType } from "@/gql/graphql";
 
 export const ProviderContractActions = ({
   contract,
@@ -14,12 +21,38 @@ export const ProviderContractActions = ({
 }) => {
   const dict = useDict();
   const status = contract.status;
-  const isPending = status === ContractStatus.Pending;
-  const isPendingPayment = status === ContractStatus.Accepted;
   const isInProgress = status === ContractStatus.InProgress;
   const isCompleted = status === ContractStatus.Completed;
-  const showsCancel = isPending || isPendingPayment || isInProgress;
-  const actionCount = isCompleted || showsCancel ? 2 : 1;
+  const [completionOpen, setCompletionOpen] = useState(false);
+  const queryClient = useQueryClient();
+  const complete = useMutation({
+    mutationFn: (deliveryEstimateDays?: number) => {
+      const signatureData = contract.signatures.find(
+        (signature) =>
+          signature.signatureType === ContractSignatureType.ProviderAcceptance,
+      )?.signatureData;
+      if (!signatureData) {
+        throw new Error(dict.contracts.completionSignatureRequired);
+      }
+      return ContractService.providerComplete({
+        contractId: contract.id,
+        signatureData,
+        deliveryEstimateDays,
+      });
+    },
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: queryKeys.contracts }),
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.contract(contract.id),
+        }),
+      ]);
+      showSuccessMessage(dict.contracts.completionSubmitted);
+      setCompletionOpen(false);
+    },
+    onError: (error) => showErrorMessage(error.message),
+  });
+  const actionCount = isCompleted || isInProgress ? 2 : 1;
 
   return (
     <footer
@@ -44,11 +77,24 @@ export const ProviderContractActions = ({
           {dict.contracts.viewDetails}
         </Link>
       )}
-      {showsCancel && (
-        <InactiveAction className="bg-[#fbe8e7] text-[#c12620]">
-          {dict.contracts.cancelContract}
-        </InactiveAction>
+      {isInProgress && (
+        <Button
+          type="button"
+          onClick={() => setCompletionOpen(true)}
+          className="text-primary h-[50px] rounded-[20px] bg-[#eff1f6] text-base font-semibold shadow-none hover:bg-[#e8ebf2]"
+        >
+          {dict.contracts.completeContract}
+        </Button>
       )}
+      <ProviderCompletionDialog
+        open={completionOpen}
+        onOpenChange={setCompletionOpen}
+        requiresDelivery={Boolean(contract.deliveryCompanyId)}
+        isPending={complete.isPending}
+        onConfirm={(deliveryEstimateDays) =>
+          complete.mutate(deliveryEstimateDays)
+        }
+      />
     </footer>
   );
 };

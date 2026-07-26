@@ -36,6 +36,7 @@ import { useDict } from "@/hooks/useDict";
 import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
 import { useState } from "react";
+import { ContractLifecycleHistory } from "./ContractLifecycleHistory";
 
 export const CustomerContractDialog = ({
   contract,
@@ -153,6 +154,7 @@ export const CustomerContractDialog = ({
               </section>
 
               <ContractFinancialSection contract={contract} />
+              <ContractLifecycleHistory contract={contract} />
 
               {isPending && (
                 <ContractSignaturesSection

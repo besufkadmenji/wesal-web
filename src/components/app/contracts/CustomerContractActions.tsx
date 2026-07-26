@@ -1,12 +1,17 @@
 "use client";
 
-import { InactiveAction } from "@/components/app/contracts/InactiveAction";
 import { Button } from "@/components/ui/button";
 import { ContractStatus, type Contract } from "@/gql/graphql";
 import { useDict } from "@/hooks/useDict";
+import { queryKeys } from "@/hooks/queryKeys";
 import { cn } from "@/lib/utils";
+import { ContractService } from "@/services/contract.service";
+import { showErrorMessage, showSuccessMessage } from "@/utils/show.messages";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { MessagesSquare } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
+import { ContractReasonDialog } from "./ContractReasonDialog";
 
 export const CustomerContractActions = ({
   contract,
@@ -19,12 +24,48 @@ export const CustomerContractActions = ({
 }) => {
   const dict = useDict();
   const status = contract.status;
-  const isPending = status === ContractStatus.Pending;
   const isPendingPayment = status === ContractStatus.Accepted;
+  const isPending = status === ContractStatus.Pending;
   const isInProgress = status === ContractStatus.InProgress;
+  const isAwaitingConfirmation =
+    status === ContractStatus.AwaitingCustomerConfirmation;
+  const isDeliveryInProgress =
+    status === ContractStatus.DeliveryInProgress;
   const isCompleted = status === ContractStatus.Completed;
   const isRejected = status === ContractStatus.Rejected;
-  const actionCount = isPendingPayment || isInProgress ? 3 : 2;
+  const canCancel =
+    isPending ||
+    isPendingPayment ||
+    isInProgress ||
+    isAwaitingConfirmation ||
+    isDeliveryInProgress;
+  const canComplete = isAwaitingConfirmation || isDeliveryInProgress;
+  const [reasonMode, setReasonMode] = useState<"cancel" | "refuse" | null>(
+    null,
+  );
+  const queryClient = useQueryClient();
+  const lifecycle = useMutation({
+    mutationFn: (reason: string) =>
+      reasonMode === "refuse"
+        ? ContractService.refuseDelivery({ contractId: contract.id, reason })
+        : ContractService.requestCancellation({
+            contractId: contract.id,
+            reason,
+          }),
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: queryKeys.contracts }),
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.contract(contract.id),
+        }),
+      ]);
+      showSuccessMessage(dict.contracts.requestSubmitted);
+      setReasonMode(null);
+    },
+    onError: (error) => showErrorMessage(error.message),
+  });
+  const actionCount =
+    isPendingPayment || canCancel || canComplete ? 3 : 2;
 
   return (
     <footer
@@ -50,7 +91,7 @@ export const CustomerContractActions = ({
           {dict.contracts.pay}
         </Button>
       )}
-      {isInProgress && (
+      {canComplete && (
         <Button
           type="button"
           onClick={onComplete}
@@ -75,11 +116,26 @@ export const CustomerContractActions = ({
           {dict.contracts.resend}
         </Link>
       )}
-      {(isPending || isPendingPayment || isInProgress) && (
-        <InactiveAction className="bg-[#fbe8e7] text-[#c12620]">
-          {dict.contracts.cancelContract}
-        </InactiveAction>
+      {canCancel && (
+        <Button
+          type="button"
+          onClick={() =>
+            setReasonMode(isDeliveryInProgress ? "refuse" : "cancel")
+          }
+          className="h-[50px] rounded-[20px] bg-[#fbe8e7] text-[#c12620] shadow-none hover:bg-[#f7d8d6]"
+        >
+          {isDeliveryInProgress
+            ? dict.contracts.rejectDelivery
+            : dict.contracts.cancelContract}
+        </Button>
       )}
+      <ContractReasonDialog
+        open={reasonMode != null}
+        onOpenChange={(nextOpen) => !nextOpen && setReasonMode(null)}
+        variant={reasonMode ?? "cancel"}
+        isPending={lifecycle.isPending}
+        onConfirm={(reason) => lifecycle.mutate(reason)}
+      />
     </footer>
   );
 };
