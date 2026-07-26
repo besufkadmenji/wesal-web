@@ -787,6 +787,11 @@
       "description": "Sorry, we couldn't find any ads matching your search. Please try searching with different keywords or apply other filters."
     }
   },
+  "notifications": {
+    "empty": "No notifications yet",
+    "loading": "Loading notifications...",
+    "markAllRead": "Mark all as read"
+  },
   "conversations": {
     "title": "All conversations",
     "empty": "No conversations yet",

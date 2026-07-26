@@ -10,6 +10,8 @@ export const queryKeys = {
   complaint: (id: string) => ["complaint", id] as const,
   favorites: ["favorites"] as const,
   favorite: (id: string) => ["favorite", id] as const,
+  notifications: ["notifications"] as const,
+  notificationStats: ["notification-stats"] as const,
   setting: ["setting"] as const,
   deliveryCompanies: ["delivery-companies"] as const,
   ownerListing: (id: string) => ["owner-listing", id] as const,
