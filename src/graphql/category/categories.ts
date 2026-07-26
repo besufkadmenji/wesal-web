@@ -20,6 +20,12 @@ export const CATEGORIES_QUERY: TypedDocumentNode<
         commissionPercent
         contractDocumentEnabled
         contractDocumentText
+        undertakingTextAr
+        undertakingTextEn
+        undertakingEnabled
+        refundPolicyAr
+        refundPolicyEn
+        refundPolicyEnabled
         customerConversationFee
         customerConversationFeeEnabled
         depositEnabled

@@ -68,6 +68,12 @@ export const LISTING_FRAGMENT = gql`
       rulesEn
       contractDocumentEnabled
       contractDocumentText
+      undertakingTextAr
+      undertakingTextEn
+      undertakingEnabled
+      refundPolicyAr
+      refundPolicyEn
+      refundPolicyEnabled
       commissionPercent
       minCommissionAmount
     }

@@ -11,6 +11,7 @@ export const GET_SETTING_QUERY: TypedDocumentNode<GetSettingQuery> = gql`
       premiumAdFee
       vatEnabled
       vatRate
+      completionConfirmationGraceHours
       aboutAr
       aboutEn
       email

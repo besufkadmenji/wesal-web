@@ -100,6 +100,12 @@ export type AdminResetPasswordInput = {
   resetToken: Scalars['String']['input'];
 };
 
+export type AdminResolveContractInput = {
+  contractId: Scalars['String']['input'];
+  reason: Scalars['String']['input'];
+  resolution: ContractResolution;
+};
+
 /** Available fields to sort admins by */
 export enum AdminSortField {
   CreatedAt = 'createdAt',
@@ -176,6 +182,11 @@ export type BulkUpdateFaqOrderInput = {
   items: Array<UpdateFaqOrderInput>;
 };
 
+export type CancelContractInput = {
+  contractId: Scalars['String']['input'];
+  reason: Scalars['String']['input'];
+};
+
 export type Category = {
   commissionEnabled: Scalars['Boolean']['output'];
   commissionPercent?: Maybe<Scalars['Float']['output']>;
@@ -201,9 +212,15 @@ export type Category = {
   providerConversationFee?: Maybe<Scalars['Float']['output']>;
   providerConversationFeeEnabled: Scalars['Boolean']['output'];
   publicId?: Maybe<Scalars['Int']['output']>;
+  refundPolicyAr: Scalars['String']['output'];
+  refundPolicyEn: Scalars['String']['output'];
+  refundPolicyEnabled: Scalars['Boolean']['output'];
   rulesAr: Scalars['String']['output'];
   rulesEn: Scalars['String']['output'];
   status: CategoryStatus;
+  undertakingEnabled: Scalars['Boolean']['output'];
+  undertakingTextAr: Scalars['String']['output'];
+  undertakingTextEn: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
 };
 
@@ -326,15 +343,19 @@ export enum ComplaintMessageAuthorType {
 
 export type ComplaintPaginationInput = {
   conversationId?: InputMaybe<Scalars['String']['input']>;
+  from?: InputMaybe<Scalars['DateTime']['input']>;
   /** Number of items per page */
   limit?: Scalars['Int']['input'];
   /** Page number (1-based) */
   page?: Scalars['Int']['input'];
+  reporterType?: InputMaybe<ComplaintReporterType>;
+  reviewerId?: InputMaybe<Scalars['String']['input']>;
   search?: InputMaybe<Scalars['String']['input']>;
   sortBy?: InputMaybe<ComplaintSortField>;
   /** Sort order: ASC or DESC */
   sortOrder?: InputMaybe<SortOrder>;
   status?: InputMaybe<ComplaintStatus>;
+  to?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 export enum ComplaintReporterType {
@@ -415,6 +436,10 @@ export enum ContactMessageStatus {
 export type Contract = {
   acceptedAt?: Maybe<Scalars['DateTime']['output']>;
   agreedPrice: Scalars['Float']['output'];
+  audits: Array<ContractAudit>;
+  cancellationReason?: Maybe<Scalars['String']['output']>;
+  cancellationRequestedAt?: Maybe<Scalars['DateTime']['output']>;
+  cancelledAt?: Maybe<Scalars['DateTime']['output']>;
   categoryId: Scalars['String']['output'];
   categoryRulesAr: Scalars['String']['output'];
   categoryRulesEn: Scalars['String']['output'];
@@ -422,6 +447,8 @@ export type Contract = {
   clientId: Scalars['String']['output'];
   commissionAmount: Scalars['Float']['output'];
   commissionPercent: Scalars['Float']['output'];
+  completedAt?: Maybe<Scalars['DateTime']['output']>;
+  confirmationDeadlineAt?: Maybe<Scalars['DateTime']['output']>;
   contractDocumentText: Scalars['String']['output'];
   conversation: Conversation;
   conversationId: Scalars['String']['output'];
@@ -432,47 +459,137 @@ export type Contract = {
   deliveryCompanyId?: Maybe<Scalars['ID']['output']>;
   deliveryCompanyNameAr?: Maybe<Scalars['String']['output']>;
   deliveryCompanyNameEn?: Maybe<Scalars['String']['output']>;
+  deliveryEstimateDays?: Maybe<Scalars['Int']['output']>;
+  deliveryStartedAt?: Maybe<Scalars['DateTime']['output']>;
   deliveryTimeDays?: Maybe<Scalars['Int']['output']>;
   depositPercent: Scalars['Float']['output'];
+  disputeReason?: Maybe<Scalars['String']['output']>;
+  disputedAt?: Maybe<Scalars['DateTime']['output']>;
+  document?: Maybe<ContractDocument>;
   downPayment: Scalars['Float']['output'];
   id: Scalars['ID']['output'];
   listingId: Scalars['String']['output'];
   maxCompletionDays?: Maybe<Scalars['Int']['output']>;
   maxTerminationDays?: Maybe<Scalars['Int']['output']>;
+  paidAt?: Maybe<Scalars['DateTime']['output']>;
   pricingVersion: Scalars['Int']['output'];
   provider: Provider;
   providerAddress?: Maybe<Scalars['String']['output']>;
+  providerCompletedAt?: Maybe<Scalars['DateTime']['output']>;
   providerId: Scalars['String']['output'];
   providerLatitude?: Maybe<Scalars['Float']['output']>;
   providerLongitude?: Maybe<Scalars['Float']['output']>;
   providerNetAmount: Scalars['Float']['output'];
   publicId?: Maybe<Scalars['Int']['output']>;
+  refundPolicyAr: Scalars['String']['output'];
+  refundPolicyEn: Scalars['String']['output'];
   rejectedAt?: Maybe<Scalars['DateTime']['output']>;
   rejectionReason?: Maybe<Scalars['String']['output']>;
+  settlements: Array<ContractSettlement>;
   signatures: Array<ContractSignature>;
   status: ContractStatus;
   supersedesContract?: Maybe<Contract>;
   supersedesContractId?: Maybe<Scalars['ID']['output']>;
   totalPayable: Scalars['Float']['output'];
+  undertakingTextAr: Scalars['String']['output'];
+  undertakingTextEn: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
   vatAmount: Scalars['Float']['output'];
   vatRate: Scalars['Float']['output'];
   version: Scalars['Int']['output'];
 };
 
+export enum ContractActorType {
+  Admin = 'ADMIN',
+  Provider = 'PROVIDER',
+  System = 'SYSTEM',
+  User = 'USER'
+}
+
+export type ContractAudit = {
+  action: ContractAuditAction;
+  actorId: Scalars['ID']['output'];
+  actorType: ContractActorType;
+  contractId: Scalars['ID']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  metadata?: Maybe<Scalars['JSON']['output']>;
+  newStatus: ContractStatus;
+  previousStatus: ContractStatus;
+  reason?: Maybe<Scalars['String']['output']>;
+};
+
+export enum ContractAuditAction {
+  CancellationRequested = 'CANCELLATION_REQUESTED',
+  ContractAccepted = 'CONTRACT_ACCEPTED',
+  ContractCreated = 'CONTRACT_CREATED',
+  ContractRejected = 'CONTRACT_REJECTED',
+  ContractResent = 'CONTRACT_RESENT',
+  CustomerCompleted = 'CUSTOMER_COMPLETED',
+  DeliveryRefused = 'DELIVERY_REFUSED',
+  DeliveryStarted = 'DELIVERY_STARTED',
+  DisputeRefunded = 'DISPUTE_REFUNDED',
+  DisputeReleased = 'DISPUTE_RELEASED',
+  PaymentCompleted = 'PAYMENT_COMPLETED',
+  ProviderCompleted = 'PROVIDER_COMPLETED',
+  TimeoutCancelled = 'TIMEOUT_CANCELLED',
+  TimeoutCompleted = 'TIMEOUT_COMPLETED'
+}
+
+export type ContractDocument = {
+  contractId: Scalars['ID']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  path: Scalars['String']['output'];
+  sha256: Scalars['String']['output'];
+  version: Scalars['Float']['output'];
+};
+
+export type ContractFinancialReport = {
+  completedCount: Scalars['Int']['output'];
+  items: Array<ContractFinancialReportRow>;
+  meta: ReportPageMeta;
+  totalCommission: Scalars['Float']['output'];
+  totalCustomerRefunds: Scalars['Float']['output'];
+  totalPaid: Scalars['Float']['output'];
+  totalProviderNet: Scalars['Float']['output'];
+  totalProviderReleases: Scalars['Float']['output'];
+  totalVat: Scalars['Float']['output'];
+};
+
+export type ContractFinancialReportRow = {
+  commission: Scalars['Float']['output'];
+  contractId: Scalars['String']['output'];
+  contractNumber?: Maybe<Scalars['Int']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  customerName?: Maybe<Scalars['String']['output']>;
+  customerRefund: Scalars['Float']['output'];
+  deliveryCompanyName?: Maybe<Scalars['String']['output']>;
+  providerName?: Maybe<Scalars['String']['output']>;
+  providerNet: Scalars['Float']['output'];
+  providerRelease: Scalars['Float']['output'];
+  status: Scalars['String']['output'];
+  totalPaid: Scalars['Float']['output'];
+  vat: Scalars['Float']['output'];
+};
+
 export type ContractPaginationInput = {
+  categoryId?: InputMaybe<Scalars['String']['input']>;
   clientId?: InputMaybe<Scalars['String']['input']>;
   conversationId?: InputMaybe<Scalars['String']['input']>;
+  from?: InputMaybe<Scalars['DateTime']['input']>;
   /** Number of items per page */
   limit?: Scalars['Int']['input'];
   /** Page number (1-based) */
   page?: Scalars['Int']['input'];
   providerId?: InputMaybe<Scalars['String']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   /** Sort field name */
   sortBy?: InputMaybe<ContractSortField>;
   /** Sort order: ASC or DESC */
   sortOrder?: InputMaybe<SortOrder>;
   status?: InputMaybe<ContractStatus>;
+  to?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 export type ContractPaymentResponse = {
@@ -500,6 +617,13 @@ export type ContractQuoteInput = {
   conversationId: Scalars['String']['input'];
 };
 
+export enum ContractResolution {
+  Cancel = 'CANCEL',
+  Complete = 'COMPLETE',
+  RefundCustomer = 'REFUND_CUSTOMER',
+  ReleaseProvider = 'RELEASE_PROVIDER'
+}
+
 export type ContractRule = {
   label: Scalars['String']['output'];
   value: Scalars['String']['output'];
@@ -509,6 +633,27 @@ export type ContractRuleInput = {
   label: Scalars['String']['input'];
   value: Scalars['String']['input'];
 };
+
+export type ContractSettlement = {
+  amount: Scalars['Float']['output'];
+  contractId: Scalars['ID']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  createdById?: Maybe<Scalars['ID']['output']>;
+  id: Scalars['ID']['output'];
+  idempotencyKey: Scalars['String']['output'];
+  paymentId: Scalars['ID']['output'];
+  reason?: Maybe<Scalars['String']['output']>;
+  type: ContractSettlementType;
+};
+
+/** Append-only mock allocation of a settled contract payment */
+export enum ContractSettlementType {
+  CustomerRefund = 'CUSTOMER_REFUND',
+  Hold = 'HOLD',
+  PlatformCommission = 'PLATFORM_COMMISSION',
+  ProviderRelease = 'PROVIDER_RELEASE',
+  Vat = 'VAT'
+}
 
 export type ContractSignature = {
   contract: Contract;
@@ -521,11 +666,12 @@ export type ContractSignature = {
   signerType: ContractSignerType;
 };
 
-/** Sprint 3 contract signature purpose */
+/** Contract acceptance or completion signature purpose */
 export enum ContractSignatureType {
   CustomerAcceptance = 'CUSTOMER_ACCEPTANCE',
   CustomerCompletion = 'CUSTOMER_COMPLETION',
-  ProviderAcceptance = 'PROVIDER_ACCEPTANCE'
+  ProviderAcceptance = 'PROVIDER_ACCEPTANCE',
+  ProviderCompletion = 'PROVIDER_COMPLETION'
 }
 
 /** Entity type of the contract signer */
@@ -547,8 +693,12 @@ export enum ContractSortField {
 /** Contract status */
 export enum ContractStatus {
   Accepted = 'ACCEPTED',
+  AwaitingCustomerConfirmation = 'AWAITING_CUSTOMER_CONFIRMATION',
+  CancellationRequested = 'CANCELLATION_REQUESTED',
   Cancelled = 'CANCELLED',
   Completed = 'COMPLETED',
+  DeliveryInProgress = 'DELIVERY_IN_PROGRESS',
+  Disputed = 'DISPUTED',
   Draft = 'DRAFT',
   InProgress = 'IN_PROGRESS',
   Pending = 'PENDING',
@@ -606,27 +756,32 @@ export type ConversationFeeReport = {
 
 export type ConversationFeeReportRow = {
   conversationId: Scalars['String']['output'];
-  createdAt: Scalars['DateTime']['output'];
+  conversationNumber?: Maybe<Scalars['Int']['output']>;
   customerFee: Scalars['Float']['output'];
   customerName?: Maybe<Scalars['String']['output']>;
-  paymentId: Scalars['String']['output'];
+  endedAt?: Maybe<Scalars['DateTime']['output']>;
   providerFee: Scalars['Float']['output'];
   providerName?: Maybe<Scalars['String']['output']>;
+  providerPhone?: Maybe<Scalars['String']['output']>;
+  startedAt: Scalars['DateTime']['output'];
   status: Scalars['String']['output'];
 };
 
 export type ConversationPaginationInput = {
+  from?: InputMaybe<Scalars['DateTime']['input']>;
   /** Number of items per page */
   limit?: Scalars['Int']['input'];
   listingId?: InputMaybe<Scalars['String']['input']>;
   /** Page number (1-based) */
   page?: Scalars['Int']['input'];
   providerId?: InputMaybe<Scalars['String']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
   /** Sort field name */
   sortBy?: InputMaybe<ConversationSortField>;
   /** Sort order: ASC or DESC */
   sortOrder?: InputMaybe<SortOrder>;
   status?: InputMaybe<ConversationStatus>;
+  to?: InputMaybe<Scalars['DateTime']['input']>;
   userId?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -724,8 +879,14 @@ export type CreateCategoryInput = {
   nameEn: Scalars['String']['input'];
   providerConversationFee?: InputMaybe<Scalars['Float']['input']>;
   providerConversationFeeEnabled?: InputMaybe<Scalars['Boolean']['input']>;
+  refundPolicyAr?: InputMaybe<Scalars['String']['input']>;
+  refundPolicyEn?: InputMaybe<Scalars['String']['input']>;
+  refundPolicyEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   rulesAr?: InputMaybe<Scalars['String']['input']>;
   rulesEn?: InputMaybe<Scalars['String']['input']>;
+  undertakingEnabled?: InputMaybe<Scalars['Boolean']['input']>;
+  undertakingTextAr?: InputMaybe<Scalars['String']['input']>;
+  undertakingTextEn?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type CreateCityInput = {
@@ -1090,9 +1251,14 @@ export type Message = {
 export enum MessageKind {
   ChatFeePaid = 'CHAT_FEE_PAID',
   ContractAccepted = 'CONTRACT_ACCEPTED',
+  ContractCancellationRequested = 'CONTRACT_CANCELLATION_REQUESTED',
+  ContractCancelled = 'CONTRACT_CANCELLED',
   ContractCompleted = 'CONTRACT_COMPLETED',
   ContractCreated = 'CONTRACT_CREATED',
+  ContractDeliveryStarted = 'CONTRACT_DELIVERY_STARTED',
+  ContractDisputed = 'CONTRACT_DISPUTED',
   ContractPaid = 'CONTRACT_PAID',
+  ContractProviderCompleted = 'CONTRACT_PROVIDER_COMPLETED',
   ContractRejected = 'CONTRACT_REJECTED',
   ContractResent = 'CONTRACT_RESENT',
   Text = 'TEXT'
@@ -1150,6 +1316,8 @@ export type Mutation = {
   adminReactivateProvider: Provider;
   adminReplyToComplaint: ComplaintMessage;
   adminResetPassword: Scalars['Boolean']['output'];
+  /** Resolve a disputed or overdue contract as an authorized admin */
+  adminResolveContract: Contract;
   adminSetComplaintStatus: Complaint;
   /** Admin terminates provider contract */
   adminTerminateProviderContract: Provider;
@@ -1232,6 +1400,10 @@ export type Mutation = {
   payContract: ContractPaymentResponse;
   /** Settle the authenticated participant conversation fee */
   payConversationFee: ConversationFeePaymentResponse;
+  /** Provider signs and submits completed work or delivery */
+  providerCompleteContract: Contract;
+  /** Customer refuses a delivered contract and opens a dispute */
+  refuseContractDelivery: Contract;
   /** Register a new user and send verification OTPs */
   register: User;
   /** Register a new provider and send verification OTPs */
@@ -1266,6 +1438,8 @@ export type Mutation = {
   removeUser: User;
   /** Reply to contact message (admin only) */
   replyToContactMessage: ContactMessage;
+  /** Customer requests cancellation before final completion */
+  requestContractCancellation: Contract;
   /** Customer resends a rejected contract as a new version */
   resendContract: Contract;
   /** Resend OTP for email or phone verification */
@@ -1405,6 +1579,11 @@ export type MutationAdminReplyToComplaintArgs = {
 
 export type MutationAdminResetPasswordArgs = {
   input: AdminResetPasswordInput;
+};
+
+
+export type MutationAdminResolveContractArgs = {
+  input: AdminResolveContractInput;
 };
 
 
@@ -1687,6 +1866,16 @@ export type MutationPayConversationFeeArgs = {
 };
 
 
+export type MutationProviderCompleteContractArgs = {
+  input: ProviderCompleteContractInput;
+};
+
+
+export type MutationRefuseContractDeliveryArgs = {
+  input: RefuseDeliveryInput;
+};
+
+
 export type MutationRegisterArgs = {
   input: RegisterInput;
 };
@@ -1788,6 +1977,11 @@ export type MutationRemoveUserArgs = {
 export type MutationReplyToContactMessageArgs = {
   id: Scalars['ID']['input'];
   message: Scalars['String']['input'];
+};
+
+
+export type MutationRequestContractCancellationArgs = {
+  input: CancelContractInput;
 };
 
 
@@ -1976,12 +2170,14 @@ export type Notification = {
   message: Scalars['String']['output'];
   publicId?: Maybe<Scalars['Int']['output']>;
   readAt?: Maybe<Scalars['DateTime']['output']>;
+  recipientId: Scalars['String']['output'];
+  recipientType: NotificationRecipientType;
   relatedEntityId?: Maybe<Scalars['String']['output']>;
   relatedEntityType?: Maybe<Scalars['String']['output']>;
   title: Scalars['String']['output'];
   type: NotificationType;
-  user: User;
-  userId: Scalars['String']['output'];
+  user?: Maybe<User>;
+  userId?: Maybe<Scalars['ID']['output']>;
 };
 
 export type NotificationPaginationInput = {
@@ -1997,6 +2193,11 @@ export type NotificationPaginationInput = {
   type?: InputMaybe<NotificationType>;
   userId?: InputMaybe<Scalars['String']['input']>;
 };
+
+export enum NotificationRecipientType {
+  Provider = 'PROVIDER',
+  User = 'USER'
+}
 
 /** Available fields to sort notifications by */
 export enum NotificationSortField {
@@ -2015,9 +2216,11 @@ export type NotificationStats = {
 /** Type of notification */
 export enum NotificationType {
   ComplaintResolved = 'COMPLAINT_RESOLVED',
+  ComplaintResponse = 'COMPLAINT_RESPONSE',
   ComplaintSubmitted = 'COMPLAINT_SUBMITTED',
   ContractCreated = 'CONTRACT_CREATED',
   ContractSigned = 'CONTRACT_SIGNED',
+  ContractUpdate = 'CONTRACT_UPDATE',
   ListingApproved = 'LISTING_APPROVED',
   ListingRejected = 'LISTING_REJECTED',
   NewMessage = 'NEW_MESSAGE',
@@ -2299,6 +2502,8 @@ export type PremiumAdFeeReport = {
 
 export type PremiumAdFeeReportRow = {
   createdAt: Scalars['DateTime']['output'];
+  featuredEndsAt?: Maybe<Scalars['DateTime']['output']>;
+  featuredStartsAt?: Maybe<Scalars['DateTime']['output']>;
   fee: Scalars['Float']['output'];
   listingId: Scalars['String']['output'];
   listingName: Scalars['String']['output'];
@@ -2357,6 +2562,12 @@ export type ProviderAuthResponse = {
   provider: Provider;
 };
 
+export type ProviderCompleteContractInput = {
+  contractId: Scalars['String']['input'];
+  deliveryEstimateDays?: InputMaybe<Scalars['Int']['input']>;
+  signatureData: Scalars['String']['input'];
+};
+
 export type ProviderPaginationInput = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   page?: InputMaybe<Scalars['Int']['input']>;
@@ -2402,6 +2613,7 @@ export type Query = {
   /** Get contact messages (admin only) with pagination */
   contactMessages: PaginatedContactMessageResponse;
   contract: Contract;
+  contractFinancialReport: ContractFinancialReport;
   /** Preview server-calculated contract financial terms */
   contractQuote: ContractQuote;
   contracts: PaginatedContractResponse;
@@ -2560,6 +2772,11 @@ export type QueryContactMessagesArgs = {
 
 export type QueryContractArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type QueryContractFinancialReportArgs = {
+  input?: InputMaybe<FeeReportInput>;
 };
 
 
@@ -2818,6 +3035,11 @@ export type RatingStatistics = {
   twoStars: Scalars['Int']['output'];
 };
 
+export type RefuseDeliveryInput = {
+  contractId: Scalars['String']['input'];
+  reason: Scalars['String']['input'];
+};
+
 export type RegisterInput = {
   avatarFilename?: InputMaybe<Scalars['String']['input']>;
   bankName: Scalars['String']['input'];
@@ -2900,6 +3122,7 @@ export enum SenderType {
 export type Setting = {
   aboutAr: Scalars['String']['output'];
   aboutEn: Scalars['String']['output'];
+  completionConfirmationGraceHours: Scalars['Int']['output'];
   contractAcceptanceWindowDays: Scalars['Int']['output'];
   contractAcceptanceWindowEnabled: Scalars['Boolean']['output'];
   email: Scalars['String']['output'];
@@ -2925,6 +3148,7 @@ export type Setting = {
 export type SettingInput = {
   aboutAr?: InputMaybe<Scalars['String']['input']>;
   aboutEn?: InputMaybe<Scalars['String']['input']>;
+  completionConfirmationGraceHours?: InputMaybe<Scalars['Int']['input']>;
   contractAcceptanceWindowDays?: InputMaybe<Scalars['Int']['input']>;
   contractAcceptanceWindowEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
@@ -3106,8 +3330,14 @@ export type UpdateCategoryInput = {
   nameEn?: InputMaybe<Scalars['String']['input']>;
   providerConversationFee?: InputMaybe<Scalars['Float']['input']>;
   providerConversationFeeEnabled?: InputMaybe<Scalars['Boolean']['input']>;
+  refundPolicyAr?: InputMaybe<Scalars['String']['input']>;
+  refundPolicyEn?: InputMaybe<Scalars['String']['input']>;
+  refundPolicyEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   rulesAr?: InputMaybe<Scalars['String']['input']>;
   rulesEn?: InputMaybe<Scalars['String']['input']>;
+  undertakingEnabled?: InputMaybe<Scalars['Boolean']['input']>;
+  undertakingTextAr?: InputMaybe<Scalars['String']['input']>;
+  undertakingTextEn?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateCityInput = {

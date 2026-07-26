@@ -22,6 +22,12 @@ export const ME_PROVIDER_QUERY: TypedDocumentNode<MeProviderQuery> = gql`
         commissionPercent
         contractDocumentEnabled
         contractDocumentText
+        undertakingTextAr
+        undertakingTextEn
+        undertakingEnabled
+        refundPolicyAr
+        refundPolicyEn
+        refundPolicyEnabled
         customerConversationFee
         customerConversationFeeEnabled
         depositEnabled
