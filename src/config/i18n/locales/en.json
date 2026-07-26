@@ -787,6 +787,11 @@
       "description": "Sorry, we couldn't find any ads matching your search. Please try searching with different keywords or apply other filters."
     }
   },
+  "notifications": {
+    "empty": "No notifications yet",
+    "loading": "Loading notifications...",
+    "markAllRead": "Mark all as read"
+  },
   "conversations": {
     "title": "All conversations",
     "empty": "No conversations yet",
@@ -952,7 +957,19 @@
     "providerSignatures": "Service provider signatures",
     "rejecting": "Sending",
     "rejectionTitle": "Reason for rejecting the contract",
-    "rejectionDescription": "Please explain why you are rejecting the contract. This information helps us improve the user experience and maintain service quality."
+    "rejectionDescription": "Please explain why you are rejecting the contract. This information helps us improve the user experience and maintain service quality.",
+    "cancellationTitle": "Request contract cancellation",
+    "cancellationDescription": "Tell us why you want to cancel. Financial treatment follows the contract stage and its stored refund terms.",
+    "refuseDeliveryTitle": "Refuse delivery",
+    "refuseDeliveryDescription": "Explain the delivery issue. The payment will remain held while an administrator reviews the dispute.",
+    "reasonPlaceholder": "Enter a clear reason",
+    "submitting": "Submitting",
+    "requestSubmitted": "Your request was submitted",
+    "providerCompletionTitle": "Submit completed work",
+    "providerCompletionDescription": "Your saved signature will be applied once. If delivery is required, enter the estimated handoff time.",
+    "deliveryEstimate": "Estimated delivery time in days",
+    "lifecycleHistory": "Lifecycle history",
+    "settlements": "Financial settlements"
   },
   "promotion": {
     "title": "Featured advertisement",

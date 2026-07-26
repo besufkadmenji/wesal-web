@@ -2,7 +2,7 @@
 
 import RemoveIcon from "@/assets/icons/remove.svg";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo } from "react";
 
 export const ComplaintEvidencePreview = ({
   file,
@@ -13,15 +13,11 @@ export const ComplaintEvidencePreview = ({
   removeLabel: string;
   onRemove: () => void;
 }) => {
-  const [url, setUrl] = useState<string | null>(null);
+  const url = useMemo(() => URL.createObjectURL(file), [file]);
 
   useEffect(() => {
-    const objectUrl = URL.createObjectURL(file);
-    setUrl(objectUrl);
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [file]);
-
-  if (!url) return null;
+    return () => URL.revokeObjectURL(url);
+  }, [url]);
 
   return (
     <div className="relative h-full min-w-0 flex-1 overflow-hidden rounded-[16px]">

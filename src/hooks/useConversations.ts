@@ -20,6 +20,8 @@ export const useRealtimeRefresh = () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.conversations });
       queryClient.invalidateQueries({ queryKey: queryKeys.contracts });
       queryClient.invalidateQueries({ queryKey: queryKeys.complaints });
+      queryClient.invalidateQueries({ queryKey: queryKeys.notifications });
+      queryClient.invalidateQueries({ queryKey: queryKeys.notificationStats });
     };
     window.addEventListener("wesal:graphql-reconnected", refresh);
     return () => window.removeEventListener("wesal:graphql-reconnected", refresh);
