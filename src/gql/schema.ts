@@ -7,8 +7,11 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
   DateTime: { input: unknown; output: unknown; }
+  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSON: { input: unknown; output: unknown; }
+  /** The `Upload` scalar type represents a file upload. */
   Upload: { input: unknown; output: unknown; }
 };
 
@@ -801,6 +804,10 @@ export enum ConversationSortField {
   UpdatedAt = 'updatedAt'
 }
 
+export type ConversationStats = {
+  unreadCount: Scalars['Int']['output'];
+};
+
 /** Conversation lifecycle status */
 export enum ConversationStatus {
   Active = 'ACTIVE',
@@ -1159,7 +1166,7 @@ export type Listing = {
   provider?: Maybe<Provider>;
   providerId: Scalars['String']['output'];
   status: ListingStatus;
-  story: ListingMedia;
+  story?: Maybe<ListingMedia>;
   tags: Scalars['String']['output'];
   type: ListingType;
   updatedAt: Scalars['DateTime']['output'];
@@ -2619,6 +2626,8 @@ export type Query = {
   contracts: PaginatedContractResponse;
   conversation: Conversation;
   conversationFeeReport: ConversationFeeReport;
+  /** Get aggregate conversation statistics for the authenticated participant */
+  conversationStats: ConversationStats;
   conversations: PaginatedConversationResponse;
   /** Get all countries with pagination */
   countries: PaginatedCountryResponse;
@@ -2635,9 +2644,9 @@ export type Query = {
   listings: PaginatedListingResponse;
   meAdmin: Admin;
   /** Get current authenticated provider */
-  meProvider: Provider;
+  meProvider?: Maybe<Provider>;
   /** Get current authenticated user */
-  meUser: User;
+  meUser?: Maybe<User>;
   message: Message;
   messages: PaginatedMessageResponse;
   myComplaint: Complaint;
@@ -3253,6 +3262,10 @@ export enum SortOrder {
 export type Subscription = {
   /** Subscribe to new messages in a conversation (participants only) */
   messageAdded: Message;
+  /** Subscribe to notifications for the authenticated participant */
+  notificationAdded: Notification;
+  /** Subscribe to all new messages for the authenticated participant */
+  participantMessageAdded: Message;
   /** Subscribe to real-time updates for the authenticated provider */
   providerUpdated: Provider;
   /** Subscribe to real-time updates for the authenticated user */

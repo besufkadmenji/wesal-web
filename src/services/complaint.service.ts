@@ -11,7 +11,7 @@ import {
   MY_COMPLAINT_QUERY,
   MY_COMPLAINTS_QUERY,
 } from "@/graphql/complaint/operations";
-import { requireData } from "@/utils/apollo.result";
+import { requireData, requireOperationField } from "@/utils/apollo.result";
 import client from "@/utils/apollo.client";
 import { graphqlMultipartRequest } from "@/utils/graphql.multipart";
 
@@ -38,7 +38,11 @@ export class ComplaintService {
       files,
       fileVariable: "evidence",
     });
-    return result.createComplaint;
+    return requireOperationField(
+      { data: result },
+      "createComplaint",
+      "Create complaint",
+    );
   }
 
   static async reply(complaintId: string, content: string) {
@@ -48,6 +52,10 @@ export class ComplaintService {
       mutation: ADD_COMPLAINT_MESSAGE_MUTATION,
       variables: { complaintId, content },
     });
-    return requireData(result, "Complaint reply").addComplaintMessage;
+    return requireOperationField(
+      result,
+      "addComplaintMessage",
+      "Complaint reply",
+    );
   }
 }

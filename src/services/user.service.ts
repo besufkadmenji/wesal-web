@@ -4,6 +4,7 @@ import { REMOVE_AVATAR_MUTATION } from "@/graphql/user/removeAvatar";
 import { UPDATE_USER_MUTATION } from "@/graphql/user/updateUser";
 import client from "@/utils/apollo.client";
 import { parseGraphQLError } from "@/utils/parse-graphql-error";
+import { requireOperationField } from "@/utils/apollo.result";
 
 class UserService {
   static me = async (): Promise<User | null> => {
@@ -26,7 +27,11 @@ class UserService {
           updateMeInput: input,
         },
       });
-      return removeAvatarResponse.data?.updateMe ?? null;
+      return requireOperationField(
+        removeAvatarResponse,
+        "updateMe",
+        "Update profile",
+      );
     } catch (error) {
       // Parse and throw the error with a readable message
       const errorMessage = parseGraphQLError(error);
@@ -39,7 +44,11 @@ class UserService {
         mutation: REMOVE_AVATAR_MUTATION,
         variables: {},
       });
-      return removeAvatarResponse.data?.removeMyAvatar ?? null;
+      return requireOperationField(
+        removeAvatarResponse,
+        "removeMyAvatar",
+        "Remove avatar",
+      );
     } catch (error) {
       // Parse and throw the error with a readable message
       const errorMessage = parseGraphQLError(error);

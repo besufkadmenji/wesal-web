@@ -4,6 +4,7 @@ import {
 import { CREATE_CONTACT_MESSAGE_MUTATION } from "@/graphql/contactMessage/createContactMessage";
 import client from "@/utils/apollo.client";
 import { parseGraphQLError } from "@/utils/parse-graphql-error";
+import { requireOperationField } from "@/utils/apollo.result";
 
 class ContactMessageService {
   static createContactMessage = async (input: CreateContactMessageInput) => {
@@ -14,7 +15,11 @@ class ContactMessageService {
           createContactMessageInput: input,
         },
       });
-      return removeAvatarResponse.data?.createContactMessage ?? null;
+      return requireOperationField(
+        removeAvatarResponse,
+        "createContactMessage",
+        "Create contact message",
+      );
     } catch (error) {
       // Parse and throw the error with a readable message
       const errorMessage = parseGraphQLError(error);

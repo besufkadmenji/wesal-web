@@ -610,6 +610,10 @@ type ConversationAccess {
   paidAt: DateTime
 }
 
+type ConversationStats {
+  unreadCount: Int!
+}
+
 type ConversationFeePaymentResponse {
   access: ConversationAccess!
   conversation: Conversation!
@@ -1041,7 +1045,7 @@ type Listing {
   provider: Provider
   providerId: String!
   status: ListingStatus!
-  story: ListingMedia!
+  story: ListingMedia
   tags: String!
   type: ListingType!
   updatedAt: DateTime!
@@ -1927,6 +1931,8 @@ type Query {
   contracts(input: ContractPaginationInput): PaginatedContractResponse!
   conversation(id: String!): Conversation!
   conversationFeeReport(input: FeeReportInput): ConversationFeeReport!
+  """Get aggregate conversation statistics for the authenticated participant"""
+  conversationStats: ConversationStats!
   conversations(input: ConversationPaginationInput): PaginatedConversationResponse!
 
   """Get all countries with pagination"""
@@ -1947,10 +1953,10 @@ type Query {
   meAdmin: Admin!
 
   """Get current authenticated provider"""
-  meProvider: Provider!
+  meProvider: Provider
 
   """Get current authenticated user"""
-  meUser: User!
+  meUser: User
   message(id: String!): Message!
   messages(input: MessagePaginationInput): PaginatedMessageResponse!
   myComplaint(id: String!): Complaint!
@@ -2262,6 +2268,12 @@ enum SortOrder {
 type Subscription {
   """Subscribe to new messages in a conversation (participants only)"""
   messageAdded(conversationId: String!): Message!
+
+  """Subscribe to notifications for the authenticated participant"""
+  notificationAdded: Notification!
+
+  """Subscribe to all new messages for the authenticated participant"""
+  participantMessageAdded: Message!
 
   """Subscribe to real-time updates for the authenticated provider"""
   providerUpdated: Provider!
@@ -2582,4 +2594,3 @@ input VerifyPasswordResetOtpInput {
 type VerifyPasswordResetOtpResponse {
   resetToken: String!
 }
-

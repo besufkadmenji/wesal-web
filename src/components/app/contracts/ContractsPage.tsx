@@ -50,6 +50,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 const CONTRACTS_PER_PAGE = 9;
@@ -77,6 +78,10 @@ const CONTRACT_FILTERS: Array<{
 export const ContractsPage = () => {
   const dict = useDict();
   const { me } = useMe();
+  const router = useAppRouter();
+  const searchParams = useSearchParams();
+  const requestedContractId = searchParams.get("contractId") || undefined;
+  const requestedContract = useContract(requestedContractId);
   const [status, setStatus] = useState<ContractStatus | "">("");
   const [page, setPage] = useState(1);
   const [selectedContract, setSelectedContract] = useState<Contract | null>(
@@ -87,6 +92,14 @@ export const ContractsPage = () => {
     page,
     limit: CONTRACTS_PER_PAGE,
   });
+  const activeContract = requestedContract.data ?? selectedContract;
+
+  const closeContract = () => {
+    setSelectedContract(null);
+    if (requestedContractId) {
+      router.replace("/contracts");
+    }
+  };
 
   const selectStatus = (value: ContractStatus | "") => {
     setStatus(value);
@@ -165,18 +178,18 @@ export const ContractsPage = () => {
       </main>
       {me?.user ? (
         <CustomerContractDialog
-          contract={selectedContract}
-          open={Boolean(selectedContract)}
+          contract={activeContract}
+          open={Boolean(activeContract)}
           onOpenChange={(open) => {
-            if (!open) setSelectedContract(null);
+            if (!open) closeContract();
           }}
         />
       ) : (
         <ProviderContractDialog
-          contract={selectedContract}
-          open={Boolean(selectedContract)}
+          contract={activeContract}
+          open={Boolean(activeContract)}
           onOpenChange={(open) => {
-            if (!open) setSelectedContract(null);
+            if (!open) closeContract();
           }}
         />
       )}
@@ -194,10 +207,11 @@ const ContractCard = ({
   onOpenContract?: (contract: Contract) => void;
 }) => {
   const dict = useDict();
-  // Detail page is only for provider pending acceptance; all other statuses open a popup.
+  // Completed contracts use the document page for PDF export. Provider-pending
+  // contracts retain their acceptance workflow; all other statuses use a popup.
   const opensContractDialog = Boolean(
     onOpenContract &&
-    contract.status !== ContractStatus.Draft &&
+    contract.status !== ContractStatus.Completed &&
     !(isProvider && contract.status === ContractStatus.Pending),
   );
   const cardDetails = (

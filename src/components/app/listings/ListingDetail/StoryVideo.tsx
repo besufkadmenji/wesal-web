@@ -1,5 +1,5 @@
 import { dataUrl } from "@/config/url";
-import { Listing } from "@/gql/graphql";
+import { Listing, MediaType } from "@/gql/graphql";
 import { useDict } from "@/hooks/useDict";
 import ReactPlayer from "react-player";
 import PlayVideoIcon from "@/assets/icons/play.video.svg";
@@ -7,12 +7,19 @@ import { useState } from "react";
 export const StoryVideo = ({ listing }: { listing: Listing }) => {
   const dict = useDict();
   const [playing, setPlaying] = useState(false);
+  const storyFilename =
+    listing.story?.type === MediaType.Video ? listing.story.filename : null;
+
+  if (!storyFilename) {
+    return null;
+  }
+
   return (
     <div className="grid grid-cols-1 gap-6 rounded-[20px] bg-white p-5">
       <p>{dict.listingDetail.storyVideo}</p>
       <div className="relative aspect-2/1 w-full overflow-hidden rounded-xl">
         <ReactPlayer
-          src={`${dataUrl}/files/${listing.story.filename}`}
+          src={`${dataUrl}/files/${storyFilename}`}
           className="object-cover"
           width={"100%"}
           height={"100%"}

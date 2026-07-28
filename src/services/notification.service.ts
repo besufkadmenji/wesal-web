@@ -9,8 +9,9 @@ import {
   MARK_NOTIFICATION_AS_READ_MUTATION,
   NOTIFICATION_STATS_QUERY,
   NOTIFICATIONS_QUERY,
+  NOTIFICATION_ADDED_SUBSCRIPTION,
 } from "@/graphql/notification/operations";
-import { requireData } from "@/utils/apollo.result";
+import { requireData, requireOperationField } from "@/utils/apollo.result";
 import client from "@/utils/apollo.client";
 
 export class NotificationService {
@@ -35,8 +36,11 @@ export class NotificationService {
       mutation: MARK_NOTIFICATION_AS_READ_MUTATION,
       variables: { id },
     });
-    return requireData(result, "Mark notification as read")
-      .markNotificationAsRead;
+    return requireOperationField(
+      result,
+      "markNotificationAsRead",
+      "Mark notification as read",
+    );
   }
 
   static async markAllAsRead(userId: string) {
@@ -46,7 +50,16 @@ export class NotificationService {
       mutation: MARK_ALL_NOTIFICATIONS_AS_READ_MUTATION,
       variables: { userId },
     });
-    return requireData(result, "Mark all notifications as read")
-      .markAllNotificationsAsRead;
+    return requireOperationField(
+      result,
+      "markAllNotificationsAsRead",
+      "Mark all notifications as read",
+    );
+  }
+
+  static notificationAdded() {
+    return client().subscribe<{ notificationAdded: Notification }>({
+      query: NOTIFICATION_ADDED_SUBSCRIPTION,
+    });
   }
 }

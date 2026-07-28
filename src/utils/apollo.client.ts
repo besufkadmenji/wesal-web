@@ -14,7 +14,7 @@ import Cookies from "js-cookie";
 const defaultOptions: ApolloClient.DefaultOptions.Input = {
   watchQuery: { fetchPolicy: "no-cache", errorPolicy: "all" },
   query: { fetchPolicy: "no-cache", errorPolicy: "all" },
-  mutate: { errorPolicy: "all" },
+  mutate: { errorPolicy: "none" },
 };
 
 let browserClient: ApolloClient | null = null;

@@ -174,8 +174,8 @@ const getUser = async (
     ]);
 
     return {
-      user: meUserResult.data?.meUser,
-      provider: meProviderResult.data?.meProvider,
+      user: meUserResult.data?.meUser ?? undefined,
+      provider: meProviderResult.data?.meProvider ?? undefined,
     };
   } catch {
     return null;

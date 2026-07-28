@@ -8,7 +8,10 @@ import MessagesIcon from "@/assets/icons/conversations.svg";
 import { useDict } from "@/hooks/useDict";
 import { useLang } from "@/hooks/useLang";
 import { twMerge } from "tailwind-merge";
-import { useConversations } from "@/hooks/useConversations";
+import {
+  useConversations,
+  useConversationStats,
+} from "@/hooks/useConversations";
 import { useMe } from "@/hooks/useMe";
 import { ParticipantAvatar } from "@/components/app/shared/ParticipantUI";
 import ViewAllIcon from "@/assets/icons/view.all.alt.svg";
@@ -19,11 +22,8 @@ export const ChatPopover = () => {
   const lang = useLang();
   const { me } = useMe();
   const conversations = useConversations({ page: 1, limit: 5 });
-  const unread =
-    conversations.data?.items.reduce(
-      (total, conversation) => total + conversation.unreadCount,
-      0,
-    ) || 0;
+  const stats = useConversationStats();
+  const unread = stats.data?.unreadCount || 0;
 
   return (
     <Popover>

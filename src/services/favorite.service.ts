@@ -7,7 +7,7 @@ import {
   MY_FAVORITES_QUERY,
   SET_PROVIDER_FAVORITE_MUTATION,
 } from "@/graphql/favorite/operations";
-import { requireData } from "@/utils/apollo.result";
+import { requireData, requireOperationField } from "@/utils/apollo.result";
 import client from "@/utils/apollo.client";
 
 export class FavoriteService {
@@ -31,6 +31,10 @@ export class FavoriteService {
       mutation: SET_PROVIDER_FAVORITE_MUTATION,
       variables: { providerId, favorite },
     });
-    return requireData(result, "Set favorite").setProviderFavorite;
+    return requireOperationField(
+      result,
+      "setProviderFavorite",
+      "Set favorite",
+    );
   }
 }
