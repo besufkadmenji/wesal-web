@@ -14,7 +14,7 @@ declare module "@apollo/client" {
       }
 
       interface Mutate {
-        errorPolicy?: "all";
+        errorPolicy?: "none";
       }
     }
   }

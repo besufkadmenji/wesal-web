@@ -1,4 +1,5 @@
 import { CreateListingForm } from "@/components/app/listings/my-listings/manage/useForm";
+import { MediaType } from "@/gql/graphql";
 import { useDict } from "@/hooks/useDict";
 import { useCallback, useMemo, useState } from "react";
 
@@ -119,7 +120,11 @@ export const useFormValidation = (form: ListingFormData) => {
   const validateStoryVideoFile = useCallback(
     (file: File | null | undefined, existingStory: unknown): string | null => {
       // Only validate if no existing story and no new file
-      const hasExistingStory = !!existingStory;
+      const hasExistingStory =
+        typeof existingStory === "object" &&
+        existingStory !== null &&
+        "type" in existingStory &&
+        existingStory.type === MediaType.Video;
       if (!hasExistingStory && !file) {
         return dict.addListing.validation.videoRequired;
       }

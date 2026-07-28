@@ -157,6 +157,7 @@ async function mockParticipantApi(
   role: "user" | "provider" = "user",
 ) {
   let providerFeePaid = role === "user";
+  let unreadConversationCount = 0;
   const currentConversation = () => ({
     ...conversation,
     providerFeePaidAt: providerFeePaid ? "2026-01-01T00:00:00.000Z" : null,
@@ -198,6 +199,10 @@ async function mockParticipantApi(
               }
             : null,
       };
+    } else if (operation.includes("ConversationStats")) {
+      data = {
+        conversationStats: { unreadCount: unreadConversationCount },
+      };
     } else if (operation.includes("Conversations")) {
       data = {
         conversations: {
@@ -228,6 +233,8 @@ async function mockParticipantApi(
           },
         },
       };
+    } else if (operation.includes("ContractById")) {
+      data = { contract: pendingContract };
     } else if (operation.includes("Contracts")) {
       const items = role === "provider" ? [pendingContract] : [];
       data = {
@@ -339,19 +346,28 @@ async function mockParticipantApi(
   });
   await page.routeWebSocket("**/graphql", (ws) => {
     ws.onMessage((raw) => {
-      const message = JSON.parse(String(raw)) as { id?: string; type: string };
+      const message = JSON.parse(String(raw)) as {
+        id?: string;
+        type: string;
+        payload?: { query?: string };
+      };
       if (message.type === "connection_init") {
         ws.send(JSON.stringify({ type: "connection_ack" }));
       }
-      if (message.type === "subscribe" && message.id) {
+      if (
+        message.type === "subscribe" &&
+        message.id &&
+        message.payload?.query?.includes("ParticipantMessageAdded")
+      ) {
         setTimeout(() => {
+          unreadConversationCount = 1;
           ws.send(
             JSON.stringify({
               id: message.id,
               type: "next",
               payload: {
                 data: {
-                  messageAdded: {
+                  participantMessageAdded: {
                     ...conversation.lastMessage,
                     id: "message-realtime",
                     content: "Realtime update",
@@ -380,6 +396,27 @@ test("customer opens the responsive conversation workspace and sends a message",
   await page.getByPlaceholder("Write your message").fill("A safe message");
   await page.getByRole("button", { name: "Send" }).click();
   await expect(page.getByText("A safe message")).toBeVisible();
+});
+
+test("incoming chat message updates the badge outside chat", async ({ page }) => {
+  await mockParticipantApi(page);
+  await page.goto("/en/contracts");
+
+  const messagesButton = page.getByRole("button", { name: /Messages/i });
+  await expect(messagesButton).toBeVisible();
+  await expect(messagesButton.getByText("1", { exact: true })).toBeVisible();
+});
+
+test("contract query parameter opens its popup from the contracts list", async ({
+  page,
+}) => {
+  await mockParticipantApi(page);
+  await page.goto(`/en/contracts?contractId=${pendingContract.id}`);
+
+  await expect(page.getByRole("dialog")).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: conversation.listing.name }),
+  ).toBeVisible();
 });
 
 test("customer-only favorites reject a provider principal", async ({

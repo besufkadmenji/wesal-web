@@ -1,5 +1,6 @@
 import type {
   Conversation,
+  ConversationStats,
   ConversationFeePaymentResponse,
   ConversationPaginationInput,
   Message,
@@ -14,11 +15,13 @@ import {
   CREATE_MESSAGE_MUTATION,
   MARK_CONVERSATION_READ_MUTATION,
   MESSAGE_ADDED_SUBSCRIPTION,
+  PARTICIPANT_MESSAGE_ADDED_SUBSCRIPTION,
+  CONVERSATION_STATS_QUERY,
   MESSAGES_QUERY,
   PAY_CONVERSATION_FEE_MUTATION,
   RESTART_CONVERSATION_MUTATION,
 } from "@/graphql/conversation/operations";
-import { requireData } from "@/utils/apollo.result";
+import { requireData, requireOperationField } from "@/utils/apollo.result";
 import client from "@/utils/apollo.client";
 
 export class ConversationService {
@@ -42,7 +45,11 @@ export class ConversationService {
       mutation: CREATE_CONVERSATION_MUTATION,
       variables: { input: { listingId } },
     });
-    return requireData(result, "Create conversation").createConversation;
+    return requireOperationField(
+      result,
+      "createConversation",
+      "Create conversation",
+    );
   }
 
   static async markRead(conversationId: string) {
@@ -50,7 +57,11 @@ export class ConversationService {
       mutation: MARK_CONVERSATION_READ_MUTATION,
       variables: { conversationId },
     });
-    return requireData(result, "Mark conversation read").markConversationRead;
+    return requireOperationField(
+      result,
+      "markConversationRead",
+      "Mark conversation read",
+    );
   }
 
   static async restart(conversationId: string) {
@@ -58,7 +69,11 @@ export class ConversationService {
       mutation: RESTART_CONVERSATION_MUTATION,
       variables: { conversationId },
     });
-    return requireData(result, "Restart conversation").restartConversation;
+    return requireOperationField(
+      result,
+      "restartConversation",
+      "Restart conversation",
+    );
   }
 
   static async messages(input: MessagePaginationInput) {
@@ -74,7 +89,7 @@ export class ConversationService {
       mutation: CREATE_MESSAGE_MUTATION,
       variables: { input: { conversationId, content } },
     });
-    return requireData(result, "Create message").createMessage;
+    return requireOperationField(result, "createMessage", "Create message");
   }
 
   static messageAdded(conversationId: string) {
@@ -84,6 +99,19 @@ export class ConversationService {
     });
   }
 
+  static participantMessageAdded() {
+    return client().subscribe<{ participantMessageAdded: Message }>({
+      query: PARTICIPANT_MESSAGE_ADDED_SUBSCRIPTION,
+    });
+  }
+
+  static async stats() {
+    const result = await client().query<{
+      conversationStats: ConversationStats;
+    }>({ query: CONVERSATION_STATS_QUERY });
+    return requireData(result, "Conversation stats").conversationStats;
+  }
+
   static async payFee(conversationId: string) {
     const result = await client().mutate<{
       payConversationFee: ConversationFeePaymentResponse;
@@ -91,6 +119,10 @@ export class ConversationService {
       mutation: PAY_CONVERSATION_FEE_MUTATION,
       variables: { conversationId },
     });
-    return requireData(result, "Pay conversation fee").payConversationFee;
+    return requireOperationField(
+      result,
+      "payConversationFee",
+      "Pay conversation fee",
+    );
   }
 }

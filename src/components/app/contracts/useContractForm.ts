@@ -145,7 +145,7 @@ export const useContractForm = ({
       queryClient.invalidateQueries({
         queryKey: queryKeys.conversation(contract.conversationId),
       });
-      router.push(`/contracts/${contract.id}`);
+      router.push(`/contracts?contractId=${encodeURIComponent(contract.id)}`);
     },
     onError: (error) => showErrorMessage(error.message),
   });

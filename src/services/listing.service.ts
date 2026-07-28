@@ -14,6 +14,7 @@ import { REMOVE_LISTING_MUTATION } from "@/graphql/listing/removeListing";
 import { UPDATE_LISTING_MUTATION } from "@/graphql/listing/updateListing";
 import client from "@/utils/apollo.client";
 import { parseGraphQLError } from "@/utils/parse-graphql-error";
+import { requireOperationField } from "@/utils/apollo.result";
 
 class ListingService {
   static listings = async (
@@ -88,7 +89,11 @@ class ListingService {
           createListingInput: input,
         },
       });
-      return createListingResponse.data?.createListing ?? null;
+      return requireOperationField(
+        createListingResponse,
+        "createListing",
+        "Create listing",
+      );
     } catch (error) {
       // Parse and throw the error with a readable message
       const errorMessage = parseGraphQLError(error);
@@ -103,7 +108,11 @@ class ListingService {
           updateListingInput: input,
         },
       });
-      return updateListingResponse.data?.updateListing ?? null;
+      return requireOperationField(
+        updateListingResponse,
+        "updateListing",
+        "Update listing",
+      );
     } catch (error) {
       // Parse and throw the error with a readable message
       const errorMessage = parseGraphQLError(error);
@@ -118,7 +127,11 @@ class ListingService {
           removeListingId,
         },
       });
-      return removeAvatarResponse.data?.removeListing ?? null;
+      return requireOperationField(
+        removeAvatarResponse,
+        "removeListing",
+        "Remove listing",
+      );
     } catch (error) {
       // Parse and throw the error with a readable message
       const errorMessage = parseGraphQLError(error);

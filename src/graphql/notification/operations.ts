@@ -1,7 +1,7 @@
 import { PAGINATION_FRAGMENT } from "@/graphql/common/fragments";
 import { gql } from "@apollo/client";
 
-const NOTIFICATION_FRAGMENT = gql`
+export const NOTIFICATION_FRAGMENT = gql`
   fragment NotificationFields on Notification {
     id
     title
@@ -53,4 +53,13 @@ export const MARK_ALL_NOTIFICATIONS_AS_READ_MUTATION = gql`
   mutation MarkAllNotificationsAsRead($userId: String!) {
     markAllNotificationsAsRead(userId: $userId)
   }
+`;
+
+export const NOTIFICATION_ADDED_SUBSCRIPTION = gql`
+  subscription NotificationAdded {
+    notificationAdded {
+      ...NotificationFields
+    }
+  }
+  ${NOTIFICATION_FRAGMENT}
 `;

@@ -18,6 +18,7 @@ export const useRealtimeRefresh = () => {
   useEffect(() => {
     const refresh = () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.conversations });
+      queryClient.invalidateQueries({ queryKey: queryKeys.conversationStats });
       queryClient.invalidateQueries({ queryKey: queryKeys.contracts });
       queryClient.invalidateQueries({ queryKey: queryKeys.complaints });
       queryClient.invalidateQueries({ queryKey: queryKeys.notifications });
@@ -33,6 +34,15 @@ export const useConversations = (input: ConversationPaginationInput = {}) =>
     queryKey: [...queryKeys.conversations, input],
     queryFn: () => ConversationService.findAll({ page: 1, limit: 50, ...input }),
   });
+
+export const useConversationStats = () => {
+  const { isLoggedIn } = useMe();
+  return useQuery({
+    queryKey: queryKeys.conversationStats,
+    queryFn: () => ConversationService.stats(),
+    enabled: isLoggedIn,
+  });
+};
 
 export const useConversation = (id?: string) =>
   useQuery({
@@ -56,8 +66,7 @@ const appendMessage = (
 };
 
 export const useConversationMessages = (conversationId?: string) => {
-  const queryClient = useQueryClient();
-  const query = useQuery({
+  return useQuery({
     queryKey: queryKeys.messages(conversationId || ""),
     queryFn: () =>
       ConversationService.messages({
@@ -68,30 +77,6 @@ export const useConversationMessages = (conversationId?: string) => {
       }),
     enabled: Boolean(conversationId),
   });
-
-  useEffect(() => {
-    if (!conversationId) return;
-    const subscription = ConversationService.messageAdded(conversationId).subscribe({
-      next: (payload) => {
-        const message = payload.data?.messageAdded;
-        if (!message) return;
-        queryClient.setQueryData<PaginatedMessageResponse>(
-          queryKeys.messages(conversationId),
-          (current) => appendMessage(current, message),
-        );
-        queryClient.invalidateQueries({ queryKey: queryKeys.conversations });
-        queryClient.invalidateQueries({
-          queryKey: queryKeys.conversation(conversationId),
-        });
-        if (message.kind !== MessageKind.Text) {
-          queryClient.invalidateQueries({ queryKey: queryKeys.contracts });
-        }
-      },
-    });
-    return () => subscription.unsubscribe();
-  }, [conversationId, queryClient]);
-
-  return query;
 };
 
 export const useSendMessage = (conversationId: string) => {

@@ -26,6 +26,7 @@ import { VERIFY_PASSWORD_RESET_OTP_MUTATION } from "@/graphql/auth/verifyPasswor
 import { VERIFY_PHONE_CHANGE_MUTATION } from "@/graphql/auth/verifyPhoneChange";
 import client from "@/utils/apollo.client";
 import { parseGraphQLError } from "@/utils/parse-graphql-error";
+import { requireOperationField } from "@/utils/apollo.result";
 
 class AuthService {
   static login = async (input: LoginInput) => {
@@ -36,7 +37,7 @@ class AuthService {
           input,
         },
       });
-      return loginResponse.data?.login ?? null;
+      return requireOperationField(loginResponse, "login", "Login");
     } catch (error) {
       // Parse and throw the error with a readable message
       const errorMessage = parseGraphQLError(error);
@@ -51,7 +52,7 @@ class AuthService {
           input,
         },
       });
-      return registerResponse.data?.register ?? null;
+      return requireOperationField(registerResponse, "register", "Register");
     } catch (error) {
       // Parse and throw the error with a readable message
       const errorMessage = parseGraphQLError(error);
@@ -66,7 +67,11 @@ class AuthService {
           input,
         },
       });
-      return otpVerificationResponse.data?.verifyOtp ?? null;
+      return requireOperationField(
+        otpVerificationResponse,
+        "verifyOtp",
+        "Verify OTP",
+      );
     } catch (error) {
       // Parse and throw the error with a readable message
       const errorMessage = parseGraphQLError(error);
@@ -83,7 +88,11 @@ class AuthService {
           input,
         },
       });
-      return otpVerificationResponse.data?.verifyPasswordResetOtp ?? null;
+      return requireOperationField(
+        otpVerificationResponse,
+        "verifyPasswordResetOtp",
+        "Verify password reset OTP",
+      );
     } catch (error) {
       // Parse and throw the error with a readable message
       const errorMessage = parseGraphQLError(error);
@@ -98,7 +107,11 @@ class AuthService {
           input,
         },
       });
-      return resendOtpMutationResponse.data?.resendOtp ?? null;
+      return requireOperationField(
+        resendOtpMutationResponse,
+        "resendOtp",
+        "Resend OTP",
+      );
     } catch (error) {
       // Parse and throw the error with a readable message
       const errorMessage = parseGraphQLError(error);
@@ -114,7 +127,11 @@ class AuthService {
           input,
         },
       });
-      return forgotPasswordMutationResponse.data?.forgotPassword ?? null;
+      return requireOperationField(
+        forgotPasswordMutationResponse,
+        "forgotPassword",
+        "Forgot password",
+      );
     } catch (error) {
       // Parse and throw the error with a readable message
       const errorMessage = parseGraphQLError(error);
@@ -129,7 +146,11 @@ class AuthService {
           input,
         },
       });
-      return resetPasswordMutationResponse.data?.resetPassword ?? null;
+      return requireOperationField(
+        resetPasswordMutationResponse,
+        "resetPassword",
+        "Reset password",
+      );
     } catch (error) {
       // Parse and throw the error with a readable message
       const errorMessage = parseGraphQLError(error);
@@ -144,7 +165,11 @@ class AuthService {
           input,
         },
       });
-      return changePasswordMutationResponse.data?.changePassword ?? null;
+      return requireOperationField(
+        changePasswordMutationResponse,
+        "changePassword",
+        "Change password",
+      );
     } catch (error) {
       // Parse and throw the error with a readable message
       const errorMessage = parseGraphQLError(error);
@@ -159,8 +184,10 @@ class AuthService {
           input,
         },
       });
-      return (
-        initiateEmailChangeMutationResponse.data?.initiateEmailChange ?? null
+      return requireOperationField(
+        initiateEmailChangeMutationResponse,
+        "initiateEmailChange",
+        "Initiate email change",
       );
     } catch (error) {
       // Parse and throw the error with a readable message
@@ -176,8 +203,10 @@ class AuthService {
           input,
         },
       });
-      return (
-        initiatePhoneChangeMutationResponse.data?.initiatePhoneChange ?? null
+      return requireOperationField(
+        initiatePhoneChangeMutationResponse,
+        "initiatePhoneChange",
+        "Initiate phone change",
       );
     } catch (error) {
       // Parse and throw the error with a readable message
@@ -193,7 +222,11 @@ class AuthService {
           input,
         },
       });
-      return verifyPhoneChangeMutationResponse.data?.verifyPhoneChange ?? null;
+      return requireOperationField(
+        verifyPhoneChangeMutationResponse,
+        "verifyPhoneChange",
+        "Verify phone change",
+      );
     } catch (error) {
       // Parse and throw the error with a readable message
       const errorMessage = parseGraphQLError(error);
@@ -208,7 +241,11 @@ class AuthService {
           input,
         },
       });
-      return verifyEmailChangeMutationResponse.data?.verifyEmailChange ?? null;
+      return requireOperationField(
+        verifyEmailChangeMutationResponse,
+        "verifyEmailChange",
+        "Verify email change",
+      );
     } catch (error) {
       // Parse and throw the error with a readable message
       const errorMessage = parseGraphQLError(error);

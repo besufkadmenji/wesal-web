@@ -7,7 +7,7 @@ import {
 } from "@/graphql/common/fragments";
 import { gql } from "@apollo/client";
 
-const MESSAGE_FRAGMENT = gql`
+export const MESSAGE_FRAGMENT = gql`
   fragment MessageFields on Message {
     id
     conversationId
@@ -137,6 +137,21 @@ export const MESSAGE_ADDED_SUBSCRIPTION = gql`
     messageAdded(conversationId: $conversationId) { ...MessageFields }
   }
   ${MESSAGE_FRAGMENT}
+`;
+
+export const PARTICIPANT_MESSAGE_ADDED_SUBSCRIPTION = gql`
+  subscription ParticipantMessageAdded {
+    participantMessageAdded { ...MessageFields }
+  }
+  ${MESSAGE_FRAGMENT}
+`;
+
+export const CONVERSATION_STATS_QUERY = gql`
+  query ConversationStats {
+    conversationStats {
+      unreadCount
+    }
+  }
 `;
 
 export const PAY_CONVERSATION_FEE_MUTATION = gql`

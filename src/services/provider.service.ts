@@ -10,6 +10,7 @@ import { TERMINATE_CONTRACT_MUTATION } from "@/graphql/providers/terminateContra
 import { UPDATE_PROVIDER_MUTATION } from "@/graphql/providers/updateProvider";
 import client from "@/utils/apollo.client";
 import { parseGraphQLError } from "@/utils/parse-graphql-error";
+import { requireOperationField } from "@/utils/apollo.result";
 
 class ProviderService {
   static me = async (): Promise<Provider | null> => {
@@ -32,7 +33,11 @@ class ProviderService {
           updateProviderInput: input,
         },
       });
-      return removeAvatarResponse.data?.updateProvider ?? null;
+      return requireOperationField(
+        removeAvatarResponse,
+        "updateProvider",
+        "Update provider",
+      );
     } catch (error) {
       // Parse and throw the error with a readable message
       const errorMessage = parseGraphQLError(error);
@@ -44,7 +49,11 @@ class ProviderService {
       const removeAvatarResponse = await client().mutate({
         mutation: REMOVE_PROVIDER_AVATAR_MUTATION,
       });
-      return removeAvatarResponse.data?.removeProviderAvatar ?? null;
+      return requireOperationField(
+        removeAvatarResponse,
+        "removeProviderAvatar",
+        "Remove provider avatar",
+      );
     } catch (error) {
       // Parse and throw the error with a readable message
       const errorMessage = parseGraphQLError(error);
@@ -59,7 +68,11 @@ class ProviderService {
           input,
         },
       });
-      return removeAvatarResponse.data?.signProviderContract ?? null;
+      return requireOperationField(
+        removeAvatarResponse,
+        "signProviderContract",
+        "Sign provider contract",
+      );
     } catch (error) {
       // Parse and throw the error with a readable message
       const errorMessage = parseGraphQLError(error);
@@ -74,7 +87,11 @@ class ProviderService {
           terminationReason,
         },
       });
-      return removeAvatarResponse.data?.terminateProviderContract ?? null;
+      return requireOperationField(
+        removeAvatarResponse,
+        "terminateProviderContract",
+        "Terminate provider contract",
+      );
     } catch (error) {
       // Parse and throw the error with a readable message
       const errorMessage = parseGraphQLError(error);

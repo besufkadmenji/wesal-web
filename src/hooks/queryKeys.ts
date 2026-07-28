@@ -1,5 +1,6 @@
 export const queryKeys = {
   conversations: ["conversations"] as const,
+  conversationStats: ["conversation-stats"] as const,
   conversation: (id: string) => ["conversation", id] as const,
   messages: (id: string) => ["messages", id] as const,
   contracts: ["contracts"] as const,

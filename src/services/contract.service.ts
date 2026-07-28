@@ -30,7 +30,7 @@ import {
   REQUEST_CONTRACT_CANCELLATION_MUTATION,
   REFUSE_CONTRACT_DELIVERY_MUTATION,
 } from "@/graphql/contract/operations";
-import { requireData } from "@/utils/apollo.result";
+import { requireData, requireOperationField } from "@/utils/apollo.result";
 import client from "@/utils/apollo.client";
 
 type ContractReference = Pick<
@@ -72,7 +72,11 @@ export class ContractService {
       mutation: INITIALIZE_CONTRACT_MUTATION,
       variables: { input },
     });
-    return requireData(result, "Initialize contract").initializeContract;
+    return requireOperationField(
+      result,
+      "initializeContract",
+      "Initialize contract",
+    );
   }
 
   static async create(input: CreateContractInput) {
@@ -82,7 +86,7 @@ export class ContractService {
       mutation: CREATE_CONTRACT_MUTATION,
       variables: { input },
     });
-    return requireData(result, "Create contract").createContract;
+    return requireOperationField(result, "createContract", "Create contract");
   }
 
   static async accept(input: AcceptContractInput) {
@@ -90,7 +94,7 @@ export class ContractService {
       mutation: ACCEPT_CONTRACT_MUTATION,
       variables: { input },
     });
-    return requireData(result, "Accept contract").acceptContract;
+    return requireOperationField(result, "acceptContract", "Accept contract");
   }
 
   static async reject(input: RejectContractInput) {
@@ -98,7 +102,7 @@ export class ContractService {
       mutation: REJECT_CONTRACT_MUTATION,
       variables: { input },
     });
-    return requireData(result, "Reject contract").rejectContract;
+    return requireOperationField(result, "rejectContract", "Reject contract");
   }
 
   static async resend(input: ResendContractInput) {
@@ -106,7 +110,7 @@ export class ContractService {
       mutation: RESEND_CONTRACT_MUTATION,
       variables: { input },
     });
-    return requireData(result, "Resend contract").resendContract;
+    return requireOperationField(result, "resendContract", "Resend contract");
   }
 
   static async pay(contractId: string) {
@@ -116,7 +120,7 @@ export class ContractService {
       mutation: PAY_CONTRACT_MUTATION,
       variables: { contractId },
     });
-    return requireData(result, "Pay contract").payContract;
+    return requireOperationField(result, "payContract", "Pay contract");
   }
 
   static async complete(input: CompleteContractInput) {
@@ -124,7 +128,11 @@ export class ContractService {
       mutation: COMPLETE_CONTRACT_MUTATION,
       variables: { input },
     });
-    return requireData(result, "Complete contract").completeContract;
+    return requireOperationField(
+      result,
+      "completeContract",
+      "Complete contract",
+    );
   }
 
   static async providerComplete(input: ProviderCompleteContractInput) {
@@ -134,7 +142,11 @@ export class ContractService {
       mutation: PROVIDER_COMPLETE_CONTRACT_MUTATION,
       variables: { input },
     });
-    return requireData(result, "Provider completion").providerCompleteContract;
+    return requireOperationField(
+      result,
+      "providerCompleteContract",
+      "Provider completion",
+    );
   }
 
   static async requestCancellation(input: CancelContractInput) {
@@ -144,8 +156,11 @@ export class ContractService {
       mutation: REQUEST_CONTRACT_CANCELLATION_MUTATION,
       variables: { input },
     });
-    return requireData(result, "Contract cancellation")
-      .requestContractCancellation;
+    return requireOperationField(
+      result,
+      "requestContractCancellation",
+      "Contract cancellation",
+    );
   }
 
   static async refuseDelivery(input: RefuseDeliveryInput) {
@@ -155,6 +170,10 @@ export class ContractService {
       mutation: REFUSE_CONTRACT_DELIVERY_MUTATION,
       variables: { input },
     });
-    return requireData(result, "Delivery refusal").refuseContractDelivery;
+    return requireOperationField(
+      result,
+      "refuseContractDelivery",
+      "Delivery refusal",
+    );
   }
 }

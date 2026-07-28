@@ -26,6 +26,7 @@ import { VERIFY_PROVIDER_PASSWORD_RESET_OTP_MUTATION } from "@/graphql/authProvi
 import { VERIFY_PROVIDER_PHONE_CHANGE_MUTATION } from "@/graphql/authProvider/verifyPhoneChangeProvider";
 import client from "@/utils/apollo.client";
 import { parseGraphQLError } from "@/utils/parse-graphql-error";
+import { requireOperationField } from "@/utils/apollo.result";
 
 class AuthProviderService {
   static loginProvider = async (input: LoginInput) => {
@@ -36,7 +37,11 @@ class AuthProviderService {
           input,
         },
       });
-      return loginResponse.data?.loginProvider ?? null;
+      return requireOperationField(
+        loginResponse,
+        "loginProvider",
+        "Provider login",
+      );
     } catch (error) {
       // Parse and throw the error with a readable message
       const errorMessage = parseGraphQLError(error);
@@ -51,7 +56,11 @@ class AuthProviderService {
           input,
         },
       });
-      return registerResponse.data?.registerProvider ?? null;
+      return requireOperationField(
+        registerResponse,
+        "registerProvider",
+        "Register provider",
+      );
     } catch (error) {
       // Parse and throw the error with a readable message
       const errorMessage = parseGraphQLError(error);
@@ -66,7 +75,11 @@ class AuthProviderService {
           input,
         },
       });
-      return otpVerificationResponse.data?.verifyProviderOtp ?? null;
+      return requireOperationField(
+        otpVerificationResponse,
+        "verifyProviderOtp",
+        "Verify provider OTP",
+      );
     } catch (error) {
       // Parse and throw the error with a readable message
       const errorMessage = parseGraphQLError(error);
@@ -83,8 +96,10 @@ class AuthProviderService {
           input,
         },
       });
-      return (
-        otpVerificationResponse.data?.verifyProviderPasswordResetOtp ?? null
+      return requireOperationField(
+        otpVerificationResponse,
+        "verifyProviderPasswordResetOtp",
+        "Verify provider password reset OTP",
       );
     } catch (error) {
       // Parse and throw the error with a readable message
@@ -100,7 +115,11 @@ class AuthProviderService {
           input,
         },
       });
-      return resendOtpMutationResponse.data?.resendProviderOtp ?? null;
+      return requireOperationField(
+        resendOtpMutationResponse,
+        "resendProviderOtp",
+        "Resend provider OTP",
+      );
     } catch (error) {
       // Parse and throw the error with a readable message
       const errorMessage = parseGraphQLError(error);
@@ -116,8 +135,10 @@ class AuthProviderService {
           input,
         },
       });
-      return (
-        forgotPasswordMutationResponse.data?.forgotProviderPassword ?? null
+      return requireOperationField(
+        forgotPasswordMutationResponse,
+        "forgotProviderPassword",
+        "Forgot provider password",
       );
     } catch (error) {
       // Parse and throw the error with a readable message
@@ -133,7 +154,11 @@ class AuthProviderService {
           input,
         },
       });
-      return resetPasswordMutationResponse.data?.resetProviderPassword ?? null;
+      return requireOperationField(
+        resetPasswordMutationResponse,
+        "resetProviderPassword",
+        "Reset provider password",
+      );
     } catch (error) {
       // Parse and throw the error with a readable message
       const errorMessage = parseGraphQLError(error);
@@ -148,8 +173,10 @@ class AuthProviderService {
           input,
         },
       });
-      return (
-        changePasswordMutationResponse.data?.changeProviderPassword ?? null
+      return requireOperationField(
+        changePasswordMutationResponse,
+        "changeProviderPassword",
+        "Change provider password",
       );
     } catch (error) {
       // Parse and throw the error with a readable message
@@ -165,9 +192,10 @@ class AuthProviderService {
           input,
         },
       });
-      return (
-        initiateEmailChangeMutationResponse.data?.initiateProviderEmailChange ??
-        null
+      return requireOperationField(
+        initiateEmailChangeMutationResponse,
+        "initiateProviderEmailChange",
+        "Initiate provider email change",
       );
     } catch (error) {
       // Parse and throw the error with a readable message
@@ -183,9 +211,10 @@ class AuthProviderService {
           input,
         },
       });
-      return (
-        initiatePhoneChangeMutationResponse.data?.initiateProviderPhoneChange ??
-        null
+      return requireOperationField(
+        initiatePhoneChangeMutationResponse,
+        "initiateProviderPhoneChange",
+        "Initiate provider phone change",
       );
     } catch (error) {
       // Parse and throw the error with a readable message
@@ -201,9 +230,10 @@ class AuthProviderService {
           input,
         },
       });
-      return (
-        verifyPhoneChangeMutationResponse.data?.verifyProviderPhoneChange ??
-        null
+      return requireOperationField(
+        verifyPhoneChangeMutationResponse,
+        "verifyProviderPhoneChange",
+        "Verify provider phone change",
       );
     } catch (error) {
       // Parse and throw the error with a readable message
@@ -219,9 +249,10 @@ class AuthProviderService {
           input,
         },
       });
-      return (
-        verifyEmailChangeMutationResponse.data?.verifyProviderEmailChange ??
-        null
+      return requireOperationField(
+        verifyEmailChangeMutationResponse,
+        "verifyProviderEmailChange",
+        "Verify provider email change",
       );
     } catch (error) {
       // Parse and throw the error with a readable message

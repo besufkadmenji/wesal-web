@@ -8,6 +8,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { UserStatusWatcher } from "@/components/app/UserStatusWatcher";
 import { useRealtimeRefresh } from "@/hooks/useConversations";
+import { RealtimeEventsWatcher } from "@/components/app/RealtimeEventsWatcher";
 
 const RealtimeQueryBridge = () => {
   useRealtimeRefresh();
@@ -21,6 +22,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         <HeroUIProvider>
           <UserStatusWatcher />
           <RealtimeQueryBridge />
+          <RealtimeEventsWatcher />
           {children}
         </HeroUIProvider>
         <ReactQueryDevtools initialIsOpen={false} />

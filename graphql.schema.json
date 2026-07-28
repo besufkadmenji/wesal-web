@@ -7529,6 +7529,34 @@
         "possibleTypes": null
       },
       {
+        "kind": "OBJECT",
+        "name": "ConversationStats",
+        "description": null,
+        "isOneOf": null,
+        "fields": [
+          {
+            "name": "unreadCount",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "name": "Int",
+                "kind": "SCALAR",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
         "kind": "ENUM",
         "name": "ConversationStatus",
         "description": "Conversation lifecycle status",
@@ -11200,13 +11228,9 @@
             "description": null,
             "args": [],
             "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "name": "ListingMedia",
-                "kind": "OBJECT",
-                "ofType": null
-              }
+              "kind": "OBJECT",
+              "name": "ListingMedia",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -21173,6 +21197,22 @@
             "deprecationReason": null
           },
           {
+            "name": "conversationStats",
+            "description": "Get aggregate conversation statistics for the authenticated participant",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "name": "ConversationStats",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "conversations",
             "description": null,
             "args": [
@@ -21514,13 +21554,9 @@
             "description": "Get current authenticated provider",
             "args": [],
             "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "name": "Provider",
-                "kind": "OBJECT",
-                "ofType": null
-              }
+              "kind": "OBJECT",
+              "name": "Provider",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -21530,13 +21566,9 @@
             "description": "Get current authenticated user",
             "args": [],
             "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "name": "User",
-                "kind": "OBJECT",
-                "ofType": null
-              }
+              "kind": "OBJECT",
+              "name": "User",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -25160,6 +25192,38 @@
                 "deprecationReason": null
               }
             ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "name": "Message",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "notificationAdded",
+            "description": "Subscribe to notifications for the authenticated participant",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "name": "Notification",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "participantMessageAdded",
+            "description": "Subscribe to all new messages for the authenticated participant",
+            "args": [],
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -29346,19 +29410,24 @@
         "isDeprecated": false,
         "deprecationReason": null,
         "locations": [
-          "ARGUMENT_DEFINITION",
-          "ENUM_VALUE",
           "FIELD_DEFINITION",
-          "INPUT_FIELD_DEFINITION"
+          "ARGUMENT_DEFINITION",
+          "INPUT_FIELD_DEFINITION",
+          "ENUM_VALUE",
+          "DIRECTIVE_DEFINITION"
         ],
         "args": [
           {
             "name": "reason",
             "description": "Explains why this element was deprecated, usually also including a suggestion for how to access supported similar data. Formatted using the Markdown syntax, as specified by [CommonMark](https://commonmark.org/).",
             "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "name": "String",
+                "kind": "SCALAR",
+                "ofType": null
+              }
             },
             "defaultValue": "\"No longer supported\"",
             "isDeprecated": false,
