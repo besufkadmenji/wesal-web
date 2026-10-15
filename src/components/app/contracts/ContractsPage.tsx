@@ -420,7 +420,11 @@ export const ContractDetailPage = ({ id }: { id: string }) => {
     return (
       <AppWrapper>
         <main className="bg-[#fcfdfe]">
-          <CompletedContractDetailPage contract={item} />
+          <CompletedContractDetailPage
+            contract={item}
+            canRate={isCustomer}
+            onRated={refresh}
+          />
         </main>
       </AppWrapper>
     );

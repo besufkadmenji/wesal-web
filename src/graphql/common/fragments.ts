@@ -22,6 +22,8 @@ export const PROVIDER_FRAGMENT = gql`
     longitude
     phone
     dialCode
+    ratingAverage
+    ratingCount
   }
 `;
 
@@ -52,6 +54,8 @@ export const LISTING_FRAGMENT = gql`
     featuredEndsAt
     categoryId
     providerId
+    ratingAverage
+    ratingCount
     photos {
       id
       filename

@@ -59,7 +59,7 @@ export const ProviderData = ({
               {provider.name}
             </p>
             <Ratings
-              rating={4.5}
+              rating={provider.ratingAverage}
               classNames={{
                 rating: "size-4",
                 info: "text-sm text-gray",

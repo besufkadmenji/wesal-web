@@ -749,7 +749,9 @@
       "rating": "التقييم",
       "comment": "التعليق",
       "viewMore": "المزيد من التعليقات",
-      "addReview": "أضف تقييمك"
+      "addReview": "أضف تقييمك",
+      "empty": "لا توجد تعليقات بعد",
+      "anonymous": "عميل وصال"
     },
     "serviceProviderData": "بيانات مقدم الخدمة",
     "contactProvider": "المحادثة و إظهار البيانات"
@@ -927,6 +929,11 @@
     "ratingPrompt": "شاركنا تقييمك للإعلان",
     "ratingDescription": "من خلال تقييمك، تساعد المستخدمين الآخرين على اختيار الإعلان الأنسب لهم.",
     "rateContract": "أضف تقييمك",
+    "ratingStarsLabel": "نجوم التقييم",
+    "ratingCommentPlaceholder": "اكتب تعليقًا عن تجربتك (اختياري)",
+    "publishRating": "نشر التقييم",
+    "ratingSubmitted": "شكرًا لك، تم نشر تقييمك",
+    "ratingHidden": "تم إخفاء هذا التقييم من قبل الإدارة",
     "deliveryDays": "مدة التسليم بالأيام",
     "accept": "قبول التعاقد",
     "reject": "رفض التعاقد",

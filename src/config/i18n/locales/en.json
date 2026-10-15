@@ -752,7 +752,9 @@
       "rating": "Rating",
       "comment": "Comment",
       "viewMore": "View More Comments",
-      "addReview": "Add Your Review"
+      "addReview": "Add Your Review",
+      "empty": "No comments yet",
+      "anonymous": "Wesal customer"
     },
     "serviceProviderData": "Service Provider Data",
     "contactProvider": "Conversation and data display"
@@ -930,6 +932,11 @@
     "ratingPrompt": "Share your rating of the advertisement",
     "ratingDescription": "Your rating helps other users choose the most suitable advertisement.",
     "rateContract": "Add your rating",
+    "ratingStarsLabel": "Rating stars",
+    "ratingCommentPlaceholder": "Write a comment about your experience (optional)",
+    "publishRating": "Publish rating",
+    "ratingSubmitted": "Thank you, your rating has been published",
+    "ratingHidden": "This rating has been hidden by the administration",
     "deliveryDays": "Delivery time in days",
     "accept": "Accept contract",
     "reject": "Reject contract",

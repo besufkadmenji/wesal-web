@@ -7,6 +7,8 @@ export const ME_PROVIDER_QUERY: TypedDocumentNode<MeProviderQuery> = gql`
       address
       avatarFilename
       bankName
+      ratingAverage
+      ratingCount
       city {
         countryId
         createdAt

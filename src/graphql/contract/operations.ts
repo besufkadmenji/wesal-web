@@ -5,6 +5,7 @@ import {
   PROVIDER_FRAGMENT,
   USER_FRAGMENT,
 } from "@/graphql/common/fragments";
+import { CONTRACT_RATING_FRAGMENT } from "@/graphql/rating/operations";
 import { gql } from "@apollo/client";
 
 const SIGNATURE_FRAGMENT = gql`
@@ -155,9 +156,13 @@ export const CONTRACT_QUERY = gql`
   query ContractById($id: String!) {
     contract(id: $id) {
       ...ContractFields
+      rating {
+        ...ContractRatingFields
+      }
     }
   }
   ${CONTRACT_FRAGMENT}
+  ${CONTRACT_RATING_FRAGMENT}
 `;
 
 export const CONTRACT_QUOTE_QUERY = gql`

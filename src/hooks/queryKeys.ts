@@ -16,6 +16,8 @@ export const queryKeys = {
   setting: ["setting"] as const,
   deliveryCompanies: ["delivery-companies"] as const,
   ownerListing: (id: string) => ["owner-listing", id] as const,
+  listingReviews: (listingId: string) =>
+    ["listing-reviews", listingId] as const,
   contractQuote: (conversationId: string, price: number) =>
     ["contract-quote", conversationId, price] as const,
 };

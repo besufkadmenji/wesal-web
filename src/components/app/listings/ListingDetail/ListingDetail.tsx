@@ -28,7 +28,7 @@ export const ListingDetail = ({ ownerMode }: { ownerMode?: boolean }) => {
             <MainInfo listing={listing} />
           </div>
           <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-2">
-            <Reviews ownerMode={!!ownerMode} />
+            <Reviews listing={listing} />
             <div className="grid grid-cols-1 gap-10">
               <StoryVideo listing={listing} />
               {ownerMode ? (

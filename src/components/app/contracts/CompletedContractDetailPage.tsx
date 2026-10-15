@@ -2,6 +2,7 @@
 
 import { ContractDocumentView } from "@/components/app/contracts/ContractDocumentView";
 import { ContractHero } from "@/components/app/contracts/ContractHero";
+import { ContractRatingSection } from "@/components/app/contracts/ContractRatingSection";
 import { Button } from "@/components/ui/button";
 import type { Contract } from "@/gql/graphql";
 import { useDict } from "@/hooks/useDict";
@@ -11,8 +12,12 @@ import { useState } from "react";
 
 export const CompletedContractDetailPage = ({
   contract,
+  canRate,
+  onRated,
 }: {
   contract: Contract;
+  canRate: boolean;
+  onRated: () => void;
 }) => {
   const dict = useDict();
   const [exporting, setExporting] = useState(false);
@@ -45,6 +50,12 @@ export const CompletedContractDetailPage = ({
       />
       <div className="mx-auto grid max-w-[1232px] gap-6 px-4 py-12 md:px-8 xl:px-[7vw] xl:py-20">
         <ContractDocumentView contract={contract} />
+        <ContractRatingSection
+          contractId={contract.id}
+          rating={contract.rating}
+          canRate={canRate}
+          onRated={onRated}
+        />
         <div className="flex justify-center">
           <Button
             type="button"
