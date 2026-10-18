@@ -246,6 +246,49 @@ export enum BankStatus {
   Inactive = 'INACTIVE'
 }
 
+/** All active accounts of the chosen types, or a hand-picked list */
+export enum BroadcastAudience {
+  All = 'ALL',
+  Selected = 'SELECTED'
+}
+
+export type BroadcastPaginationInput = {
+  /** Number of items per page */
+  limit?: Scalars['Int']['input'];
+  /** Page number (1-based) */
+  page?: Scalars['Int']['input'];
+  recipientType?: InputMaybe<BroadcastRecipientType>;
+  /** Search by title */
+  search?: InputMaybe<Scalars['String']['input']>;
+  /** Sort order: ASC or DESC */
+  sortOrder?: InputMaybe<SortOrder>;
+};
+
+export type BroadcastRecipient = {
+  id: Scalars['String']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+  type: BroadcastRecipientType;
+};
+
+export type BroadcastRecipientInput = {
+  id: Scalars['String']['input'];
+  type: BroadcastRecipientType;
+};
+
+export type BroadcastRecipientOption = {
+  /** Phone or email, to tell names apart */
+  detail?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  type: BroadcastRecipientType;
+};
+
+/** Broadcast target: customers (USER) or service providers */
+export enum BroadcastRecipientType {
+  Provider = 'PROVIDER',
+  User = 'USER'
+}
+
 export type BulkAssignPermissionsInput = {
   adminId: Scalars['ID']['input'];
   permissionIds: Array<Scalars['ID']['input']>;
@@ -1402,6 +1445,8 @@ export type Mutation = {
   adminChangePassword: Scalars['Boolean']['output'];
   adminForgotPassword: Scalars['Boolean']['output'];
   adminLogin: AdminAuthResponse;
+  adminMarkAllNotificationsRead: Scalars['Boolean']['output'];
+  adminMarkNotificationRead: Notification;
   /** Admin reactivates a provider whose contract was terminated by admin */
   adminReactivateProvider: Provider;
   adminReplyToComplaint: ComplaintMessage;
@@ -1548,6 +1593,8 @@ export type Mutation = {
   revokePermissionFromAdmin: Scalars['Boolean']['output'];
   /** Runs this month's badge assignment now instead of waiting for the 1st. It counts as the month's run. */
   runBadgeAssignment: BadgeRun;
+  /** Send a notification to active customers and/or providers */
+  sendBroadcast: NotificationBroadcast;
   setProviderFavorite: Scalars['Boolean']['output'];
   /** Create or update application settings (admin only) */
   setSetting: Setting;
@@ -1657,6 +1704,11 @@ export type MutationAdminForgotPasswordArgs = {
 
 export type MutationAdminLoginArgs = {
   input: AdminLoginInput;
+};
+
+
+export type MutationAdminMarkNotificationReadArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
@@ -2121,6 +2173,11 @@ export type MutationRevokePermissionFromAdminArgs = {
 };
 
 
+export type MutationSendBroadcastArgs = {
+  input: SendBroadcastInput;
+};
+
+
 export type MutationSetProviderFavoriteArgs = {
   favorite: Scalars['Boolean']['input'];
   providerId: Scalars['String']['input'];
@@ -2270,9 +2327,25 @@ export type Notification = {
   relatedEntityId?: Maybe<Scalars['String']['output']>;
   relatedEntityType?: Maybe<Scalars['String']['output']>;
   title: Scalars['String']['output'];
+  /** Other-language copies, e.g. { en: { title, message } }; title/message hold Arabic */
+  translations?: Maybe<Scalars['JSON']['output']>;
   type: NotificationType;
   user?: Maybe<User>;
   userId?: Maybe<Scalars['ID']['output']>;
+};
+
+export type NotificationBroadcast = {
+  audience: BroadcastAudience;
+  createdAt: Scalars['DateTime']['output'];
+  createdByAdminId?: Maybe<Scalars['ID']['output']>;
+  id: Scalars['ID']['output'];
+  message: Scalars['String']['output'];
+  publicId?: Maybe<Scalars['Int']['output']>;
+  recipientCount: Scalars['Int']['output'];
+  recipientTypes: Array<BroadcastRecipientType>;
+  /** Hand-picked recipients (SELECTED audience only) */
+  recipients?: Maybe<Array<BroadcastRecipient>>;
+  title: Scalars['String']['output'];
 };
 
 export type NotificationPaginationInput = {
@@ -2290,6 +2363,7 @@ export type NotificationPaginationInput = {
 };
 
 export enum NotificationRecipientType {
+  Admin = 'ADMIN',
   Provider = 'PROVIDER',
   User = 'USER'
 }
@@ -2310,6 +2384,15 @@ export type NotificationStats = {
 
 /** Type of notification */
 export enum NotificationType {
+  AdminBadgeDeleted = 'ADMIN_BADGE_DELETED',
+  AdminBadgeUnderImprovement = 'ADMIN_BADGE_UNDER_IMPROVEMENT',
+  AdminComplaint = 'ADMIN_COMPLAINT',
+  AdminContactMessage = 'ADMIN_CONTACT_MESSAGE',
+  AdminContractCreated = 'ADMIN_CONTRACT_CREATED',
+  AdminContractStatus = 'ADMIN_CONTRACT_STATUS',
+  AdminNewCustomer = 'ADMIN_NEW_CUSTOMER',
+  AdminPayment = 'ADMIN_PAYMENT',
+  AdminProviderRequest = 'ADMIN_PROVIDER_REQUEST',
   BadgeChanged = 'BADGE_CHANGED',
   BadgeWarning = 'BADGE_WARNING',
   ComplaintResolved = 'COMPLAINT_RESOLVED',
@@ -2344,6 +2427,13 @@ export type PaginatedAdminResponse = {
 export type PaginatedBankResponse = {
   /** List of items */
   items: Array<Bank>;
+  /** Pagination metadata */
+  meta: PaginationMeta;
+};
+
+export type PaginatedBroadcastResponse = {
+  /** List of items */
+  items: Array<NotificationBroadcast>;
   /** Pagination metadata */
   meta: PaginationMeta;
 };
@@ -2712,6 +2802,8 @@ export type Query = {
   /** Active delivery companies available to authenticated users */
   activeDeliveryCompanies: Array<DeliveryCompany>;
   admin: Admin;
+  adminBroadcast: NotificationBroadcast;
+  adminBroadcasts: PaginatedBroadcastResponse;
   adminComplaint: Complaint;
   adminComplaints: PaginatedComplaintResponse;
   adminContract: Contract;
@@ -2720,9 +2812,12 @@ export type Query = {
   adminConversations: PaginatedConversationResponse;
   /** Admin home statistics cards */
   adminDashboardStats: AdminDashboardStats;
+  adminNotifications: PaginatedNotificationResponse;
   adminPermissions: Array<AdminPermission>;
   adminRating: Rating;
   adminRatings: PaginatedRatingResponse;
+  /** Unread header notifications */
+  adminUnreadNotificationCount: Scalars['Int']['output'];
   admins: PaginatedAdminResponse;
   /** Summary of the most recent monthly badge run */
   badgeLastRun?: Maybe<BadgeRun>;
@@ -2730,6 +2825,8 @@ export type Query = {
   badgeSettings: Array<BadgeSetting>;
   bank: Bank;
   banks: PaginatedBankResponse;
+  /** Active accounts for the broadcast recipient picker (max 20) */
+  broadcastRecipientOptions: Array<BroadcastRecipientOption>;
   categories: PaginatedCategoryResponse;
   category: Category;
   /** Get all cities with pagination */
@@ -2819,6 +2916,16 @@ export type QueryAdminArgs = {
 };
 
 
+export type QueryAdminBroadcastArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryAdminBroadcastsArgs = {
+  input?: InputMaybe<BroadcastPaginationInput>;
+};
+
+
 export type QueryAdminComplaintArgs = {
   id: Scalars['String']['input'];
 };
@@ -2849,6 +2956,12 @@ export type QueryAdminConversationsArgs = {
 };
 
 
+export type QueryAdminNotificationsArgs = {
+  limit?: Scalars['Int']['input'];
+  page?: Scalars['Int']['input'];
+};
+
+
 export type QueryAdminPermissionsArgs = {
   adminId: Scalars['ID']['input'];
 };
@@ -2876,6 +2989,12 @@ export type QueryBankArgs = {
 
 export type QueryBanksArgs = {
   input?: InputMaybe<BankPaginationInput>;
+};
+
+
+export type QueryBroadcastRecipientOptionsArgs = {
+  search?: InputMaybe<Scalars['String']['input']>;
+  type: BroadcastRecipientType;
 };
 
 
@@ -3286,6 +3405,15 @@ export type ResetPasswordWithTokenInput = {
   resetToken: Scalars['String']['input'];
 };
 
+export type SendBroadcastInput = {
+  audience: BroadcastAudience;
+  message: Scalars['String']['input'];
+  recipientTypes: Array<BroadcastRecipientType>;
+  /** Required when audience is SELECTED */
+  recipients?: InputMaybe<Array<BroadcastRecipientInput>>;
+  title: Scalars['String']['input'];
+};
+
 /** Type of contact message sender */
 export enum SenderType {
   Guest = 'GUEST',
@@ -3427,6 +3555,7 @@ export enum SortOrder {
 export type Subscription = {
   /** Pushes the admin home statistics whenever one of them changes (admin connections only) */
   adminDashboardStatsUpdated: AdminDashboardStats;
+  adminNotificationAdded: Notification;
   /** Subscribe to new messages in a conversation (participants only) */
   messageAdded: Message;
   /** Subscribe to notifications for the authenticated participant */
