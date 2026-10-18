@@ -1,5 +1,6 @@
 import {
   CreateListingInput,
+  TrustedListingsQuery,
   Listing,
   ListingPaginationInput,
   PaginatedListingResponse,
@@ -8,6 +9,7 @@ import {
 import { CREATE_LISTING_MUTATION } from "@/graphql/listing/createListing";
 import { LISTING_QUERY } from "@/graphql/listing/listing";
 import { LISTINGS_QUERY } from "@/graphql/listing/listings";
+import { TRUSTED_LISTINGS_QUERY } from "@/graphql/listing/trustedListings";
 import { MY_LISTING_QUERY } from "@/graphql/listing/myListing";
 import { MY_LISTINGS_QUERY } from "@/graphql/listing/myListings";
 import { REMOVE_LISTING_MUTATION } from "@/graphql/listing/removeListing";
@@ -33,6 +35,17 @@ class ListingService {
     }
     return null;
   };
+  /** Home carousel: one ad per Trust-badge provider (BRD 4.1.2). */
+  static trustedListings = async (): Promise<
+    TrustedListingsQuery["trustedListings"]
+  > => {
+    const result = await client().query({
+      query: TRUSTED_LISTINGS_QUERY,
+      fetchPolicy: "network-only",
+    });
+    return requireOperationField(result, "trustedListings", "Trusted listings");
+  };
+
   static myListings = async (
     paginationInput: ListingPaginationInput,
   ): Promise<PaginatedListingResponse | null> => {

@@ -1,18 +1,30 @@
-import { sar } from "@/assets/fonts/sar";
 import ArrowLeft from "@/assets/icons/arrow.left.svg";
 import ArrowRight from "@/assets/icons/arrow.right.svg";
 import DotLine from "@/assets/icons/dot.line.svg";
-import RatingIcon from "@/assets/icons/rating.svg";
+import { TrustedListingCard } from "@/components/app/home/TrustedListingCard";
+import {
+  TrustedGateMode,
+  TrustedListingGate,
+} from "@/components/app/home/TrustedListingGate";
 import { Button } from "@/components/ui/button";
+import { useAppRouter } from "@/hooks/use.app.router";
 import { useDict } from "@/hooks/useDict";
-import Image from "next/image";
+import { useLang } from "@/hooks/useLang";
+import { useMe } from "@/hooks/useMe";
+import { useTrustedListings } from "@/hooks/useTrustedListings";
 import { useEffect, useState } from "react";
 import type { Swiper as SwiperType } from "swiper";
 import { FreeMode, Mousewheel } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { twMerge } from "tailwind-merge";
+
+/** Trusted advertisers carousel: one ad per Trust-badge provider. */
 export const TopListing = () => {
   const dict = useDict();
+  const lang = useLang();
+  const router = useAppRouter();
+  const { me } = useMe();
+  const { listings } = useTrustedListings();
+  const [gate, setGate] = useState<TrustedGateMode | null>(null);
   const [swiper, setSwiper] = useState<SwiperType | null>(null);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(true);
@@ -39,6 +51,18 @@ export const TopListing = () => {
       swiper.off("fromEdge", update);
     };
   }, [swiper]);
+
+  const open = (listingId: string) => {
+    if (me?.user) {
+      router.push(`/${lang}/listings/${listingId}`);
+    } else {
+      setGate(me?.provider ? "be-customer" : "login");
+    }
+  };
+
+  // Q-H2 default: nothing to show without Trust-badge providers.
+  if (listings.length === 0) return null;
+
   return (
     <div className="grid grid-cols-1 gap-6 overflow-visible bg-[#FBFBFB] py-20 md:gap-11">
       <div className="flex justify-between px-[7vw]">
@@ -102,7 +126,6 @@ export const TopListing = () => {
               momentumBounce: false, // IMPORTANT: disables stretch
             }}
             mousewheel={{ forceToAxis: true }}
-            onSlideChange={() => console.log("slide change")}
             onSwiper={(instance) => {
               setSwiper(instance);
               setCanPrev(!instance.isBeginning);
@@ -110,71 +133,18 @@ export const TopListing = () => {
             }}
             slidesOffsetAfter={window.innerWidth * 0.07}
           >
-            {[
-              ...dict.home.topListing.listings,
-              ...dict.home.topListing.listings,
-            ].map((category, index) => (
-              <SwiperSlide key={index}>
-                <ListingCard
-                  title={category.name}
-                  image={`/images/iphone.jpg`}
-                  desc={category.description}
+            {listings.map((listing) => (
+              <SwiperSlide key={listing.id}>
+                <TrustedListingCard
+                  listing={listing}
+                  onOpen={() => open(listing.id)}
                 />
               </SwiperSlide>
             ))}
           </Swiper>
         )}
       </div>
-    </div>
-  );
-};
-
-const ListingCard = ({
-  title,
-  image,
-  desc,
-}: {
-  title: string;
-  image: string;
-  desc: string;
-}) => {
-  const dict = useDict();
-  return (
-    <div className="group grid grid-cols-1 rounded-[20px] bg-white pb-2 select-none">
-      <div className="relative aspect-284/180 w-full overflow-hidden rounded-[20px]">
-        <Image src={image} alt={title} fill className="object-cover" />
-      </div>
-      <div className="grid gap-6 px-3 py-4">
-        <div className="grid grid-cols-1 gap-2 border-b border-b-[#F2F2F2] pb-3">
-          <div className="grid grid-cols-[1fr_auto]">
-            <p className="text-lg font-semibold text-black">{title}</p>
-            <div className="flex items-center gap-0.5">
-              <RatingIcon className="size-4 text-[#FB8A00]" />
-              <p className="grow text-sm leading-6 font-medium text-black">
-                4.5
-              </p>
-            </div>
-          </div>
-          <div className="w-full overflow-hidden">
-            <p className="text-gray line-clamp-2 text-sm text-ellipsis">
-              {desc}
-            </p>
-          </div>
-        </div>
-        <div className="flex items-center justify-between">
-          <p className="text-gray text-sm font-medium">
-            {dict.home.products.price}
-          </p>
-          <div className="flex items-center gap-1">
-            <p className="text-primary text-xl leading-8 font-semibold">
-              500.00
-            </p>
-            <p className={twMerge(sar.className, "text-app-green text-[20px]")}>
-              A
-            </p>
-          </div>
-        </div>
-      </div>
+      <TrustedListingGate mode={gate} onClose={() => setGate(null)} />
     </div>
   );
 };

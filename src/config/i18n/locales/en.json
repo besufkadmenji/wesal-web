@@ -160,36 +160,18 @@
     "topListing": {
       "subtitle": "Trusted Advertisers",
       "title": "Ads from trusted sellers with a 5-star rating",
-      "listings": [
-        {
-          "id": 1,
-          "name": "iPhone 15 Pro Max",
-          "rating": 4.5,
-          "price": 500.0,
-          "description": "Unique handmade products crafted with precision... distinctive pieces that add a special touch to your life."
-        },
-        {
-          "id": 2,
-          "name": "iPhone 15 Pro Max",
-          "rating": 4.5,
-          "price": 500.0,
-          "description": "Unique handmade products crafted with precision... distinctive pieces that add a special touch to your life."
-        },
-        {
-          "id": 3,
-          "name": "iPhone 15 Pro Max",
-          "rating": 4.5,
-          "price": 500.0,
-          "description": "Unique handmade products crafted with precision... distinctive pieces that add a special touch to your life."
-        },
-        {
-          "id": 4,
-          "name": "iPhone 15 Pro Max",
-          "rating": 4.5,
-          "price": 500.0,
-          "description": "Unique handmade products crafted with precision... distinctive pieces that add a special touch to your life."
-        }
-      ]
+      "loginDialog": {
+        "title": "Log in to view this ad",
+        "description": "Ads from trusted advertisers are available to registered service requesters. Log in or create an account to continue.",
+        "confirm": "Log in",
+        "cancel": "Cancel"
+      },
+      "customerDialog": {
+        "title": "Register as a service requester first",
+        "description": "You are signed in as a service provider. To view and request this ad, register as a service requester.",
+        "confirm": "Register as service requester",
+        "cancel": "Cancel"
+      }
     },
     "contactUs": {
       "subtitle": "We are here to help",

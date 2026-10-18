@@ -56,7 +56,9 @@ export const ListingCard = ({
               </p>
               <div className="flex items-center gap-1">
                 <RatingIcon className="size-4.5 text-[#FB8A00]" />
-                <p className="text-sm font-medium text-[#1A1A1A]">0.0</p>
+                <p className="text-sm font-medium text-[#1A1A1A]">
+                  {(listing.ratingAverage ?? 0).toFixed(1)}
+                </p>
               </div>
             </div>
             <p className="text-gray line-clamp-2 text-sm leading-6 font-medium text-ellipsis">

@@ -2805,6 +2805,8 @@ export type Query = {
   signedContractById?: Maybe<SignedContract>;
   signedContractByProviderId?: Maybe<SignedContract>;
   signedContracts: PaginatedSignedContractResponse;
+  /** Home carousel: one active ad per Trust-badge provider, best sellers first */
+  trustedListings: Array<Listing>;
   /** Get user by ID */
   user: User;
   /** Get all users with pagination by role */
@@ -3115,6 +3117,11 @@ export type QuerySignedContractByProviderIdArgs = {
 
 export type QuerySignedContractsArgs = {
   input?: InputMaybe<SignedContractPaginationInput>;
+};
+
+
+export type QueryTrustedListingsArgs = {
+  limit?: Scalars['Int']['input'];
 };
 
 
