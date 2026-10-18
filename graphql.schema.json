@@ -430,6 +430,114 @@
         "possibleTypes": null
       },
       {
+        "kind": "OBJECT",
+        "name": "AdminDashboardStats",
+        "description": "Admin home statistics cards (BRD 4.3.3)",
+        "isOneOf": null,
+        "fields": [
+          {
+            "name": "completedContracts",
+            "description": "Completed contracts",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "name": "Int",
+                "kind": "SCALAR",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "customers",
+            "description": "Active, non-deleted customers",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "name": "Int",
+                "kind": "SCALAR",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "featuredListings",
+            "description": "Published featured ads",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "name": "Int",
+                "kind": "SCALAR",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "freeListings",
+            "description": "Published free ads",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "name": "Int",
+                "kind": "SCALAR",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "messagesToday",
+            "description": "Chat messages sent by customers and providers today (Asia/Riyadh); system messages are excluded",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "name": "Int",
+                "kind": "SCALAR",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "providers",
+            "description": "Active, non-deleted service providers",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "name": "Int",
+                "kind": "SCALAR",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
         "kind": "INPUT_OBJECT",
         "name": "AdminForgotPasswordInput",
         "description": null,
@@ -19619,6 +19727,66 @@
       },
       {
         "kind": "OBJECT",
+        "name": "PlatformStats",
+        "description": "Public home page statistics",
+        "isOneOf": null,
+        "fields": [
+          {
+            "name": "completedContracts",
+            "description": "Completed (successful) contracts",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "name": "Int",
+                "kind": "SCALAR",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "customers",
+            "description": "Active, non-deleted customers",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "name": "Int",
+                "kind": "SCALAR",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "providers",
+            "description": "Active, non-deleted service providers",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "name": "Int",
+                "kind": "SCALAR",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
         "name": "PremiumAdFeeReport",
         "description": null,
         "isOneOf": null,
@@ -20835,6 +21003,22 @@
               "name": null,
               "ofType": {
                 "name": "PaginatedConversationResponse",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "adminDashboardStats",
+            "description": "Admin home statistics cards",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "name": "AdminDashboardStats",
                 "kind": "OBJECT",
                 "ofType": null
               }
@@ -22406,6 +22590,22 @@
                     "ofType": null
                   }
                 }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "platformStats",
+            "description": "Public home page statistics (visitors included)",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "name": "PlatformStats",
+                "kind": "OBJECT",
+                "ofType": null
               }
             },
             "isDeprecated": false,
@@ -25640,6 +25840,22 @@
         "isOneOf": null,
         "fields": [
           {
+            "name": "adminDashboardStatsUpdated",
+            "description": "Pushes the admin home statistics whenever one of them changes (admin connections only)",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "name": "AdminDashboardStats",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "messageAdded",
             "description": "Subscribe to new messages in a conversation (participants only)",
             "args": [
@@ -25697,6 +25913,22 @@
               "name": null,
               "ofType": {
                 "name": "Message",
+                "kind": "OBJECT",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "platformStatsUpdated",
+            "description": "Pushes the public home page statistics whenever one of them changes",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "name": "PlatformStats",
                 "kind": "OBJECT",
                 "ofType": null
               }

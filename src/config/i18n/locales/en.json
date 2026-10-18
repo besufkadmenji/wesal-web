@@ -107,20 +107,11 @@
       "subtitle": "Start your success with thousands of advertisers",
       "title": "Your trusted partner to find the right ad",
       "description": "We provide you with a smooth and reliable search experience that helps you explore ads suitable for your needs, whether you are looking for products, services, jobs, or real estate, with a simple interface and advanced options that make finding what you want faster and easier than ever before.",
-      "stats": [
-        {
-          "number": "500",
-          "label": "Number of successful deals"
-        },
-        {
-          "number": "200",
-          "label": "Total number of advertisers"
-        },
-        {
-          "number": "350",
-          "label": "Total number of clients"
-        }
-      ]
+      "stats": {
+        "completedContracts": "Number of successful deals",
+        "providers": "Total number of advertisers",
+        "customers": "Total number of clients"
+      }
     },
     "bestSelling": {
       "title": "Top Sections in Sales and Revenue",

@@ -52,6 +52,22 @@ export type AdminChangePasswordInput = {
   newPassword: Scalars['String']['input'];
 };
 
+/** Admin home statistics cards (BRD 4.3.3) */
+export type AdminDashboardStats = {
+  /** Completed contracts */
+  completedContracts: Scalars['Int']['output'];
+  /** Active, non-deleted customers */
+  customers: Scalars['Int']['output'];
+  /** Published featured ads */
+  featuredListings: Scalars['Int']['output'];
+  /** Published free ads */
+  freeListings: Scalars['Int']['output'];
+  /** Chat messages sent by customers and providers today (Asia/Riyadh); system messages are excluded */
+  messagesToday: Scalars['Int']['output'];
+  /** Active, non-deleted service providers */
+  providers: Scalars['Int']['output'];
+};
+
 export type AdminForgotPasswordInput = {
   email: Scalars['String']['input'];
 };
@@ -2515,6 +2531,16 @@ export enum PermissionPlatform {
   Global = 'GLOBAL'
 }
 
+/** Public home page statistics */
+export type PlatformStats = {
+  /** Completed (successful) contracts */
+  completedContracts: Scalars['Int']['output'];
+  /** Active, non-deleted customers */
+  customers: Scalars['Int']['output'];
+  /** Active, non-deleted service providers */
+  providers: Scalars['Int']['output'];
+};
+
 export type PremiumAdFeeReport = {
   items: Array<PremiumAdFeeReportRow>;
   meta: ReportPageMeta;
@@ -2622,6 +2648,8 @@ export type Query = {
   adminContracts: PaginatedContractResponse;
   adminConversation: Conversation;
   adminConversations: PaginatedConversationResponse;
+  /** Admin home statistics cards */
+  adminDashboardStats: AdminDashboardStats;
   adminPermissions: Array<AdminPermission>;
   adminRating: Rating;
   adminRatings: PaginatedRatingResponse;
@@ -2687,6 +2715,8 @@ export type Query = {
   permission: Permission;
   permissionAdmins: Array<AdminPermission>;
   permissions: Array<Permission>;
+  /** Public home page statistics (visitors included) */
+  platformStats: PlatformStats;
   premiumAdFeeReport: PremiumAdFeeReport;
   /** Get provider by ID */
   provider: Provider;
@@ -3314,12 +3344,16 @@ export enum SortOrder {
 }
 
 export type Subscription = {
+  /** Pushes the admin home statistics whenever one of them changes (admin connections only) */
+  adminDashboardStatsUpdated: AdminDashboardStats;
   /** Subscribe to new messages in a conversation (participants only) */
   messageAdded: Message;
   /** Subscribe to notifications for the authenticated participant */
   notificationAdded: Notification;
   /** Subscribe to all new messages for the authenticated participant */
   participantMessageAdded: Message;
+  /** Pushes the public home page statistics whenever one of them changes */
+  platformStatsUpdated: PlatformStats;
   /** Subscribe to real-time updates for the authenticated provider */
   providerUpdated: Provider;
   /** Subscribe to real-time updates for the authenticated user */

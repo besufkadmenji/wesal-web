@@ -107,6 +107,9 @@ type Documents = {
     "\n  mutation RateContract($input: RateContractInput!) {\n    rateContract(input: $input) {\n      ...ContractRatingFields\n    }\n  }\n  \n": typeof types.RateContractDocument,
     "\n  query ListingReviews($input: ListingReviewsInput!) {\n    listingReviews(input: $input) {\n      items {\n        id\n        rating\n        comment\n        reviewerName\n        reviewerAvatarFilename\n        createdAt\n      }\n      meta {\n        ...PaginationFields\n      }\n    }\n  }\n  \n": typeof types.ListingReviewsDocument,
     "\n  query getSetting {\n    getSetting {\n      contractAcceptanceWindowDays\n      contractAcceptanceWindowEnabled\n      premiumAdDurationDays\n      premiumAdEnabled\n      premiumAdFee\n      vatEnabled\n      vatRate\n      completionConfirmationGraceHours\n      aboutAr\n      aboutEn\n      email\n      phones\n      privacyPolicyAr\n      privacyPolicyEn\n      socialMediaLinks {\n        link\n        name\n      }\n      termsAr\n      termsEn\n      whatsappNumber\n      rulesAr\n      rulesEn\n      platformManagerName\n      platformManagerSignature\n    }\n  }\n": typeof types.GetSettingDocument,
+    "\n  fragment PlatformStatsFields on PlatformStats {\n    completedContracts\n    providers\n    customers\n  }\n": typeof types.PlatformStatsFieldsFragmentDoc,
+    "\n  query PlatformStats {\n    platformStats {\n      ...PlatformStatsFields\n    }\n  }\n  \n": typeof types.PlatformStatsDocument,
+    "\n  subscription PlatformStatsUpdated {\n    platformStatsUpdated {\n      ...PlatformStatsFields\n    }\n  }\n  \n": typeof types.PlatformStatsUpdatedDocument,
     "\n  query meUser {\n    meUser {\n      id\n      name\n      isActive\n      languageCode\n      address\n      avatarFilename\n      cityId\n      countryId\n      createdAt\n      dialCode\n      email\n      emailVerified\n      latitude\n      longitude\n      phone\n      phoneVerified\n      updatedAt\n      ibanNumber\n      bankName\n      status\n      deactivationReason\n      deleteReason\n      deletedAt\n      publicId\n      withAbsher\n      contractSignature\n    }\n  }\n": typeof types.MeUserDocument,
     "\n  mutation removeMyAvatar {\n    removeMyAvatar\n  }\n": typeof types.RemoveMyAvatarDocument,
     "\n  mutation updateMe($updateMeInput: UpdateMeInput!) {\n    updateMe(updateMeInput: $updateMeInput) {\n      id\n    }\n  }\n": typeof types.UpdateMeDocument,
@@ -206,6 +209,9 @@ const documents: Documents = {
     "\n  mutation RateContract($input: RateContractInput!) {\n    rateContract(input: $input) {\n      ...ContractRatingFields\n    }\n  }\n  \n": types.RateContractDocument,
     "\n  query ListingReviews($input: ListingReviewsInput!) {\n    listingReviews(input: $input) {\n      items {\n        id\n        rating\n        comment\n        reviewerName\n        reviewerAvatarFilename\n        createdAt\n      }\n      meta {\n        ...PaginationFields\n      }\n    }\n  }\n  \n": types.ListingReviewsDocument,
     "\n  query getSetting {\n    getSetting {\n      contractAcceptanceWindowDays\n      contractAcceptanceWindowEnabled\n      premiumAdDurationDays\n      premiumAdEnabled\n      premiumAdFee\n      vatEnabled\n      vatRate\n      completionConfirmationGraceHours\n      aboutAr\n      aboutEn\n      email\n      phones\n      privacyPolicyAr\n      privacyPolicyEn\n      socialMediaLinks {\n        link\n        name\n      }\n      termsAr\n      termsEn\n      whatsappNumber\n      rulesAr\n      rulesEn\n      platformManagerName\n      platformManagerSignature\n    }\n  }\n": types.GetSettingDocument,
+    "\n  fragment PlatformStatsFields on PlatformStats {\n    completedContracts\n    providers\n    customers\n  }\n": types.PlatformStatsFieldsFragmentDoc,
+    "\n  query PlatformStats {\n    platformStats {\n      ...PlatformStatsFields\n    }\n  }\n  \n": types.PlatformStatsDocument,
+    "\n  subscription PlatformStatsUpdated {\n    platformStatsUpdated {\n      ...PlatformStatsFields\n    }\n  }\n  \n": types.PlatformStatsUpdatedDocument,
     "\n  query meUser {\n    meUser {\n      id\n      name\n      isActive\n      languageCode\n      address\n      avatarFilename\n      cityId\n      countryId\n      createdAt\n      dialCode\n      email\n      emailVerified\n      latitude\n      longitude\n      phone\n      phoneVerified\n      updatedAt\n      ibanNumber\n      bankName\n      status\n      deactivationReason\n      deleteReason\n      deletedAt\n      publicId\n      withAbsher\n      contractSignature\n    }\n  }\n": types.MeUserDocument,
     "\n  mutation removeMyAvatar {\n    removeMyAvatar\n  }\n": types.RemoveMyAvatarDocument,
     "\n  mutation updateMe($updateMeInput: UpdateMeInput!) {\n    updateMe(updateMeInput: $updateMeInput) {\n      id\n    }\n  }\n": types.UpdateMeDocument,
@@ -598,6 +604,18 @@ export function graphql(source: "\n  query ListingReviews($input: ListingReviews
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query getSetting {\n    getSetting {\n      contractAcceptanceWindowDays\n      contractAcceptanceWindowEnabled\n      premiumAdDurationDays\n      premiumAdEnabled\n      premiumAdFee\n      vatEnabled\n      vatRate\n      completionConfirmationGraceHours\n      aboutAr\n      aboutEn\n      email\n      phones\n      privacyPolicyAr\n      privacyPolicyEn\n      socialMediaLinks {\n        link\n        name\n      }\n      termsAr\n      termsEn\n      whatsappNumber\n      rulesAr\n      rulesEn\n      platformManagerName\n      platformManagerSignature\n    }\n  }\n"): (typeof documents)["\n  query getSetting {\n    getSetting {\n      contractAcceptanceWindowDays\n      contractAcceptanceWindowEnabled\n      premiumAdDurationDays\n      premiumAdEnabled\n      premiumAdFee\n      vatEnabled\n      vatRate\n      completionConfirmationGraceHours\n      aboutAr\n      aboutEn\n      email\n      phones\n      privacyPolicyAr\n      privacyPolicyEn\n      socialMediaLinks {\n        link\n        name\n      }\n      termsAr\n      termsEn\n      whatsappNumber\n      rulesAr\n      rulesEn\n      platformManagerName\n      platformManagerSignature\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  fragment PlatformStatsFields on PlatformStats {\n    completedContracts\n    providers\n    customers\n  }\n"): (typeof documents)["\n  fragment PlatformStatsFields on PlatformStats {\n    completedContracts\n    providers\n    customers\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query PlatformStats {\n    platformStats {\n      ...PlatformStatsFields\n    }\n  }\n  \n"): (typeof documents)["\n  query PlatformStats {\n    platformStats {\n      ...PlatformStatsFields\n    }\n  }\n  \n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  subscription PlatformStatsUpdated {\n    platformStatsUpdated {\n      ...PlatformStatsFields\n    }\n  }\n  \n"): (typeof documents)["\n  subscription PlatformStatsUpdated {\n    platformStatsUpdated {\n      ...PlatformStatsFields\n    }\n  }\n  \n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
