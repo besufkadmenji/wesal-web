@@ -378,6 +378,15 @@ export type ChangePhoneResponse = {
   changeToken: Scalars['String']['output'];
 };
 
+export type CharitySummary = {
+  /** Completed charity contracts */
+  completedContracts: Scalars['Int']['output'];
+  /** All charity contracts in the period */
+  contracts: Scalars['Int']['output'];
+  /** Waived commission on completed charity contracts: the amount to donate (SAR) */
+  totalAmount: Scalars['Float']['output'];
+};
+
 export type City = {
   country?: Maybe<Country>;
   countryId: Scalars['String']['output'];
@@ -559,6 +568,8 @@ export type Contract = {
   categoryId: Scalars['String']['output'];
   categoryRulesAr: Scalars['String']['output'];
   categoryRulesEn: Scalars['String']['output'];
+  /** The waived commission on a charity contract (0 otherwise) */
+  charityAmount: Scalars['Float']['output'];
   client: User;
   clientId: Scalars['String']['output'];
   commissionAmount: Scalars['Float']['output'];
@@ -584,6 +595,7 @@ export type Contract = {
   document?: Maybe<ContractDocument>;
   downPayment: Scalars['Float']['output'];
   id: Scalars['ID']['output'];
+  isCharity: Scalars['Boolean']['output'];
   listingId: Scalars['String']['output'];
   maxCompletionDays?: Maybe<Scalars['Int']['output']>;
   maxTerminationDays?: Maybe<Scalars['Int']['output']>;
@@ -695,6 +707,8 @@ export type ContractPaginationInput = {
   clientId?: InputMaybe<Scalars['String']['input']>;
   conversationId?: InputMaybe<Scalars['String']['input']>;
   from?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Only Wesal Al-Khair (charity) contracts, or only non-charity */
+  isCharity?: InputMaybe<Scalars['Boolean']['input']>;
   /** Number of items per page */
   limit?: Scalars['Int']['input'];
   /** Page number (1-based) */
@@ -716,11 +730,15 @@ export type ContractPaymentResponse = {
 
 export type ContractQuote = {
   agreedPrice: Scalars['Float']['output'];
+  /** The waived commission on a charity contract (0 otherwise) */
+  charityAmount: Scalars['Float']['output'];
   commissionAmount: Scalars['Float']['output'];
   commissionPercent: Scalars['Float']['output'];
   contractDocumentText: Scalars['String']['output'];
   depositPercent: Scalars['Float']['output'];
   downPayment: Scalars['Float']['output'];
+  /** Wesal Al-Khair: the calculated commission is at or below the category minimum, so it is waived */
+  isCharity: Scalars['Boolean']['output'];
   maxCompletionDays?: Maybe<Scalars['Int']['output']>;
   maxTerminationDays?: Maybe<Scalars['Int']['output']>;
   providerNetAmount: Scalars['Float']['output'];
@@ -2804,6 +2822,9 @@ export type Query = {
   admin: Admin;
   adminBroadcast: NotificationBroadcast;
   adminBroadcasts: PaginatedBroadcastResponse;
+  /** Wesal Al-Khair list (BRD 4.3.11): charity contracts only */
+  adminCharityContracts: PaginatedContractResponse;
+  adminCharitySummary: CharitySummary;
   adminComplaint: Complaint;
   adminComplaints: PaginatedComplaintResponse;
   adminContract: Contract;
@@ -2923,6 +2944,17 @@ export type QueryAdminBroadcastArgs = {
 
 export type QueryAdminBroadcastsArgs = {
   input?: InputMaybe<BroadcastPaginationInput>;
+};
+
+
+export type QueryAdminCharityContractsArgs = {
+  input?: InputMaybe<ContractPaginationInput>;
+};
+
+
+export type QueryAdminCharitySummaryArgs = {
+  from?: InputMaybe<Scalars['DateTime']['input']>;
+  to?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 

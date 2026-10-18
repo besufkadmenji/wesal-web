@@ -32,6 +32,7 @@ import {
   type Contract,
 } from "@/gql/graphql";
 import { useContract, useContracts } from "@/hooks/useContracts";
+import { CharityIntroDialog } from "@/components/app/contracts/CharityIntroDialog";
 import { queryKeys } from "@/hooks/queryKeys";
 import { useAppRouter } from "@/hooks/use.app.router";
 import { useDict } from "@/hooks/useDict";
@@ -75,7 +76,17 @@ const CONTRACT_FILTERS: Array<{
   { value: ContractStatus.Cancelled, label: "cancelled" },
 ];
 
-export const ContractsPage = () => {
+/**
+ * My Contracts. The "charity" variant is the Wesal Al-Khair page (BRD 4.1.10,
+ * 4.2.8): the same tabs and cards, limited to the user's charity contracts.
+ */
+export const ContractsPage = ({
+  variant = "all",
+}: {
+  variant?: "all" | "charity";
+}) => {
+  const isCharityPage = variant === "charity";
+  const basePath = isCharityPage ? "/charity" : "/contracts";
   const dict = useDict();
   const { me } = useMe();
   const router = useAppRouter();
@@ -91,13 +102,14 @@ export const ContractsPage = () => {
     status: status || undefined,
     page,
     limit: CONTRACTS_PER_PAGE,
+    isCharity: isCharityPage ? true : undefined,
   });
   const activeContract = requestedContract.data ?? selectedContract;
 
   const closeContract = () => {
     setSelectedContract(null);
     if (requestedContractId) {
-      router.replace("/contracts");
+      router.replace(basePath);
     }
   };
 
@@ -108,8 +120,9 @@ export const ContractsPage = () => {
 
   return (
     <AppWrapper>
+      {isCharityPage && <CharityIntroDialog />}
       <ContractHero
-        title={dict.contracts.title}
+        title={isCharityPage ? dict.charity.title : dict.contracts.title}
         breadcrumbHref="/"
         breadcrumbLabel={dict.home.nav.home}
       />
@@ -148,7 +161,9 @@ export const ContractsPage = () => {
               ))}
             </div>
           ) : !contracts.data?.items.length ? (
-            <EmptyState title={dict.contracts.empty} />
+            <EmptyState
+              title={isCharityPage ? dict.charity.empty : dict.contracts.empty}
+            />
           ) : (
             <>
               <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">

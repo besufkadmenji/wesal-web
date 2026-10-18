@@ -31,10 +31,9 @@ export const Header = () => {
           {isLoggedIn && (
             <NavItem label={dict.home.nav.contracts} href={"/contracts"} />
           )}
-          <NavItem
-            label={dict.home.nav.goodConnections}
-            href={"/good-connections"}
-          />
+          {isLoggedIn && (
+            <NavItem label={dict.home.nav.goodConnections} href={"/charity"} />
+          )}
           <NavItem
             label={dict.home.nav.contactUs}
             href={"/support/contact-us"}

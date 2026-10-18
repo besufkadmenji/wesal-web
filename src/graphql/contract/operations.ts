@@ -37,6 +37,8 @@ const CONTRACT_FRAGMENT = gql`
     downPayment
     commissionPercent
     commissionAmount
+    isCharity
+    charityAmount
     vatRate
     vatAmount
     totalPayable
@@ -173,6 +175,8 @@ export const CONTRACT_QUOTE_QUERY = gql`
       downPayment
       commissionPercent
       commissionAmount
+      isCharity
+      charityAmount
       vatRate
       vatAmount
       totalPayable

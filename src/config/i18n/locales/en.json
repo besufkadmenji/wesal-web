@@ -49,7 +49,7 @@
       "categories": "Categories",
       "myListings": "My Ads",
       "contracts": "My Contracts",
-      "goodConnections": "Good Connections",
+      "goodConnections": "Wesal Al-Khair",
       "contactUs": "Contact Us"
     },
     "title": "Certified Mediator for Contractors, Workers, and International Search",
@@ -977,5 +977,13 @@
     "PENDING_PAYMENT": "Pending payment",
     "EXPIRED": "Expired",
     "NONE": "Free"
+  },
+  "charity": {
+    "title": "Wesal Al-Khair",
+    "introTitle": "Wesal Al-Khair",
+    "intro": "All contracts on this page are considered charity from the customer. The platform collects no commission on them, and the amount is donated through the Ihsan platform.",
+    "ok": "OK",
+    "empty": "You have no Wesal Al-Khair contracts yet",
+    "commissionNote": "Wesal Al-Khair: no commission is charged on this contract."
   }
 }

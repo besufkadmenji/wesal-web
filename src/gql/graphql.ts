@@ -156,6 +156,8 @@ export type ContractPaginationInput = {
   clientId?: string | null | undefined;
   conversationId?: string | null | undefined;
   from?: unknown;
+  /** Only Wesal Al-Khair (charity) contracts, or only non-charity */
+  isCharity?: boolean | null | undefined;
   /** Number of items per page */
   limit?: number;
   /** Page number (1-based) */
@@ -1521,6 +1523,7 @@ export type {
   Category,
   ChangeEmailResponse,
   ChangePhoneResponse,
+  CharitySummary,
   City,
   Complaint,
   ComplaintMessage,
@@ -1740,6 +1743,8 @@ export type {
   QueryAdminArgs,
   QueryAdminBroadcastArgs,
   QueryAdminBroadcastsArgs,
+  QueryAdminCharityContractsArgs,
+  QueryAdminCharitySummaryArgs,
   QueryAdminComplaintArgs,
   QueryAdminComplaintsArgs,
   QueryAdminContractArgs,

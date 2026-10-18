@@ -60,11 +60,13 @@ export const MobileMenu = () => {
                     onNavigate={onClose}
                   />
                 )}
-                <NavItem
-                  label={dict.home.nav.goodConnections}
-                  href={"/good-connections"}
-                  onNavigate={onClose}
-                />
+                {isLoggedIn && (
+                  <NavItem
+                    label={dict.home.nav.goodConnections}
+                    href={"/charity"}
+                    onNavigate={onClose}
+                  />
+                )}
                 <NavItem
                   label={dict.home.nav.contactUs}
                   href={"/support/contact-us"}
