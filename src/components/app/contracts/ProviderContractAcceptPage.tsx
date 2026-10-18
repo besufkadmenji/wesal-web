@@ -17,14 +17,12 @@ import { TermsCard } from "@/components/app/contracts/TermsCard";
 import { FormInput } from "@/components/app/profile/SignedContract/FormInput";
 import { SignatureInput } from "@/components/app/profile/SignedContract/SignatureInput";
 import { Button } from "@/components/ui/button";
-import {
-  ContractSignatureType,
-  type Contract,
-} from "@/gql/graphql";
+import { ContractSignatureType, type Contract } from "@/gql/graphql";
 import { queryKeys } from "@/hooks/queryKeys";
 import { useAppRouter } from "@/hooks/use.app.router";
 import { useDict } from "@/hooks/useDict";
 import { useLang } from "@/hooks/useLang";
+import { pickLocalizedText } from "./contractTerms";
 import { useMe } from "@/hooks/useMe";
 import { ContractService } from "@/services/contract.service";
 import { showErrorMessage, showSuccessMessage } from "@/utils/show.messages";
@@ -309,10 +307,15 @@ export const ProviderContractAcceptPage = ({
               onChange={setAcceptedCommitment}
             >
               <p className="text-gray text-base leading-[1.7]">
-                {dict.contracts.clientCommitmentBody.replace(
-                  "{percent}",
-                  String(contract.commissionPercent),
-                )}
+                {pickLocalizedText(
+                  lang,
+                  contract.undertakingTextAr,
+                  contract.undertakingTextEn,
+                ) ||
+                  dict.contracts.clientCommitmentBody.replace(
+                    "{percent}",
+                    String(contract.commissionPercent),
+                  )}
               </p>
             </TermsCard>
             <TermsCard
@@ -321,7 +324,11 @@ export const ProviderContractAcceptPage = ({
               onChange={setAcceptedRefund}
             >
               <p className="text-gray text-base leading-[1.7]">
-                {dict.contracts.refundBody}
+                {pickLocalizedText(
+                  lang,
+                  contract.refundPolicyAr,
+                  contract.refundPolicyEn,
+                ) || dict.contracts.refundBody}
               </p>
             </TermsCard>
           </div>

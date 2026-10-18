@@ -1,9 +1,9 @@
-import { Setting } from "@/gql/graphql";
+import { GetSettingQuery } from "@/gql/graphql";
 import { GET_SETTING_QUERY } from "@/graphql/setting/getSetting";
 import client from "@/utils/apollo.client";
 
 export class SettingService {
-  static getSetting = async (): Promise<Setting | null> => {
+  static getSetting = async (): Promise<GetSettingQuery["getSetting"] | null> => {
     try {
       const userResult = await client().query({
         query: GET_SETTING_QUERY,

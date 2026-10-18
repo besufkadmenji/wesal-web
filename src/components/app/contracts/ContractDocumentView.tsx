@@ -14,12 +14,10 @@ import { TermsCard } from "@/components/app/contracts/TermsCard";
 import { FormInput } from "@/components/app/profile/SignedContract/FormInput";
 import { SignatureInput } from "@/components/app/profile/SignedContract/SignatureInput";
 import { Button } from "@/components/ui/button";
-import {
-  ContractSignatureType,
-  type Contract,
-} from "@/gql/graphql";
+import { ContractSignatureType, type Contract } from "@/gql/graphql";
 import { useDict } from "@/hooks/useDict";
 import { useLang } from "@/hooks/useLang";
+import { pickLocalizedText } from "./contractTerms";
 import { useMe } from "@/hooks/useMe";
 import { forwardRef, useState } from "react";
 
@@ -229,15 +227,24 @@ export const ContractDocumentView = forwardRef<
           </TermsCard>
           <TermsCard title={dict.contracts.clientCommitmentTitle} readOnly>
             <p className="text-gray text-base leading-[1.7]">
-              {dict.contracts.clientCommitmentBody.replace(
-                "{percent}",
-                String(contract.commissionPercent),
-              )}
+              {pickLocalizedText(
+                lang,
+                contract.undertakingTextAr,
+                contract.undertakingTextEn,
+              ) ||
+                dict.contracts.clientCommitmentBody.replace(
+                  "{percent}",
+                  String(contract.commissionPercent),
+                )}
             </p>
           </TermsCard>
           <TermsCard title={dict.contracts.refundTitle} readOnly>
             <p className="text-gray text-base leading-[1.7]">
-              {dict.contracts.refundBody}
+              {pickLocalizedText(
+                lang,
+                contract.refundPolicyAr,
+                contract.refundPolicyEn,
+              ) || dict.contracts.refundBody}
             </p>
           </TermsCard>
         </div>

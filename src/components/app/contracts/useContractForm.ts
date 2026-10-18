@@ -6,13 +6,16 @@ import { useConversation } from "@/hooks/useConversations";
 import { queryKeys } from "@/hooks/queryKeys";
 import { useAppRouter } from "@/hooks/use.app.router";
 import { useDict } from "@/hooks/useDict";
+import { useLang } from "@/hooks/useLang";
 import { useMe } from "@/hooks/useMe";
+import CategoryService from "@/services/category.service";
 import { ContractService } from "@/services/contract.service";
 import UserService from "@/services/user.service";
 import { uploadFile } from "@/utils/file.upload";
 import { showErrorMessage } from "@/utils/show.messages";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { pickLocalizedText, renderUndertaking } from "./contractTerms";
 
 export const useContractForm = ({
   conversationId,
@@ -22,6 +25,7 @@ export const useContractForm = ({
   rejectedContractId?: string;
 }) => {
   const dict = useDict();
+  const lang = useLang();
   const router = useAppRouter();
   const queryClient = useQueryClient();
   const { me, isLoading: meLoading } = useMe();
@@ -150,12 +154,54 @@ export const useContractForm = ({
     onError: (error) => showErrorMessage(error.message),
   });
 
-  const category = conversation.data?.listing.category;
+  // The conversation doesn't load the listing's category, so fetch it for
+  // the terms shown before a price (and quote) exists.
+  const categoryId = conversation.data?.listing.categoryId;
+  const { data: category } = useQuery({
+    queryKey: ["contractCategory", categoryId],
+    queryFn: () => CategoryService.category(categoryId!),
+    enabled: Boolean(categoryId),
+  });
   const documentText =
     quote.data?.contractDocumentText || category?.contractDocumentText || "";
+  // Before a price is entered there is no quote, so apply the category's
+  // enable flags the same way the API snapshot does (S4-35).
   const commissionPercent =
-    category?.commissionPercent ?? quote.data?.commissionPercent ?? 0;
-  const minCommission = category?.minCommissionAmount ?? 0;
+    quote.data?.commissionPercent ??
+    (category?.commissionEnabled ? Number(category.commissionPercent ?? 0) : 0);
+  const minCommission = category?.minCommissionEnabled
+    ? Number(category.minCommissionAmount ?? 0)
+    : 0;
+  const undertakingText = quote.data
+    ? pickLocalizedText(
+        lang,
+        quote.data.undertakingTextAr,
+        quote.data.undertakingTextEn,
+      )
+    : category?.undertakingEnabled
+      ? renderUndertaking(
+          pickLocalizedText(
+            lang,
+            category.undertakingTextAr,
+            category.undertakingTextEn,
+          ),
+          commissionPercent,
+          minCommission,
+        )
+      : "";
+  const refundText = quote.data
+    ? pickLocalizedText(
+        lang,
+        quote.data.refundPolicyAr,
+        quote.data.refundPolicyEn,
+      )
+    : category?.refundPolicyEnabled
+      ? pickLocalizedText(
+          lang,
+          category.refundPolicyAr,
+          category.refundPolicyEn,
+        )
+      : "";
   const publicId = rejected.data?.publicId ?? initialized.data?.publicId;
   const contractNumber = publicId ? `#${publicId}` : "—";
   const client = conversation.data?.user;
@@ -217,6 +263,8 @@ export const useContractForm = ({
     documentText,
     commissionPercent,
     minCommission,
+    undertakingText,
+    refundText,
     contractNumber,
     client,
     provider,

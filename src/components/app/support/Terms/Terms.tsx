@@ -1,9 +1,9 @@
 "use client";
-import { Setting } from "@/gql/graphql";
+import { GetSettingQuery } from "@/gql/graphql";
 import { useLang } from "@/hooks/useLang";
 import { SupportPageType, Wrapper } from "../Wrapper";
 
-export const Terms = ({ setting }: { setting: Setting }) => {
+export const Terms = ({ setting }: { setting: GetSettingQuery["getSetting"] }) => {
   const lang = useLang();
   return (
     <Wrapper variant={SupportPageType.TERMS}>

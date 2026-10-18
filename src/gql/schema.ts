@@ -343,6 +343,21 @@ export type Category = {
   updatedAt: Scalars['DateTime']['output'];
 };
 
+export type CategoryContractDefaults = {
+  commissionPercent: Scalars['Int']['output'];
+  contractDocumentText: Scalars['String']['output'];
+  customerConversationFee: Scalars['Int']['output'];
+  depositPercent: Scalars['Int']['output'];
+  maxExecutionHours: Scalars['Int']['output'];
+  maxTerminationHours: Scalars['Int']['output'];
+  minCommissionAmount: Scalars['Int']['output'];
+  providerConversationFee: Scalars['Int']['output'];
+  refundPolicyAr: Scalars['String']['output'];
+  refundPolicyEn: Scalars['String']['output'];
+  undertakingTextAr: Scalars['String']['output'];
+  undertakingTextEn: Scalars['String']['output'];
+};
+
 export type CategoryPaginationInput = {
   /** Number of items per page */
   limit?: Scalars['Int']['input'];
@@ -747,7 +762,13 @@ export type ContractQuote = {
   maxExecutionHours?: Maybe<Scalars['Int']['output']>;
   maxTerminationHours?: Maybe<Scalars['Int']['output']>;
   providerNetAmount: Scalars['Float']['output'];
+  refundPolicyAr: Scalars['String']['output'];
+  refundPolicyEn: Scalars['String']['output'];
   totalPayable: Scalars['Float']['output'];
+  /** Customer undertaking with commission and minimum filled in */
+  undertakingTextAr: Scalars['String']['output'];
+  /** Customer undertaking with commission and minimum filled in */
+  undertakingTextEn: Scalars['String']['output'];
   vatAmount: Scalars['Float']['output'];
   vatRate: Scalars['Float']['output'];
 };
@@ -2858,6 +2879,8 @@ export type Query = {
   broadcastRecipientOptions: Array<BroadcastRecipientOption>;
   categories: PaginatedCategoryResponse;
   category: Category;
+  /** Values and texts the add-category form starts with */
+  categoryContractDefaults: CategoryContractDefaults;
   /** Get all cities with pagination */
   cities: PaginatedCityResponse;
   /** Get cities by country with pagination */
@@ -3467,6 +3490,20 @@ export type Setting = {
   completionConfirmationGraceHours: Scalars['Int']['output'];
   contractAcceptanceWindowDays: Scalars['Int']['output'];
   contractAcceptanceWindowEnabled: Scalars['Boolean']['output'];
+  /** System commission (%) for new categories */
+  defaultCommissionPercent: Scalars['Int']['output'];
+  /** Customer chat fee (SAR) for new categories */
+  defaultCustomerConversationFee: Scalars['Int']['output'];
+  /** Deposit (%) for new categories */
+  defaultDepositPercent: Scalars['Int']['output'];
+  /** Max execution time (hours) for new categories */
+  defaultMaxExecutionHours: Scalars['Int']['output'];
+  /** Termination limit (hours) for new categories */
+  defaultMaxTerminationHours: Scalars['Int']['output'];
+  /** Minimum commission (SAR) for new categories */
+  defaultMinCommissionAmount: Scalars['Int']['output'];
+  /** Provider chat fee (SAR) for new categories */
+  defaultProviderConversationFee: Scalars['Int']['output'];
   email: Scalars['String']['output'];
   phones: Array<Scalars['String']['output']>;
   platformManagerName?: Maybe<Scalars['String']['output']>;
@@ -3493,6 +3530,13 @@ export type SettingInput = {
   completionConfirmationGraceHours?: InputMaybe<Scalars['Int']['input']>;
   contractAcceptanceWindowDays?: InputMaybe<Scalars['Int']['input']>;
   contractAcceptanceWindowEnabled?: InputMaybe<Scalars['Boolean']['input']>;
+  defaultCommissionPercent?: InputMaybe<Scalars['Int']['input']>;
+  defaultCustomerConversationFee?: InputMaybe<Scalars['Int']['input']>;
+  defaultDepositPercent?: InputMaybe<Scalars['Int']['input']>;
+  defaultMaxExecutionHours?: InputMaybe<Scalars['Int']['input']>;
+  defaultMaxTerminationHours?: InputMaybe<Scalars['Int']['input']>;
+  defaultMinCommissionAmount?: InputMaybe<Scalars['Int']['input']>;
+  defaultProviderConversationFee?: InputMaybe<Scalars['Int']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   phones?: InputMaybe<Array<Scalars['String']['input']>>;
   platformManagerName?: InputMaybe<Scalars['String']['input']>;

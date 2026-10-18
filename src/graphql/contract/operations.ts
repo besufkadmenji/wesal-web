@@ -182,6 +182,10 @@ export const CONTRACT_QUOTE_QUERY = gql`
       totalPayable
       providerNetAmount
       contractDocumentText
+      undertakingTextAr
+      undertakingTextEn
+      refundPolicyAr
+      refundPolicyEn
       maxExecutionHours
       maxTerminationHours
     }
