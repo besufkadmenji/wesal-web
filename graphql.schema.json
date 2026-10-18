@@ -3194,7 +3194,7 @@
           },
           {
             "name": "totalAmount",
-            "description": "Waived commission on completed charity contracts: the amount to donate (SAR)",
+            "description": "Commission collected on completed charity contracts: the amount to donate (SAR)",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -4842,7 +4842,7 @@
           },
           {
             "name": "charityAmount",
-            "description": "The waived commission on a charity contract (0 otherwise)",
+            "description": "Commission set aside for donation on a charity contract (0 otherwise)",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -6686,7 +6686,7 @@
           },
           {
             "name": "charityAmount",
-            "description": "The waived commission on a charity contract (0 otherwise)",
+            "description": "Commission set aside for donation on a charity contract (0 otherwise)",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -6782,7 +6782,7 @@
           },
           {
             "name": "isCharity",
-            "description": "Wesal Al-Khair: the calculated commission is at or below the category minimum, so it is waived",
+            "description": "Wesal Al-Khair: the commission is at or below the category minimum, so it is donated instead of kept by the platform",
             "args": [],
             "type": {
               "kind": "NON_NULL",

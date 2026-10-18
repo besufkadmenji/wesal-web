@@ -383,7 +383,7 @@ export type CharitySummary = {
   completedContracts: Scalars['Int']['output'];
   /** All charity contracts in the period */
   contracts: Scalars['Int']['output'];
-  /** Waived commission on completed charity contracts: the amount to donate (SAR) */
+  /** Commission collected on completed charity contracts: the amount to donate (SAR) */
   totalAmount: Scalars['Float']['output'];
 };
 
@@ -568,7 +568,7 @@ export type Contract = {
   categoryId: Scalars['String']['output'];
   categoryRulesAr: Scalars['String']['output'];
   categoryRulesEn: Scalars['String']['output'];
-  /** The waived commission on a charity contract (0 otherwise) */
+  /** Commission set aside for donation on a charity contract (0 otherwise) */
   charityAmount: Scalars['Float']['output'];
   client: User;
   clientId: Scalars['String']['output'];
@@ -730,14 +730,14 @@ export type ContractPaymentResponse = {
 
 export type ContractQuote = {
   agreedPrice: Scalars['Float']['output'];
-  /** The waived commission on a charity contract (0 otherwise) */
+  /** Commission set aside for donation on a charity contract (0 otherwise) */
   charityAmount: Scalars['Float']['output'];
   commissionAmount: Scalars['Float']['output'];
   commissionPercent: Scalars['Float']['output'];
   contractDocumentText: Scalars['String']['output'];
   depositPercent: Scalars['Float']['output'];
   downPayment: Scalars['Float']['output'];
-  /** Wesal Al-Khair: the calculated commission is at or below the category minimum, so it is waived */
+  /** Wesal Al-Khair: the commission is at or below the category minimum, so it is donated instead of kept by the platform */
   isCharity: Scalars['Boolean']['output'];
   maxCompletionDays?: Maybe<Scalars['Int']['output']>;
   maxTerminationDays?: Maybe<Scalars['Int']['output']>;

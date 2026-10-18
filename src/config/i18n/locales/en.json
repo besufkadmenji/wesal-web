@@ -980,10 +980,10 @@
   },
   "charity": {
     "title": "Wesal Al-Khair",
-    "intro": "All contracts on this page are considered charity from the customer, and no commission is collected on them by the platform. This is done through linking with the Ihsan platform.",
+    "intro": "All contracts on this page are considered charity from the customer, and the platform keeps no commission from them. This is done through linking with the Ihsan platform.",
     "ok": "OK",
     "empty": "You have no Wesal Al-Khair contracts yet",
-    "commissionNote": "Wesal Al-Khair: no commission is charged on this contract.",
+    "commissionNote": "Wesal Al-Khair: this commission is donated through the Ihsan platform; the platform does not keep it.",
     "ihsanLogoAlt": "Ihsan platform"
   }
 }
