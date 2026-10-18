@@ -29,7 +29,12 @@ class ListingService {
           paginationInput,
         },
       });
-      return listingResult.data?.listings ?? null;
+      // The query selects only the provider fields the cards use
+      // (id, isNewlyAdded); callers read the result as full listings.
+      return (
+        (listingResult.data?.listings as
+          PaginatedListingResponse | undefined) ?? null
+      );
     } catch (e) {
       console.error("listingResult", e);
     }

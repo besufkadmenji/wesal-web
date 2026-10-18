@@ -9,6 +9,7 @@ export const ME_PROVIDER_QUERY: TypedDocumentNode<MeProviderQuery> = gql`
       bankName
       ratingAverage
       ratingCount
+      isNewlyAdded
       city {
         countryId
         createdAt

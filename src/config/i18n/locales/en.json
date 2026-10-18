@@ -985,5 +985,8 @@
     "empty": "You have no Wesal Al-Khair contracts yet",
     "commissionNote": "Wesal Al-Khair: this commission is donated through the Ihsan platform; the platform does not keep it.",
     "ihsanLogoAlt": "Ihsan platform"
+  },
+  "provider": {
+    "newlyAdded": "Newly Added"
   }
 }

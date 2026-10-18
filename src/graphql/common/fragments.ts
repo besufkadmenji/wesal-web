@@ -24,6 +24,7 @@ export const PROVIDER_FRAGMENT = gql`
     dialCode
     ratingAverage
     ratingCount
+    isNewlyAdded
   }
 `;
 

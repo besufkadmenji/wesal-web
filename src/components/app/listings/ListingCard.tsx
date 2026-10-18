@@ -11,13 +11,17 @@ import type { ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 import { PromotionStatus } from "@/gql/graphql";
 import { StatusBadge } from "@/components/app/shared/ParticipantUI";
+import { NewlyAddedChip } from "@/components/app/shared/NewlyAddedChip";
 
 export const ListingCard = ({
   listing,
   action,
+  showProviderLabels = true,
 }: {
   listing: Listing;
   action?: ReactNode;
+  /** Off on the provider's own listings (S4-54 label is for customers). */
+  showProviderLabels?: boolean;
 }) => {
   const dict = useDict();
   const pathname = usePathname();
@@ -46,6 +50,9 @@ export const ListingCard = ({
               status={listing.promotionStatus}
               className="absolute start-3 top-3"
             />
+          )}
+          {showProviderLabels && listing.provider?.isNewlyAdded && (
+            <NewlyAddedChip className="absolute end-3 top-3" />
           )}
         </div>
         <div className="grid grid-cols-1 gap-3 px-3 py-4">

@@ -44,6 +44,7 @@ export const LISTING_QUERY: TypedDocumentNode<
       provider {
         ratingAverage
         ratingCount
+        isNewlyAdded
         id
         name
         isActive

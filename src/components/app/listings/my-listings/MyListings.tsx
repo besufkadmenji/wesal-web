@@ -39,7 +39,11 @@ export const MyListings = () => {
               <div className="grid grid-cols-1 gap-12">
                 <div className="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
                   {listings.items.map((listing) => (
-                    <ListingCard key={listing.id} listing={listing} />
+                    <ListingCard
+                      key={listing.id}
+                      listing={listing}
+                      showProviderLabels={false}
+                    />
                   ))}
                 </div>
                 {listings.meta.totalPages > 1 && (
