@@ -37,8 +37,8 @@
             "deprecationReason": null
           },
           {
-            "name": "deliveryTimeDays",
-            "description": null,
+            "name": "executionHours",
+            "description": "Execution time the provider commits to, in hours",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -2573,8 +2573,8 @@
             "deprecationReason": null
           },
           {
-            "name": "maxCompletionDays",
-            "description": null,
+            "name": "maxExecutionHours",
+            "description": "Longest execution time a provider may commit to, in hours",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -2585,7 +2585,7 @@
             "deprecationReason": null
           },
           {
-            "name": "maxCompletionDaysEnabled",
+            "name": "maxExecutionHoursEnabled",
             "description": null,
             "args": [],
             "type": {
@@ -2601,8 +2601,8 @@
             "deprecationReason": null
           },
           {
-            "name": "maxTerminationDays",
-            "description": null,
+            "name": "maxTerminationHours",
+            "description": "Termination limit, in hours",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -2613,7 +2613,7 @@
             "deprecationReason": null
           },
           {
-            "name": "maxTerminationDaysEnabled",
+            "name": "maxTerminationHoursEnabled",
             "description": null,
             "args": [],
             "type": {
@@ -5085,8 +5085,8 @@
             "deprecationReason": null
           },
           {
-            "name": "deliveryEstimateDays",
-            "description": null,
+            "name": "deliveryHours",
+            "description": "Delivery time entered at provider completion, in hours",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -5103,18 +5103,6 @@
             "type": {
               "kind": "SCALAR",
               "name": "DateTime",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "deliveryTimeDays",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int",
               "ofType": null
             },
             "isDeprecated": false,
@@ -5189,6 +5177,18 @@
             "deprecationReason": null
           },
           {
+            "name": "executionHours",
+            "description": "Execution time the provider committed to at acceptance, in hours",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "id",
             "description": null,
             "args": [],
@@ -5237,7 +5237,7 @@
             "deprecationReason": null
           },
           {
-            "name": "maxCompletionDays",
+            "name": "maxExecutionHours",
             "description": null,
             "args": [],
             "type": {
@@ -5249,7 +5249,7 @@
             "deprecationReason": null
           },
           {
-            "name": "maxTerminationDays",
+            "name": "maxTerminationHours",
             "description": null,
             "args": [],
             "type": {
@@ -6797,7 +6797,7 @@
             "deprecationReason": null
           },
           {
-            "name": "maxCompletionDays",
+            "name": "maxExecutionHours",
             "description": null,
             "args": [],
             "type": {
@@ -6809,7 +6809,7 @@
             "deprecationReason": null
           },
           {
-            "name": "maxTerminationDays",
+            "name": "maxTerminationHours",
             "description": null,
             "args": [],
             "type": {
@@ -9224,8 +9224,8 @@
             "deprecationReason": null
           },
           {
-            "name": "maxCompletionDays",
-            "description": null,
+            "name": "maxExecutionHours",
+            "description": "In hours",
             "type": {
               "kind": "SCALAR",
               "name": "Int",
@@ -9236,7 +9236,7 @@
             "deprecationReason": null
           },
           {
-            "name": "maxCompletionDaysEnabled",
+            "name": "maxExecutionHoursEnabled",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -9248,8 +9248,8 @@
             "deprecationReason": null
           },
           {
-            "name": "maxTerminationDays",
-            "description": null,
+            "name": "maxTerminationHours",
+            "description": "In hours",
             "type": {
               "kind": "SCALAR",
               "name": "Int",
@@ -9260,7 +9260,7 @@
             "deprecationReason": null
           },
           {
-            "name": "maxTerminationDaysEnabled",
+            "name": "maxTerminationHoursEnabled",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -21974,8 +21974,8 @@
             "deprecationReason": null
           },
           {
-            "name": "deliveryEstimateDays",
-            "description": null,
+            "name": "deliveryHours",
+            "description": "Delivery time in hours; required when a delivery company is set",
             "type": {
               "kind": "SCALAR",
               "name": "Int",
@@ -28418,8 +28418,8 @@
             "deprecationReason": null
           },
           {
-            "name": "maxCompletionDays",
-            "description": null,
+            "name": "maxExecutionHours",
+            "description": "In hours",
             "type": {
               "kind": "SCALAR",
               "name": "Int",
@@ -28430,7 +28430,7 @@
             "deprecationReason": null
           },
           {
-            "name": "maxCompletionDaysEnabled",
+            "name": "maxExecutionHoursEnabled",
             "description": null,
             "type": {
               "kind": "SCALAR",
@@ -28442,8 +28442,8 @@
             "deprecationReason": null
           },
           {
-            "name": "maxTerminationDays",
-            "description": null,
+            "name": "maxTerminationHours",
+            "description": "In hours",
             "type": {
               "kind": "SCALAR",
               "name": "Int",
@@ -28454,7 +28454,7 @@
             "deprecationReason": null
           },
           {
-            "name": "maxTerminationDaysEnabled",
+            "name": "maxTerminationHoursEnabled",
             "description": null,
             "type": {
               "kind": "SCALAR",

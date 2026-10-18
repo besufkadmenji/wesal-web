@@ -16,7 +16,7 @@ import { TimelineMetric } from "@/components/app/contracts/TimelineMetric";
 import {
   formatContractDate,
   formatContractReference,
-  formatDays,
+  contractTimeline,
 } from "@/components/app/contracts/formatContract";
 import {
   Dialog,
@@ -57,15 +57,7 @@ export const ProviderContractDialog = ({
   const customerSignature = contract.signatures.find(
     (entry) => entry.signatureType === ContractSignatureType.CustomerAcceptance,
   );
-  // The API does not expose a provider completion-time field yet, so the
-  // provider and expected-completion metrics can only show a placeholder
-  // once the contract leaves the pending state.
-  const pendingTimelineValue = isPending
-    ? dict.contracts.awaitingProviderInput
-    : "—";
-  const deliveryTimelineValue = isPending
-    ? pendingTimelineValue
-    : formatDays(contract.deliveryTimeDays, dict.contracts.dayUnit);
+  const timeline = contractTimeline(contract, dict.contracts, isPending);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -113,17 +105,17 @@ export const ProviderContractDialog = ({
                   <TimelineMetric
                     icon={ClockIcon}
                     label={dict.contracts.providerCompletionTime}
-                    value={pendingTimelineValue}
+                    value={timeline.execution}
                   />
                   <TimelineMetric
                     icon={ClockIcon}
                     label={dict.contracts.deliveryTime}
-                    value={deliveryTimelineValue}
+                    value={timeline.delivery}
                   />
                   <TimelineMetric
                     icon={ClockIcon}
                     label={dict.contracts.expectedCompletionTime}
-                    value={pendingTimelineValue}
+                    value={timeline.total}
                   />
                 </div>
 

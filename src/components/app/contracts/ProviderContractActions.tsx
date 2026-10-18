@@ -26,7 +26,7 @@ export const ProviderContractActions = ({
   const [completionOpen, setCompletionOpen] = useState(false);
   const queryClient = useQueryClient();
   const complete = useMutation({
-    mutationFn: (deliveryEstimateDays?: number) => {
+    mutationFn: (deliveryHours?: number) => {
       const signatureData = contract.signatures.find(
         (signature) =>
           signature.signatureType === ContractSignatureType.ProviderAcceptance,
@@ -37,7 +37,7 @@ export const ProviderContractActions = ({
       return ContractService.providerComplete({
         contractId: contract.id,
         signatureData,
-        deliveryEstimateDays,
+        deliveryHours,
       });
     },
     onSuccess: async () => {
@@ -91,8 +91,8 @@ export const ProviderContractActions = ({
         onOpenChange={setCompletionOpen}
         requiresDelivery={Boolean(contract.deliveryCompanyId)}
         isPending={complete.isPending}
-        onConfirm={(deliveryEstimateDays) =>
-          complete.mutate(deliveryEstimateDays)
+        onConfirm={(deliveryHours) =>
+          complete.mutate(deliveryHours)
         }
       />
     </footer>

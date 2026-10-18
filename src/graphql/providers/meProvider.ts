@@ -34,10 +34,10 @@ export const ME_PROVIDER_QUERY: TypedDocumentNode<MeProviderQuery> = gql`
         customerConversationFeeEnabled
         depositEnabled
         depositPercent
-        maxCompletionDays
-        maxCompletionDaysEnabled
-        maxTerminationDays
-        maxTerminationDaysEnabled
+        maxExecutionHours
+        maxExecutionHoursEnabled
+        maxTerminationHours
+        maxTerminationHoursEnabled
         minCommissionAmount
         minCommissionEnabled
         providerConversationFee

@@ -79,14 +79,14 @@ export const ProviderContractAcceptPage = ({
     ]);
 
   const accept = useMutation({
-    mutationFn: (deliveryTimeDays: number) => {
+    mutationFn: (executionHours: number) => {
       if (!providerSignature) {
         throw new Error(dict.contracts.providerAcceptanceSignature);
       }
       return ContractService.accept({
         contractId: contract.id,
         signatureData: providerSignature,
-        deliveryTimeDays,
+        executionHours,
       });
     },
     onSuccess: async () => {
@@ -351,9 +351,9 @@ export const ProviderContractAcceptPage = ({
       <ContractAcceptanceDialog
         open={acceptOpen}
         onOpenChange={setAcceptOpen}
-        maxCompletionDays={contract.maxCompletionDays}
+        maxExecutionHours={contract.maxExecutionHours}
         isPending={accept.isPending}
-        onConfirm={(deliveryTimeDays) => accept.mutate(deliveryTimeDays)}
+        onConfirm={(executionHours) => accept.mutate(executionHours)}
       />
       <ContractRejectionDialog
         open={rejectOpen}

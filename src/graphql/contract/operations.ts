@@ -52,7 +52,7 @@ const CONTRACT_FRAGMENT = gql`
     deliveryCompanyId
     deliveryCompanyNameAr
     deliveryCompanyNameEn
-    deliveryTimeDays
+    executionHours
     categoryRulesAr
     categoryRulesEn
     contractDocumentText
@@ -60,8 +60,8 @@ const CONTRACT_FRAGMENT = gql`
     undertakingTextEn
     refundPolicyAr
     refundPolicyEn
-    maxCompletionDays
-    maxTerminationDays
+    maxExecutionHours
+    maxTerminationHours
     rejectionReason
     cancellationReason
     disputeReason
@@ -70,7 +70,7 @@ const CONTRACT_FRAGMENT = gql`
     rejectedAt
     providerCompletedAt
     deliveryStartedAt
-    deliveryEstimateDays
+    deliveryHours
     confirmationDeadlineAt
     cancellationRequestedAt
     disputedAt
@@ -182,8 +182,8 @@ export const CONTRACT_QUOTE_QUERY = gql`
       totalPayable
       providerNetAmount
       contractDocumentText
-      maxCompletionDays
-      maxTerminationDays
+      maxExecutionHours
+      maxTerminationHours
     }
   }
 `;

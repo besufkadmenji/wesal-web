@@ -23,13 +23,13 @@ export const ProviderCompletionDialog = ({
   onOpenChange: (open: boolean) => void;
   requiresDelivery: boolean;
   isPending: boolean;
-  onConfirm: (deliveryEstimateDays?: number) => void;
+  onConfirm: (deliveryHours?: number) => void;
 }) => {
   const dict = useDict();
-  const [days, setDays] = useState("1");
-  const parsedDays = Number(days);
+  const [hours, setHours] = useState("1");
+  const parsedHours = Number(hours);
   const isValid =
-    !requiresDelivery || (Number.isInteger(parsedDays) && parsedDays > 0);
+    !requiresDelivery || (Number.isInteger(parsedHours) && parsedHours > 0);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -45,16 +45,16 @@ export const ProviderCompletionDialog = ({
         </div>
         {requiresDelivery && (
           <div className="grid gap-2 text-start">
-            <label htmlFor="delivery-estimate">
-              {dict.contracts.deliveryEstimate}
+            <label htmlFor="delivery-hours">
+              {dict.contracts.deliveryHours}
             </label>
             <Input
-              id="delivery-estimate"
+              id="delivery-hours"
               type="number"
               min={1}
               step={1}
-              value={days}
-              onChange={(event) => setDays(event.target.value)}
+              value={hours}
+              onChange={(event) => setHours(event.target.value)}
               disabled={isPending}
             />
           </div>
@@ -69,7 +69,7 @@ export const ProviderCompletionDialog = ({
             type="button"
             disabled={!isValid || isPending}
             onClick={() =>
-              onConfirm(requiresDelivery ? parsedDays : undefined)
+              onConfirm(requiresDelivery ? parsedHours : undefined)
             }
           >
             {isPending

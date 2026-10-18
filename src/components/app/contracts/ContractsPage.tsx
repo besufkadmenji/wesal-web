@@ -12,6 +12,7 @@ import { SignaturePreview } from "@/components/app/contracts/SignaturePreview";
 import {
   CONTRACT_DATE_FORMATTER,
   formatContractReference,
+  formatHours,
   toContractDate,
 } from "@/components/app/contracts/formatContract";
 import {
@@ -493,12 +494,8 @@ export const ContractDetailPage = ({ id }: { id: string }) => {
                 }
               />
               <Detail
-                label={dict.contracts.deliveryDays}
-                value={
-                  item.deliveryTimeDays
-                    ? `${item.deliveryTimeDays} ${dict.common.days}`
-                    : "—"
-                }
+                label={dict.contracts.executionHours}
+                value={formatHours(item.executionHours, dict.contracts.hourUnit)}
               />
             </div>
             <FinancialSummary contract={item} />

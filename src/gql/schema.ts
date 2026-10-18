@@ -14,7 +14,8 @@ export type Scalars = {
 
 export type AcceptContractInput = {
   contractId: Scalars['String']['input'];
-  deliveryTimeDays: Scalars['Int']['input'];
+  /** Execution time the provider commits to, in hours */
+  executionHours: Scalars['Int']['input'];
   signatureData: Scalars['String']['input'];
 };
 
@@ -317,10 +318,12 @@ export type Category = {
   descriptionEn: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   image: Scalars['String']['output'];
-  maxCompletionDays?: Maybe<Scalars['Int']['output']>;
-  maxCompletionDaysEnabled: Scalars['Boolean']['output'];
-  maxTerminationDays?: Maybe<Scalars['Int']['output']>;
-  maxTerminationDaysEnabled: Scalars['Boolean']['output'];
+  /** Longest execution time a provider may commit to, in hours */
+  maxExecutionHours?: Maybe<Scalars['Int']['output']>;
+  maxExecutionHoursEnabled: Scalars['Boolean']['output'];
+  /** Termination limit, in hours */
+  maxTerminationHours?: Maybe<Scalars['Int']['output']>;
+  maxTerminationHoursEnabled: Scalars['Boolean']['output'];
   minCommissionAmount?: Maybe<Scalars['Float']['output']>;
   minCommissionEnabled: Scalars['Boolean']['output'];
   nameAr: Scalars['String']['output'];
@@ -586,19 +589,21 @@ export type Contract = {
   deliveryCompanyId?: Maybe<Scalars['ID']['output']>;
   deliveryCompanyNameAr?: Maybe<Scalars['String']['output']>;
   deliveryCompanyNameEn?: Maybe<Scalars['String']['output']>;
-  deliveryEstimateDays?: Maybe<Scalars['Int']['output']>;
+  /** Delivery time entered at provider completion, in hours */
+  deliveryHours?: Maybe<Scalars['Int']['output']>;
   deliveryStartedAt?: Maybe<Scalars['DateTime']['output']>;
-  deliveryTimeDays?: Maybe<Scalars['Int']['output']>;
   depositPercent: Scalars['Float']['output'];
   disputeReason?: Maybe<Scalars['String']['output']>;
   disputedAt?: Maybe<Scalars['DateTime']['output']>;
   document?: Maybe<ContractDocument>;
   downPayment: Scalars['Float']['output'];
+  /** Execution time the provider committed to at acceptance, in hours */
+  executionHours?: Maybe<Scalars['Int']['output']>;
   id: Scalars['ID']['output'];
   isCharity: Scalars['Boolean']['output'];
   listingId: Scalars['String']['output'];
-  maxCompletionDays?: Maybe<Scalars['Int']['output']>;
-  maxTerminationDays?: Maybe<Scalars['Int']['output']>;
+  maxExecutionHours?: Maybe<Scalars['Int']['output']>;
+  maxTerminationHours?: Maybe<Scalars['Int']['output']>;
   paidAt?: Maybe<Scalars['DateTime']['output']>;
   pricingVersion: Scalars['Int']['output'];
   provider: Provider;
@@ -739,8 +744,8 @@ export type ContractQuote = {
   downPayment: Scalars['Float']['output'];
   /** Wesal Al-Khair: the commission is at or below the category minimum, so it is donated instead of kept by the platform */
   isCharity: Scalars['Boolean']['output'];
-  maxCompletionDays?: Maybe<Scalars['Int']['output']>;
-  maxTerminationDays?: Maybe<Scalars['Int']['output']>;
+  maxExecutionHours?: Maybe<Scalars['Int']['output']>;
+  maxTerminationHours?: Maybe<Scalars['Int']['output']>;
   providerNetAmount: Scalars['Float']['output'];
   totalPayable: Scalars['Float']['output'];
   vatAmount: Scalars['Float']['output'];
@@ -1008,10 +1013,12 @@ export type CreateCategoryInput = {
   descriptionAr: Scalars['String']['input'];
   descriptionEn: Scalars['String']['input'];
   image: Scalars['String']['input'];
-  maxCompletionDays?: InputMaybe<Scalars['Int']['input']>;
-  maxCompletionDaysEnabled?: InputMaybe<Scalars['Boolean']['input']>;
-  maxTerminationDays?: InputMaybe<Scalars['Int']['input']>;
-  maxTerminationDaysEnabled?: InputMaybe<Scalars['Boolean']['input']>;
+  /** In hours */
+  maxExecutionHours?: InputMaybe<Scalars['Int']['input']>;
+  maxExecutionHoursEnabled?: InputMaybe<Scalars['Boolean']['input']>;
+  /** In hours */
+  maxTerminationHours?: InputMaybe<Scalars['Int']['input']>;
+  maxTerminationHoursEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   minCommissionAmount?: InputMaybe<Scalars['Float']['input']>;
   minCommissionEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   nameAr: Scalars['String']['input'];
@@ -2793,7 +2800,8 @@ export type ProviderAuthResponse = {
 
 export type ProviderCompleteContractInput = {
   contractId: Scalars['String']['input'];
-  deliveryEstimateDays?: InputMaybe<Scalars['Int']['input']>;
+  /** Delivery time in hours; required when a delivery company is set */
+  deliveryHours?: InputMaybe<Scalars['Int']['input']>;
   signatureData: Scalars['String']['input'];
 };
 
@@ -3667,10 +3675,12 @@ export type UpdateCategoryInput = {
   descriptionEn?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['String']['input'];
   image?: InputMaybe<Scalars['String']['input']>;
-  maxCompletionDays?: InputMaybe<Scalars['Int']['input']>;
-  maxCompletionDaysEnabled?: InputMaybe<Scalars['Boolean']['input']>;
-  maxTerminationDays?: InputMaybe<Scalars['Int']['input']>;
-  maxTerminationDaysEnabled?: InputMaybe<Scalars['Boolean']['input']>;
+  /** In hours */
+  maxExecutionHours?: InputMaybe<Scalars['Int']['input']>;
+  maxExecutionHoursEnabled?: InputMaybe<Scalars['Boolean']['input']>;
+  /** In hours */
+  maxTerminationHours?: InputMaybe<Scalars['Int']['input']>;
+  maxTerminationHoursEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   minCommissionAmount?: InputMaybe<Scalars['Float']['input']>;
   minCommissionEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   nameAr?: InputMaybe<Scalars['String']['input']>;
