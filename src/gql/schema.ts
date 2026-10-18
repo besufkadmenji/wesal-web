@@ -162,6 +162,63 @@ export type AuthResponse = {
   user: User;
 };
 
+/** Badge threshold dropdown value (=5, =4, <4, … , zero stars) */
+export enum BadgeBound {
+  Eq_1 = 'EQ_1',
+  Eq_2 = 'EQ_2',
+  Eq_3 = 'EQ_3',
+  Eq_4 = 'EQ_4',
+  Eq_5 = 'EQ_5',
+  Lt_1 = 'LT_1',
+  Lt_2 = 'LT_2',
+  Lt_3 = 'LT_3',
+  Lt_4 = 'LT_4',
+  Zero = 'ZERO'
+}
+
+export type BadgeRun = {
+  /** Providers whose badge changed */
+  changedCount: Scalars['Int']['output'];
+  /** Under-improvement providers deleted by this run */
+  deletedProviders: Array<BadgeRunProvider>;
+  diligenceCount: Scalars['Int']['output'];
+  id: Scalars['String']['output'];
+  /** Month the run belongs to (YYYY-MM, Asia/Riyadh) */
+  period: Scalars['String']['output'];
+  ranAt: Scalars['DateTime']['output'];
+  /** Under-improvement providers not deleted because of unfinished contracts */
+  skippedProviders: Array<BadgeRunProvider>;
+  trustCount: Scalars['Int']['output'];
+  underImprovementCount: Scalars['Int']['output'];
+};
+
+export type BadgeRunProvider = {
+  id: Scalars['String']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+export type BadgeSetting = {
+  enabled: Scalars['Boolean']['output'];
+  maxBound?: Maybe<BadgeBound>;
+  minBound?: Maybe<BadgeBound>;
+  tier: BadgeTier;
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type BadgeSettingInput = {
+  enabled: Scalars['Boolean']['input'];
+  maxBound?: InputMaybe<BadgeBound>;
+  minBound?: InputMaybe<BadgeBound>;
+  tier: BadgeTier;
+};
+
+/** Provider badge (BRD 4.3.18): Trust, Diligence, or the Under-improvement title */
+export enum BadgeTier {
+  Diligence = 'DILIGENCE',
+  Trust = 'TRUST',
+  UnderImprovement = 'UNDER_IMPROVEMENT'
+}
+
 export type Bank = {
   createdAt: Scalars['DateTime']['output'];
   deactivationReason?: Maybe<Scalars['String']['output']>;
@@ -1489,6 +1546,8 @@ export type Mutation = {
   restartConversation: Conversation;
   revokeAllPermissionsFromAdmin: Scalars['Boolean']['output'];
   revokePermissionFromAdmin: Scalars['Boolean']['output'];
+  /** Runs this month's badge assignment now instead of waiting for the 1st. It counts as the month's run. */
+  runBadgeAssignment: BadgeRun;
   setProviderFavorite: Scalars['Boolean']['output'];
   /** Create or update application settings (admin only) */
   setSetting: Setting;
@@ -1498,6 +1557,7 @@ export type Mutation = {
   terminateProviderContract: Provider;
   trackAction: Tracking;
   updateAdmin: Admin;
+  updateBadgeSettings: Array<BadgeSetting>;
   updateBank: Bank;
   updateCategory: Category;
   updateCity: City;
@@ -2093,6 +2153,11 @@ export type MutationUpdateAdminArgs = {
 };
 
 
+export type MutationUpdateBadgeSettingsArgs = {
+  input: UpdateBadgeSettingsInput;
+};
+
+
 export type MutationUpdateBankArgs = {
   input: UpdateBankInput;
 };
@@ -2245,6 +2310,8 @@ export type NotificationStats = {
 
 /** Type of notification */
 export enum NotificationType {
+  BadgeChanged = 'BADGE_CHANGED',
+  BadgeWarning = 'BADGE_WARNING',
   ComplaintResolved = 'COMPLAINT_RESOLVED',
   ComplaintResponse = 'COMPLAINT_RESPONSE',
   ComplaintSubmitted = 'COMPLAINT_SUBMITTED',
@@ -2571,6 +2638,9 @@ export enum PromotionStatus {
 export type Provider = {
   address?: Maybe<Scalars['String']['output']>;
   avatarFilename?: Maybe<Scalars['String']['output']>;
+  /** Badge from the latest monthly run (BRD 4.3.18) */
+  badge?: Maybe<BadgeTier>;
+  badgeAssignedAt?: Maybe<Scalars['DateTime']['output']>;
   bankName?: Maybe<Scalars['String']['output']>;
   categories?: Maybe<Array<Category>>;
   city?: Maybe<City>;
@@ -2654,6 +2724,10 @@ export type Query = {
   adminRating: Rating;
   adminRatings: PaginatedRatingResponse;
   admins: PaginatedAdminResponse;
+  /** Summary of the most recent monthly badge run */
+  badgeLastRun?: Maybe<BadgeRun>;
+  /** Badge thresholds, highest tier first (BRD 4.3.18) */
+  badgeSettings: Array<BadgeSetting>;
   bank: Bank;
   banks: PaginatedBankResponse;
   categories: PaginatedCategoryResponse;
@@ -3399,6 +3473,10 @@ export type UpdateAdminInput = {
   roleName?: InputMaybe<Scalars['String']['input']>;
   status?: InputMaybe<AdminStatus>;
   userType?: InputMaybe<AdminUserType>;
+};
+
+export type UpdateBadgeSettingsInput = {
+  settings: Array<BadgeSettingInput>;
 };
 
 export type UpdateBankInput = {

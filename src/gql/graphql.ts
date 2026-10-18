@@ -477,6 +477,8 @@ export enum NotificationSortField {
 
 /** Type of notification */
 export enum NotificationType {
+  BadgeChanged = 'BADGE_CHANGED',
+  BadgeWarning = 'BADGE_WARNING',
   ComplaintResolved = 'COMPLAINT_RESOLVED',
   ComplaintResponse = 'COMPLAINT_RESPONSE',
   ComplaintSubmitted = 'COMPLAINT_SUBMITTED',
@@ -1487,6 +1489,10 @@ export type {
   AdminTerminateContractInput,
   AssignPermissionInput,
   AuthResponse,
+  BadgeRun,
+  BadgeRunProvider,
+  BadgeSetting,
+  BadgeSettingInput,
   Bank,
   BankPaginationInput,
   BulkAssignPermissionsInput,
@@ -1652,6 +1658,7 @@ export type {
   MutationTerminateProviderContractArgs,
   MutationTrackActionArgs,
   MutationUpdateAdminArgs,
+  MutationUpdateBadgeSettingsArgs,
   MutationUpdateBankArgs,
   MutationUpdateCategoryArgs,
   MutationUpdateCityArgs,
@@ -1783,6 +1790,7 @@ export type {
   TrackActionInput,
   Tracking,
   UpdateAdminInput,
+  UpdateBadgeSettingsInput,
   UpdateBankInput,
   UpdateCategoryInput,
   UpdateCityInput,
