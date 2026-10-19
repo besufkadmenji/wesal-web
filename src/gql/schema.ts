@@ -304,6 +304,23 @@ export type CancelContractInput = {
   reason: Scalars['String']['input'];
 };
 
+/** What cancelling would do to the customer's payment (BRD 4.1.18) */
+export enum CancellationOutcome {
+  FullRefund = 'FULL_REFUND',
+  Held = 'HELD',
+  NotCancellable = 'NOT_CANCELLABLE',
+  NoCharge = 'NO_CHARGE',
+  PartialRefund = 'PARTIAL_REFUND'
+}
+
+export type CancellationPreview = {
+  outcome: CancellationOutcome;
+  /** Released to the provider (SAR), after commission */
+  providerAmount: Scalars['Float']['output'];
+  /** Refunded to the customer (SAR) */
+  refundAmount: Scalars['Float']['output'];
+};
+
 export type Category = {
   commissionEnabled: Scalars['Boolean']['output'];
   commissionPercent?: Maybe<Scalars['Float']['output']>;
@@ -580,6 +597,7 @@ export type Contract = {
   acceptedAt?: Maybe<Scalars['DateTime']['output']>;
   agreedPrice: Scalars['Float']['output'];
   audits: Array<ContractAudit>;
+  cancellationPreview?: Maybe<CancellationPreview>;
   cancellationReason?: Maybe<Scalars['String']['output']>;
   cancellationRequestedAt?: Maybe<Scalars['DateTime']['output']>;
   cancelledAt?: Maybe<Scalars['DateTime']['output']>;

@@ -78,6 +78,11 @@ const CONTRACT_FRAGMENT = gql`
     completedAt
     cancelledAt
     resolvedAt
+    cancellationPreview {
+      outcome
+      refundAmount
+      providerAmount
+    }
     createdAt
     updatedAt
     signatures {

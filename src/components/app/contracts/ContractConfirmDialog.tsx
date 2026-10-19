@@ -1,6 +1,7 @@
 "use client";
 
 import CancelContractIcon from "@/assets/icons/contracts/popup/cancel.contract.svg";
+import { ContractOutcomeNotice } from "@/components/app/contracts/ContractOutcomeNotice";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,10 +18,13 @@ export const ContractConfirmDialog = ({
   open,
   onOpenChange,
   onConfirm,
+  outcome = null,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
+  /** BRD 4.1.18: what happens to the customer's money. */
+  outcome?: string | null;
 }) => {
   const dict = useDict();
   return (
@@ -40,6 +44,7 @@ export const ContractConfirmDialog = ({
             <DialogDescription className="text-gray text-base leading-[1.7]">
               {dict.contracts.confirmCancelDescription}
             </DialogDescription>
+            <ContractOutcomeNotice text={outcome} />
           </div>
         </div>
         <div dir="ltr" className="grid grid-cols-2 gap-4">

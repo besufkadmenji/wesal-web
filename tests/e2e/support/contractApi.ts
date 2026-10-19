@@ -134,9 +134,33 @@ const baseContract = {
   conversation: { id: "conversation-lifecycle", status: "ACTIVE", listing },
   supersedesContract: null,
   settlements: [],
-  audits: [],
+  audits: [] as Array<Record<string, unknown>>,
   document: null,
   rating: null as null | { id: string; rating: number; comment: string },
+};
+
+/** Mirrors the API's cancellationOutcome (customer only), BRD 4.1.18. */
+const previewFor = (contract: {
+  status: string;
+  totalPayable: number;
+  downPayment: number;
+  commissionAmount: number;
+}) => {
+  switch (contract.status) {
+    case "ACCEPTED":
+      return { outcome: "NO_CHARGE", refundAmount: 0, providerAmount: 0 };
+    case "IN_PROGRESS":
+      return {
+        outcome: "PARTIAL_REFUND",
+        refundAmount: contract.totalPayable - contract.downPayment,
+        providerAmount: contract.downPayment - contract.commissionAmount,
+      };
+    case "AWAITING_CUSTOMER_CONFIRMATION":
+    case "DELIVERY_IN_PROGRESS":
+      return { outcome: "HELD", refundAmount: 0, providerAmount: 0 };
+    default:
+      return { outcome: "NOT_CANCELLABLE", refundAmount: 0, providerAmount: 0 };
+  }
 };
 
 export type ContractApi = {
@@ -169,6 +193,10 @@ export async function mockContractApi(
     };
   };
   if (status !== "ACCEPTED") contract.paidAt = NOW;
+  const view = () => ({
+    ...contract,
+    cancellationPreview: role === "user" ? previewFor(contract) : null,
+  });
 
   await page.context().addCookies(
     [
@@ -223,12 +251,12 @@ export async function mockContractApi(
         };
         break;
       case "ContractById":
-        data = { contract };
+        data = { contract: view() };
         break;
       case "Contracts":
         data = {
           contracts: {
-            items: [contract],
+            items: [view()],
             meta: {
               total: 1,
               page: 1,
@@ -280,6 +308,18 @@ export async function mockContractApi(
         transition("DISPUTED", {
           disputeReason: String(input.reason),
           disputedAt: now,
+          audits: [
+            ...contract.audits,
+            {
+              id: "audit-refused",
+              actorType: "USER",
+              action: "DELIVERY_REFUSED",
+              previousStatus: contract.status,
+              newStatus: "DISPUTED",
+              reason: String(input.reason),
+              createdAt: now,
+            },
+          ],
         });
         data = { refuseContractDelivery: contract };
         break;

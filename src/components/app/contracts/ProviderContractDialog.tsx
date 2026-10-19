@@ -6,6 +6,7 @@ import TimelineIcon from "@/assets/icons/contracts/popup/timeline.svg";
 import TitleIcon from "@/assets/icons/contracts/popup/title.svg";
 import { ContractClientIdentity } from "@/components/app/contracts/ContractClientIdentity";
 import { ContractAdminResolution } from "@/components/app/contracts/ContractAdminResolution";
+import { ContractHeldFunds } from "@/components/app/contracts/ContractHeldFunds";
 import { ContractCancellationDetails } from "@/components/app/contracts/ContractCancellationDetails";
 import { ContractFinancialSection } from "@/components/app/contracts/ContractFinancialSection";
 import { ContractSectionTitle } from "@/components/app/contracts/ContractSectionTitle";
@@ -157,6 +158,10 @@ export const ProviderContractDialog = ({
             )}
 
             {isCancelled && <ContractCancellationDetails contract={contract} />}
+            {(contract.status === ContractStatus.Disputed ||
+              contract.status === ContractStatus.CancellationRequested) && (
+              <ContractHeldFunds contract={contract} viewer="provider" />
+            )}
             {contract.status === ContractStatus.AdminResolved && (
               <ContractAdminResolution contract={contract} />
             )}

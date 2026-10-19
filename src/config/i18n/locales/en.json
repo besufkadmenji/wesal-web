@@ -974,7 +974,20 @@
     "adminResolved": "Closed by admin",
     "adminResolvedNote": "The administration closed this contract and released the payment to the service provider. It was not signed as completed by the customer, so it can't be rated.",
     "resolvedAt": "Closed on",
-    "adminResolutionReason": "Administration note"
+    "adminResolutionReason": "Administration note",
+    "outcomeNoCharge": "Nothing has been paid yet, so nothing is charged.",
+    "outcomePartialRefund": "You will get back {refund}. The deposit goes to the service provider ({provider} after the platform commission).",
+    "outcomeFullRefund": "You will get back the full amount, {refund}, because the service provider passed the agreed time.",
+    "outcomeHeld": "Your payment will be held on the platform until the administration reviews the case and decides between a refund and paying the service provider.",
+    "heldTitle": "Payment on hold, under review",
+    "heldCustomerDescription": "The administration is reviewing this contract. It will either refund you or release the payment to the service provider, and you will be notified.",
+    "heldProviderDescription": "The administration is reviewing this contract. It will either refund the customer or release the payment to you, and you will be notified.",
+    "heldRefusedReceipt": "The customer refused receipt",
+    "heldCancelledAfterCompletion": "The customer cancelled after the work was completed",
+    "heldSince": "Under review since",
+    "heldReason": "Customer's reason",
+    "heldSupport": "Need to add details? Raise a complaint from the conversation or contact us.",
+    "contactUs": "Contact us"
   },
   "promotion": {
     "title": "Featured advertisement",

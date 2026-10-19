@@ -1,5 +1,6 @@
 "use client";
 
+import { ContractOutcomeNotice } from "@/components/app/contracts/ContractOutcomeNotice";
 import CancelReasonIcon from "@/assets/icons/contracts/popup/cancel.reason.svg";
 import RefuseReceiptIcon from "@/assets/icons/contracts/popup/refuse.receipt.svg";
 import { Button } from "@/components/ui/button";
@@ -26,7 +27,9 @@ export const ContractReasonDialog = ({
   variant,
   isPending,
   onConfirm,
+  outcome = null,
 }: {
+  outcome?: string | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   variant: "cancel" | "refuse";
@@ -79,6 +82,8 @@ export const ContractReasonDialog = ({
                   : dict.contracts.cancellationDescription}
               </DialogDescription>
             </div>
+            {/* Refusing receipt has no confirm step, so it warns here. */}
+            {refuse && <ContractOutcomeNotice text={outcome} />}
             <div className="grid gap-1.5">
               <Textarea
                 value={reason}

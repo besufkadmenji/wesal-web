@@ -1,8 +1,10 @@
 "use client";
 
+import { cancellationOutcomeText } from "@/components/app/contracts/cancellationOutcomeText";
 import { Button } from "@/components/ui/button";
 import { ContractStatus, type Contract } from "@/gql/graphql";
 import { useDict } from "@/hooks/useDict";
+import { useLang } from "@/hooks/useLang";
 import { queryKeys } from "@/hooks/queryKeys";
 import { cn } from "@/lib/utils";
 import { ContractService } from "@/services/contract.service";
@@ -24,6 +26,7 @@ export const CustomerContractActions = ({
   onComplete: () => void;
 }) => {
   const dict = useDict();
+  const lang = useLang();
   const status = contract.status;
   const isPendingPayment = status === ContractStatus.Accepted;
   const isPending = status === ContractStatus.Pending;
@@ -40,6 +43,11 @@ export const CustomerContractActions = ({
     isAwaitingConfirmation ||
     isDeliveryInProgress;
   const canComplete = isAwaitingConfirmation || isDeliveryInProgress;
+  const outcome = cancellationOutcomeText(
+    contract.cancellationPreview,
+    dict.contracts,
+    lang,
+  );
   const [reasonMode, setReasonMode] = useState<"cancel" | "refuse" | null>(
     null,
   );
@@ -134,6 +142,7 @@ export const CustomerContractActions = ({
         </Button>
       )}
       <ContractConfirmDialog
+        outcome={outcome}
         open={confirmingCancel}
         onOpenChange={setConfirmingCancel}
         onConfirm={() => {
@@ -142,6 +151,7 @@ export const CustomerContractActions = ({
         }}
       />
       <ContractReasonDialog
+        outcome={outcome}
         open={reasonMode != null}
         onOpenChange={(nextOpen) => !nextOpen && setReasonMode(null)}
         variant={reasonMode ?? "cancel"}

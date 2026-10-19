@@ -119,6 +119,10 @@ test("customer cancels an in-progress contract with a required reason (Arabic)",
   await contractDialog(page)
     .getByRole("button", { name: ar.contracts.cancelContract })
     .click();
+  // BRD 4.1.18: the confirm pop-up states the refund before anything is sent
+  // (345 paid, 30 deposit, 6 commission).
+  await expect(page.getByRole("note")).toContainText("٣١٥٫٠٠ ر.س");
+  await expect(page.getByRole("note")).toContainText("٢٤٫٠٠ ر.س");
   await page
     .getByRole("button", { name: ar.contracts.confirmCancelYes })
     .click();
@@ -163,6 +167,9 @@ test("customer refuses receipt of a delivery and it goes under review", async ({
   const reasonDialog = page
     .getByRole("dialog")
     .filter({ hasText: en.contracts.refuseDeliveryTitle });
+  await expect(reasonDialog.getByRole("note")).toHaveText(
+    en.contracts.outcomeHeld,
+  );
   await reasonDialog
     .getByPlaceholder(en.contracts.reasonPlaceholder)
     .fill("The item arrived damaged");
@@ -174,6 +181,18 @@ test("customer refuses receipt of a delivery and it goes under review", async ({
     reason: "The item arrived damaged",
   });
   await expect(pill(page, en.contracts.underReview)).toBeVisible();
+
+  // The held view tells the customer why and what happens next.
+  await openContract(page);
+  const held = contractDialog(page);
+  await expect(held.getByText(en.contracts.heldTitle)).toBeVisible();
+  await expect(
+    held.getByText(en.contracts.heldRefusedReceipt, { exact: false }),
+  ).toBeVisible();
+  await expect(held.getByText("The item arrived damaged")).toBeVisible();
+  await expect(
+    held.getByRole("link", { name: en.contracts.contactUs }),
+  ).toBeVisible();
 });
 
 test("an overdue contract blocks the platform until its details are opened", async ({
