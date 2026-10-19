@@ -8,6 +8,19 @@
 @source "../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}";
 @custom-variant dark (&:is(.dark *));
 
+/*
+ * S4-48: user text (listing names, notices) uses dir="auto" so English
+ * truncates at its end inside RTL pages; this keeps it on the page's side.
+ */
+@utility text-page-start {
+  [dir="rtl"] & {
+    text-align: right;
+  }
+  [dir="ltr"] & {
+    text-align: left;
+  }
+}
+
 @keyframes word-fade {
   0% {
     opacity: 0;

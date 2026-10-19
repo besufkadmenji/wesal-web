@@ -34,8 +34,11 @@ export const ContractCard = ({
           <span className="text-primary grid size-10 shrink-0 place-content-center rounded-xl bg-[#eff1f6]">
             <DocumentIcon className="size-6" />
           </span>
-          <div className="min-w-0 text-left rtl:text-right">
-            <h2 className="truncate text-base leading-8 font-medium text-[#1a1a1a]">
+          <div className="min-w-0 text-start">
+            <h2
+              dir="auto"
+              className="text-page-start truncate text-base leading-8 font-medium text-[#1a1a1a]"
+            >
               {contract.conversation.listing.name}
             </h2>
             <p className="text-gray truncate text-sm leading-[1.7]" dir="ltr">

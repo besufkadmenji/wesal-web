@@ -65,12 +65,19 @@ export const NotificationItem = ({
       />
       <span className="grid min-w-0 flex-1 gap-1">
         <span className="flex items-center gap-2.5">
-          <span className="min-w-0 flex-1 text-base leading-8 font-medium text-[#1A1A1A]">
+          <span
+            dir="auto"
+            className="text-page-start min-w-0 flex-1 text-base leading-8 font-medium text-[#1A1A1A]"
+          >
             {notification.title}
           </span>
           <ListDateTime value={notification.createdAt} lang={lang} />
         </span>
-        <span className="text-sm leading-[1.7] text-[#666]">
+        {/* Old rows and broadcasts can be in either language (D-11). */}
+        <span
+          dir="auto"
+          className="text-page-start text-sm leading-[1.7] text-[#666]"
+        >
           {notification.message}
         </span>
       </span>

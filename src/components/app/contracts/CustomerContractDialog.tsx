@@ -76,13 +76,16 @@ export const CustomerContractDialog = ({
           showCloseButton={false}
           className="flex h-[771px] max-h-[calc(100dvh-2rem)] flex-col gap-0 overflow-hidden rounded-[20px] border-0 bg-white p-0 shadow-xl sm:max-w-[830px]"
         >
-          <header className="flex min-h-[111px] shrink-0 items-center gap-3 bg-[#fbfbfb] p-6">
-            <div className="flex min-w-0 items-center gap-3">
+          <header className="flex min-h-[111px] shrink-0 flex-wrap items-center gap-3 bg-[#fbfbfb] p-6 sm:flex-nowrap">
+            <div className="flex min-w-0 flex-1 basis-[calc(100%-2.75rem)] items-center gap-3 sm:basis-auto">
               <span className="text-primary grid size-[60px] shrink-0 place-content-center rounded-2xl bg-[#eff1f6]">
                 <TitleIcon className="size-[30px]" />
               </span>
               <div className="min-w-0 text-start">
-                <DialogTitle className="truncate text-xl leading-8 font-medium text-[#1a1a1a]">
+                <DialogTitle
+                  dir="auto"
+                  className="text-page-start truncate text-xl leading-8 font-medium text-[#1a1a1a]"
+                >
                   {contract.conversation.listing.name}
                 </DialogTitle>
                 <p
@@ -97,7 +100,10 @@ export const CustomerContractDialog = ({
             <DialogDescription className="sr-only">
               {getContractStatusLabel(status, dict)}
             </DialogDescription>
-            <ContractStatusPill status={status} className="ms-auto" />
+            <ContractStatusPill
+              status={status}
+              className="order-last sm:order-none sm:ms-auto"
+            />
             <DialogClose className="text-gray grid size-8 shrink-0 cursor-pointer place-content-center rounded-full border border-[#f2f2f2] bg-white transition hover:bg-[#f8f9fb]">
               <X className="size-4" />
               <span className="sr-only">{dict.common.cancel}</span>

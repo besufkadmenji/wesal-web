@@ -45,7 +45,10 @@ export const TrustedListingCard = ({
       <div className="grid gap-6 px-3 py-4">
         <div className="grid grid-cols-1 gap-2 border-b border-b-[#F2F2F2] pb-3">
           <div className="grid grid-cols-[1fr_auto] gap-2">
-            <p className="line-clamp-1 text-lg font-semibold text-black">
+            <p
+              dir="auto"
+              className="text-page-start line-clamp-1 text-lg font-semibold text-black"
+            >
               {listing.name}
             </p>
             <div className="flex items-center gap-0.5">
@@ -56,7 +59,10 @@ export const TrustedListingCard = ({
             </div>
           </div>
           <div className="w-full overflow-hidden">
-            <p className="text-gray line-clamp-2 text-sm text-ellipsis">
+            <p
+              dir="auto"
+              className="text-gray text-page-start line-clamp-2 text-sm text-ellipsis"
+            >
               {listing.description}
             </p>
           </div>
