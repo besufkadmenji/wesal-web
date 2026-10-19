@@ -7,6 +7,7 @@ import TitleIcon from "@/assets/icons/contracts/popup/title.svg";
 import { ContractCompletionDialog } from "@/components/app/contracts/ContractCompletionDialog";
 import { ContractCancellationDetails } from "@/components/app/contracts/ContractCancellationDetails";
 import { ContractFinancialSection } from "@/components/app/contracts/ContractFinancialSection";
+import { ContractInvoiceButton } from "@/components/app/contracts/ContractInvoiceButton";
 import { ContractPaymentDialog } from "@/components/app/contracts/ContractPaymentDialog";
 import { ContractSectionTitle } from "@/components/app/contracts/ContractSectionTitle";
 import { ContractSignaturesSection } from "@/components/app/contracts/ContractSignaturesSection";
@@ -155,6 +156,7 @@ export const CustomerContractDialog = ({
               )}
 
               <ContractFinancialSection contract={contract} />
+              <ContractInvoiceButton contract={contract} className="w-full" />
 
               {isPending && (
                 <ContractSignaturesSection

@@ -970,7 +970,9 @@
     "overdueTitle": "You have a contract that needs to be signed and finalized",
     "overdueCustomerDescription": "The time for this contract has passed. Open the contract details to sign and complete it before you continue on the platform.",
     "overdueProviderDescription": "The execution time for this contract has passed. Open the contract details to sign and complete it before you continue on the platform.",
-    "overdueDetails": "Contract details"
+    "overdueDetails": "Contract details",
+    "downloadInvoice": "Download tax invoice",
+    "invoiceError": "The tax invoice could not be downloaded. Please try again."
   },
   "promotion": {
     "title": "Featured advertisement",

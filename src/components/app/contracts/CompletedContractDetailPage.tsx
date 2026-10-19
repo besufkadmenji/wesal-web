@@ -1,13 +1,13 @@
 "use client";
 
 import { ContractDocumentView } from "@/components/app/contracts/ContractDocumentView";
+import { ContractInvoiceButton } from "@/components/app/contracts/ContractInvoiceButton";
+import { downloadContractPdf } from "@/components/app/contracts/downloadContractPdf";
 import { ContractHero } from "@/components/app/contracts/ContractHero";
 import { ContractRatingSection } from "@/components/app/contracts/ContractRatingSection";
 import { Button } from "@/components/ui/button";
 import type { Contract } from "@/gql/graphql";
 import { useDict } from "@/hooks/useDict";
-import { apiUrl } from "@/config/url";
-import Cookies from "js-cookie";
 import { useState } from "react";
 
 export const CompletedContractDetailPage = ({
@@ -26,16 +26,10 @@ export const CompletedContractDetailPage = ({
     if (exporting) return;
     setExporting(true);
     try {
-      const response = await fetch(`${apiUrl}/contract-documents/${contract.id}`, {
-        headers: { Authorization: `Bearer ${Cookies.get("token") ?? ""}` },
-      });
-      if (!response.ok) throw new Error("Unable to download contract PDF");
-      const url = URL.createObjectURL(await response.blob());
-      const anchor = document.createElement("a");
-      anchor.href = url;
-      anchor.download = `contract-${contract.publicId ?? contract.id}-v${contract.version}.pdf`;
-      anchor.click();
-      URL.revokeObjectURL(url);
+      await downloadContractPdf(
+        `/contract-documents/${contract.id}`,
+        `contract-${contract.publicId ?? contract.id}-v${contract.version}.pdf`,
+      );
     } finally {
       setExporting(false);
     }
@@ -56,7 +50,11 @@ export const CompletedContractDetailPage = ({
           canRate={canRate}
           onRated={onRated}
         />
-        <div className="flex justify-center">
+        <div className="flex flex-wrap justify-center gap-4">
+          <ContractInvoiceButton
+            contract={contract}
+            className="w-full max-w-[285px] px-6"
+          />
           <Button
             type="button"
             className="h-[50px] w-full max-w-[285px] rounded-[20px] px-6 text-base font-semibold text-[#eff9f0]"
