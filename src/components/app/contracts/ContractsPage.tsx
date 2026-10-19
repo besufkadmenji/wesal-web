@@ -343,11 +343,14 @@ export const ContractDetailPage = ({ id }: { id: string }) => {
                 label={dict.contracts.signature}
                 filename={customerSignature?.signatureData}
               />
-              <SignaturePreview
-                variant="detail"
-                label={dict.contracts.providerAcceptanceSignature}
-                filename={providerSignature?.signatureData}
-              />
+              {/* BRD (D-19): the customer sees provider signatures only in the PDF. */}
+              {!me?.user && (
+                <SignaturePreview
+                  variant="detail"
+                  label={dict.contracts.providerAcceptanceSignature}
+                  filename={providerSignature?.signatureData}
+                />
+              )}
               {completionSignature && (
                 <SignaturePreview
                   variant="detail"

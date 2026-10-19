@@ -25,12 +25,14 @@ export const ProviderContractActions = ({
   const isCompleted = status === ContractStatus.Completed;
   const [completionOpen, setCompletionOpen] = useState(false);
   const queryClient = useQueryClient();
+  // The provider signs once; the acceptance signature is reused (by design).
+  const signatureData =
+    contract.signatures.find(
+      (signature) =>
+        signature.signatureType === ContractSignatureType.ProviderAcceptance,
+    )?.signatureData ?? null;
   const complete = useMutation({
     mutationFn: (deliveryHours?: number) => {
-      const signatureData = contract.signatures.find(
-        (signature) =>
-          signature.signatureType === ContractSignatureType.ProviderAcceptance,
-      )?.signatureData;
       if (!signatureData) {
         throw new Error(dict.contracts.completionSignatureRequired);
       }
@@ -90,10 +92,9 @@ export const ProviderContractActions = ({
         open={completionOpen}
         onOpenChange={setCompletionOpen}
         requiresDelivery={Boolean(contract.deliveryCompanyId)}
+        signatureUrl={signatureData}
         isPending={complete.isPending}
-        onConfirm={(deliveryHours) =>
-          complete.mutate(deliveryHours)
-        }
+        onConfirm={(deliveryHours) => complete.mutate(deliveryHours)}
       />
     </footer>
   );

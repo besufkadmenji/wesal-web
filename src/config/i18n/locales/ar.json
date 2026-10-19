@@ -790,7 +790,13 @@
     "contractPaid": "تم دفع قيمة التعاقد",
     "contractCompleted": "تم إتمام التعاقد",
     "complain": "تقديم شكوى",
-    "viewAll": "عرض جميع المحادثات"
+    "viewAll": "عرض جميع المحادثات",
+    "contractProviderCompleted": "أتمّ مقدم الخدمة التعاقد",
+    "contractDeliveryStarted": "الطلب جاري التوصيل",
+    "contractCancellationRequested": "تم طلب إلغاء التعاقد",
+    "contractCancelled": "تم إلغاء التعاقد",
+    "contractDisputed": "تم رفض الاستلام، والتعاقد قيد المراجعة",
+    "reason": "السبب"
   },
   "favorites": {
     "title": "مقدمو الخدمة المفضلون",
@@ -934,11 +940,11 @@
     "rejecting": "جارٍ الإرسال",
     "rejectionTitle": "سبب رفض التعاقد",
     "rejectionDescription": "يرجى توضيح سبب رفض التعاقد، حيث تساعدنا هذه المعلومات على تحسين تجربة المستخدم وضمان جودة الخدمة.",
-    "cancellationTitle": "طلب إلغاء التعاقد",
-    "cancellationDescription": "يرجى توضيح سبب الإلغاء. تتم المعالجة المالية حسب مرحلة التعاقد وسياسة الاسترداد المحفوظة.",
-    "refuseDeliveryTitle": "رفض الاستلام",
-    "refuseDeliveryDescription": "يرجى توضيح مشكلة التسليم. سيبقى المبلغ محجوزًا حتى يراجع المشرف النزاع.",
-    "reasonPlaceholder": "أدخل سببًا واضحًا",
+    "cancellationTitle": "سبب إلغاء التعاقد",
+    "cancellationDescription": "يرجى توضيح سبب إلغاء التعاقد، حيث تساعدنا هذه المعلومات على تحسين تجربة المستخدم وضمان جودة الخدمة.",
+    "refuseDeliveryTitle": "هل متأكد من رفض الاستلام؟",
+    "refuseDeliveryDescription": "يرجى توضيح سبب رفض الاستلام، حيث تساعدنا هذه المعلومات على تحسين تجربة المستخدم وضمان جودة الخدمة.",
+    "reasonPlaceholder": "أضف السبب",
     "submitting": "جارٍ الإرسال",
     "requestSubmitted": "تم إرسال طلبك",
     "providerCompletionTitle": "تسليم العمل المكتمل",
@@ -950,7 +956,14 @@
     "deliveryHours": "مدة التوصيل بالساعات",
     "hourUnit": "ساعة",
     "awaitingConfirmation": "بانتظار تأكيد الاستلام",
-    "underReview": "قيد المراجعة"
+    "underReview": "قيد المراجعة",
+    "reasonRequired": "يجب إدخال السبب اولا",
+    "confirmCancelTitle": "هل انت متأكد من إلغاء التعاقد؟",
+    "confirmCancelDescription": "بمجرد التأكيد، سيتم إلغاء التعاقد ولا يمكن التراجع عن العملية.",
+    "confirmCancelNo": "لا ، لا أريد الإلغاء",
+    "confirmCancelYes": "نعم ، إلغاء التعاقد",
+    "cancellationReason": "سبب الإلغاء",
+    "shownAfterPayment": "تظهر بعد السداد"
   },
   "promotion": {
     "title": "الإعلان المميز",

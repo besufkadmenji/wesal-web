@@ -149,13 +149,22 @@ export const ProviderContractAcceptPage = ({
         <ContractFormSection title={dict.contracts.clientInfo} icon={UserIcon}>
           <div className="grid gap-5">
             <div className="grid gap-3 md:grid-cols-2">
+              {/* BRD: the customer's name and phone show only after payment. */}
               <FormInput
                 label={dict.contracts.clientName}
-                value={client?.name || "—"}
+                value={
+                  contract.paidAt
+                    ? client?.name || "—"
+                    : dict.contracts.shownAfterPayment
+                }
               />
               <FormInput
                 label={dict.contracts.clientPhone}
-                value={formatPhone(client?.dialCode, client?.phone)}
+                value={
+                  contract.paidAt
+                    ? formatPhone(client?.dialCode, client?.phone)
+                    : dict.contracts.shownAfterPayment
+                }
               />
             </div>
             <div className="grid items-center gap-3 md:grid-cols-[1fr_auto]">

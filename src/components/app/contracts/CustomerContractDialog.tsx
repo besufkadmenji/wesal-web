@@ -5,6 +5,7 @@ import ClockIcon from "@/assets/icons/contracts/popup/clock.svg";
 import TimelineIcon from "@/assets/icons/contracts/popup/timeline.svg";
 import TitleIcon from "@/assets/icons/contracts/popup/title.svg";
 import { ContractCompletionDialog } from "@/components/app/contracts/ContractCompletionDialog";
+import { ContractCancellationDetails } from "@/components/app/contracts/ContractCancellationDetails";
 import { ContractFinancialSection } from "@/components/app/contracts/ContractFinancialSection";
 import { ContractPaymentDialog } from "@/components/app/contracts/ContractPaymentDialog";
 import { ContractSectionTitle } from "@/components/app/contracts/ContractSectionTitle";
@@ -30,6 +31,7 @@ import {
 import {
   ContractSignatureType,
   ContractStatus,
+  ContractStatusGroup,
   type Contract,
 } from "@/gql/graphql";
 import { useDict } from "@/hooks/useDict";
@@ -53,11 +55,13 @@ export const CustomerContractDialog = ({
 
   const status = contract.status;
   const isPending = status === ContractStatus.Pending;
-  const isPendingPayment = status === ContractStatus.Accepted;
-  const isInProgress = status === ContractStatus.InProgress;
   const isCompleted = status === ContractStatus.Completed;
   const isCancelled = status === ContractStatus.Cancelled;
-  const showsAcceptanceDate = isPendingPayment || isInProgress || isCompleted;
+  // S4-18: the acceptance date once accepted (not pending or cancelled).
+  const showsAcceptanceDate =
+    Boolean(contract.acceptedAt) &&
+    contract.statusGroup !== ContractStatusGroup.PendingAcceptance &&
+    contract.statusGroup !== ContractStatusGroup.Cancelled;
 
   const customerSignature = contract.signatures.find(
     (entry) => entry.signatureType === ContractSignatureType.CustomerAcceptance,
@@ -131,7 +135,9 @@ export const CustomerContractDialog = ({
                         <TimelineMetric
                           icon={CalendarIcon}
                           label={dict.contracts.completedAt}
-                          value={formatContractDate(contract.updatedAt)}
+                          value={formatContractDate(
+                            contract.completedAt ?? contract.updatedAt,
+                          )}
                         />
                       )}
                       <TimelineMetric
@@ -143,6 +149,10 @@ export const CustomerContractDialog = ({
                   )}
                 </div>
               </section>
+
+              {isCancelled && (
+                <ContractCancellationDetails contract={contract} />
+              )}
 
               <ContractFinancialSection contract={contract} />
 

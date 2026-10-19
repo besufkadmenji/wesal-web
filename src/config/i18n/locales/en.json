@@ -793,7 +793,13 @@
     "contractPaid": "Contract paid",
     "contractCompleted": "Contract completed",
     "complain": "Submit complaint",
-    "viewAll": "View all conversations"
+    "viewAll": "View all conversations",
+    "contractProviderCompleted": "The provider completed the contract",
+    "contractDeliveryStarted": "The order is out for delivery",
+    "contractCancellationRequested": "Contract cancellation requested",
+    "contractCancelled": "The contract was cancelled",
+    "contractDisputed": "Receipt was refused; the contract is under review",
+    "reason": "Reason"
   },
   "favorites": {
     "title": "Favorite providers",
@@ -937,11 +943,11 @@
     "rejecting": "Sending",
     "rejectionTitle": "Reason for rejecting the contract",
     "rejectionDescription": "Please explain why you are rejecting the contract. This information helps us improve the user experience and maintain service quality.",
-    "cancellationTitle": "Request contract cancellation",
-    "cancellationDescription": "Tell us why you want to cancel. Financial treatment follows the contract stage and its stored refund terms.",
-    "refuseDeliveryTitle": "Refuse delivery",
-    "refuseDeliveryDescription": "Explain the delivery issue. The payment will remain held while an administrator reviews the dispute.",
-    "reasonPlaceholder": "Enter a clear reason",
+    "cancellationTitle": "Reason for cancelling the contract",
+    "cancellationDescription": "Please explain why you are cancelling. This helps us improve the experience and keep the service quality high.",
+    "refuseDeliveryTitle": "Are you sure you want to refuse receipt?",
+    "refuseDeliveryDescription": "Please explain why you are refusing receipt. This helps us improve the experience and keep the service quality high.",
+    "reasonPlaceholder": "Add the reason",
     "submitting": "Submitting",
     "requestSubmitted": "Your request was submitted",
     "providerCompletionTitle": "Submit completed work",
@@ -953,7 +959,14 @@
     "deliveryHours": "Delivery time in hours",
     "hourUnit": "hours",
     "awaitingConfirmation": "Awaiting confirmation",
-    "underReview": "Under review"
+    "underReview": "Under review",
+    "reasonRequired": "Please enter the reason first",
+    "confirmCancelTitle": "Are you sure you want to cancel the contract?",
+    "confirmCancelDescription": "Once confirmed, the contract will be cancelled and this cannot be undone.",
+    "confirmCancelNo": "No, keep the contract",
+    "confirmCancelYes": "Yes, cancel the contract",
+    "cancellationReason": "Cancellation reason",
+    "shownAfterPayment": "Shown after payment"
   },
   "promotion": {
     "title": "Featured advertisement",

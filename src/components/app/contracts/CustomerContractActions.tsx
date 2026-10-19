@@ -11,6 +11,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { MessagesSquare } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { ContractConfirmDialog } from "./ContractConfirmDialog";
 import { ContractReasonDialog } from "./ContractReasonDialog";
 
 export const CustomerContractActions = ({
@@ -29,8 +30,7 @@ export const CustomerContractActions = ({
   const isInProgress = status === ContractStatus.InProgress;
   const isAwaitingConfirmation =
     status === ContractStatus.AwaitingCustomerConfirmation;
-  const isDeliveryInProgress =
-    status === ContractStatus.DeliveryInProgress;
+  const isDeliveryInProgress = status === ContractStatus.DeliveryInProgress;
   const isCompleted = status === ContractStatus.Completed;
   const isRejected = status === ContractStatus.Rejected;
   const canCancel =
@@ -43,6 +43,9 @@ export const CustomerContractActions = ({
   const [reasonMode, setReasonMode] = useState<"cancel" | "refuse" | null>(
     null,
   );
+  // Figma: cancel asks "are you sure?" first (pop up 14); refuse receipt's
+  // reason pop-up (38) is itself the confirmation.
+  const [confirmingCancel, setConfirmingCancel] = useState(false);
   const queryClient = useQueryClient();
   const lifecycle = useMutation({
     mutationFn: (reason: string) =>
@@ -64,8 +67,7 @@ export const CustomerContractActions = ({
     },
     onError: (error) => showErrorMessage(error.message),
   });
-  const actionCount =
-    isPendingPayment || canCancel || canComplete ? 3 : 2;
+  const actionCount = isPendingPayment || canCancel || canComplete ? 3 : 2;
 
   return (
     <footer
@@ -120,7 +122,9 @@ export const CustomerContractActions = ({
         <Button
           type="button"
           onClick={() =>
-            setReasonMode(isDeliveryInProgress ? "refuse" : "cancel")
+            isDeliveryInProgress
+              ? setReasonMode("refuse")
+              : setConfirmingCancel(true)
           }
           className="h-[50px] rounded-[20px] bg-[#fbe8e7] text-[#c12620] shadow-none hover:bg-[#f7d8d6]"
         >
@@ -129,6 +133,14 @@ export const CustomerContractActions = ({
             : dict.contracts.cancelContract}
         </Button>
       )}
+      <ContractConfirmDialog
+        open={confirmingCancel}
+        onOpenChange={setConfirmingCancel}
+        onConfirm={() => {
+          setConfirmingCancel(false);
+          setReasonMode("cancel");
+        }}
+      />
       <ContractReasonDialog
         open={reasonMode != null}
         onOpenChange={(nextOpen) => !nextOpen && setReasonMode(null)}
