@@ -760,9 +760,10 @@
     }
   },
   "notifications": {
-    "empty": "لا توجد إشعارات بعد",
+    "empty": "لا يوجد اشعارات حاليًا",
     "loading": "جاري تحميل الإشعارات...",
-    "markAllRead": "تعليم الكل كمقروء"
+    "markAllRead": "تعليم الكل كمقروء",
+    "close": "إغلاق"
   },
   "conversations": {
     "title": "جميع المحادثات",
@@ -788,7 +789,8 @@
     "contractAccepted": "تم قبول التعاقد",
     "contractPaid": "تم دفع قيمة التعاقد",
     "contractCompleted": "تم إتمام التعاقد",
-    "complain": "تقديم شكوى"
+    "complain": "تقديم شكوى",
+    "viewAll": "عرض جميع المحادثات"
   },
   "favorites": {
     "title": "مقدمو الخدمة المفضلون",

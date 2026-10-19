@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -5,6 +7,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import MessagesIcon from "@/assets/icons/conversations.svg";
+import CloseIcon from "@/assets/icons/notifications/close.svg";
 import { useDict } from "@/hooks/useDict";
 import { useLang } from "@/hooks/useLang";
 import { twMerge } from "tailwind-merge";
@@ -13,20 +16,24 @@ import {
   useConversationStats,
 } from "@/hooks/useConversations";
 import { useMe } from "@/hooks/useMe";
-import { ParticipantAvatar } from "@/components/app/shared/ParticipantUI";
+import { ChatPopoverItem } from "@/components/app/shared/ChatPopoverItem";
 import ViewAllIcon from "@/assets/icons/view.all.alt.svg";
 import Link from "next/link";
+import { useState } from "react";
 
+/** Figma "chats pop up" (6543:21353): title + close, list, view all. */
 export const ChatPopover = () => {
   const dict = useDict();
   const lang = useLang();
   const { me } = useMe();
-  const conversations = useConversations({ page: 1, limit: 5 });
+  const [open, setOpen] = useState(false);
+  const conversations = useConversations({ page: 1, limit: 10 });
   const stats = useConversationStats();
   const unread = stats.data?.unreadCount || 0;
+  const items = conversations.data?.items ?? [];
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="ghost"
@@ -50,41 +57,49 @@ export const ChatPopover = () => {
           </p>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 overflow-hidden p-0">
-        <div className="grid max-h-[80vh] overflow-y-auto">
-          {conversations.data?.items.slice(0, 5).map((conversation) => {
-            const party = me?.provider
-              ? conversation.user
-              : conversation.provider;
-            return (
-              <Link
-                key={conversation.id}
-                href={`/conversations/${conversation.id}`}
-                className="border-border grid grid-cols-[auto_1fr] gap-3 border-b p-4 hover:bg-[#f8f9fc]"
-              >
-                <ParticipantAvatar
-                  filename={party.avatarFilename}
-                  name={party.name}
-                  className="size-10"
-                />
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-medium">{party.name}</p>
-                  <p className="text-gray truncate text-xs">
-                    {conversation.lastMessage?.content ||
-                      conversation.listing.name}
-                  </p>
-                </div>
-              </Link>
-            );
-          })}
-          <Link
-            href="/conversations"
-            className="text-primary flex justify-between p-4 text-center text-sm font-semibold"
+      <PopoverContent
+        align="end"
+        className="w-[min(593px,calc(100vw-2rem))] overflow-hidden rounded-[20px] border-0 bg-[#FCFDFE] p-0"
+      >
+        <div className="flex items-center gap-2.5 border-b border-[#F2F2F2] bg-white p-6">
+          <p className="flex-1 text-base leading-8 font-medium text-[#1A1A1A]">
+            {dict.header.messages}
+          </p>
+          <button
+            type="button"
+            aria-label={dict.notifications.close}
+            onClick={() => setOpen(false)}
+            className="grid size-8 shrink-0 place-content-center rounded-2xl border border-[#F2F2F2] bg-white"
           >
-            {dict.conversations.title}
-            <ViewAllIcon className="size-4 ltr:rotate-180" />
-          </Link>
+            <CloseIcon className="size-4" />
+          </button>
         </div>
+        <div className="grid max-h-[60vh] overflow-y-auto">
+          {!conversations.isLoading && items.length === 0 && (
+            <p className="text-gray p-6 text-center text-sm">
+              {dict.conversations.empty}
+            </p>
+          )}
+          {items.map((conversation) => (
+            <ChatPopoverItem
+              key={conversation.id}
+              conversation={conversation}
+              party={me?.provider ? conversation.user : conversation.provider}
+              lang={lang}
+              onNavigate={() => setOpen(false)}
+            />
+          ))}
+        </div>
+        <Link
+          href="/conversations"
+          onClick={() => setOpen(false)}
+          className="flex items-center gap-2.5 border-b border-[#F2F2F2] bg-white p-6"
+        >
+          <span className="text-primary flex-1 text-base font-semibold">
+            {dict.conversations.viewAll}
+          </span>
+          <ViewAllIcon className="size-6 shrink-0 ltr:rotate-180" />
+        </Link>
       </PopoverContent>
     </Popover>
   );

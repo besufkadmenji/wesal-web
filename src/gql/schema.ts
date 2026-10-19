@@ -2453,6 +2453,9 @@ export enum NotificationType {
   AdminProviderRequest = 'ADMIN_PROVIDER_REQUEST',
   BadgeChanged = 'BADGE_CHANGED',
   BadgeWarning = 'BADGE_WARNING',
+  ChatEnded = 'CHAT_ENDED',
+  ChatFeePaid = 'CHAT_FEE_PAID',
+  ChatStarted = 'CHAT_STARTED',
   ComplaintResolved = 'COMPLAINT_RESOLVED',
   ComplaintResponse = 'COMPLAINT_RESPONSE',
   ComplaintSubmitted = 'COMPLAINT_SUBMITTED',
@@ -2460,11 +2463,15 @@ export enum NotificationType {
   ContractSigned = 'CONTRACT_SIGNED',
   ContractUpdate = 'CONTRACT_UPDATE',
   ListingApproved = 'LISTING_APPROVED',
+  ListingFeatured = 'LISTING_FEATURED',
+  ListingFeaturedExpired = 'LISTING_FEATURED_EXPIRED',
   ListingRejected = 'LISTING_REJECTED',
   NewMessage = 'NEW_MESSAGE',
   NewRating = 'NEW_RATING',
   PaymentCompleted = 'PAYMENT_COMPLETED',
   PaymentReceived = 'PAYMENT_RECEIVED',
+  PayoutTransferred = 'PAYOUT_TRANSFERRED',
+  RefundIssued = 'REFUND_ISSUED',
   SystemAnnouncement = 'SYSTEM_ANNOUNCEMENT'
 }
 

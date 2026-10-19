@@ -763,9 +763,10 @@
     }
   },
   "notifications": {
-    "empty": "No notifications yet",
+    "empty": "No notifications at the moment",
     "loading": "Loading notifications...",
-    "markAllRead": "Mark all as read"
+    "markAllRead": "Mark all as read",
+    "close": "Close"
   },
   "conversations": {
     "title": "All conversations",
@@ -791,7 +792,8 @@
     "contractAccepted": "Contract accepted",
     "contractPaid": "Contract paid",
     "contractCompleted": "Contract completed",
-    "complain": "Submit complaint"
+    "complain": "Submit complaint",
+    "viewAll": "View all conversations"
   },
   "favorites": {
     "title": "Favorite providers",
