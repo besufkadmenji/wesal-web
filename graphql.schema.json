@@ -5693,6 +5693,18 @@
             "deprecationReason": null
           },
           {
+            "name": "resolvedAt",
+            "description": "When the administration closed the contract with a payout (ADMIN_RESOLVED)",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "DateTime",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "settlements",
             "description": null,
             "args": [],
@@ -7943,6 +7955,12 @@
         "enumValues": [
           {
             "name": "ACCEPTED",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "ADMIN_RESOLVED",
             "description": null,
             "isDeprecated": false,
             "deprecationReason": null
@@ -13602,6 +13620,12 @@
           },
           {
             "name": "CONTRACT_ACCEPTED",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "CONTRACT_ADMIN_RESOLVED",
             "description": null,
             "isDeprecated": false,
             "deprecationReason": null

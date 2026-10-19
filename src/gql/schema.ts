@@ -638,6 +638,8 @@ export type Contract = {
   refundPolicyEn: Scalars['String']['output'];
   rejectedAt?: Maybe<Scalars['DateTime']['output']>;
   rejectionReason?: Maybe<Scalars['String']['output']>;
+  /** When the administration closed the contract with a payout (ADMIN_RESOLVED) */
+  resolvedAt?: Maybe<Scalars['DateTime']['output']>;
   settlements: Array<ContractSettlement>;
   signatures: Array<ContractSignature>;
   status: ContractStatus;
@@ -872,6 +874,7 @@ export enum ContractSortField {
 /** Contract status */
 export enum ContractStatus {
   Accepted = 'ACCEPTED',
+  AdminResolved = 'ADMIN_RESOLVED',
   AwaitingCustomerConfirmation = 'AWAITING_CUSTOMER_CONFIRMATION',
   CancellationRequested = 'CANCELLATION_REQUESTED',
   Cancelled = 'CANCELLED',
@@ -1459,6 +1462,7 @@ export type Message = {
 export enum MessageKind {
   ChatFeePaid = 'CHAT_FEE_PAID',
   ContractAccepted = 'CONTRACT_ACCEPTED',
+  ContractAdminResolved = 'CONTRACT_ADMIN_RESOLVED',
   ContractCancellationRequested = 'CONTRACT_CANCELLATION_REQUESTED',
   ContractCancelled = 'CONTRACT_CANCELLED',
   ContractCompleted = 'CONTRACT_COMPLETED',

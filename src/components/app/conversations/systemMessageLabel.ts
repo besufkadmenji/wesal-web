@@ -13,6 +13,7 @@ export const systemMessageLabel = (
     [MessageKind.ContractAccepted]: labels.contractAccepted,
     [MessageKind.ContractPaid]: labels.contractPaid,
     [MessageKind.ContractCompleted]: labels.contractCompleted,
+    [MessageKind.ContractAdminResolved]: labels.contractAdminResolved,
     [MessageKind.ContractProviderCompleted]: labels.contractProviderCompleted,
     [MessageKind.ContractDeliveryStarted]: labels.contractDeliveryStarted,
     [MessageKind.ContractCancellationRequested]:

@@ -10,6 +10,7 @@ import {
   FilePenLine,
   Hourglass,
   Search,
+  ShieldCheck,
   Truck,
   WalletCards,
   type LucideIcon,
@@ -36,6 +37,7 @@ export const getContractStatusLabel = (
     [ContractStatus.Completed]: dict.contracts.completed,
     [ContractStatus.Rejected]: dict.contracts.rejected,
     [ContractStatus.Cancelled]: dict.contracts.cancelled,
+    [ContractStatus.AdminResolved]: dict.contracts.adminResolved,
   };
   return (
     labels[status] ||
@@ -56,6 +58,7 @@ const STATUS_ICONS: Record<ContractStatus, LucideIcon> = {
   [ContractStatus.Completed]: CircleCheck,
   [ContractStatus.Rejected]: CircleX,
   [ContractStatus.Cancelled]: CircleX,
+  [ContractStatus.AdminResolved]: ShieldCheck,
 };
 
 const STATUS_CLASSES: Record<ContractStatus, string> = {
@@ -73,6 +76,7 @@ const STATUS_CLASSES: Record<ContractStatus, string> = {
     "border-emerald-500 bg-emerald-50 text-emerald-600",
   [ContractStatus.Rejected]: "border-rose-500 bg-rose-50 text-rose-600",
   [ContractStatus.Cancelled]: "border-[#b3251e] bg-[#fbeae9] text-[#b3251e]",
+  [ContractStatus.AdminResolved]: "border-teal-600 bg-teal-50 text-teal-700",
 };
 
 export const ContractStatusPill = ({

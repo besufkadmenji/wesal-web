@@ -77,6 +77,7 @@ const CONTRACT_FRAGMENT = gql`
     disputedAt
     completedAt
     cancelledAt
+    resolvedAt
     createdAt
     updatedAt
     signatures {

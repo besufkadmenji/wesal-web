@@ -796,7 +796,8 @@
     "contractCancellationRequested": "Contract cancellation requested",
     "contractCancelled": "The contract was cancelled",
     "contractDisputed": "Receipt was refused; the contract is under review",
-    "reason": "Reason"
+    "reason": "Reason",
+    "contractAdminResolved": "The administration closed the contract and released the payment to the provider"
   },
   "favorites": {
     "title": "Favorite providers",
@@ -969,7 +970,11 @@
     "overdueProviderDescription": "The execution time for this contract has passed. Open the contract details to sign and complete it before you continue on the platform.",
     "overdueDetails": "Contract details",
     "downloadInvoice": "Download tax invoice",
-    "invoiceError": "The tax invoice could not be downloaded. Please try again."
+    "invoiceError": "The tax invoice could not be downloaded. Please try again.",
+    "adminResolved": "Closed by admin",
+    "adminResolvedNote": "The administration closed this contract and released the payment to the service provider. It was not signed as completed by the customer, so it can't be rated.",
+    "resolvedAt": "Closed on",
+    "adminResolutionReason": "Administration note"
   },
   "promotion": {
     "title": "Featured advertisement",
