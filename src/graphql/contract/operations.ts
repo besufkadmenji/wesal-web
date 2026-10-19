@@ -31,6 +31,7 @@ const CONTRACT_FRAGMENT = gql`
     version
     pricingVersion
     status
+    statusGroup
     supersedesContractId
     agreedPrice
     depositPercent

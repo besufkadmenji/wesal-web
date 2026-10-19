@@ -825,7 +825,7 @@
     "pendingPayment": "قيد الدفع",
     "inProgress": "جاري التنفيذ",
     "outForDelivery": "جاري التوصيل",
-    "completed": "مكتمل",
+    "completed": "منتهية",
     "rejected": "مرفوض",
     "cancelled": "ملغى",
     "conversation": "المحادثة",
@@ -834,7 +834,7 @@
     "completedAt": "الإتمام",
     "rejectedAt": "تاريخ الرفض",
     "cancelledAt": "تاريخ الإلغاء",
-    "empty": "لا توجد تعاقدات بعد",
+    "empty": "لا توجد تعاقدات لديك بعد",
     "details": "تفاصيل التعاقد",
     "new": "إنشاء التعاقد",
     "resend": "إعادة إرسال التعاقد",
@@ -948,7 +948,9 @@
     "executionHours": "مدة التنفيذ بالساعات",
     "maxExecutionHours": "الحد الأقصى لمدة التنفيذ هو {hours} ساعة",
     "deliveryHours": "مدة التوصيل بالساعات",
-    "hourUnit": "ساعة"
+    "hourUnit": "ساعة",
+    "awaitingConfirmation": "بانتظار تأكيد الاستلام",
+    "underReview": "قيد المراجعة"
   },
   "promotion": {
     "title": "الإعلان المميز",

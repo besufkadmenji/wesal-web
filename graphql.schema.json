@@ -5733,6 +5733,18 @@
             "deprecationReason": null
           },
           {
+            "name": "statusGroup",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "ENUM",
+              "name": "ContractStatusGroup",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "supersedesContract",
             "description": null,
             "args": [],
@@ -6926,6 +6938,18 @@
             "deprecationReason": null
           },
           {
+            "name": "statusGroup",
+            "description": "My Contracts tab (S4-1); combines with status if both set",
+            "type": {
+              "kind": "ENUM",
+              "name": "ContractStatusGroup",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "to",
             "description": null,
             "type": {
@@ -7955,6 +7979,54 @@
           },
           {
             "name": "REJECTED",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "ContractStatusGroup",
+        "description": "My Contracts tab a contract status belongs to (BRD/Figma)",
+        "isOneOf": null,
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "CANCELLED",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "COMPLETED",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "IN_DELIVERY",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "IN_PROGRESS",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "PENDING_ACCEPTANCE",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "PENDING_PAYMENT",
             "description": null,
             "isDeprecated": false,
             "deprecationReason": null

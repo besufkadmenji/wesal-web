@@ -827,7 +827,7 @@
     "pendingAcceptance": "Pending acceptance",
     "pendingPayment": "Pending payment",
     "inProgress": "In progress",
-    "outForDelivery": "Out for delivery",
+    "outForDelivery": "In delivery",
     "completed": "Completed",
     "rejected": "Rejected",
     "cancelled": "Cancelled",
@@ -837,7 +837,7 @@
     "completedAt": "Completion",
     "rejectedAt": "Rejection date",
     "cancelledAt": "Cancellation date",
-    "empty": "No contracts yet",
+    "empty": "You have no contracts yet",
     "details": "Contract details",
     "new": "Create contract",
     "resend": "Resend contract",
@@ -951,7 +951,9 @@
     "executionHours": "Execution time in hours",
     "maxExecutionHours": "Maximum allowed execution time is {hours} hours",
     "deliveryHours": "Delivery time in hours",
-    "hourUnit": "hours"
+    "hourUnit": "hours",
+    "awaitingConfirmation": "Awaiting confirmation",
+    "underReview": "Under review"
   },
   "promotion": {
     "title": "Featured advertisement",
