@@ -155,6 +155,16 @@ export const CONTRACTS_QUERY = gql`
   ${PAGINATION_FRAGMENT}
 `;
 
+/** S4-4 / S4-19: the signed-in party's overdue contracts, oldest first. */
+export const MY_OVERDUE_CONTRACTS_QUERY = gql`
+  query MyOverdueContracts {
+    myOverdueContracts {
+      ...ContractFields
+    }
+  }
+  ${CONTRACT_FRAGMENT}
+`;
+
 export const CONTRACT_QUERY = gql`
   query ContractById($id: String!) {
     contract(id: $id) {

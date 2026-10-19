@@ -21,6 +21,7 @@ import {
   CONTRACT_QUERY,
   CONTRACT_QUOTE_QUERY,
   CONTRACTS_QUERY,
+  MY_OVERDUE_CONTRACTS_QUERY,
   CREATE_CONTRACT_MUTATION,
   INITIALIZE_CONTRACT_MUTATION,
   PAY_CONTRACT_MUTATION,
@@ -47,6 +48,13 @@ export class ContractService {
       variables: { input },
     });
     return requireData(result, "Contracts").contracts;
+  }
+
+  static async overdue() {
+    const result = await client().query<{ myOverdueContracts: Contract[] }>({
+      query: MY_OVERDUE_CONTRACTS_QUERY,
+    });
+    return requireData(result, "Overdue contracts").myOverdueContracts;
   }
 
   static async findOne(id: string) {

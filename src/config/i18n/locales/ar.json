@@ -963,7 +963,11 @@
     "confirmCancelNo": "لا ، لا أريد الإلغاء",
     "confirmCancelYes": "نعم ، إلغاء التعاقد",
     "cancellationReason": "سبب الإلغاء",
-    "shownAfterPayment": "تظهر بعد السداد"
+    "shownAfterPayment": "تظهر بعد السداد",
+    "overdueTitle": "لديك تعاقد يحتاج إلى توقيع وإنهاء",
+    "overdueCustomerDescription": "انتهت المدة المحددة لهذا التعاقد. افتح تفاصيل التعاقد للتوقيع وإنهائه قبل متابعة استخدام المنصة.",
+    "overdueProviderDescription": "انتهت مدة تنفيذ هذا التعاقد. افتح تفاصيل التعاقد للتوقيع وإنهائه قبل متابعة استخدام المنصة.",
+    "overdueDetails": "تفاصيل التعاقد"
   },
   "promotion": {
     "title": "الإعلان المميز",

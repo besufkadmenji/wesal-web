@@ -192,6 +192,10 @@ export const RealtimeEventsWatcher = () => {
         void queryClient.invalidateQueries({
           queryKey: queryKeys.notificationStats,
         });
+        // Contract notices (overdue, expiry, status) refresh contract views.
+        if (notification.relatedEntityType === "contract") {
+          void queryClient.invalidateQueries({ queryKey: queryKeys.contracts });
+        }
       },
     });
 

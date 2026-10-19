@@ -32,6 +32,7 @@ const FIGMA_ICONS: Partial<Record<NotificationType, () => ReactNode>> = {
   [NotificationType.ListingApproved]: () => <ListingIcon className="size-5" />,
   [NotificationType.ContractUpdate]: () => <StatusIcon className="size-5" />,
   [NotificationType.ContractCreated]: () => <StatusIcon className="size-5" />,
+  [NotificationType.ContractOverdue]: () => <StatusIcon className="size-5" />,
   [NotificationType.PaymentReceived]: () => <StatusIcon className="size-5" />,
   [NotificationType.ChatFeePaid]: PayIcon,
   [NotificationType.PayoutTransferred]: PayIcon,

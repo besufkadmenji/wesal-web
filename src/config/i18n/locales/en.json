@@ -966,7 +966,11 @@
     "confirmCancelNo": "No, keep the contract",
     "confirmCancelYes": "Yes, cancel the contract",
     "cancellationReason": "Cancellation reason",
-    "shownAfterPayment": "Shown after payment"
+    "shownAfterPayment": "Shown after payment",
+    "overdueTitle": "You have a contract that needs to be signed and finalized",
+    "overdueCustomerDescription": "The time for this contract has passed. Open the contract details to sign and complete it before you continue on the platform.",
+    "overdueProviderDescription": "The execution time for this contract has passed. Open the contract details to sign and complete it before you continue on the platform.",
+    "overdueDetails": "Contract details"
   },
   "promotion": {
     "title": "Featured advertisement",

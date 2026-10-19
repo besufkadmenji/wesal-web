@@ -601,6 +601,8 @@ export type Contract = {
   customerAddress: Scalars['String']['output'];
   customerLatitude?: Maybe<Scalars['Float']['output']>;
   customerLongitude?: Maybe<Scalars['Float']['output']>;
+  /** When the customer was flagged overdue (S4-2) */
+  customerOverdueAt?: Maybe<Scalars['DateTime']['output']>;
   deliveryCompanyId?: Maybe<Scalars['ID']['output']>;
   deliveryCompanyNameAr?: Maybe<Scalars['String']['output']>;
   deliveryCompanyNameEn?: Maybe<Scalars['String']['output']>;
@@ -628,6 +630,8 @@ export type Contract = {
   providerLatitude?: Maybe<Scalars['Float']['output']>;
   providerLongitude?: Maybe<Scalars['Float']['output']>;
   providerNetAmount: Scalars['Float']['output'];
+  /** When the provider was flagged overdue (S4-2) */
+  providerOverdueAt?: Maybe<Scalars['DateTime']['output']>;
   publicId?: Maybe<Scalars['Int']['output']>;
   rating?: Maybe<Rating>;
   refundPolicyAr: Scalars['String']['output'];
@@ -2473,6 +2477,7 @@ export enum NotificationType {
   ComplaintResponse = 'COMPLAINT_RESPONSE',
   ComplaintSubmitted = 'COMPLAINT_SUBMITTED',
   ContractCreated = 'CONTRACT_CREATED',
+  ContractOverdue = 'CONTRACT_OVERDUE',
   ContractSigned = 'CONTRACT_SIGNED',
   ContractUpdate = 'CONTRACT_UPDATE',
   ListingApproved = 'LISTING_APPROVED',
@@ -2961,6 +2966,8 @@ export type Query = {
   myFavoriteProviders: PaginatedFavoriteResponse;
   myListing: Listing;
   myListings: PaginatedListingResponse;
+  /** S4-4: the signed-in customer or provider overdue contracts, oldest first */
+  myOverdueContracts: Array<Contract>;
   myPopularCategories: Array<Scalars['String']['output']>;
   myPopularListings: Array<Scalars['String']['output']>;
   notification: Notification;

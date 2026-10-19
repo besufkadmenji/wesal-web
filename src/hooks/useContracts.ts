@@ -11,6 +11,16 @@ export const useContracts = (input: ContractPaginationInput = {}) =>
     queryFn: () => ContractService.findAll({ page: 1, limit: 30, ...input }),
   });
 
+/** S4-19: refreshed every minute and by contract notifications. */
+export const useOverdueContracts = (enabled: boolean) =>
+  useQuery({
+    queryKey: [...queryKeys.contracts, "overdue"],
+    queryFn: () => ContractService.overdue(),
+    enabled,
+    refetchInterval: 60_000,
+    refetchOnWindowFocus: true,
+  });
+
 export const useContract = (id?: string) =>
   useQuery({
     queryKey: queryKeys.contract(id || ""),
