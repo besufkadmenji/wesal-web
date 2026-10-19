@@ -1,5 +1,6 @@
 "use client";
 
+import { ContractRemovedNotice } from "@/components/app/contracts/ContractRemovedNotice";
 import { CompletedContractDetailPage } from "@/components/app/contracts/CompletedContractDetailPage";
 import { ContractHero } from "@/components/app/contracts/ContractHero";
 import { CustomerContractDialog } from "@/components/app/contracts/CustomerContractDialog";
@@ -122,6 +123,9 @@ export const ContractsPage = ({
       />
       <main className="bg-[#fcfdfe] px-4 py-12 md:px-8 xl:px-[7vw] xl:py-20">
         <div className="mx-auto grid max-w-[1440px] gap-8">
+          {requestedContractId && requestedContract.isError && (
+            <ContractRemovedNotice onDismiss={closeContract} />
+          )}
           <div className="overflow-x-auto pb-1">
             <div className="flex min-w-max gap-1 rounded-[20px] bg-white p-1 lg:min-w-0">
               {CONTRACT_FILTERS.map((filter) => {
@@ -239,7 +243,13 @@ export const ContractDetailPage = ({ id }: { id: string }) => {
   if (!contract.data)
     return (
       <AppWrapper>
-        <EmptyState title={dict.contracts.empty} />
+        <EmptyState
+          title={
+            contract.isError
+              ? dict.contracts.removedTitle
+              : dict.contracts.empty
+          }
+        />
       </AppWrapper>
     );
   const item = contract.data;

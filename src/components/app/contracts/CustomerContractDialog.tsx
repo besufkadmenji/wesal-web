@@ -186,6 +186,7 @@ export const CustomerContractDialog = ({
               contract={contract}
               onPay={() => setPaymentOpen(true)}
               onComplete={() => setCompletionOpen(true)}
+              onRemoved={() => onOpenChange(false)}
             />
           )}
         </DialogContent>

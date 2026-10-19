@@ -20,10 +20,13 @@ export const CustomerContractActions = ({
   contract,
   onPay,
   onComplete,
+  onRemoved,
 }: {
   contract: Contract;
   onPay: () => void;
   onComplete: () => void;
+  /** BRD 4.1.18: a cancel before payment deletes the contract. */
+  onRemoved?: () => void;
 }) => {
   const dict = useDict();
   const lang = useLang();
@@ -64,6 +67,22 @@ export const CustomerContractActions = ({
             reason,
           }),
     onSuccess: async () => {
+      // A contract cancelled before payment no longer exists (D-13): the API
+      // deletes every unpaid draft, pending or accepted contract it cancels.
+      const removed =
+        reasonMode === "cancel" &&
+        !contract.paidAt &&
+        (isPending || isPendingPayment || status === ContractStatus.Draft);
+      if (removed) {
+        queryClient.removeQueries({
+          queryKey: queryKeys.contract(contract.id),
+        });
+        await queryClient.invalidateQueries({ queryKey: queryKeys.contracts });
+        showSuccessMessage(dict.contracts.removedToast);
+        setReasonMode(null);
+        onRemoved?.();
+        return;
+      }
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: queryKeys.contracts }),
         queryClient.invalidateQueries({

@@ -155,6 +155,40 @@ test("customer cancels an in-progress contract with a required reason (Arabic)",
   ).toBeVisible();
 });
 
+test("cancelling before payment removes the contract (BRD 4.1.18)", async ({
+  page,
+}) => {
+  const api = await mockContractApi(page, { status: "ACCEPTED" });
+
+  await openContract(page);
+  await contractDialog(page)
+    .getByRole("button", { name: en.contracts.cancelContract })
+    .click();
+  await expect(page.getByRole("note")).toHaveText(en.contracts.outcomeNoCharge);
+  await page
+    .getByRole("button", { name: en.contracts.confirmCancelYes })
+    .click();
+  const reasonDialog = page
+    .getByRole("dialog")
+    .filter({ hasText: en.contracts.cancellationTitle });
+  await reasonDialog
+    .getByPlaceholder(en.contracts.reasonPlaceholder)
+    .fill("Found another provider");
+  await reasonDialog.getByRole("button", { name: en.contracts.send }).click();
+
+  await expect
+    .poll(() => api.calls.RequestContractCancellation?.length)
+    .toBe(1);
+  await expect(page.getByText(en.contracts.removedToast)).toBeVisible();
+  await expect(
+    page.locator("article").filter({ hasText: reference }),
+  ).toHaveCount(0);
+
+  // An old link to it explains that it no longer exists.
+  await openContract(page);
+  await expect(page.getByText(en.contracts.removedTitle)).toBeVisible();
+});
+
 test("customer refuses receipt of a delivery and it goes under review", async ({
   page,
 }) => {

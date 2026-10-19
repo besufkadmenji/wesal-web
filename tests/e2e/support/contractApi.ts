@@ -193,6 +193,8 @@ export async function mockContractApi(
     };
   };
   if (status !== "ACCEPTED") contract.paidAt = NOW;
+  // BRD 4.1.18 (D-13): cancelled before payment means deleted.
+  const removed = () => contract.status === "CANCELLED" && !contract.paidAt;
   const view = () => ({
     ...contract,
     cancellationPreview: role === "user" ? previewFor(contract) : null,
@@ -251,12 +253,23 @@ export async function mockContractApi(
         };
         break;
       case "ContractById":
+        if (removed()) {
+          await route.fulfill({
+            status: 200,
+            contentType: "application/json",
+            body: JSON.stringify({
+              data: null,
+              errors: [{ message: "Contract not found" }],
+            }),
+          });
+          return;
+        }
         data = { contract: view() };
         break;
       case "Contracts":
         data = {
           contracts: {
-            items: [view()],
+            items: removed() ? [] : [view()],
             meta: {
               total: 1,
               page: 1,
