@@ -12,10 +12,10 @@ import { useLang } from "@/hooks/useLang";
 import { useMe } from "@/hooks/useMe";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { ReactNode } from "react";
+import { ComponentProps, ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 export const Nav = () => {
-  const { me, logout } = useMe();
+  const { me } = useMe();
   const dict = useDict();
   const router = useAppRouter();
   const pathname = usePathname();
@@ -90,14 +90,12 @@ export const Nav = () => {
               isActive={pathname === `/${lng}/profile/favorites`}
             />
           )}
+          {/* The dialog's confirm button signs out; this only opens it. */}
           <ConfirmLogout>
             <NavItem
               icon={<LogoutIcon className="size-5 shrink-0" />}
               label={dict.profile.logout}
               className="text-[#B3251E]!"
-              onClick={(): void => {
-                logout();
-              }}
             />
           </ConfirmLogout>
         </div>
@@ -106,28 +104,27 @@ export const Nav = () => {
   );
 };
 
+// Extra props are passed on so a dialog trigger (`asChild`) can open it.
 const NavItem = ({
   icon,
   label,
-  onClick,
   isActive,
   className,
-}: {
+  ...props
+}: Omit<ComponentProps<typeof Button>, "children"> & {
   icon: ReactNode;
   label: string;
-  onClick: () => void;
   isActive?: boolean;
-  className?: string;
 }) => {
   return (
     <Button
+      {...props}
       variant={"ghost"}
       className={twMerge(
         "text-gray! flex h-12 justify-start gap-1 rounded-[16px] bg-white! text-sm font-medium",
         isActive && "bg-[#EFF1F6]! text-black!",
         className,
       )}
-      onClick={onClick}
     >
       {icon} <span>{label}</span>
     </Button>

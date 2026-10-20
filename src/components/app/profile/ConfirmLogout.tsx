@@ -18,7 +18,7 @@ export const ConfirmLogout = ({ children }: { children: ReactNode }) => {
         setOpen(isOpen ? "true" : null);
       }}
     >
-      <DialogTrigger>{children}</DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="min-w-[42vw]">
         <div className="grid grid-cols-1 gap-8">
           <div className="grid grid-cols-[auto_1fr] gap-6">

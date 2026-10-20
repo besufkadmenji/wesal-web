@@ -23,7 +23,7 @@ export const CancelContract = ({ children }: { children: ReactNode }) => {
         setOpen(isOpen ? "true" : null);
       }}
     >
-      <DialogTrigger>{children}</DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="min-w-[42vw] p-0">
         <div className="grid grid-cols-[auto_1fr] gap-6 px-6 py-10">
           <div className="grid size-15 items-center justify-items-center rounded-[16px] bg-[#EFF1F6]">
