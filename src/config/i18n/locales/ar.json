@@ -636,7 +636,7 @@
     "commitmentDescription": "يتعهد الطرفان بالالتزام الكامل بجميع بنود هذا التعاقد والشروط المذكورة فيه، وفي حالة الإخلال بأي من الشروط بحث للطرف الآخر اتخاذ الإجراءات القانونية اللازمة كما يتعهد الطرفان بحل أي نزاع قد ينشأ بينهما بالطرق الودية أولاً، وفي حالة عدم الوصول لحل يتم اللجوء للجهات المختصة.",
     "saveSignature": "حفظ التوقيع",
     "signContract": "توقيع العقد",
-    "cancelContract": "قسم العقد",
+    "cancelContract": "فسخ العقد",
     "exportPDF": "تصدير العقد PDF",
     "downloadPDF": "تحميل PDF",
     "cancelReason": {
@@ -644,7 +644,7 @@
       "subtitle": "يرجى توضيح سبب فسخ العقد، حيث تساعدنا هذه المعلومات على تحسين تجربة المستخدم وضمان جودة الخدمة.",
       "placeholder": "أضف السبب",
       "cancel": "إلغاء",
-      "send": "إرسال"
+      "send": "إرسال الطلب"
     },
     "error": {
       "serviceProviderSignatureRequired": "توقيع مقدم الخدمة مطلوب",
@@ -652,7 +652,20 @@
       "cancelReasonRequired": "يرجى تقديم سبب لفسخ العقد"
     },
     "signatureSavedSuccessfully": "تم حفظ التوقيع بنجاح",
-    "contractTerminatedSuccessfully": "تم إرسال فسخ العقد للإدارة بنجاح"
+    "contractTerminatedSuccessfully": "تم إرسال طلب فسخ العقد إلى الإدارة",
+    "terminateConfirm": {
+      "title": "هل تريد فسخ العقد؟",
+      "message": "سيتم إرسال طلبك إلى الإدارة، ويبقى حسابك نشطًا حتى يتم الرد عليه، ولا يمكن فسخ العقد إلا في حال عدم وجود تعاقدات جارية.",
+      "confirm": "تأكيد"
+    },
+    "terminationRequest": {
+      "pendingTitle": "طلب فسخ العقد بانتظار رد الإدارة",
+      "pendingMessage": "تم الإرسال بتاريخ {date}. يبقى حسابك نشطًا حتى ترد الإدارة.",
+      "reason": "السبب المرسل",
+      "rejectedTitle": "تم رفض طلب فسخ العقد",
+      "rejectedMessage": "رفضت الإدارة طلبك بتاريخ {date}.",
+      "rejectionReason": "سبب الإدارة"
+    }
   },
   "myListings": {
     "title": "إعلاناتي",

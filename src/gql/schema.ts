@@ -1243,6 +1243,57 @@ export type CreateProviderInput = {
   withAbsher?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+/** Work waiting for an admin; a count is null when the admin lacks that permission */
+export type DashboardAttentionCounts = {
+  cancellationRequests?: Maybe<Scalars['Int']['output']>;
+  disputedContracts?: Maybe<Scalars['Int']['output']>;
+  openComplaints?: Maybe<Scalars['Int']['output']>;
+  pendingProviderRequests?: Maybe<Scalars['Int']['output']>;
+  /** Provider e-contract termination requests (S4-58) */
+  terminationRequests?: Maybe<Scalars['Int']['output']>;
+};
+
+/** Contracts created in the period, per status */
+export type DashboardContractStatusCount = {
+  count: Scalars['Int']['output'];
+  status: ContractStatus;
+};
+
+/** New sign-ups in one dashboard bucket */
+export type DashboardGrowthPoint = {
+  /** Bucket start date (YYYY-MM-DD, Asia/Riyadh) */
+  bucket: Scalars['String']['output'];
+  customers: Scalars['Int']['output'];
+  providers: Scalars['Int']['output'];
+};
+
+/** Admin dashboard chart period: 7 or 30 daily buckets, or 12 monthly buckets (Asia/Riyadh) */
+export enum DashboardRange {
+  Last_7Days = 'LAST_7_DAYS',
+  Last_12Months = 'LAST_12_MONTHS',
+  Last_30Days = 'LAST_30_DAYS'
+}
+
+/** Platform revenue in one dashboard bucket (SAR) */
+export type DashboardRevenuePoint = {
+  /** Bucket start date (YYYY-MM-DD, Asia/Riyadh) */
+  bucket: Scalars['String']['output'];
+  /** Customer and provider chat fees */
+  chatFees: Scalars['Float']['output'];
+  /** Commission from paid contracts (charity contracts excluded) */
+  contracts: Scalars['Float']['output'];
+  /** Premium ad fees */
+  premiumAds: Scalars['Float']['output'];
+};
+
+/** Category ranked by contracts created in the period */
+export type DashboardTopCategory = {
+  categoryId: Scalars['ID']['output'];
+  contracts: Scalars['Int']['output'];
+  nameAr: Scalars['String']['output'];
+  nameEn: Scalars['String']['output'];
+};
+
 export type DeactivateAdminInput = {
   reason?: InputMaybe<Scalars['String']['input']>;
 };
@@ -1569,6 +1620,8 @@ export type Mutation = {
   /** Admin terminates provider contract */
   adminTerminateProviderContract: Provider;
   adminVerifyPasswordResetOtp: VerifyAdminPasswordResetOtpResponse;
+  /** Admin approves a provider's e-contract termination request: the account is deleted (S4-58) */
+  approveProviderContractTermination: Provider;
   assignPermissionToAdmin: AdminPermission;
   bulkAssignPermissionsToAdmin: Array<AdminPermission>;
   bulkRevokePermissionsFromAdmin: Scalars['Boolean']['output'];
@@ -1658,6 +1711,8 @@ export type Mutation = {
   registerProvider: Provider;
   /** Provider rejects a pending contract */
   rejectContract: Contract;
+  /** Admin rejects a provider's e-contract termination request; the contract is active again (S4-58) */
+  rejectProviderContractTermination: Provider;
   /** Reject a pending provider join request */
   rejectProviderJoinRequest: Provider;
   removeAdmin: Scalars['Boolean']['output'];
@@ -1712,7 +1767,7 @@ export type Mutation = {
   signProviderContract: Provider;
   /** S4-10: start a gateway checkout; send the payer to redirectUrl */
   startPaymentCheckout: PaymentCheckout;
-  /** Terminate provider contract */
+  /** Provider asks the administration to terminate their e-contract (S4-58); refused while customer contracts are unfinished */
   terminateProviderContract: Provider;
   trackAction: Tracking;
   updateAdmin: Admin;
@@ -1869,6 +1924,11 @@ export type MutationAdminTerminateProviderContractArgs = {
 
 export type MutationAdminVerifyPasswordResetOtpArgs = {
   input: VerifyAdminPasswordResetOtpInput;
+};
+
+
+export type MutationApproveProviderContractTerminationArgs = {
+  providerId: Scalars['ID']['input'];
 };
 
 
@@ -2157,6 +2217,11 @@ export type MutationRegisterProviderArgs = {
 
 export type MutationRejectContractArgs = {
   input: RejectContractInput;
+};
+
+
+export type MutationRejectProviderContractTerminationArgs = {
+  input: RejectContractTerminationInput;
 };
 
 
@@ -2512,6 +2577,7 @@ export enum NotificationType {
   AdminContactMessage = 'ADMIN_CONTACT_MESSAGE',
   AdminContractCreated = 'ADMIN_CONTRACT_CREATED',
   AdminContractStatus = 'ADMIN_CONTRACT_STATUS',
+  AdminEcontractTerminationRequested = 'ADMIN_ECONTRACT_TERMINATION_REQUESTED',
   AdminNewCustomer = 'ADMIN_NEW_CUSTOMER',
   AdminPayment = 'ADMIN_PAYMENT',
   AdminProviderRequest = 'ADMIN_PROVIDER_REQUEST',
@@ -2527,6 +2593,7 @@ export enum NotificationType {
   ContractOverdue = 'CONTRACT_OVERDUE',
   ContractSigned = 'CONTRACT_SIGNED',
   ContractUpdate = 'CONTRACT_UPDATE',
+  EcontractTerminationRejected = 'ECONTRACT_TERMINATION_REJECTED',
   ListingApproved = 'LISTING_APPROVED',
   ListingFeatured = 'LISTING_FEATURED',
   ListingFeaturedExpired = 'LISTING_FEATURED_EXPIRED',
@@ -2948,6 +3015,8 @@ export type Query = {
   /** Active delivery companies available to authenticated users */
   activeDeliveryCompanies: Array<DeliveryCompany>;
   admin: Admin;
+  /** Items waiting for an admin, limited to readable modules */
+  adminAttentionCounts: DashboardAttentionCounts;
   adminBroadcast: NotificationBroadcast;
   adminBroadcasts: PaginatedBroadcastResponse;
   /** Wesal Al-Khair list (BRD 4.3.11): charity contracts only */
@@ -2956,15 +3025,23 @@ export type Query = {
   adminComplaint: Complaint;
   adminComplaints: PaginatedComplaintResponse;
   adminContract: Contract;
+  /** Contracts created in the period, per status (drafts excluded) */
+  adminContractStatusBreakdown: Array<DashboardContractStatusCount>;
   adminContracts: PaginatedContractResponse;
   adminConversation: Conversation;
   adminConversations: PaginatedConversationResponse;
   /** Admin home statistics cards */
   adminDashboardStats: AdminDashboardStats;
+  /** New customers and providers per bucket */
+  adminGrowthSeries: Array<DashboardGrowthPoint>;
   adminNotifications: PaginatedNotificationResponse;
   adminPermissions: Array<AdminPermission>;
   adminRating: Rating;
   adminRatings: PaginatedRatingResponse;
+  /** Platform revenue per bucket (commission and fees) */
+  adminRevenueSeries: Array<DashboardRevenuePoint>;
+  /** Top 6 categories by contracts created in the period */
+  adminTopCategories: Array<DashboardTopCategory>;
   /** Unread header notifications */
   adminUnreadNotificationCount: Scalars['Int']['output'];
   admins: PaginatedAdminResponse;
@@ -3107,6 +3184,11 @@ export type QueryAdminContractArgs = {
 };
 
 
+export type QueryAdminContractStatusBreakdownArgs = {
+  range: DashboardRange;
+};
+
+
 export type QueryAdminContractsArgs = {
   input?: InputMaybe<ContractPaginationInput>;
 };
@@ -3119,6 +3201,11 @@ export type QueryAdminConversationArgs = {
 
 export type QueryAdminConversationsArgs = {
   input?: InputMaybe<ConversationPaginationInput>;
+};
+
+
+export type QueryAdminGrowthSeriesArgs = {
+  range: DashboardRange;
 };
 
 
@@ -3140,6 +3227,16 @@ export type QueryAdminRatingArgs = {
 
 export type QueryAdminRatingsArgs = {
   input?: InputMaybe<RatingPaginationInput>;
+};
+
+
+export type QueryAdminRevenueSeriesArgs = {
+  range: DashboardRange;
+};
+
+
+export type QueryAdminTopCategoriesArgs = {
+  range: DashboardRange;
 };
 
 
@@ -3540,6 +3637,11 @@ export type RejectContractInput = {
   reason: Scalars['String']['input'];
 };
 
+export type RejectContractTerminationInput = {
+  providerId: Scalars['String']['input'];
+  reason: Scalars['String']['input'];
+};
+
 export type RemoveListingResponse = {
   message: Scalars['String']['output'];
   success: Scalars['Boolean']['output'];
@@ -3705,6 +3807,10 @@ export type SignedContract = {
   serviceProviderSignature: Scalars['String']['output'];
   status: SignedContractStatus;
   terminationReason?: Maybe<Scalars['String']['output']>;
+  terminationRejectedAt?: Maybe<Scalars['DateTime']['output']>;
+  terminationRejectionReason?: Maybe<Scalars['String']['output']>;
+  terminationRequestReason?: Maybe<Scalars['String']['output']>;
+  terminationRequestedAt?: Maybe<Scalars['DateTime']['output']>;
   updatedAt: Scalars['DateTime']['output'];
 };
 
@@ -3719,6 +3825,7 @@ export type SignedContractPaginationInput = {
   sortBy?: InputMaybe<SignedContractSortField>;
   /** Sort order: ASC or DESC */
   sortOrder?: InputMaybe<SortOrder>;
+  status?: InputMaybe<SignedContractStatus>;
 };
 
 /** Available fields to sort signed contracts by */
@@ -3729,13 +3836,14 @@ export enum SignedContractSortField {
   UpdatedAt = 'updatedAt'
 }
 
-/** Provider account status */
+/** Provider e-contract status */
 export enum SignedContractStatus {
   Active = 'ACTIVE',
   Expired = 'EXPIRED',
   Pending = 'PENDING',
   TerminatedByAdmin = 'TERMINATED_BY_ADMIN',
-  TerminatedByProvider = 'TERMINATED_BY_PROVIDER'
+  TerminatedByProvider = 'TERMINATED_BY_PROVIDER',
+  TerminationRequested = 'TERMINATION_REQUESTED'
 }
 
 export type SocialMediaLink = {

@@ -636,7 +636,7 @@
     "commitmentDescription": "Both parties fully commit to the terms and conditions mentioned herein and referred to therein. In case of any dispute between the parties, and in the event of non-fulfillment by either party, the matter shall be referred to the competent authorities to take the necessary legal measures to resolve the dispute.",
     "saveSignature": "Save Signature",
     "signContract": "Sign Contract",
-    "cancelContract": "Cancel Contract",
+    "cancelContract": "Terminate contract",
     "exportPDF": "Export Contract as PDF",
     "downloadPDF": "Download PDF",
     "cancelReason": {
@@ -644,7 +644,7 @@
       "subtitle": "Please clarify the reason for terminating the contract, as this information helps us improve the user experience and ensure service quality.",
       "placeholder": "Add the reason",
       "cancel": "Cancel",
-      "send": "Send"
+      "send": "Send request"
     },
     "error": {
       "serviceProviderSignatureRequired": "Service provider signature is required",
@@ -652,7 +652,20 @@
       "cancelReasonRequired": "Please provide a reason for contract termination"
     },
     "signatureSavedSuccessfully": "Signature saved successfully",
-    "contractTerminatedSuccessfully": "Contract termination has been sent to the administration successfully"
+    "contractTerminatedSuccessfully": "Your termination request was sent to the administration",
+    "terminateConfirm": {
+      "title": "Terminate the contract?",
+      "message": "Your request will be sent to the administration. Your account stays active until they respond, and the contract can only be terminated when you have no ongoing contracts.",
+      "confirm": "Confirm"
+    },
+    "terminationRequest": {
+      "pendingTitle": "Termination request awaiting the administration",
+      "pendingMessage": "Sent on {date}. Your account stays active until the administration responds.",
+      "reason": "Your reason",
+      "rejectedTitle": "Termination request rejected",
+      "rejectedMessage": "The administration rejected your request on {date}.",
+      "rejectionReason": "Administration's reason"
+    }
   },
   "myListings": {
     "title": "My Ads",

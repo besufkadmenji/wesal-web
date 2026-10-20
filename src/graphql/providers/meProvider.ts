@@ -89,6 +89,10 @@ export const ME_PROVIDER_QUERY: TypedDocumentNode<MeProviderQuery> = gql`
       updatedAt
       status
       signedContract {
+        terminationRequestedAt
+        terminationRequestReason
+        terminationRejectedAt
+        terminationRejectionReason
         acceptedRulesAr {
           label
           value
