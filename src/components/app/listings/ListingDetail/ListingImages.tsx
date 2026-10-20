@@ -8,17 +8,27 @@ export const ListingImages = ({ listing }: { listing: Listing }) => {
   const [image, setImage] = useState(0);
   const [showAll, setShowAll] = useState(false);
   const images = listing.photos || [];
+  const current = images[image] ?? images[0];
   return (
     <div className="grid grid-cols-1 gap-3 rounded-[20px] bg-white">
       <div className="relative aspect-584/468 w-full overflow-hidden rounded-[24px]">
-        <Image
-          src={`${dataUrl}/files/${images[image].filename}`}
-          alt="listing image"
-          fill
-          className="object-cover"
-        />
+        {/* H-20: a listing without photos shows a neutral tile, as the card does. */}
+        {current ? (
+          <Image
+            src={`${dataUrl}/files/${current.filename}`}
+            alt={listing.name}
+            fill
+            className="object-cover"
+          />
+        ) : (
+          <div
+            className="size-full bg-[#eff1f6]"
+            role="img"
+            aria-label={listing.name}
+          />
+        )}
       </div>
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-4 gap-3 empty:hidden">
         {images
           .slice(0, showAll ? images.length : Math.min(4, images.length))
           .map((img, index) => (

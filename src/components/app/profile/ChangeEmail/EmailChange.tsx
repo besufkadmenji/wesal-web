@@ -25,7 +25,7 @@ export const EmailChange = ({ children }: { children: ReactNode }) => {
         );
       }}
     >
-      <DialogTrigger>{children}</DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="min-w-[42vw]">
         {emailChange === "initiate" ? (
           <InitiateEmailChange />

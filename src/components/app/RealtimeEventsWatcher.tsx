@@ -52,6 +52,12 @@ export const RealtimeEventsWatcher = () => {
   const seenMessages = useRef(new Set<string>());
   const seenNotifications = useRef(new Set<string>());
   const principalId = me?.provider?.id || me?.user?.id;
+  // H-26: the path is read through a ref so navigating doesn't tear down and
+  // reopen the subscriptions; events arriving in that gap were lost.
+  const pathnameRef = useRef(pathname);
+  useEffect(() => {
+    pathnameRef.current = pathname;
+  }, [pathname]);
 
   useEffect(() => {
     if (!isLoggedIn || !principalId) return;
@@ -61,7 +67,7 @@ export const RealtimeEventsWatcher = () => {
         const message = payload.data?.participantMessageAdded;
         if (!message || !rememberEvent(seenMessages.current, message.id)) return;
 
-        const isOpen = pathname.endsWith(
+        const isOpen = pathnameRef.current.endsWith(
           `/conversations/${message.conversationId}`,
         );
         const isIncoming = message.senderId !== principalId;
@@ -192,6 +198,10 @@ export const RealtimeEventsWatcher = () => {
         void queryClient.invalidateQueries({
           queryKey: queryKeys.notificationStats,
         });
+        // Contract notices (overdue, expiry, status) refresh contract views.
+        if (notification.relatedEntityType === "contract") {
+          void queryClient.invalidateQueries({ queryKey: queryKeys.contracts });
+        }
       },
     });
 
@@ -199,7 +209,7 @@ export const RealtimeEventsWatcher = () => {
       messages.unsubscribe();
       notifications.unsubscribe();
     };
-  }, [isLoggedIn, pathname, principalId, queryClient]);
+  }, [isLoggedIn, principalId, queryClient]);
 
   return null;
 };

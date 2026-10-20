@@ -115,6 +115,9 @@ export const useSignSignature = () => {
     }
   };
 
+  // S4-58: sends a termination request to the administration (the account
+  // stays active until an admin approves). Returns false on failure so the
+  // dialog stays open with the reason.
   const terminateContract = async (reason: string) => {
     if (reason.trim().length === 0) {
       showErrorMessage(dict.contract.error.cancelReasonRequired);
@@ -122,23 +125,19 @@ export const useSignSignature = () => {
     }
     setBusy(true);
     try {
-      const result = await ProviderService.terminateContact(reason);
-      if (result) {
-        showSuccessMessage(dict.contract.contractTerminatedSuccessfully);
-        queryClient.invalidateQueries({
-          queryKey: ["me"],
-        });
-      }
-      // Handle successful login (e.g., redirect, show message)
+      const result = await ProviderService.terminateContact(reason.trim());
+      if (!result) return false;
+      showSuccessMessage(dict.contract.contractTerminatedSuccessfully);
+      await queryClient.invalidateQueries({ queryKey: ["me"] });
+      return true;
     } catch (error) {
-      console.error("Login error:", error);
       showErrorMessage(
         error instanceof Error ? error.message : dict.common.unexpectedError,
       );
+      return false;
     } finally {
       setBusy(false);
     }
-    return true;
   };
 
   return {

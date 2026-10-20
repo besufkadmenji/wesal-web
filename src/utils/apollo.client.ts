@@ -117,6 +117,9 @@ const createApolloClient = (token?: string, url?: string) => {
     defaultOptions,
     ssrMode: isServer,
     queryDeduplication: true,
+    // H-28: fragments are not masked; services read every selected field
+    // from results directly. Keep this explicit if Apollo's default changes.
+    dataMasking: false,
   });
 };
 

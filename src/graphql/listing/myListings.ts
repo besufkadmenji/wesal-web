@@ -40,6 +40,8 @@ export const MY_LISTINGS_QUERY: TypedDocumentNode<
         type
         updatedAt
         providerId
+        ratingAverage
+        ratingCount
         photos {
           filename
           id

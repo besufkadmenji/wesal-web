@@ -1,56 +1,90 @@
 import html2canvas from "html2canvas-pro";
-import jsPDF from "jspdf";
+import jsPDF, { GState } from "jspdf";
 import { RefObject } from "react";
-export const downloadPDF = async (ref: RefObject<HTMLDivElement | null>) => {
-  const input = ref?.current;
 
+/** UI-15: the navy brand mark (public/images/logo.pdf.png, 636×492). */
+const LOGO_SRC = "/images/logo.pdf.png";
+const LOGO_RATIO = 636 / 492;
+const WATERMARK_OPACITY = 0.035;
+
+const loadImage = (src: string) =>
+  new Promise<HTMLImageElement | null>((resolve) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = () => resolve(null);
+    image.src = src;
+  });
+
+/**
+ * Captures the element and saves it as an A4 PDF, split across pages, with
+ * the Wesal logo in each page header and a barely visible centred logo
+ * watermark (UI-15).
+ */
+export const downloadPDF = async (
+  ref: RefObject<HTMLDivElement | null>,
+  fileName = "contract.pdf",
+) => {
+  const input = ref?.current;
   if (!input) return;
 
-  const canvas = await html2canvas(input, {
-    scale: 2,
-    useCORS: true,
-    allowTaint: false,
-    ignoreElements: (element) => element.hasAttribute("data-pdf-exclude"),
-  });
+  const [canvas, logo] = await Promise.all([
+    html2canvas(input, {
+      scale: 2,
+      useCORS: true,
+      allowTaint: false,
+      ignoreElements: (element) => element.hasAttribute("data-pdf-exclude"),
+    }),
+    loadImage(LOGO_SRC),
+  ]);
 
   const pdf = new jsPDF("p", "mm", "a4");
   const pageWidth = pdf.internal.pageSize.getWidth();
   const pageHeight = pdf.internal.pageSize.getHeight();
+  const rtl = document.documentElement.dir === "rtl";
 
-  // Padding/margins in mm
   const margins = 10;
+  const logoHeight = 11;
+  const logoWidth = logoHeight * LOGO_RATIO;
+  const headerHeight = logo ? logoHeight + 5 : 0;
+  const contentTop = margins + headerHeight;
   const contentWidth = pageWidth - margins * 2;
+  const contentHeight = pageHeight - contentTop - margins;
 
-  // Calculate dimensions maintaining aspect ratio
   const canvasWidth = canvas.width;
   const canvasHeight = canvas.height;
-  const imgWidth = contentWidth;
+  const canvasHeightPerPage = (contentHeight * canvasWidth) / contentWidth;
+  const totalPages = Math.max(1, Math.ceil(canvasHeight / canvasHeightPerPage));
 
-  // Calculate how much canvas height fits on one page while maintaining aspect ratio
-  const canvasHeightPerPage =
-    ((pageHeight - margins * 2) * canvasWidth) / pageWidth;
-
-  // Calculate number of pages needed
-  const totalPages = Math.ceil(canvasHeight / canvasHeightPerPage);
-
-  // Add image to PDF, splitting across multiple pages if necessary
   for (let pageNum = 0; pageNum < totalPages; pageNum++) {
-    if (pageNum > 0) {
-      pdf.addPage();
+    if (pageNum > 0) pdf.addPage();
+
+    if (logo) {
+      pdf.addImage(
+        logo,
+        "PNG",
+        rtl ? pageWidth - margins - logoWidth : margins,
+        margins,
+        logoWidth,
+        logoHeight,
+      );
+      pdf.setDrawColor(34, 40, 58);
+      pdf.setLineWidth(0.3);
+      pdf.line(
+        margins,
+        margins + logoHeight + 2,
+        pageWidth - margins,
+        margins + logoHeight + 2,
+      );
     }
 
-    // Calculate the source rectangle for this page
     const sourceY = pageNum * canvasHeightPerPage;
     const sourceHeight = Math.min(canvasHeightPerPage, canvasHeight - sourceY);
-
-    // Create a temporary canvas for this page
     const pageCanvas = document.createElement("canvas");
     pageCanvas.width = canvasWidth;
     pageCanvas.height = sourceHeight;
-
-    const ctx = pageCanvas.getContext("2d");
-    if (ctx) {
-      ctx.drawImage(
+    pageCanvas
+      .getContext("2d")
+      ?.drawImage(
         canvas,
         0,
         sourceY,
@@ -61,14 +95,31 @@ export const downloadPDF = async (ref: RefObject<HTMLDivElement | null>) => {
         canvasWidth,
         sourceHeight,
       );
+    pdf.addImage(
+      pageCanvas.toDataURL("image/png"),
+      "PNG",
+      margins,
+      contentTop,
+      contentWidth,
+      (sourceHeight * contentWidth) / canvasWidth,
+    );
+
+    // The captured page is opaque, so the watermark goes on top, faintly.
+    if (logo) {
+      const markWidth = pageWidth * 0.5;
+      const markHeight = markWidth / LOGO_RATIO;
+      pdf.setGState(new GState({ opacity: WATERMARK_OPACITY }));
+      pdf.addImage(
+        logo,
+        "PNG",
+        (pageWidth - markWidth) / 2,
+        (pageHeight - markHeight) / 2,
+        markWidth,
+        markHeight,
+      );
+      pdf.setGState(new GState({ opacity: 1 }));
     }
-
-    const pageImgData = pageCanvas.toDataURL("image/png");
-    const imgHeight = (sourceHeight * imgWidth) / canvasWidth;
-
-    // Add image with padding/margins
-    pdf.addImage(pageImgData, "PNG", margins, margins, imgWidth, imgHeight);
   }
 
-  pdf.save("contract.pdf");
+  pdf.save(fileName);
 };

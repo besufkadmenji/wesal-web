@@ -12,63 +12,62 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
-import type { Contract } from "@/gql/graphql";
-import { queryKeys } from "@/hooks/queryKeys";
+import {
+  CheckoutPurpose,
+  PaymentMethod,
+  type Contract,
+} from "@/gql/graphql";
 import { useDict } from "@/hooks/useDict";
 import { cn } from "@/lib/utils";
-import { ContractService } from "@/services/contract.service";
-import { showErrorMessage, showSuccessMessage } from "@/utils/show.messages";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { PaymentService } from "@/services/payment.service";
+import { showErrorMessage } from "@/utils/show.messages";
+import { useMutation } from "@tanstack/react-query";
 import { WalletCards, X } from "lucide-react";
 import Image, { type StaticImageData } from "next/image";
 import { useState } from "react";
 
-type MockPaymentMethod = "ELECTRONIC" | "TABBY" | "TAMARA";
-
+/**
+ * BRD 4.1.17: the customer picks card, Tabby or Tamara and is sent to that
+ * gateway's checkout (S4-11). Installments outside the admin's bounds are not
+ * offered; the result shows on /payments/return.
+ */
 export const ContractPaymentDialog = ({
   contract,
   open,
   onOpenChange,
-  onPaid,
 }: {
   contract: Contract;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onPaid: () => void;
 }) => {
   const dict = useDict();
-  const queryClient = useQueryClient();
-  const [method, setMethod] = useState<MockPaymentMethod>("TABBY");
+  const available = contract.paymentMethods ?? [PaymentMethod.Electronic];
+  const [choice, setChoice] = useState<PaymentMethod | null>(null);
+  const method =
+    choice && available.includes(choice) ? choice : available[0];
 
   const payment = useMutation({
-    mutationFn: () => ContractService.pay(contract.id),
-    onSuccess: async () => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: queryKeys.contracts }),
-        queryClient.invalidateQueries({
-          queryKey: queryKeys.contract(contract.id),
-        }),
-        queryClient.invalidateQueries({
-          queryKey: queryKeys.conversation(contract.conversationId),
-        }),
-      ]);
-      showSuccessMessage(dict.contracts.paid);
-      setMethod("TABBY");
-      onOpenChange(false);
-      onPaid();
-    },
+    mutationFn: () =>
+      PaymentService.startCheckout({
+        purpose: CheckoutPurpose.Contract,
+        targetId: contract.id,
+        method,
+      }),
+    onSuccess: ({ redirectUrl }) => PaymentService.redirect(redirectUrl),
     onError: (error) => showErrorMessage(error.message),
   });
+  // Stays busy after success while the browser leaves for the gateway.
+  const busy = payment.isPending || payment.isSuccess;
 
   const methods: Array<{
-    value: MockPaymentMethod;
+    value: PaymentMethod;
     label: string;
     logo: StaticImageData;
     logoClassName: string;
     imageClassName?: string;
   }> = [
     {
-      value: "ELECTRONIC",
+      value: PaymentMethod.Electronic,
       label: dict.contracts.electronicPayment,
       logo: visaLogo,
       logoClassName: "h-[21px] w-[46px]",
@@ -76,7 +75,7 @@ export const ContractPaymentDialog = ({
         "absolute -left-[36.5%] -top-[70%] h-[240%] w-[202%] max-w-none",
     },
     {
-      value: "TABBY",
+      value: PaymentMethod.Tabby,
       label: dict.contracts.tabbyInstallments,
       logo: tabbyLogo,
       logoClassName: "h-[15px] w-[46px]",
@@ -84,18 +83,18 @@ export const ContractPaymentDialog = ({
         "absolute -left-1/4 -top-[84%] h-[365%] w-[151%] max-w-none",
     },
     {
-      value: "TAMARA",
+      value: PaymentMethod.Tamara,
       label: dict.contracts.tamaraInstallments,
       logo: tamaraLogo,
       logoClassName: "h-[15px] w-[46px]",
     },
-  ];
+  ].filter((option) => available.includes(option.value));
 
   return (
     <Dialog
       open={open}
       onOpenChange={(nextOpen) => {
-        if (!nextOpen) setMethod("TABBY");
+        if (!nextOpen) setChoice(null);
         onOpenChange(nextOpen);
       }}
     >
@@ -140,7 +139,7 @@ export const ContractPaymentDialog = ({
                         ? "border-primary text-primary bg-[#eff1f6]"
                         : "border-[#f2f2f2] bg-white text-[#1a1a1a] hover:bg-[#fbfbfb]",
                     )}
-                    onClick={() => setMethod(option.value)}
+                    onClick={() => setChoice(option.value)}
                   >
                     <span
                       className={cn(
@@ -187,7 +186,7 @@ export const ContractPaymentDialog = ({
           <DialogClose asChild>
             <Button
               type="button"
-              disabled={payment.isPending}
+              disabled={busy}
               className="h-[50px] rounded-[20px] bg-[#f2f2f2] text-base font-semibold text-[#4d4d4d] shadow-none hover:bg-[#e9e9e9]"
             >
               {dict.common.cancel}
@@ -195,11 +194,11 @@ export const ContractPaymentDialog = ({
           </DialogClose>
           <Button
             type="button"
-            disabled={payment.isPending}
+            disabled={busy}
             onClick={() => payment.mutate()}
             className="bg-primary h-[50px] rounded-[20px] text-base font-semibold text-white"
           >
-            {payment.isPending
+            {busy
               ? dict.contracts.paymentProcessing
               : dict.contracts.continuePayment}
           </Button>

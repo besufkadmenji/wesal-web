@@ -4,6 +4,11 @@ import CalendarIcon from "@/assets/icons/contracts/popup/calendar.svg";
 import ClockIcon from "@/assets/icons/contracts/popup/clock.svg";
 import TimelineIcon from "@/assets/icons/contracts/popup/timeline.svg";
 import TitleIcon from "@/assets/icons/contracts/popup/title.svg";
+import { ContractClientIdentity } from "@/components/app/contracts/ContractClientIdentity";
+import { ContractPaymentInfo } from "@/components/app/contracts/ContractPaymentInfo";
+import { ContractAdminResolution } from "@/components/app/contracts/ContractAdminResolution";
+import { ContractHeldFunds } from "@/components/app/contracts/ContractHeldFunds";
+import { ContractCancellationDetails } from "@/components/app/contracts/ContractCancellationDetails";
 import { ContractFinancialSection } from "@/components/app/contracts/ContractFinancialSection";
 import { ContractSectionTitle } from "@/components/app/contracts/ContractSectionTitle";
 import { ContractSignaturesSection } from "@/components/app/contracts/ContractSignaturesSection";
@@ -16,7 +21,7 @@ import { TimelineMetric } from "@/components/app/contracts/TimelineMetric";
 import {
   formatContractDate,
   formatContractReference,
-  formatDays,
+  contractTimeline,
 } from "@/components/app/contracts/formatContract";
 import {
   Dialog,
@@ -28,6 +33,7 @@ import {
 import {
   ContractSignatureType,
   ContractStatus,
+  ContractStatusGroup,
   type Contract,
 } from "@/gql/graphql";
 import { useDict } from "@/hooks/useDict";
@@ -48,24 +54,18 @@ export const ProviderContractDialog = ({
 
   const status = contract.status;
   const isPending = status === ContractStatus.Pending;
-  const isPendingPayment = status === ContractStatus.Accepted;
-  const isInProgress = status === ContractStatus.InProgress;
   const isCompleted = status === ContractStatus.Completed;
   const isCancelled = status === ContractStatus.Cancelled;
-  const showsAcceptanceDate = isPendingPayment || isInProgress || isCompleted;
+  // S4-18: the acceptance date once accepted (not pending or cancelled).
+  const showsAcceptanceDate =
+    Boolean(contract.acceptedAt) &&
+    contract.statusGroup !== ContractStatusGroup.PendingAcceptance &&
+    contract.statusGroup !== ContractStatusGroup.Cancelled;
 
   const customerSignature = contract.signatures.find(
     (entry) => entry.signatureType === ContractSignatureType.CustomerAcceptance,
   );
-  // The API does not expose a provider completion-time field yet, so the
-  // provider and expected-completion metrics can only show a placeholder
-  // once the contract leaves the pending state.
-  const pendingTimelineValue = isPending
-    ? dict.contracts.awaitingProviderInput
-    : "—";
-  const deliveryTimelineValue = isPending
-    ? pendingTimelineValue
-    : formatDays(contract.deliveryTimeDays, dict.contracts.dayUnit);
+  const timeline = contractTimeline(contract, dict.contracts, isPending);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -73,13 +73,16 @@ export const ProviderContractDialog = ({
         showCloseButton={false}
         className="flex h-[771px] max-h-[calc(100dvh-2rem)] flex-col gap-0 overflow-hidden rounded-[20px] border-0 bg-white p-0 shadow-xl sm:max-w-[830px]"
       >
-        <header className="flex min-h-[111px] shrink-0 items-center gap-3 bg-[#fbfbfb] p-6">
-          <div className="flex min-w-0 items-center gap-3">
+        <header className="flex min-h-[111px] shrink-0 flex-wrap items-center gap-3 bg-[#fbfbfb] p-6 sm:flex-nowrap">
+          <div className="flex min-w-0 flex-1 basis-[calc(100%-2.75rem)] items-center gap-3 sm:basis-auto">
             <span className="text-primary grid size-[60px] shrink-0 place-content-center rounded-2xl bg-[#eff1f6]">
               <TitleIcon className="size-[30px]" />
             </span>
             <div className="min-w-0 text-start">
-              <DialogTitle className="truncate text-xl leading-8 font-medium text-[#1a1a1a]">
+              <DialogTitle
+                dir="auto"
+                className="text-page-start truncate text-xl leading-8 font-medium text-[#1a1a1a]"
+              >
                 {contract.conversation.listing.name}
               </DialogTitle>
               <p
@@ -94,7 +97,10 @@ export const ProviderContractDialog = ({
           <DialogDescription className="sr-only">
             {getContractStatusLabel(status, dict)}
           </DialogDescription>
-          <ContractStatusPill status={status} className="ms-auto" />
+          <ContractStatusPill
+            status={status}
+            className="order-last sm:order-none sm:ms-auto"
+          />
           <DialogClose className="text-gray grid size-8 shrink-0 cursor-pointer place-content-center rounded-full border border-[#f2f2f2] bg-white transition hover:bg-[#f8f9fb]">
             <X className="size-4" />
             <span className="sr-only">{dict.common.cancel}</span>
@@ -113,17 +119,17 @@ export const ProviderContractDialog = ({
                   <TimelineMetric
                     icon={ClockIcon}
                     label={dict.contracts.providerCompletionTime}
-                    value={pendingTimelineValue}
+                    value={timeline.execution}
                   />
                   <TimelineMetric
                     icon={ClockIcon}
                     label={dict.contracts.deliveryTime}
-                    value={deliveryTimelineValue}
+                    value={timeline.delivery}
                   />
                   <TimelineMetric
                     icon={ClockIcon}
                     label={dict.contracts.expectedCompletionTime}
-                    value={pendingTimelineValue}
+                    value={timeline.total}
                   />
                 </div>
 
@@ -133,7 +139,9 @@ export const ProviderContractDialog = ({
                       <TimelineMetric
                         icon={CalendarIcon}
                         label={dict.contracts.completedAt}
-                        value={formatContractDate(contract.updatedAt)}
+                        value={formatContractDate(
+                          contract.completedAt ?? contract.updatedAt,
+                        )}
                       />
                     )}
                     <TimelineMetric
@@ -145,6 +153,23 @@ export const ProviderContractDialog = ({
                 )}
               </div>
             </section>
+
+            {Boolean(contract.paidAt) && (
+              <ContractClientIdentity client={contract.client} />
+            )}
+            {(Boolean(contract.paidAt) ||
+              contract.status === ContractStatus.Accepted) && (
+              <ContractPaymentInfo contract={contract} />
+            )}
+
+            {isCancelled && <ContractCancellationDetails contract={contract} />}
+            {(contract.status === ContractStatus.Disputed ||
+              contract.status === ContractStatus.CancellationRequested) && (
+              <ContractHeldFunds contract={contract} viewer="provider" />
+            )}
+            {contract.status === ContractStatus.AdminResolved && (
+              <ContractAdminResolution contract={contract} />
+            )}
 
             <ContractFinancialSection contract={contract} />
 

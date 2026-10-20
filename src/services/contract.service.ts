@@ -3,7 +3,6 @@ import type {
   CompleteContractInput,
   Contract,
   ContractPaginationInput,
-  ContractPaymentResponse,
   ContractQuote,
   ContractQuoteInput,
   CreateContractInput,
@@ -21,9 +20,11 @@ import {
   CONTRACT_QUERY,
   CONTRACT_QUOTE_QUERY,
   CONTRACTS_QUERY,
+  MY_OVERDUE_CONTRACTS_QUERY,
+  MY_PAID_CONTRACT_NOTICES_QUERY,
+  ACKNOWLEDGE_CONTRACT_PAID_MUTATION,
   CREATE_CONTRACT_MUTATION,
   INITIALIZE_CONTRACT_MUTATION,
-  PAY_CONTRACT_MUTATION,
   REJECT_CONTRACT_MUTATION,
   RESEND_CONTRACT_MUTATION,
   PROVIDER_COMPLETE_CONTRACT_MUTATION,
@@ -47,6 +48,38 @@ export class ContractService {
       variables: { input },
     });
     return requireData(result, "Contracts").contracts;
+  }
+
+  static async overdue() {
+    const result = await client().query<{ myOverdueContracts: Contract[] }>({
+      query: MY_OVERDUE_CONTRACTS_QUERY,
+    });
+    return requireData(result, "Overdue contracts").myOverdueContracts;
+  }
+
+  /** S4-12: paid contracts the provider hasn't been told about yet. */
+  static async paidNotices() {
+    const result = await client().query<{
+      myPaidContractNotices: Pick<Contract, "id" | "publicId">[];
+    }>({
+      query: MY_PAID_CONTRACT_NOTICES_QUERY,
+      fetchPolicy: "network-only",
+    });
+    return requireData(result, "Paid contracts").myPaidContractNotices;
+  }
+
+  static async acknowledgePaid(contractId: string) {
+    const result = await client().mutate<{ acknowledgeContractPaid: boolean }>(
+      {
+        mutation: ACKNOWLEDGE_CONTRACT_PAID_MUTATION,
+        variables: { contractId },
+      },
+    );
+    return requireOperationField(
+      result,
+      "acknowledgeContractPaid",
+      "Acknowledge payment",
+    );
   }
 
   static async findOne(id: string) {
@@ -111,16 +144,6 @@ export class ContractService {
       variables: { input },
     });
     return requireOperationField(result, "resendContract", "Resend contract");
-  }
-
-  static async pay(contractId: string) {
-    const result = await client().mutate<{
-      payContract: ContractPaymentResponse;
-    }>({
-      mutation: PAY_CONTRACT_MUTATION,
-      variables: { contractId },
-    });
-    return requireOperationField(result, "payContract", "Pay contract");
   }
 
   static async complete(input: CompleteContractInput) {

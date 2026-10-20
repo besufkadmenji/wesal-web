@@ -11,6 +11,7 @@ import { useDict } from "@/hooks/useDict";
 import { Reviews } from "@/components/app/listings/ListingDetail/Reviews";
 import { usePathname, useRouter } from "next/navigation";
 import { ProviderData } from "@/components/app/listings/ListingDetail/ProviderData";
+import { EmptyState } from "@/components/app/shared/ParticipantUI";
 
 export const ListingDetail = ({ ownerMode }: { ownerMode?: boolean }) => {
   const { listing, isLoading } = useListing();
@@ -19,8 +20,16 @@ export const ListingDetail = ({ ownerMode }: { ownerMode?: boolean }) => {
   const dict = useDict();
   return (
     <AppWrapper>
-      {isLoading || !listing ? (
+      {isLoading ? (
         <DetailSkeleton />
+      ) : !listing ? (
+        // S4-56: removed, or its section is inactive.
+        <div className="px-[7vw] py-16">
+          <EmptyState
+            title={dict.listingDetail.unavailableTitle}
+            description={dict.listingDetail.unavailableDescription}
+          />
+        </div>
       ) : (
         <div className="grid auto-rows-max grid-cols-1 items-start gap-20 px-[7vw] py-10">
           <div className="grid grid-cols-1 items-start gap-10 md:grid-cols-2">
@@ -28,7 +37,7 @@ export const ListingDetail = ({ ownerMode }: { ownerMode?: boolean }) => {
             <MainInfo listing={listing} />
           </div>
           <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-2">
-            <Reviews ownerMode={!!ownerMode} />
+            <Reviews listing={listing} />
             <div className="grid grid-cols-1 gap-10">
               <StoryVideo listing={listing} />
               {ownerMode ? (

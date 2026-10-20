@@ -8,18 +8,19 @@ import UserIcon from "@/assets/icons/contracts/user.svg";
 import { ContractFormSection } from "@/components/app/contracts/ContractFormSection";
 import { ContractLocationMap } from "@/components/app/contracts/ContractLocationMap";
 import { ContractMoneyField } from "@/components/app/contracts/ContractMoneyField";
-import { formatContractReference } from "@/components/app/contracts/formatContract";
+import {
+  formatContractDate,
+  formatContractReference,
+} from "@/components/app/contracts/formatContract";
 import { formatPhone } from "@/components/app/contracts/formatPhone";
 import { TermsCard } from "@/components/app/contracts/TermsCard";
 import { FormInput } from "@/components/app/profile/SignedContract/FormInput";
 import { SignatureInput } from "@/components/app/profile/SignedContract/SignatureInput";
 import { Button } from "@/components/ui/button";
-import {
-  ContractSignatureType,
-  type Contract,
-} from "@/gql/graphql";
+import { ContractSignatureType, type Contract } from "@/gql/graphql";
 import { useDict } from "@/hooks/useDict";
 import { useLang } from "@/hooks/useLang";
+import { pickLocalizedText } from "./contractTerms";
 import { useMe } from "@/hooks/useMe";
 import { forwardRef, useState } from "react";
 
@@ -44,6 +45,11 @@ export const ContractDocumentView = forwardRef<
   const providerSignature = contract.signatures.find(
     (entry) => entry.signatureType === ContractSignatureType.ProviderAcceptance,
   )?.signatureData;
+  const providerCompletionSignature = contract.signatures.find(
+    (entry) => entry.signatureType === ContractSignatureType.ProviderCompletion,
+  )?.signatureData;
+  // BRD (D-19): the customer sees the provider's signatures only in the PDF.
+  const showProviderSignatures = !me?.user;
   const deliveryCompanyName =
     lang === "ar"
       ? contract.deliveryCompanyNameAr || contract.deliveryCompanyNameEn
@@ -67,6 +73,14 @@ export const ContractDocumentView = forwardRef<
           <FormInput
             label={dict.contracts.listingName}
             value={contract.conversation.listing.name}
+          />
+          <FormInput
+            label={dict.contracts.acceptedAt}
+            value={formatContractDate(contract.acceptedAt)}
+          />
+          <FormInput
+            label={dict.contracts.completedAt}
+            value={formatContractDate(contract.completedAt)}
           />
         </div>
       </ContractFormSection>
@@ -169,6 +183,10 @@ export const ContractDocumentView = forwardRef<
             value={deliveryCompanyName || "—"}
           />
           <ContractMoneyField
+            label={`${dict.contracts.commission} (${contract.commissionPercent}%)`}
+            value={contract.commissionAmount}
+          />
+          <ContractMoneyField
             label={dict.contracts.vat}
             value={contract.vatAmount}
           />
@@ -199,25 +217,27 @@ export const ContractDocumentView = forwardRef<
         </div>
       </ContractFormSection>
 
-      <ContractFormSection
-        title={dict.contracts.providerSignatures}
-        icon={AgreementIcon}
-      >
-        <div className="grid gap-8 md:grid-cols-2">
-          <SignatureInput
-            label={dict.contracts.providerAcceptanceSignature}
-            initUrl={providerSignature}
-            file={null}
-            disabled
-          />
-          <SignatureInput
-            label={dict.contracts.providerCompletionSignature}
-            initUrl={null}
-            file={null}
-            disabled
-          />
-        </div>
-      </ContractFormSection>
+      {showProviderSignatures && (
+        <ContractFormSection
+          title={dict.contracts.providerSignatures}
+          icon={AgreementIcon}
+        >
+          <div className="grid gap-8 md:grid-cols-2">
+            <SignatureInput
+              label={dict.contracts.providerAcceptanceSignature}
+              initUrl={providerSignature}
+              file={null}
+              disabled
+            />
+            <SignatureInput
+              label={dict.contracts.providerCompletionSignature}
+              initUrl={providerCompletionSignature}
+              file={null}
+              disabled
+            />
+          </div>
+        </ContractFormSection>
+      )}
 
       <ContractFormSection title={dict.contracts.termsTitle} icon={BillIcon}>
         <div className="grid gap-6">
@@ -229,15 +249,24 @@ export const ContractDocumentView = forwardRef<
           </TermsCard>
           <TermsCard title={dict.contracts.clientCommitmentTitle} readOnly>
             <p className="text-gray text-base leading-[1.7]">
-              {dict.contracts.clientCommitmentBody.replace(
-                "{percent}",
-                String(contract.commissionPercent),
-              )}
+              {pickLocalizedText(
+                lang,
+                contract.undertakingTextAr,
+                contract.undertakingTextEn,
+              ) ||
+                dict.contracts.clientCommitmentBody.replace(
+                  "{percent}",
+                  String(contract.commissionPercent),
+                )}
             </p>
           </TermsCard>
           <TermsCard title={dict.contracts.refundTitle} readOnly>
             <p className="text-gray text-base leading-[1.7]">
-              {dict.contracts.refundBody}
+              {pickLocalizedText(
+                lang,
+                contract.refundPolicyAr,
+                contract.refundPolicyEn,
+              ) || dict.contracts.refundBody}
             </p>
           </TermsCard>
         </div>

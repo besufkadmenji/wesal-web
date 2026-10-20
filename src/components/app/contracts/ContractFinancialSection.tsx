@@ -31,6 +31,11 @@ export const ContractFinancialSection = ({
           label={`${dict.contracts.commission} (${contract.commissionPercent}%)`}
           value={contract.commissionAmount}
         />
+        {contract.isCharity && (
+          <p className="text-app-green text-sm leading-6">
+            {dict.charity.commissionNote}
+          </p>
+        )}
         <div className="my-1 h-px bg-[#f2f2f2]" />
         <div className="flex items-center justify-between gap-4">
           <span className="text-lg leading-8 font-medium text-[#1a1a1a]">

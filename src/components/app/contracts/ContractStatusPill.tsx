@@ -9,10 +9,18 @@ import {
   Clock3,
   FilePenLine,
   Hourglass,
+  Search,
+  ShieldCheck,
+  Truck,
   WalletCards,
   type LucideIcon,
 } from "lucide-react";
 
+/**
+ * Pill text per API status. Tabs follow the S4-1 groups (API
+ * `statusGroup`); statuses Figma doesn't show get their own text:
+ * Rejected, Awaiting confirmation and Under review.
+ */
 export const getContractStatusLabel = (
   status: ContractStatus,
   dict: ReturnType<typeof useDict>,
@@ -21,13 +29,15 @@ export const getContractStatusLabel = (
     [ContractStatus.Pending]: dict.contracts.pendingAcceptance,
     [ContractStatus.Accepted]: dict.contracts.pendingPayment,
     [ContractStatus.InProgress]: dict.contracts.inProgress,
-    [ContractStatus.AwaitingCustomerConfirmation]: dict.contracts.pendingAcceptance,
+    [ContractStatus.AwaitingCustomerConfirmation]:
+      dict.contracts.awaitingConfirmation,
     [ContractStatus.DeliveryInProgress]: dict.contracts.outForDelivery,
-    [ContractStatus.CancellationRequested]: dict.contracts.cancelled,
-    [ContractStatus.Disputed]: dict.contracts.rejectDelivery,
+    [ContractStatus.CancellationRequested]: dict.contracts.underReview,
+    [ContractStatus.Disputed]: dict.contracts.underReview,
     [ContractStatus.Completed]: dict.contracts.completed,
     [ContractStatus.Rejected]: dict.contracts.rejected,
     [ContractStatus.Cancelled]: dict.contracts.cancelled,
+    [ContractStatus.AdminResolved]: dict.contracts.adminResolved,
   };
   return (
     labels[status] ||
@@ -42,12 +52,13 @@ const STATUS_ICONS: Record<ContractStatus, LucideIcon> = {
   [ContractStatus.Accepted]: WalletCards,
   [ContractStatus.InProgress]: Hourglass,
   [ContractStatus.AwaitingCustomerConfirmation]: Clock3,
-  [ContractStatus.DeliveryInProgress]: Hourglass,
-  [ContractStatus.CancellationRequested]: Clock3,
-  [ContractStatus.Disputed]: CircleX,
+  [ContractStatus.DeliveryInProgress]: Truck,
+  [ContractStatus.CancellationRequested]: Search,
+  [ContractStatus.Disputed]: Search,
   [ContractStatus.Completed]: CircleCheck,
   [ContractStatus.Rejected]: CircleX,
   [ContractStatus.Cancelled]: CircleX,
+  [ContractStatus.AdminResolved]: ShieldCheck,
 };
 
 const STATUS_CLASSES: Record<ContractStatus, string> = {
@@ -56,16 +67,16 @@ const STATUS_CLASSES: Record<ContractStatus, string> = {
   [ContractStatus.Accepted]: "border-blue-500 bg-blue-50 text-blue-600",
   [ContractStatus.InProgress]: "border-violet-500 bg-violet-50 text-violet-600",
   [ContractStatus.AwaitingCustomerConfirmation]:
-    "border-amber-500 bg-amber-50 text-amber-700",
-  [ContractStatus.DeliveryInProgress]:
-    "border-sky-500 bg-sky-50 text-sky-700",
+    "border-violet-500 bg-violet-50 text-violet-600",
+  [ContractStatus.DeliveryInProgress]: "border-sky-500 bg-sky-50 text-sky-700",
   [ContractStatus.CancellationRequested]:
     "border-orange-500 bg-orange-50 text-orange-700",
-  [ContractStatus.Disputed]: "border-rose-500 bg-rose-50 text-rose-700",
+  [ContractStatus.Disputed]: "border-orange-500 bg-orange-50 text-orange-700",
   [ContractStatus.Completed]:
     "border-emerald-500 bg-emerald-50 text-emerald-600",
   [ContractStatus.Rejected]: "border-rose-500 bg-rose-50 text-rose-600",
   [ContractStatus.Cancelled]: "border-[#b3251e] bg-[#fbeae9] text-[#b3251e]",
+  [ContractStatus.AdminResolved]: "border-teal-600 bg-teal-50 text-teal-700",
 };
 
 export const ContractStatusPill = ({

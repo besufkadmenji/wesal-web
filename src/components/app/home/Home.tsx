@@ -8,6 +8,7 @@ import { Join } from "@/components/app/home/Join";
 import { TopListing } from "@/components/app/home/TopListing";
 import { ContactUs } from "@/components/app/home/ContactUs";
 import { Category } from "@/gql/graphql";
+import { PendingPaymentGate } from "@/components/app/home/PendingPaymentGate";
 
 export const Home = ({ categories }: { categories: Category[] }) => {
   const dict = useDict();
@@ -30,6 +31,7 @@ export const Home = ({ categories }: { categories: Category[] }) => {
         <TopListing />
         <ContactUs />
       </div>
+      <PendingPaymentGate />
     </AppWrapper>
   );
 };

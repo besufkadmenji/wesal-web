@@ -17,27 +17,27 @@ import { useState } from "react";
 export const ContractAcceptanceDialog = ({
   open,
   onOpenChange,
-  maxCompletionDays,
+  maxExecutionHours,
   isPending,
   onConfirm,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  maxCompletionDays?: number | null;
+  maxExecutionHours?: number | null;
   isPending: boolean;
-  onConfirm: (deliveryTimeDays: number) => void;
+  onConfirm: (executionHours: number) => void;
 }) => {
   const dict = useDict();
-  const [deliveryDays, setDeliveryDays] = useState("1");
-  const deliveryTimeDays = Number(deliveryDays);
-  const hasValidDeliveryDays =
-    Number.isInteger(deliveryTimeDays) &&
-    deliveryTimeDays > 0 &&
-    (maxCompletionDays == null || deliveryTimeDays <= maxCompletionDays);
+  const [executionHoursInput, setExecutionHoursInput] = useState("1");
+  const executionHours = Number(executionHoursInput);
+  const hasValidExecutionHours =
+    Number.isInteger(executionHours) &&
+    executionHours > 0 &&
+    (maxExecutionHours == null || executionHours <= maxExecutionHours);
 
   const handleOpenChange = (nextOpen: boolean) => {
     if (!isPending) {
-      if (!nextOpen) setDeliveryDays("1");
+      if (!nextOpen) setExecutionHoursInput("1");
       onOpenChange(nextOpen);
     }
   };
@@ -64,29 +64,29 @@ export const ContractAcceptanceDialog = ({
 
         <div className="grid gap-2">
           <label
-            htmlFor="accept-delivery-days"
+            htmlFor="accept-execution-hours"
             className="text-base leading-8 font-medium text-black"
           >
-            {dict.contracts.deliveryDays}{" "}
+            {dict.contracts.executionHours}{" "}
             <span className="text-[#b3251e]">*</span>
           </label>
           <Input
-            id="accept-delivery-days"
+            id="accept-execution-hours"
             type="number"
             min={1}
-            max={maxCompletionDays ?? undefined}
+            max={maxExecutionHours ?? undefined}
             step={1}
             required
-            value={deliveryDays}
-            onChange={(event) => setDeliveryDays(event.target.value)}
+            value={executionHoursInput}
+            onChange={(event) => setExecutionHoursInput(event.target.value)}
             disabled={isPending}
             className="h-[50px] rounded-[20px] border-[#f2f2f2] px-4"
           />
-          {maxCompletionDays != null && (
+          {maxExecutionHours != null && (
             <p className="text-gray text-xs leading-[1.7]">
-              {dict.contracts.maxDeliveryDays.replace(
-                "{days}",
-                String(maxCompletionDays),
+              {dict.contracts.maxExecutionHours.replace(
+                "{hours}",
+                String(maxExecutionHours),
               )}
             </p>
           )}
@@ -104,8 +104,8 @@ export const ContractAcceptanceDialog = ({
           </DialogClose>
           <Button
             type="button"
-            disabled={!hasValidDeliveryDays || isPending}
-            onClick={() => onConfirm(deliveryTimeDays)}
+            disabled={!hasValidExecutionHours || isPending}
+            onClick={() => onConfirm(executionHours)}
             className="bg-primary h-12.5 rounded-[20px] text-base font-semibold text-white"
           >
             {isPending

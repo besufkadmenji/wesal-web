@@ -1,7 +1,10 @@
 "use client";
 
 import type { Notification } from "@/gql/graphql";
+import { ListDateTime } from "@/components/app/shared/ListDateTime";
+import { NotificationTypeIcon } from "@/components/app/shared/NotificationTypeIcon";
 import { notificationHref } from "@/components/app/shared/notificationHref";
+import { useLang } from "@/hooks/useLang";
 import { useMarkNotificationAsRead } from "@/hooks/useNotifications";
 import { useRouter } from "next/navigation";
 import { twMerge } from "tailwind-merge";
@@ -10,16 +13,24 @@ type NotificationItemProps = {
   notification: Pick<
     Notification,
     | "id"
+    | "type"
     | "title"
     | "message"
     | "isRead"
+    | "createdAt"
     | "relatedEntityId"
     | "relatedEntityType"
   >;
+  onNavigate?: () => void;
 };
 
-export const NotificationItem = ({ notification }: NotificationItemProps) => {
+/** One row of the Figma notification list (6242:7422 / 6242:7494). */
+export const NotificationItem = ({
+  notification,
+  onNavigate,
+}: NotificationItemProps) => {
   const router = useRouter();
+  const lang = useLang();
   const markAsRead = useMarkNotificationAsRead();
   const href = notificationHref(
     notification.relatedEntityType,
@@ -31,7 +42,8 @@ export const NotificationItem = ({ notification }: NotificationItemProps) => {
       await markAsRead.mutateAsync(notification.id);
     }
     if (href) {
-      router.push(href);
+      onNavigate?.();
+      router.push(`/${lang}${href}`);
     }
   };
 
@@ -40,19 +52,35 @@ export const NotificationItem = ({ notification }: NotificationItemProps) => {
       type="button"
       onClick={handleClick}
       className={twMerge(
-        "border-border grid w-full gap-1 border-b p-4 text-start hover:bg-[#f8f9fc]",
-        !notification.isRead && "bg-[#f8f9fc]",
+        "flex w-full items-start gap-3 p-6 text-start",
+        notification.isRead
+          ? "border-b border-[#F2F2F2] bg-white"
+          : "bg-[#EFF1F6]",
       )}
     >
-      <p
-        className={twMerge(
-          "truncate text-sm",
-          notification.isRead ? "font-medium" : "font-semibold",
-        )}
-      >
-        {notification.title}
-      </p>
-      <p className="text-gray line-clamp-2 text-xs">{notification.message}</p>
+      <NotificationTypeIcon
+        type={notification.type}
+        relatedEntityType={notification.relatedEntityType}
+        isRead={notification.isRead}
+      />
+      <span className="grid min-w-0 flex-1 gap-1">
+        <span className="flex items-center gap-2.5">
+          <span
+            dir="auto"
+            className="text-page-start min-w-0 flex-1 text-base leading-8 font-medium text-[#1A1A1A]"
+          >
+            {notification.title}
+          </span>
+          <ListDateTime value={notification.createdAt} lang={lang} />
+        </span>
+        {/* Old rows and broadcasts can be in either language (D-11). */}
+        <span
+          dir="auto"
+          className="text-page-start text-sm leading-[1.7] text-[#666]"
+        >
+          {notification.message}
+        </span>
+      </span>
     </button>
   );
 };

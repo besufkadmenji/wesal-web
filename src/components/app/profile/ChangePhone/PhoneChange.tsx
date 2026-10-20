@@ -16,7 +16,7 @@ export const PhoneChange = ({ children }: { children: ReactNode }) => {
         );
       }}
     >
-      <DialogTrigger>{children}</DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="min-w-[42vw]">
         {phoneChange === "initiate" ? (
           <InitiatePhoneChange />

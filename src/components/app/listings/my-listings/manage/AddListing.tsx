@@ -27,6 +27,7 @@ import { twMerge } from "tailwind-merge";
 import { FormInput } from "./FormInput";
 import { useFormValidation } from "./useFormValidation";
 import { useSetting } from "@/hooks/useSettings";
+import { selectableCategories } from "./selectableCategories";
 
 export const AddListing = () => {
   const dict = useDict();
@@ -34,7 +35,7 @@ export const AddListing = () => {
   const { me } = useMe();
   const { setting } = useSetting();
   const { createListing, creating } = useManageListing();
-  const categories = me?.provider?.categories || [];
+  const categories = selectableCategories(me?.provider?.categories || []);
   const {
     form,
     setForm,

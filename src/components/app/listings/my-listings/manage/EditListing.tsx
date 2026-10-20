@@ -21,13 +21,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ListingType } from "@/gql/graphql";
+import { CategoryStatus, ListingType } from "@/gql/graphql";
 import { useDict } from "@/hooks/useDict";
 import { useLang } from "@/hooks/useLang";
 import { useMe } from "@/hooks/useMe";
 import { twMerge } from "tailwind-merge";
 import { FormInput } from "./FormInput";
 import { useFormValidation } from "./useFormValidation";
+import { selectableCategories } from "./selectableCategories";
 
 export const EditListing = () => {
   const dict = useDict();
@@ -142,11 +143,15 @@ export const EditListing = () => {
                     </div>
                   </SelectTrigger>
                   <SelectContent>
-                    {categories.map((category) => (
-                      <SelectItem key={category.id} value={category.id}>
-                        {lng === "ar" ? category.nameAr : category.nameEn}
-                      </SelectItem>
-                    ))}
+                    {selectableCategories(categories, listing?.categoryId).map(
+                      (category) => (
+                        <SelectItem key={category.id} value={category.id}>
+                          {lng === "ar" ? category.nameAr : category.nameEn}
+                          {category.status === CategoryStatus.Inactive &&
+                            ` ${dict.addListing.form.unavailableCategory}`}
+                        </SelectItem>
+                      ),
+                    )}
                   </SelectContent>
                 </Select>
                 {errors.categoryId && (

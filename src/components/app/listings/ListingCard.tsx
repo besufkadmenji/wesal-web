@@ -11,13 +11,17 @@ import type { ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 import { PromotionStatus } from "@/gql/graphql";
 import { StatusBadge } from "@/components/app/shared/ParticipantUI";
+import { NewlyAddedChip } from "@/components/app/shared/NewlyAddedChip";
 
 export const ListingCard = ({
   listing,
   action,
+  showProviderLabels = true,
 }: {
   listing: Listing;
   action?: ReactNode;
+  /** Off on the provider's own listings (S4-54 label is for customers). */
+  showProviderLabels?: boolean;
 }) => {
   const dict = useDict();
   const pathname = usePathname();
@@ -47,6 +51,9 @@ export const ListingCard = ({
               className="absolute start-3 top-3"
             />
           )}
+          {showProviderLabels && listing.provider?.isNewlyAdded && (
+            <NewlyAddedChip className="absolute end-3 top-3" />
+          )}
         </div>
         <div className="grid grid-cols-1 gap-3 px-3 py-4">
           <div className="grid grid-cols-1 gap-2.5">
@@ -56,7 +63,9 @@ export const ListingCard = ({
               </p>
               <div className="flex items-center gap-1">
                 <RatingIcon className="size-4.5 text-[#FB8A00]" />
-                <p className="text-sm font-medium text-[#1A1A1A]">0.0</p>
+                <p className="text-sm font-medium text-[#1A1A1A]">
+                  {(listing.ratingAverage ?? 0).toFixed(1)}
+                </p>
               </div>
             </div>
             <p className="text-gray line-clamp-2 text-sm leading-6 font-medium text-ellipsis">

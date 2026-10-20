@@ -5,6 +5,8 @@ import {
 } from "@/components/app/listings/ListingCard";
 import { ListingHeader } from "@/components/app/listings/my-listings/ListingHeader";
 import { NoListing } from "@/components/app/listings/my-listings/NoListing";
+import { PayToFeatureButton } from "@/components/app/listings/my-listings/PayToFeatureButton";
+import { PromotionStatus } from "@/gql/graphql";
 import { useListings } from "@/components/app/listings/my-listings/useListings";
 import { AppPagination } from "@/components/app/shared/AppPagination";
 import { AppWrapper } from "@/components/app/shared/AppWrapper";
@@ -39,7 +41,17 @@ export const MyListings = () => {
               <div className="grid grid-cols-1 gap-12">
                 <div className="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
                   {listings.items.map((listing) => (
-                    <ListingCard key={listing.id} listing={listing} />
+                    <ListingCard
+                      key={listing.id}
+                      listing={listing}
+                      showProviderLabels={false}
+                      action={
+                        listing.promotionStatus ===
+                          PromotionStatus.PendingPayment && (
+                          <PayToFeatureButton listingId={listing.id} />
+                        )
+                      }
+                    />
                   ))}
                 </div>
                 {listings.meta.totalPages > 1 && (

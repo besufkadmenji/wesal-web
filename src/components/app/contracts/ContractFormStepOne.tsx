@@ -19,17 +19,15 @@ import { Button } from "@/components/ui/button";
 import GoogleMapReact from "google-map-react";
 import { twMerge } from "tailwind-merge";
 
-export const ContractFormStepOne = ({
-  form,
-}: {
-  form: ContractFormState;
-}) => {
+export const ContractFormStepOne = ({ form }: { form: ContractFormState }) => {
   const {
     dict,
     conversation,
     documentText,
     commissionPercent,
     minCommission,
+    undertakingText,
+    refundText,
     contractNumber,
     client,
     provider,
@@ -90,7 +88,7 @@ export const ContractFormStepOne = ({
               value={formatPhone(provider?.dialCode, provider?.phone)}
             />
           </div>
-          <div className="grid gap-3 md:grid-cols-[1fr_auto] items-center">
+          <div className="grid items-center gap-3 md:grid-cols-[1fr_auto]">
             <FormInput
               label={dict.contracts.providerLocation}
               value={provider?.address || "—"}
@@ -156,30 +154,39 @@ export const ContractFormStepOne = ({
             checked={acceptedCommitment}
             onChange={setAcceptedCommitment}
           >
-            <div className="flex flex-wrap items-center justify-end gap-1">
-              <p className="text-gray text-base leading-[1.7]">
-                {dict.contracts.clientCommitmentBody.replace(
-                  "{percent}",
-                  String(commissionPercent),
-                )}
+            {undertakingText ? (
+              <p className="text-gray text-base leading-[1.7] whitespace-pre-line">
+                {undertakingText}
               </p>
-              <span className="text-primary flex items-center gap-1 text-base font-medium leading-8">
-                <span
-                  className={twMerge("text-app-green text-base", sar.className)}
-                >
-                  A
+            ) : (
+              <div className="flex flex-wrap items-center justify-end gap-1">
+                <p className="text-gray text-base leading-[1.7]">
+                  {dict.contracts.clientCommitmentBody.replace(
+                    "{percent}",
+                    String(commissionPercent),
+                  )}
+                </p>
+                <span className="text-primary flex items-center gap-1 text-base leading-8 font-medium">
+                  <span
+                    className={twMerge(
+                      "text-app-green text-base",
+                      sar.className,
+                    )}
+                  >
+                    A
+                  </span>
+                  ({Number(minCommission).toFixed(2)})
                 </span>
-                ({Number(minCommission).toFixed(2)})
-              </span>
-            </div>
+              </div>
+            )}
           </TermsCard>
           <TermsCard
             title={dict.contracts.refundTitle}
             checked={acceptedRefund}
             onChange={setAcceptedRefund}
           >
-            <p className="text-gray text-base leading-[1.7]">
-              {dict.contracts.refundBody}
+            <p className="text-gray text-base leading-[1.7] whitespace-pre-line">
+              {refundText || dict.contracts.refundBody}
             </p>
           </TermsCard>
         </div>

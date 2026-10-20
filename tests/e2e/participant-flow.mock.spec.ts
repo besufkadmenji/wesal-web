@@ -91,12 +91,12 @@ const pendingContract = {
   deliveryCompanyId: null,
   deliveryCompanyNameAr: null,
   deliveryCompanyNameEn: null,
-  deliveryTimeDays: null,
+  executionHours: null,
   categoryRulesAr: "الشروط",
   categoryRulesEn: "Terms",
   contractDocumentText: "Contract terms",
-  maxCompletionDays: 30,
-  maxTerminationDays: 3,
+  maxExecutionHours: 30,
+  maxTerminationHours: 3,
   rejectionReason: null,
   acceptedAt: null,
   rejectedAt: null,
@@ -299,18 +299,28 @@ async function mockParticipantApi(
       };
     } else if (operation.includes("MarkConversationRead")) {
       data = { markConversationRead: { id: conversation.id, unreadCount: 0 } };
-    } else if (operation.includes("PayConversationFee")) {
+    } else if (operation.includes("StartPaymentCheckout")) {
+      // The gateway approves at once and returns to the web (S4-10).
       providerFeePaid = true;
       data = {
-        payConversationFee: {
-          payment: {
-            id: "chat-payment-e2e",
-            purpose: "CHAT_PROVIDER",
-            status: "COMPLETED",
-            amount: 10,
-          },
-          access: currentConversation().access,
-          conversation: currentConversation(),
+        startPaymentCheckout: {
+          paymentId: "chat-payment-e2e",
+          redirectUrl: "/en/payments/return?paymentId=chat-payment-e2e",
+        },
+      };
+    } else if (operation.includes("PaymentResult")) {
+      data = {
+        payment: {
+          id: "chat-payment-e2e",
+          purpose: "CHAT_PROVIDER",
+          status: "COMPLETED",
+          amount: 10,
+          paymentMethod: "ELECTRONIC",
+          contractId: null,
+          conversationId: conversation.id,
+          listingId: null,
+          paidAt: new Date().toISOString(),
+          failedAt: null,
         },
       };
     } else if (operation.includes("getSetting")) {
@@ -367,10 +377,21 @@ async function mockParticipantApi(
               type: "next",
               payload: {
                 data: {
+                  // H-26: subscription results go through Apollo's cache,
+                  // which drops a payload missing __typename or fields of
+                  // the sender union, as the real API always sends them.
                   participantMessageAdded: {
                     ...conversation.lastMessage,
+                    __typename: "Message",
                     id: "message-realtime",
                     content: "Realtime update",
+                    sender: {
+                      __typename: "Provider",
+                      id: "provider-e2e",
+                      name: "E2E Provider",
+                      commercialName: null,
+                      avatarFilename: null,
+                    },
                   },
                 },
               },
@@ -402,9 +423,43 @@ test("incoming chat message updates the badge outside chat", async ({ page }) =>
   await mockParticipantApi(page);
   await page.goto("/en/contracts");
 
+  // D-21: the header shows a dot (with a screen-reader label), not a count.
   const messagesButton = page.getByRole("button", { name: /Messages/i });
   await expect(messagesButton).toBeVisible();
-  await expect(messagesButton.getByText("1", { exact: true })).toBeVisible();
+  await expect(messagesButton.getByText("Unread messages")).toBeAttached();
+});
+
+test("chats open as a full-height side drawer on the header's side", async ({
+  page,
+}) => {
+  await mockParticipantApi(page);
+  for (const [lang, title, edge] of [
+    ["en", "Messages", "right"],
+    ["ar", "المحادثات", "left"],
+  ] as const) {
+    await page.context().addCookies([
+      { name: "lang", value: lang, domain: "127.0.0.1", path: "/" },
+    ]);
+    await page.goto(`/${lang}/contracts`);
+    await page.getByRole("button", { name: new RegExp(title) }).click();
+    const drawer = page.getByRole("dialog", { name: title });
+    await expect(drawer).toBeVisible();
+    await expect(drawer.getByText("E2E Provider").first()).toBeVisible();
+    // Measured once the slide-in animation has settled.
+    const viewport = page.viewportSize()!;
+    const edgeOffset = async () => {
+      const box = (await drawer.boundingBox())!;
+      return edge === "right"
+        ? Math.round(viewport.width - (box.x + box.width))
+        : Math.round(box.x);
+    };
+    await expect.poll(edgeOffset).toBe(0);
+    expect(Math.round((await drawer.boundingBox())!.height)).toBe(
+      viewport.height,
+    );
+    await page.keyboard.press("Escape");
+    await expect(drawer).toBeHidden();
+  }
 });
 
 test("contract query parameter opens its popup from the contracts list", async ({
@@ -444,6 +499,8 @@ test("provider pays the chat fee and opens the pending contract", async ({
 
   await expect(page.getByText("Conversation access fee")).toBeVisible();
   await page.getByRole("button", { name: "Pay now" }).click();
+  await expect(page.getByText("Payment completed successfully")).toBeVisible();
+  await page.getByRole("link", { name: "Back to chat" }).click();
   await expect(page.getByPlaceholder("Write your message")).toBeVisible();
 
   const contractLink = page.getByRole("link", { name: "Accept contract" });

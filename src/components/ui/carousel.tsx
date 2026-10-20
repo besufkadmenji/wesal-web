@@ -6,6 +6,7 @@ import useEmblaCarousel, {
 } from "embla-carousel-react"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 
+import { useDict } from "@/hooks/useDict"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 
@@ -95,6 +96,8 @@ function Carousel({
 
   React.useEffect(() => {
     if (!api) return
+    // Syncing from the external Embla instance once it is ready.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     onSelect(api)
     api.on("reInit", onSelect)
     api.on("select", onSelect)
@@ -178,6 +181,7 @@ function CarouselPrevious({
   ...props
 }: React.ComponentProps<typeof Button>) {
   const { orientation, scrollPrev, canScrollPrev } = useCarousel()
+  const dict = useDict()
 
   return (
     <Button
@@ -196,7 +200,7 @@ function CarouselPrevious({
       {...props}
     >
       <ArrowLeft />
-      <span className="sr-only">Previous slide</span>
+      <span className="sr-only">{dict.common.previousSlide}</span>
     </Button>
   )
 }
@@ -208,6 +212,7 @@ function CarouselNext({
   ...props
 }: React.ComponentProps<typeof Button>) {
   const { orientation, scrollNext, canScrollNext } = useCarousel()
+  const dict = useDict()
 
   return (
     <Button
@@ -226,7 +231,7 @@ function CarouselNext({
       {...props}
     >
       <ArrowRight />
-      <span className="sr-only">Next slide</span>
+      <span className="sr-only">{dict.common.nextSlide}</span>
     </Button>
   )
 }

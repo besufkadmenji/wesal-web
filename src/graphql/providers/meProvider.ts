@@ -7,6 +7,9 @@ export const ME_PROVIDER_QUERY: TypedDocumentNode<MeProviderQuery> = gql`
       address
       avatarFilename
       bankName
+      ratingAverage
+      ratingCount
+      isNewlyAdded
       city {
         countryId
         createdAt
@@ -32,10 +35,10 @@ export const ME_PROVIDER_QUERY: TypedDocumentNode<MeProviderQuery> = gql`
         customerConversationFeeEnabled
         depositEnabled
         depositPercent
-        maxCompletionDays
-        maxCompletionDaysEnabled
-        maxTerminationDays
-        maxTerminationDaysEnabled
+        maxExecutionHours
+        maxExecutionHoursEnabled
+        maxTerminationHours
+        maxTerminationHoursEnabled
         minCommissionAmount
         minCommissionEnabled
         providerConversationFee
@@ -86,6 +89,10 @@ export const ME_PROVIDER_QUERY: TypedDocumentNode<MeProviderQuery> = gql`
       updatedAt
       status
       signedContract {
+        terminationRequestedAt
+        terminationRequestReason
+        terminationRejectedAt
+        terminationRejectionReason
         acceptedRulesAr {
           label
           value

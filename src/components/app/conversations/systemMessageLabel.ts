@@ -13,7 +13,24 @@ export const systemMessageLabel = (
     [MessageKind.ContractAccepted]: labels.contractAccepted,
     [MessageKind.ContractPaid]: labels.contractPaid,
     [MessageKind.ContractCompleted]: labels.contractCompleted,
+    [MessageKind.ContractAdminResolved]: labels.contractAdminResolved,
+    [MessageKind.ContractProviderCompleted]: labels.contractProviderCompleted,
+    [MessageKind.ContractDeliveryStarted]: labels.contractDeliveryStarted,
+    [MessageKind.ContractCancellationRequested]:
+      labels.contractCancellationRequested,
+    [MessageKind.ContractCancelled]: labels.contractCancelled,
+    [MessageKind.ContractDisputed]: labels.contractDisputed,
   };
 
   return labelsByKind[kind] || labels.systemEvent;
+};
+
+/**
+ * BRD: a cancellation or refused-delivery reason appears in the chat. The API
+ * puts it in the system event's metadata ({ contractId, reason }).
+ */
+export const systemMessageReason = (metadata: unknown): string | null => {
+  if (!metadata || typeof metadata !== "object") return null;
+  const reason = (metadata as { reason?: unknown }).reason;
+  return typeof reason === "string" && reason.trim() ? reason.trim() : null;
 };

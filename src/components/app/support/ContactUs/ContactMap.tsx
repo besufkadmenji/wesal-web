@@ -3,6 +3,7 @@ import MarkerIcon from "@/assets/icons/marker.svg";
 import MinusIcon from "@/assets/icons/minus.svg";
 import PlusIcon from "@/assets/icons/plus.svg";
 import { Button } from "@/components/ui/button";
+import { useDict } from "@/hooks/useDict";
 import GoogleMapReact from "google-map-react";
 import { useRef, useState } from "react";
 const defaultProps = {
@@ -69,11 +70,14 @@ export const ContactMap = () => {
 };
 
 const AddressMarker = ({ lat, lng }: { lat: number; lng: number }) => {
+  const dict = useDict();
   return (
     <div className="relative z-40">
       <MarkerIcon className="w-11.5" />
 
-      <p className="mt-1.5 text-xl font-medium text-white">العنوان</p>
+      <p className="mt-1.5 text-xl font-medium text-white">
+        {dict.support.contactUs.mapMarker}
+      </p>
     </div>
   );
 };

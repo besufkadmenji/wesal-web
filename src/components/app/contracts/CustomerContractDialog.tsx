@@ -5,7 +5,12 @@ import ClockIcon from "@/assets/icons/contracts/popup/clock.svg";
 import TimelineIcon from "@/assets/icons/contracts/popup/timeline.svg";
 import TitleIcon from "@/assets/icons/contracts/popup/title.svg";
 import { ContractCompletionDialog } from "@/components/app/contracts/ContractCompletionDialog";
+import { ContractAdminResolution } from "@/components/app/contracts/ContractAdminResolution";
+import { ContractHeldFunds } from "@/components/app/contracts/ContractHeldFunds";
+import { ContractCancellationDetails } from "@/components/app/contracts/ContractCancellationDetails";
 import { ContractFinancialSection } from "@/components/app/contracts/ContractFinancialSection";
+import { ContractInvoiceButton } from "@/components/app/contracts/ContractInvoiceButton";
+import { ContractPaymentInfo } from "@/components/app/contracts/ContractPaymentInfo";
 import { ContractPaymentDialog } from "@/components/app/contracts/ContractPaymentDialog";
 import { ContractSectionTitle } from "@/components/app/contracts/ContractSectionTitle";
 import { ContractSignaturesSection } from "@/components/app/contracts/ContractSignaturesSection";
@@ -18,7 +23,7 @@ import { TimelineMetric } from "@/components/app/contracts/TimelineMetric";
 import {
   formatContractDate,
   formatContractReference,
-  formatDays,
+  contractTimeline,
 } from "@/components/app/contracts/formatContract";
 import {
   Dialog,
@@ -30,47 +35,56 @@ import {
 import {
   ContractSignatureType,
   ContractStatus,
+  ContractStatusGroup,
   type Contract,
 } from "@/gql/graphql";
 import { useDict } from "@/hooks/useDict";
 import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const CustomerContractDialog = ({
   contract,
   open,
   onOpenChange,
+  startWithPayment,
 }: {
   contract: Contract | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  /** Open the payment dialog right away while payment is due. */
+  startWithPayment?: boolean;
 }) => {
   const dict = useDict();
   const [paymentOpen, setPaymentOpen] = useState(false);
+  // BRD "Go to contract (payment)": arrive with the payment dialog open.
+  // Opened after the contract dialog has mounted and taken focus, otherwise
+  // that focus move dismisses the nested dialog straight away.
+  const payNow =
+    Boolean(startWithPayment) &&
+    contract?.status === ContractStatus.Accepted;
+  useEffect(() => {
+    if (!payNow) return;
+    const timer = setTimeout(() => setPaymentOpen(true));
+    return () => clearTimeout(timer);
+  }, [payNow, contract?.id]);
   const [completionOpen, setCompletionOpen] = useState(false);
   if (!contract) return null;
 
   const status = contract.status;
   const isPending = status === ContractStatus.Pending;
-  const isPendingPayment = status === ContractStatus.Accepted;
-  const isInProgress = status === ContractStatus.InProgress;
   const isCompleted = status === ContractStatus.Completed;
   const isCancelled = status === ContractStatus.Cancelled;
-  const showsAcceptanceDate = isPendingPayment || isInProgress || isCompleted;
+  // S4-18: the acceptance date once accepted (not pending or cancelled).
+  const showsAcceptanceDate =
+    Boolean(contract.acceptedAt) &&
+    contract.statusGroup !== ContractStatusGroup.PendingAcceptance &&
+    contract.statusGroup !== ContractStatusGroup.Cancelled;
 
   const customerSignature = contract.signatures.find(
     (entry) => entry.signatureType === ContractSignatureType.CustomerAcceptance,
   );
-  // The API does not expose a provider completion-time field yet, so the
-  // provider and expected-completion metrics can only show a placeholder
-  // once the contract leaves the pending state.
-  const pendingTimelineValue = isPending
-    ? dict.contracts.awaitingProviderInput
-    : "—";
-  const deliveryTimelineValue = isPending
-    ? pendingTimelineValue
-    : formatDays(contract.deliveryTimeDays, dict.contracts.dayUnit);
+  const timeline = contractTimeline(contract, dict.contracts, isPending);
 
   return (
     <>
@@ -79,13 +93,16 @@ export const CustomerContractDialog = ({
           showCloseButton={false}
           className="flex h-[771px] max-h-[calc(100dvh-2rem)] flex-col gap-0 overflow-hidden rounded-[20px] border-0 bg-white p-0 shadow-xl sm:max-w-[830px]"
         >
-          <header className="flex min-h-[111px] shrink-0 items-center gap-3 bg-[#fbfbfb] p-6">
-            <div className="flex min-w-0 items-center gap-3">
+          <header className="flex min-h-[111px] shrink-0 flex-wrap items-center gap-3 bg-[#fbfbfb] p-6 sm:flex-nowrap">
+            <div className="flex min-w-0 flex-1 basis-[calc(100%-2.75rem)] items-center gap-3 sm:basis-auto">
               <span className="text-primary grid size-[60px] shrink-0 place-content-center rounded-2xl bg-[#eff1f6]">
                 <TitleIcon className="size-[30px]" />
               </span>
               <div className="min-w-0 text-start">
-                <DialogTitle className="truncate text-xl leading-8 font-medium text-[#1a1a1a]">
+                <DialogTitle
+                  dir="auto"
+                  className="text-page-start truncate text-xl leading-8 font-medium text-[#1a1a1a]"
+                >
                   {contract.conversation.listing.name}
                 </DialogTitle>
                 <p
@@ -100,7 +117,10 @@ export const CustomerContractDialog = ({
             <DialogDescription className="sr-only">
               {getContractStatusLabel(status, dict)}
             </DialogDescription>
-            <ContractStatusPill status={status} className="ms-auto" />
+            <ContractStatusPill
+              status={status}
+              className="order-last sm:order-none sm:ms-auto"
+            />
             <DialogClose className="text-gray grid size-8 shrink-0 cursor-pointer place-content-center rounded-full border border-[#f2f2f2] bg-white transition hover:bg-[#f8f9fb]">
               <X className="size-4" />
               <span className="sr-only">{dict.common.cancel}</span>
@@ -119,17 +139,17 @@ export const CustomerContractDialog = ({
                     <TimelineMetric
                       icon={ClockIcon}
                       label={dict.contracts.providerCompletionTime}
-                      value={pendingTimelineValue}
+                      value={timeline.execution}
                     />
                     <TimelineMetric
                       icon={ClockIcon}
                       label={dict.contracts.deliveryTime}
-                      value={deliveryTimelineValue}
+                      value={timeline.delivery}
                     />
                     <TimelineMetric
                       icon={ClockIcon}
                       label={dict.contracts.expectedCompletionTime}
-                      value={pendingTimelineValue}
+                      value={timeline.total}
                     />
                   </div>
 
@@ -139,7 +159,9 @@ export const CustomerContractDialog = ({
                         <TimelineMetric
                           icon={CalendarIcon}
                           label={dict.contracts.completedAt}
-                          value={formatContractDate(contract.updatedAt)}
+                          value={formatContractDate(
+                            contract.completedAt ?? contract.updatedAt,
+                          )}
                         />
                       )}
                       <TimelineMetric
@@ -152,7 +174,22 @@ export const CustomerContractDialog = ({
                 </div>
               </section>
 
+              {isCancelled && (
+                <ContractCancellationDetails contract={contract} />
+              )}
+              {(status === ContractStatus.Disputed ||
+                status === ContractStatus.CancellationRequested) && (
+                <ContractHeldFunds contract={contract} viewer="customer" />
+              )}
+              {status === ContractStatus.AdminResolved && (
+                <ContractAdminResolution contract={contract} />
+              )}
+
+              {Boolean(contract.paidAt) && (
+                <ContractPaymentInfo contract={contract} />
+              )}
               <ContractFinancialSection contract={contract} />
+              <ContractInvoiceButton contract={contract} className="w-full" />
 
               {isPending && (
                 <ContractSignaturesSection
@@ -167,6 +204,7 @@ export const CustomerContractDialog = ({
               contract={contract}
               onPay={() => setPaymentOpen(true)}
               onComplete={() => setCompletionOpen(true)}
+              onRemoved={() => onOpenChange(false)}
             />
           )}
         </DialogContent>
@@ -175,7 +213,6 @@ export const CustomerContractDialog = ({
         contract={contract}
         open={paymentOpen}
         onOpenChange={setPaymentOpen}
-        onPaid={() => onOpenChange(false)}
       />
       <ContractCompletionDialog
         contract={contract}

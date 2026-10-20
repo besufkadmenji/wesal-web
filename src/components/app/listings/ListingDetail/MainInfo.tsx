@@ -17,7 +17,7 @@ export const MainInfo = ({ listing }: { listing: Listing }) => {
           <h1 className="text-2xl font-semibold text-[#1A1A1A]">
             {listing.name}
           </h1>
-          <Ratings rating={4.5} />
+          <Ratings rating={listing.ratingAverage} total={listing.ratingCount} />
         </div>
       </div>
       <div className="grid grid-cols-1 gap-1">

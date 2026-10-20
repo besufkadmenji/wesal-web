@@ -43,6 +43,12 @@ export const LISTINGS_QUERY: TypedDocumentNode<
         type
         updatedAt
         providerId
+        provider {
+          id
+          isNewlyAdded
+        }
+        ratingAverage
+        ratingCount
         photos {
           filename
           id

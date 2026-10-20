@@ -19,6 +19,7 @@ import { parseAsBoolean, useQueryState } from "nuqs";
 import { useEffect, useRef } from "react";
 import { FormInput } from "./FormInput";
 import { SignatureInput } from "./SignatureInput";
+import { TerminationRequestNotice } from "./TerminationRequestNotice";
 
 const defaultProps = {
   center: { lat: 21.636981, lng: 39.181078 },
@@ -220,25 +221,39 @@ export const SignedContract = () => {
               {dict.contract.signContract}
             </Button>
           ) : (
-            <div className="grid grid-cols-2 gap-3 justify-self-center px-27">
-              <Button
-                className="h-12.5 rounded-[20px] px-24 font-semibold text-[#EFF9F0]"
-                onClick={() => {
-                  downloadPDF(contractRef);
-                }}
+            <div className="grid grid-cols-1 gap-6">
+              <TerminationRequestNotice contract={me.provider.signedContract} />
+              <div
+                className={
+                  me.provider.signedContract.status ===
+                  SignedContractStatus.Active
+                    ? "grid grid-cols-2 gap-3 justify-self-center px-27"
+                    : "grid grid-cols-1 justify-self-center px-27"
+                }
               >
-                <DownloadIcon className="size-5" />
-                {dict.contract.exportPDF}
-              </Button>
-              <CancelContract>
                 <Button
-                  className="h-12.5 rounded-[20px] bg-[#FBEAE9]! px-24 font-semibold text-[#B3251E]!"
-                  onClick={() => {}}
-                  variant={"ghost"}
+                  className="h-12.5 rounded-[20px] px-24 font-semibold text-[#EFF9F0]"
+                  onClick={() => {
+                    downloadPDF(contractRef);
+                  }}
                 >
-                  {dict.contract.cancelContract}
+                  <DownloadIcon className="size-5" />
+                  {dict.contract.exportPDF}
                 </Button>
-              </CancelContract>
+                {/* S4-58: only an active contract can be asked to end. */}
+                {me.provider.signedContract.status ===
+                  SignedContractStatus.Active && (
+                  <CancelContract>
+                    <Button
+                      className="h-12.5 rounded-[20px] bg-[#FBEAE9]! px-24 font-semibold text-[#B3251E]!"
+                      onClick={() => {}}
+                      variant={"ghost"}
+                    >
+                      {dict.contract.cancelContract}
+                    </Button>
+                  </CancelContract>
+                )}
+              </div>
             </div>
           )
         ) : (

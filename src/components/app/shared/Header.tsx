@@ -1,9 +1,9 @@
 import AddIcon from "@/assets/icons/add.circle.svg";
 import { BeProvider } from "@/components/app/shared/BeProvider";
-import { ChatPopover } from "@/components/app/shared/ChatPopover";
+import { ChatDrawer } from "@/components/app/shared/ChatDrawer";
 import { MobileMenu } from "@/components/app/shared/MobileMenu";
 import { NavItem } from "@/components/app/shared/NavItem";
-import { NotificationPopover } from "@/components/app/shared/NotificationPopover";
+import { NotificationDrawer } from "@/components/app/shared/NotificationDrawer";
 import { Button } from "@/components/ui/button";
 import { useDict } from "@/hooks/useDict";
 import { useMe } from "@/hooks/useMe";
@@ -31,10 +31,9 @@ export const Header = () => {
           {isLoggedIn && (
             <NavItem label={dict.home.nav.contracts} href={"/contracts"} />
           )}
-          <NavItem
-            label={dict.home.nav.goodConnections}
-            href={"/good-connections"}
-          />
+          {isLoggedIn && (
+            <NavItem label={dict.home.nav.goodConnections} href={"/charity"} />
+          )}
           <NavItem
             label={dict.home.nav.contactUs}
             href={"/support/contact-us"}
@@ -44,8 +43,8 @@ export const Header = () => {
       <div className="flex items-center gap-4 lg:gap-6">
         {isLoggedIn && (
           <>
-            <NotificationPopover />
-            <ChatPopover />
+            <NotificationDrawer />
+            <ChatDrawer />
           </>
         )}
         <Button

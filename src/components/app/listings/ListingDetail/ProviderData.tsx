@@ -12,6 +12,7 @@ import { useAppRouter } from "@/hooks/use.app.router";
 import { ConversationService } from "@/services/conversation.service";
 import { showErrorMessage } from "@/utils/show.messages";
 import { useState } from "react";
+import { NewlyAddedChip } from "@/components/app/shared/NewlyAddedChip";
 
 export const ProviderData = ({
   provider,
@@ -55,11 +56,14 @@ export const ProviderData = ({
             />
           </div>
           <div className="grid grid-cols-1 items-center gap-2">
-            <p className="text-lg leading-5.25 font-medium text-[#1A1A1A]">
-              {provider.name}
-            </p>
+            <div className="flex flex-wrap items-center gap-2">
+              <p className="text-lg leading-5.25 font-medium text-[#1A1A1A]">
+                {provider.name}
+              </p>
+              {provider.isNewlyAdded && <NewlyAddedChip />}
+            </div>
             <Ratings
-              rating={4.5}
+              rating={provider.ratingAverage}
               classNames={{
                 rating: "size-4",
                 info: "text-sm text-gray",

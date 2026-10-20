@@ -1,77 +1,69 @@
+"use client";
+
 import ShowMoreIcon from "@/assets/icons/show.more.svg";
 import { Ratings } from "@/components/app/listings/ListingDetail/MainInfo";
+import { ReviewCard } from "@/components/app/listings/ListingDetail/ReviewCard";
 import { Button } from "@/components/ui/button";
+import type { Listing } from "@/gql/graphql";
+import { queryKeys } from "@/hooks/queryKeys";
 import { useDict } from "@/hooks/useDict";
-import Image from "next/image";
-import { Review, reviewsData } from "./reviews_data";
-import { twMerge } from "tailwind-merge";
-import RatingIcon from "@/assets/icons/rating.svg";
+import { RatingService } from "@/services/rating.service";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
-export const Reviews = ({ ownerMode }: { ownerMode: boolean }) => {
+const PAGE_SIZE = 5;
+
+/**
+ * Published reviews for a listing. Reviews are written from completed
+ * contracts only (BRD 4.1.20.1), so there is no "add review" action here.
+ */
+export const Reviews = ({
+  listing,
+}: {
+  listing: Pick<Listing, "id" | "ratingAverage" | "ratingCount">;
+}) => {
   const dict = useDict();
+  const reviews = useInfiniteQuery({
+    queryKey: queryKeys.listingReviews(listing.id),
+    queryFn: ({ pageParam }) =>
+      RatingService.listingReviews({
+        listingId: listing.id,
+        page: pageParam,
+        limit: PAGE_SIZE,
+      }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) =>
+      lastPage.meta.hasNext ? lastPage.meta.page + 1 : undefined,
+  });
+  const items = reviews.data?.pages.flatMap((page) => page.items) ?? [];
+
   return (
     <div className="grid grid-cols-1 gap-6 rounded-[20px] bg-white p-5">
-      <div
-        className={twMerge(
-          "grid grid-cols-1 items-center",
-          !ownerMode && "grid-cols-[1fr_auto]",
-        )}
-      >
-        <div className="grid grid-cols-1 gap-1">
-          <p>{dict.listingDetail.reviews.title}</p>
-          <Ratings rating={4.5} total={22} />
+      <div className="grid grid-cols-1 gap-1">
+        <p>{dict.listingDetail.reviews.title}</p>
+        <Ratings rating={listing.ratingAverage} total={listing.ratingCount} />
+      </div>
+      {!reviews.isLoading && items.length === 0 ? (
+        <p className="text-gray text-sm">{dict.listingDetail.reviews.empty}</p>
+      ) : (
+        <div className="grid grid-cols-1 gap-6">
+          {items.map((review) => (
+            <ReviewCard key={review.id} review={review} />
+          ))}
         </div>
-        {!ownerMode && (
-          <Button className="flex h-12.5 items-center gap-1 rounded-[20px] px-6!">
-            {dict.listingDetail.reviews.addReview}
-            <RatingIcon className="size-5" />
-          </Button>
-        )}
-      </div>
-      <div className="grid grid-cols-1 gap-6">
-        {reviewsData.map((review) => (
-          <ReviewCard key={review.id} review={review} />
-        ))}
-      </div>
-      <Button
-        variant={"secondary"}
-        className="mt-9 h-12.5 gap-3 justify-self-start rounded-[20px] px-6!"
-      >
-        <p className="text-primary text-base font-semibold">
-          {dict.listingDetail.reviews.viewMore}
-        </p>
-        <ShowMoreIcon className="size-5 ltr:rotate-90" />
-      </Button>
-    </div>
-  );
-};
-
-const ReviewCard = ({ review }: { review: Review }) => {
-  return (
-    <div className="grid grid-cols-[auto_1fr] gap-4 border-b border-b-[#F2F2F2] pb-6">
-      <div className="relative size-14 rounded-full">
-        <Image src={"/images/reviewer.png"} alt="reviewer" fill />
-      </div>
-      <div className="grid grid-cols-1 gap-3">
-        <div className="grid grid-cols-[1fr_auto] gap-2.5">
-          <div className="grid grid-cols-1 gap-2">
-            <p className="text-lg font-medium text-[#1A1A1A]">
-              {review.reviewerName}
-            </p>
-            <p className="text-gray text-sm">{review.postedDate}</p>
-          </div>
-          <Ratings
-            rating={review.rating}
-            hideInfo
-            classNames={{
-              rating: "size-4",
-            }}
-          />
-        </div>
-        <p className="text-gray text-sm leading-6 font-medium">
-          {review.comment}
-        </p>
-      </div>
+      )}
+      {reviews.hasNextPage && (
+        <Button
+          variant={"secondary"}
+          className="mt-9 h-12.5 gap-3 justify-self-start rounded-[20px] px-6!"
+          disabled={reviews.isFetchingNextPage}
+          onClick={() => reviews.fetchNextPage()}
+        >
+          <p className="text-primary text-base font-semibold">
+            {dict.listingDetail.reviews.viewMore}
+          </p>
+          <ShowMoreIcon className="size-5 ltr:rotate-90" />
+        </Button>
+      )}
     </div>
   );
 };

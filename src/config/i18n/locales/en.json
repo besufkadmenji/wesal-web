@@ -9,7 +9,9 @@
   "header": {
     "notifications": "Notifications",
     "messages": "Messages",
-    "addAd": "Add Your Ad"
+    "addAd": "Add Your Ad",
+    "unreadNotifications": "Unread notifications",
+    "unreadMessages": "Unread messages"
   },
   "footer": {
     "aboutUs": "A digital platform that acts as an intermediary between sellers and buyers, aiming to facilitate the process of supply and demand through a smooth and secure user experience.",
@@ -49,12 +51,9 @@
       "categories": "Categories",
       "myListings": "My Ads",
       "contracts": "My Contracts",
-      "goodConnections": "Good Connections",
+      "goodConnections": "Wesal Al-Khair",
       "contactUs": "Contact Us"
     },
-    "title": "Certified Mediator for Contractors, Workers, and International Search",
-    "subtitle": "Discover reliable services from certified contractors and workers throughout the region",
-    "cta": "Start Searching",
     "hero": {
       "title": "Certified intermediary between advertiser and client for",
       "subtitle": "From handicrafts to jobs, real estate, and various products… we provide you with a unified space that brings together all the ads that may interest you, so you can compare, choose, and apply for what suits you best with ease and clarity.",
@@ -107,20 +106,11 @@
       "subtitle": "Start your success with thousands of advertisers",
       "title": "Your trusted partner to find the right ad",
       "description": "We provide you with a smooth and reliable search experience that helps you explore ads suitable for your needs, whether you are looking for products, services, jobs, or real estate, with a simple interface and advanced options that make finding what you want faster and easier than ever before.",
-      "stats": [
-        {
-          "number": "500",
-          "label": "Number of successful deals"
-        },
-        {
-          "number": "200",
-          "label": "Total number of advertisers"
-        },
-        {
-          "number": "350",
-          "label": "Total number of clients"
-        }
-      ]
+      "stats": {
+        "completedContracts": "Number of successful deals",
+        "providers": "Total number of advertisers",
+        "customers": "Total number of clients"
+      }
     },
     "bestSelling": {
       "title": "Top Sections in Sales and Revenue",
@@ -169,36 +159,18 @@
     "topListing": {
       "subtitle": "Trusted Advertisers",
       "title": "Ads from trusted sellers with a 5-star rating",
-      "listings": [
-        {
-          "id": 1,
-          "name": "iPhone 15 Pro Max",
-          "rating": 4.5,
-          "price": 500.0,
-          "description": "Unique handmade products crafted with precision... distinctive pieces that add a special touch to your life."
-        },
-        {
-          "id": 2,
-          "name": "iPhone 15 Pro Max",
-          "rating": 4.5,
-          "price": 500.0,
-          "description": "Unique handmade products crafted with precision... distinctive pieces that add a special touch to your life."
-        },
-        {
-          "id": 3,
-          "name": "iPhone 15 Pro Max",
-          "rating": 4.5,
-          "price": 500.0,
-          "description": "Unique handmade products crafted with precision... distinctive pieces that add a special touch to your life."
-        },
-        {
-          "id": 4,
-          "name": "iPhone 15 Pro Max",
-          "rating": 4.5,
-          "price": 500.0,
-          "description": "Unique handmade products crafted with precision... distinctive pieces that add a special touch to your life."
-        }
-      ]
+      "loginDialog": {
+        "title": "Log in to view this ad",
+        "description": "Ads from trusted advertisers are available to registered service requesters. Log in or create an account to continue.",
+        "confirm": "Log in",
+        "cancel": "Cancel"
+      },
+      "customerDialog": {
+        "title": "Register as a service requester first",
+        "description": "You are signed in as a service provider. To view and request this ad, register as a service requester.",
+        "confirm": "Register as service requester",
+        "cancel": "Cancel"
+      }
     },
     "contactUs": {
       "subtitle": "We are here to help",
@@ -447,7 +419,10 @@
     "sar": "SAR",
     "days": "days",
     "empty": "Nothing here yet",
-    "menu": "Menu"
+    "menu": "Menu",
+    "close": "Close",
+    "previousSlide": "Previous slide",
+    "nextSlide": "Next slide"
   },
   "support": {
     "addListing": {
@@ -510,7 +485,8 @@
           "minLength": "Message content must be at least 10 characters",
           "maxLength": "Message content must not exceed 1000 characters"
         }
-      }
+      },
+      "mapMarker": "Address"
     },
     "about": {
       "title": "About Platform",
@@ -664,7 +640,7 @@
     "commitmentDescription": "Both parties fully commit to the terms and conditions mentioned herein and referred to therein. In case of any dispute between the parties, and in the event of non-fulfillment by either party, the matter shall be referred to the competent authorities to take the necessary legal measures to resolve the dispute.",
     "saveSignature": "Save Signature",
     "signContract": "Sign Contract",
-    "cancelContract": "Cancel Contract",
+    "cancelContract": "Terminate contract",
     "exportPDF": "Export Contract as PDF",
     "downloadPDF": "Download PDF",
     "cancelReason": {
@@ -672,7 +648,7 @@
       "subtitle": "Please clarify the reason for terminating the contract, as this information helps us improve the user experience and ensure service quality.",
       "placeholder": "Add the reason",
       "cancel": "Cancel",
-      "send": "Send"
+      "send": "Send request"
     },
     "error": {
       "serviceProviderSignatureRequired": "Service provider signature is required",
@@ -680,7 +656,20 @@
       "cancelReasonRequired": "Please provide a reason for contract termination"
     },
     "signatureSavedSuccessfully": "Signature saved successfully",
-    "contractTerminatedSuccessfully": "Contract termination has been sent to the administration successfully"
+    "contractTerminatedSuccessfully": "Your termination request was sent to the administration",
+    "terminateConfirm": {
+      "title": "Terminate the contract?",
+      "message": "Your request will be sent to the administration. Your account stays active until they respond, and the contract can only be terminated when you have no ongoing contracts.",
+      "confirm": "Confirm"
+    },
+    "terminationRequest": {
+      "pendingTitle": "Termination request awaiting the administration",
+      "pendingMessage": "Sent on {date}. Your account stays active until the administration responds.",
+      "reason": "Your reason",
+      "rejectedTitle": "Termination request rejected",
+      "rejectedMessage": "The administration rejected your request on {date}.",
+      "rejectionReason": "Administration's reason"
+    }
   },
   "myListings": {
     "title": "My Ads",
@@ -711,7 +700,8 @@
       "maxImages": "(Max 5 images - 10MB each)",
       "characterLimit50": "0/50",
       "characterLimit1000": "0/1000",
-      "submit": "Post the advertisement"
+      "submit": "Post the advertisement",
+      "unavailableCategory": "(unavailable)"
     },
     "validation": {
       "nameRequired": "Listing name is required",
@@ -752,10 +742,14 @@
       "rating": "Rating",
       "comment": "Comment",
       "viewMore": "View More Comments",
-      "addReview": "Add Your Review"
+      "addReview": "Add Your Review",
+      "empty": "No comments yet",
+      "anonymous": "Wesal customer"
     },
     "serviceProviderData": "Service Provider Data",
-    "contactProvider": "Conversation and data display"
+    "contactProvider": "Conversation and data display",
+    "unavailableTitle": "This ad is currently unavailable",
+    "unavailableDescription": "It may have been removed, or its section is closed for now."
   },
   "editListing": {
     "saveChanges": "Save Changes"
@@ -788,9 +782,10 @@
     }
   },
   "notifications": {
-    "empty": "No notifications yet",
+    "empty": "No notifications at the moment",
     "loading": "Loading notifications...",
-    "markAllRead": "Mark all as read"
+    "markAllRead": "Mark all as read",
+    "close": "Close"
   },
   "conversations": {
     "title": "All conversations",
@@ -816,7 +811,15 @@
     "contractAccepted": "Contract accepted",
     "contractPaid": "Contract paid",
     "contractCompleted": "Contract completed",
-    "complain": "Submit complaint"
+    "complain": "Submit complaint",
+    "viewAll": "View all conversations",
+    "contractProviderCompleted": "The provider completed the contract",
+    "contractDeliveryStarted": "The order is out for delivery",
+    "contractCancellationRequested": "Contract cancellation requested",
+    "contractCancelled": "The contract was cancelled",
+    "contractDisputed": "Receipt was refused; the contract is under review",
+    "reason": "Reason",
+    "contractAdminResolved": "The administration closed the contract and released the payment to the provider"
   },
   "favorites": {
     "title": "Favorite providers",
@@ -850,7 +853,7 @@
     "pendingAcceptance": "Pending acceptance",
     "pendingPayment": "Pending payment",
     "inProgress": "In progress",
-    "outForDelivery": "Out for delivery",
+    "outForDelivery": "In delivery",
     "completed": "Completed",
     "rejected": "Rejected",
     "cancelled": "Cancelled",
@@ -860,7 +863,7 @@
     "completedAt": "Completion",
     "rejectedAt": "Rejection date",
     "cancelledAt": "Cancellation date",
-    "empty": "No contracts yet",
+    "empty": "You have no contracts yet",
     "details": "Contract details",
     "new": "Create contract",
     "resend": "Resend contract",
@@ -908,7 +911,6 @@
     "providerCompletionTime": "Service-provider completion time",
     "deliveryTime": "Delivery time",
     "expectedCompletionTime": "Expected total contract time",
-    "dayUnit": "days",
     "financialDetails": "Contract financial details",
     "financialTotal": "Total",
     "electronicSignatures": "Electronic signatures",
@@ -930,7 +932,11 @@
     "ratingPrompt": "Share your rating of the advertisement",
     "ratingDescription": "Your rating helps other users choose the most suitable advertisement.",
     "rateContract": "Add your rating",
-    "deliveryDays": "Delivery time in days",
+    "ratingStarsLabel": "Rating stars",
+    "ratingCommentPlaceholder": "Write a comment about your experience (optional)",
+    "publishRating": "Publish rating",
+    "ratingSubmitted": "Thank you, your rating has been published",
+    "ratingHidden": "This rating has been hidden by the administration",
     "accept": "Accept contract",
     "reject": "Reject contract",
     "rejectionReason": "Reason for rejection",
@@ -949,27 +955,63 @@
     "providerCompletionSignature": "Service provider contract completion signature",
     "acceptTitle": "Accept contract",
     "acceptanceTitle": "Confirm contract acceptance",
-    "acceptanceDescription": "Enter the delivery time in days to accept this contract and formally activate the agreement.",
+    "acceptanceDescription": "Enter the execution time in hours to accept this contract and formally activate the agreement.",
     "confirmAcceptance": "Confirm acceptance",
     "accepting": "Accepting contract",
     "accepted": "Contract accepted successfully",
-    "maxDeliveryDays": "Maximum allowed delivery time is {days} days",
     "providerSignatures": "Service provider signatures",
     "rejecting": "Sending",
     "rejectionTitle": "Reason for rejecting the contract",
     "rejectionDescription": "Please explain why you are rejecting the contract. This information helps us improve the user experience and maintain service quality.",
-    "cancellationTitle": "Request contract cancellation",
-    "cancellationDescription": "Tell us why you want to cancel. Financial treatment follows the contract stage and its stored refund terms.",
-    "refuseDeliveryTitle": "Refuse delivery",
-    "refuseDeliveryDescription": "Explain the delivery issue. The payment will remain held while an administrator reviews the dispute.",
-    "reasonPlaceholder": "Enter a clear reason",
+    "cancellationTitle": "Reason for cancelling the contract",
+    "cancellationDescription": "Please explain why you are cancelling. This helps us improve the experience and keep the service quality high.",
+    "refuseDeliveryTitle": "Are you sure you want to refuse receipt?",
+    "refuseDeliveryDescription": "Please explain why you are refusing receipt. This helps us improve the experience and keep the service quality high.",
+    "reasonPlaceholder": "Add the reason",
     "submitting": "Submitting",
     "requestSubmitted": "Your request was submitted",
     "providerCompletionTitle": "Submit completed work",
     "providerCompletionDescription": "Your saved signature will be applied once. If delivery is required, enter the estimated handoff time.",
-    "deliveryEstimate": "Estimated delivery time in days",
     "lifecycleHistory": "Lifecycle history",
-    "settlements": "Financial settlements"
+    "settlements": "Financial settlements",
+    "executionHours": "Execution time in hours",
+    "maxExecutionHours": "Maximum allowed execution time is {hours} hours",
+    "deliveryHours": "Delivery time in hours",
+    "hourUnit": "hours",
+    "awaitingConfirmation": "Awaiting confirmation",
+    "underReview": "Under review",
+    "reasonRequired": "Please enter the reason first",
+    "confirmCancelTitle": "Are you sure you want to cancel the contract?",
+    "confirmCancelDescription": "Once confirmed, the contract will be cancelled and this cannot be undone.",
+    "confirmCancelNo": "No, keep the contract",
+    "confirmCancelYes": "Yes, cancel the contract",
+    "cancellationReason": "Cancellation reason",
+    "shownAfterPayment": "Shown after payment",
+    "overdueTitle": "You have a contract that needs to be signed and finalized",
+    "overdueCustomerDescription": "The time for this contract has passed. Open the contract details to sign and complete it before you continue on the platform.",
+    "overdueProviderDescription": "The execution time for this contract has passed. Open the contract details to sign and complete it before you continue on the platform.",
+    "overdueDetails": "Contract details",
+    "downloadInvoice": "Download tax invoice",
+    "invoiceError": "The tax invoice could not be downloaded. Please try again.",
+    "adminResolved": "Closed by admin",
+    "adminResolvedNote": "The administration closed this contract and released the payment to the service provider. It was not signed as completed by the customer, so it can't be rated.",
+    "resolvedAt": "Closed on",
+    "adminResolutionReason": "Administration note",
+    "outcomeNoCharge": "Nothing has been paid yet, so nothing is charged. The contract will be removed.",
+    "outcomePartialRefund": "You will get back {refund}. The deposit goes to the service provider ({provider} after the platform commission).",
+    "outcomeFullRefund": "You will get back the full amount, {refund}, because the service provider passed the agreed time.",
+    "outcomeHeld": "Your payment will be held on the platform until the administration reviews the case and decides between a refund and paying the service provider.",
+    "heldTitle": "Payment on hold, under review",
+    "heldCustomerDescription": "The administration is reviewing this contract. It will either refund you or release the payment to the service provider, and you will be notified.",
+    "heldProviderDescription": "The administration is reviewing this contract. It will either refund the customer or release the payment to you, and you will be notified.",
+    "heldRefusedReceipt": "The customer refused receipt",
+    "heldCancelledAfterCompletion": "The customer cancelled after the work was completed",
+    "heldSince": "Under review since",
+    "heldReason": "Customer's reason",
+    "heldSupport": "Need to add details? Raise a complaint from the conversation or contact us.",
+    "contactUs": "Contact us",
+    "removedToast": "Contract cancelled and removed",
+    "removedTitle": "This contract no longer exists. It was cancelled before payment."
   },
   "promotion": {
     "title": "Featured advertisement",
@@ -977,10 +1019,11 @@
     "free": "Free listing",
     "fee": "Promotion fee",
     "duration": "Promotion duration",
-    "createFeeDescription": "Featured listings are published immediately. The admin fee is recorded as a mock payment for this listing.",
+    "createFeeDescription": "Your listing is published right away. After publishing you pay the fee and it becomes featured.",
     "active": "Featured and active",
     "expired": "Promotion expired",
-    "disabled": "Featured advertisements are currently unavailable"
+    "disabled": "Featured advertisements are currently unavailable",
+    "payToFeature": "Pay to feature"
   },
   "status": {
     "DRAFT": "Draft",
@@ -997,5 +1040,49 @@
     "PENDING_PAYMENT": "Pending payment",
     "EXPIRED": "Expired",
     "NONE": "Free"
+  },
+  "charity": {
+    "title": "Wesal Al-Khair",
+    "intro": "All contracts on this page are considered charity from the customer, and the platform keeps no commission from them. This is done through linking with the Ihsan platform.",
+    "ok": "OK",
+    "empty": "You have no Wesal Al-Khair contracts yet",
+    "commissionNote": "Wesal Al-Khair: this commission is donated through the Ihsan platform; the platform does not keep it.",
+    "ihsanLogoAlt": "Ihsan platform"
+  },
+  "provider": {
+    "newlyAdded": "Newly Added"
+  },
+  "payments": {
+    "successTitle": "Payment completed successfully",
+    "failureTitle": "Payment was not completed, please try again",
+    "pendingTitle": "Confirming your payment",
+    "pendingDescription": "This usually takes a few seconds.",
+    "timeoutTitle": "Your payment is still being processed",
+    "timeoutDescription": "We will notify you as soon as it is confirmed.",
+    "notFound": "We couldn't find this payment.",
+    "contractDetails": "Contract details",
+    "backToChat": "Back to chat",
+    "myAds": "My ads",
+    "home": "Home",
+    "tryAgain": "Try again",
+    "paidNoticeTitle": "Contract paid",
+    "paidNoticeDescription": "The contract amount has been paid and the platform holds your right until the customer completes the deal. Please carry out the contract on your side.",
+    "ok": "OK",
+    "method": "Payment method",
+    "status": "Payment status",
+    "statusPaid": "Paid",
+    "statusPending": "Awaiting payment",
+    "methods": {
+      "ELECTRONIC": "Card payment",
+      "TABBY": "Tabby",
+      "TAMARA": "Tamara",
+      "MOCK": "Test payment"
+    },
+    "paidAt": "Payment date",
+    "section": "Payment details",
+    "payPromptTitle": "Please pay the contract amount to start it",
+    "goToContract": "Go to contract",
+    "awaitingPaymentTitle": "Contract accepted",
+    "awaitingPaymentDescription": "Please wait for the payment to the platform to be completed."
   }
 }

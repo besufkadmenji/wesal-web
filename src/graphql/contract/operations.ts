@@ -1,10 +1,10 @@
 import {
   LISTING_FRAGMENT,
   PAGINATION_FRAGMENT,
-  PAYMENT_FRAGMENT,
   PROVIDER_FRAGMENT,
   USER_FRAGMENT,
 } from "@/graphql/common/fragments";
+import { CONTRACT_RATING_FRAGMENT } from "@/graphql/rating/operations";
 import { gql } from "@apollo/client";
 
 const SIGNATURE_FRAGMENT = gql`
@@ -30,12 +30,15 @@ const CONTRACT_FRAGMENT = gql`
     version
     pricingVersion
     status
+    statusGroup
     supersedesContractId
     agreedPrice
     depositPercent
     downPayment
     commissionPercent
     commissionAmount
+    isCharity
+    charityAmount
     vatRate
     vatAmount
     totalPayable
@@ -49,7 +52,7 @@ const CONTRACT_FRAGMENT = gql`
     deliveryCompanyId
     deliveryCompanyNameAr
     deliveryCompanyNameEn
-    deliveryTimeDays
+    executionHours
     categoryRulesAr
     categoryRulesEn
     contractDocumentText
@@ -57,22 +60,30 @@ const CONTRACT_FRAGMENT = gql`
     undertakingTextEn
     refundPolicyAr
     refundPolicyEn
-    maxCompletionDays
-    maxTerminationDays
+    maxExecutionHours
+    maxTerminationHours
     rejectionReason
     cancellationReason
     disputeReason
     paidAt
+    paymentMethod
+    paymentMethods
     acceptedAt
     rejectedAt
     providerCompletedAt
     deliveryStartedAt
-    deliveryEstimateDays
+    deliveryHours
     confirmationDeadlineAt
     cancellationRequestedAt
     disputedAt
     completedAt
     cancelledAt
+    resolvedAt
+    cancellationPreview {
+      outcome
+      refundAmount
+      providerAmount
+    }
     createdAt
     updatedAt
     signatures {
@@ -151,13 +162,42 @@ export const CONTRACTS_QUERY = gql`
   ${PAGINATION_FRAGMENT}
 `;
 
-export const CONTRACT_QUERY = gql`
-  query ContractById($id: String!) {
-    contract(id: $id) {
+/** S4-4 / S4-19: the signed-in party's overdue contracts, oldest first. */
+export const MY_OVERDUE_CONTRACTS_QUERY = gql`
+  query MyOverdueContracts {
+    myOverdueContracts {
       ...ContractFields
     }
   }
   ${CONTRACT_FRAGMENT}
+`;
+
+export const MY_PAID_CONTRACT_NOTICES_QUERY = gql`
+  query MyPaidContractNotices {
+    myPaidContractNotices {
+      id
+      publicId
+    }
+  }
+`;
+
+export const ACKNOWLEDGE_CONTRACT_PAID_MUTATION = gql`
+  mutation AcknowledgeContractPaid($contractId: String!) {
+    acknowledgeContractPaid(contractId: $contractId)
+  }
+`;
+
+export const CONTRACT_QUERY = gql`
+  query ContractById($id: String!) {
+    contract(id: $id) {
+      ...ContractFields
+      rating {
+        ...ContractRatingFields
+      }
+    }
+  }
+  ${CONTRACT_FRAGMENT}
+  ${CONTRACT_RATING_FRAGMENT}
 `;
 
 export const CONTRACT_QUOTE_QUERY = gql`
@@ -168,13 +208,19 @@ export const CONTRACT_QUOTE_QUERY = gql`
       downPayment
       commissionPercent
       commissionAmount
+      isCharity
+      charityAmount
       vatRate
       vatAmount
       totalPayable
       providerNetAmount
       contractDocumentText
-      maxCompletionDays
-      maxTerminationDays
+      undertakingTextAr
+      undertakingTextEn
+      refundPolicyAr
+      refundPolicyEn
+      maxExecutionHours
+      maxTerminationHours
     }
   }
 `;
@@ -224,20 +270,6 @@ export const RESEND_CONTRACT_MUTATION = gql`
   ${CONTRACT_FRAGMENT}
 `;
 
-export const PAY_CONTRACT_MUTATION = gql`
-  mutation PayContract($contractId: String!) {
-    payContract(contractId: $contractId) {
-      payment {
-        ...PaymentSummary
-      }
-      contract {
-        ...ContractFields
-      }
-    }
-  }
-  ${PAYMENT_FRAGMENT}
-  ${CONTRACT_FRAGMENT}
-`;
 
 export const COMPLETE_CONTRACT_MUTATION = gql`
   mutation CompleteContract($input: CompleteContractInput!) {

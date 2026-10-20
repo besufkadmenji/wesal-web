@@ -7,17 +7,15 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
-  /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
   DateTime: { input: unknown; output: unknown; }
-  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
   JSON: { input: unknown; output: unknown; }
-  /** The `Upload` scalar type represents a file upload. */
   Upload: { input: unknown; output: unknown; }
 };
 
 export type AcceptContractInput = {
   contractId: Scalars['String']['input'];
-  deliveryTimeDays: Scalars['Int']['input'];
+  /** Execution time the provider commits to, in hours */
+  executionHours: Scalars['Int']['input'];
   signatureData: Scalars['String']['input'];
 };
 
@@ -53,6 +51,22 @@ export type AdminAuthResponse = {
 export type AdminChangePasswordInput = {
   currentPassword: Scalars['String']['input'];
   newPassword: Scalars['String']['input'];
+};
+
+/** Admin home statistics cards (BRD 4.3.3) */
+export type AdminDashboardStats = {
+  /** Completed contracts */
+  completedContracts: Scalars['Int']['output'];
+  /** Active, non-deleted customers */
+  customers: Scalars['Int']['output'];
+  /** Published featured ads */
+  featuredListings: Scalars['Int']['output'];
+  /** Published free ads */
+  freeListings: Scalars['Int']['output'];
+  /** Chat messages sent by customers and providers today (Asia/Riyadh); system messages are excluded */
+  messagesToday: Scalars['Int']['output'];
+  /** Active, non-deleted service providers */
+  providers: Scalars['Int']['output'];
 };
 
 export type AdminForgotPasswordInput = {
@@ -149,6 +163,63 @@ export type AuthResponse = {
   user: User;
 };
 
+/** Badge threshold dropdown value (=5, =4, <4, … , zero stars) */
+export enum BadgeBound {
+  Eq_1 = 'EQ_1',
+  Eq_2 = 'EQ_2',
+  Eq_3 = 'EQ_3',
+  Eq_4 = 'EQ_4',
+  Eq_5 = 'EQ_5',
+  Lt_1 = 'LT_1',
+  Lt_2 = 'LT_2',
+  Lt_3 = 'LT_3',
+  Lt_4 = 'LT_4',
+  Zero = 'ZERO'
+}
+
+export type BadgeRun = {
+  /** Providers whose badge changed */
+  changedCount: Scalars['Int']['output'];
+  /** Under-improvement providers deleted by this run */
+  deletedProviders: Array<BadgeRunProvider>;
+  diligenceCount: Scalars['Int']['output'];
+  id: Scalars['String']['output'];
+  /** Month the run belongs to (YYYY-MM, Asia/Riyadh) */
+  period: Scalars['String']['output'];
+  ranAt: Scalars['DateTime']['output'];
+  /** Under-improvement providers not deleted because of unfinished contracts */
+  skippedProviders: Array<BadgeRunProvider>;
+  trustCount: Scalars['Int']['output'];
+  underImprovementCount: Scalars['Int']['output'];
+};
+
+export type BadgeRunProvider = {
+  id: Scalars['String']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+export type BadgeSetting = {
+  enabled: Scalars['Boolean']['output'];
+  maxBound?: Maybe<BadgeBound>;
+  minBound?: Maybe<BadgeBound>;
+  tier: BadgeTier;
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type BadgeSettingInput = {
+  enabled: Scalars['Boolean']['input'];
+  maxBound?: InputMaybe<BadgeBound>;
+  minBound?: InputMaybe<BadgeBound>;
+  tier: BadgeTier;
+};
+
+/** Provider badge (BRD 4.3.18): Trust, Diligence, or the Under-improvement title */
+export enum BadgeTier {
+  Diligence = 'DILIGENCE',
+  Trust = 'TRUST',
+  UnderImprovement = 'UNDER_IMPROVEMENT'
+}
+
 export type Bank = {
   createdAt: Scalars['DateTime']['output'];
   deactivationReason?: Maybe<Scalars['String']['output']>;
@@ -176,6 +247,49 @@ export enum BankStatus {
   Inactive = 'INACTIVE'
 }
 
+/** All active accounts of the chosen types, or a hand-picked list */
+export enum BroadcastAudience {
+  All = 'ALL',
+  Selected = 'SELECTED'
+}
+
+export type BroadcastPaginationInput = {
+  /** Number of items per page */
+  limit?: Scalars['Int']['input'];
+  /** Page number (1-based) */
+  page?: Scalars['Int']['input'];
+  recipientType?: InputMaybe<BroadcastRecipientType>;
+  /** Search by title */
+  search?: InputMaybe<Scalars['String']['input']>;
+  /** Sort order: ASC or DESC */
+  sortOrder?: InputMaybe<SortOrder>;
+};
+
+export type BroadcastRecipient = {
+  id: Scalars['String']['output'];
+  name?: Maybe<Scalars['String']['output']>;
+  type: BroadcastRecipientType;
+};
+
+export type BroadcastRecipientInput = {
+  id: Scalars['String']['input'];
+  type: BroadcastRecipientType;
+};
+
+export type BroadcastRecipientOption = {
+  /** Phone or email, to tell names apart */
+  detail?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  type: BroadcastRecipientType;
+};
+
+/** Broadcast target: customers (USER) or service providers */
+export enum BroadcastRecipientType {
+  Provider = 'PROVIDER',
+  User = 'USER'
+}
+
 export type BulkAssignPermissionsInput = {
   adminId: Scalars['ID']['input'];
   permissionIds: Array<Scalars['ID']['input']>;
@@ -188,6 +302,23 @@ export type BulkUpdateFaqOrderInput = {
 export type CancelContractInput = {
   contractId: Scalars['String']['input'];
   reason: Scalars['String']['input'];
+};
+
+/** What cancelling would do to the customer's payment (BRD 4.1.18) */
+export enum CancellationOutcome {
+  FullRefund = 'FULL_REFUND',
+  Held = 'HELD',
+  NotCancellable = 'NOT_CANCELLABLE',
+  NoCharge = 'NO_CHARGE',
+  PartialRefund = 'PARTIAL_REFUND'
+}
+
+export type CancellationPreview = {
+  outcome: CancellationOutcome;
+  /** Released to the provider (SAR), after commission */
+  providerAmount: Scalars['Float']['output'];
+  /** Refunded to the customer (SAR) */
+  refundAmount: Scalars['Float']['output'];
 };
 
 export type Category = {
@@ -204,10 +335,12 @@ export type Category = {
   descriptionEn: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   image: Scalars['String']['output'];
-  maxCompletionDays?: Maybe<Scalars['Int']['output']>;
-  maxCompletionDaysEnabled: Scalars['Boolean']['output'];
-  maxTerminationDays?: Maybe<Scalars['Int']['output']>;
-  maxTerminationDaysEnabled: Scalars['Boolean']['output'];
+  /** Longest execution time a provider may commit to, in hours */
+  maxExecutionHours?: Maybe<Scalars['Int']['output']>;
+  maxExecutionHoursEnabled: Scalars['Boolean']['output'];
+  /** Termination limit, in hours */
+  maxTerminationHours?: Maybe<Scalars['Int']['output']>;
+  maxTerminationHoursEnabled: Scalars['Boolean']['output'];
   minCommissionAmount?: Maybe<Scalars['Float']['output']>;
   minCommissionEnabled: Scalars['Boolean']['output'];
   nameAr: Scalars['String']['output'];
@@ -225,6 +358,21 @@ export type Category = {
   undertakingTextAr: Scalars['String']['output'];
   undertakingTextEn: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
+};
+
+export type CategoryContractDefaults = {
+  commissionPercent: Scalars['Int']['output'];
+  contractDocumentText: Scalars['String']['output'];
+  customerConversationFee: Scalars['Int']['output'];
+  depositPercent: Scalars['Int']['output'];
+  maxExecutionHours: Scalars['Int']['output'];
+  maxTerminationHours: Scalars['Int']['output'];
+  minCommissionAmount: Scalars['Int']['output'];
+  providerConversationFee: Scalars['Int']['output'];
+  refundPolicyAr: Scalars['String']['output'];
+  refundPolicyEn: Scalars['String']['output'];
+  undertakingTextAr: Scalars['String']['output'];
+  undertakingTextEn: Scalars['String']['output'];
 };
 
 export type CategoryPaginationInput = {
@@ -264,6 +412,22 @@ export type ChangePhoneInput = {
 export type ChangePhoneResponse = {
   changeToken: Scalars['String']['output'];
 };
+
+export type CharitySummary = {
+  /** Completed charity contracts */
+  completedContracts: Scalars['Int']['output'];
+  /** All charity contracts in the period */
+  contracts: Scalars['Int']['output'];
+  /** Commission collected on completed charity contracts: the amount to donate (SAR) */
+  totalAmount: Scalars['Float']['output'];
+};
+
+/** What a payment checkout pays for */
+export enum CheckoutPurpose {
+  ChatFee = 'CHAT_FEE',
+  Contract = 'CONTRACT',
+  PremiumAd = 'PREMIUM_AD'
+}
 
 export type City = {
   country?: Maybe<Country>;
@@ -440,12 +604,15 @@ export type Contract = {
   acceptedAt?: Maybe<Scalars['DateTime']['output']>;
   agreedPrice: Scalars['Float']['output'];
   audits: Array<ContractAudit>;
+  cancellationPreview?: Maybe<CancellationPreview>;
   cancellationReason?: Maybe<Scalars['String']['output']>;
   cancellationRequestedAt?: Maybe<Scalars['DateTime']['output']>;
   cancelledAt?: Maybe<Scalars['DateTime']['output']>;
   categoryId: Scalars['String']['output'];
   categoryRulesAr: Scalars['String']['output'];
   categoryRulesEn: Scalars['String']['output'];
+  /** Commission set aside for donation on a charity contract (0 otherwise) */
+  charityAmount: Scalars['Float']['output'];
   client: User;
   clientId: Scalars['String']['output'];
   commissionAmount: Scalars['Float']['output'];
@@ -459,22 +626,31 @@ export type Contract = {
   customerAddress: Scalars['String']['output'];
   customerLatitude?: Maybe<Scalars['Float']['output']>;
   customerLongitude?: Maybe<Scalars['Float']['output']>;
+  /** When the customer was flagged overdue (S4-2) */
+  customerOverdueAt?: Maybe<Scalars['DateTime']['output']>;
   deliveryCompanyId?: Maybe<Scalars['ID']['output']>;
   deliveryCompanyNameAr?: Maybe<Scalars['String']['output']>;
   deliveryCompanyNameEn?: Maybe<Scalars['String']['output']>;
-  deliveryEstimateDays?: Maybe<Scalars['Int']['output']>;
+  /** Delivery time entered at provider completion, in hours */
+  deliveryHours?: Maybe<Scalars['Int']['output']>;
   deliveryStartedAt?: Maybe<Scalars['DateTime']['output']>;
-  deliveryTimeDays?: Maybe<Scalars['Int']['output']>;
   depositPercent: Scalars['Float']['output'];
   disputeReason?: Maybe<Scalars['String']['output']>;
   disputedAt?: Maybe<Scalars['DateTime']['output']>;
   document?: Maybe<ContractDocument>;
   downPayment: Scalars['Float']['output'];
+  /** Execution time the provider committed to at acceptance, in hours */
+  executionHours?: Maybe<Scalars['Int']['output']>;
   id: Scalars['ID']['output'];
+  isCharity: Scalars['Boolean']['output'];
   listingId: Scalars['String']['output'];
-  maxCompletionDays?: Maybe<Scalars['Int']['output']>;
-  maxTerminationDays?: Maybe<Scalars['Int']['output']>;
+  maxExecutionHours?: Maybe<Scalars['Int']['output']>;
+  maxTerminationHours?: Maybe<Scalars['Int']['output']>;
   paidAt?: Maybe<Scalars['DateTime']['output']>;
+  /** How the contract was paid (null until paid) */
+  paymentMethod?: Maybe<PaymentMethod>;
+  /** Methods the customer may pay with now (BNPL bounds applied); customer only */
+  paymentMethods?: Maybe<Array<PaymentMethod>>;
   pricingVersion: Scalars['Int']['output'];
   provider: Provider;
   providerAddress?: Maybe<Scalars['String']['output']>;
@@ -483,14 +659,20 @@ export type Contract = {
   providerLatitude?: Maybe<Scalars['Float']['output']>;
   providerLongitude?: Maybe<Scalars['Float']['output']>;
   providerNetAmount: Scalars['Float']['output'];
+  /** When the provider was flagged overdue (S4-2) */
+  providerOverdueAt?: Maybe<Scalars['DateTime']['output']>;
   publicId?: Maybe<Scalars['Int']['output']>;
+  rating?: Maybe<Rating>;
   refundPolicyAr: Scalars['String']['output'];
   refundPolicyEn: Scalars['String']['output'];
   rejectedAt?: Maybe<Scalars['DateTime']['output']>;
   rejectionReason?: Maybe<Scalars['String']['output']>;
+  /** When the administration closed the contract with a payout (ADMIN_RESOLVED) */
+  resolvedAt?: Maybe<Scalars['DateTime']['output']>;
   settlements: Array<ContractSettlement>;
   signatures: Array<ContractSignature>;
   status: ContractStatus;
+  statusGroup?: Maybe<ContractStatusGroup>;
   supersedesContract?: Maybe<Contract>;
   supersedesContractId?: Maybe<Scalars['ID']['output']>;
   totalPayable: Scalars['Float']['output'];
@@ -552,7 +734,10 @@ export type ContractFinancialReport = {
   completedCount: Scalars['Int']['output'];
   items: Array<ContractFinancialReportRow>;
   meta: ReportPageMeta;
+  totalAdminProfit: Scalars['Float']['output'];
+  totalCharity: Scalars['Float']['output'];
   totalCommission: Scalars['Float']['output'];
+  totalContractValue: Scalars['Float']['output'];
   totalCustomerRefunds: Scalars['Float']['output'];
   totalPaid: Scalars['Float']['output'];
   totalProviderNet: Scalars['Float']['output'];
@@ -561,14 +746,22 @@ export type ContractFinancialReport = {
 };
 
 export type ContractFinancialReportRow = {
+  /** Commission, or 0 on charity contracts */
+  adminProfit: Scalars['Float']['output'];
   commission: Scalars['Float']['output'];
   contractId: Scalars['String']['output'];
   contractNumber?: Maybe<Scalars['Int']['output']>;
+  /** What the customer pays (incl. VAT) */
+  contractTotal: Scalars['Float']['output'];
   createdAt: Scalars['DateTime']['output'];
   customerName?: Maybe<Scalars['String']['output']>;
   customerRefund: Scalars['Float']['output'];
   deliveryCompanyName?: Maybe<Scalars['String']['output']>;
+  deliveryCompanyNameAr?: Maybe<Scalars['String']['output']>;
+  deliveryCompanyNameEn?: Maybe<Scalars['String']['output']>;
+  isCharity: Scalars['Boolean']['output'];
   providerName?: Maybe<Scalars['String']['output']>;
+  /** Agreed price minus commission */
   providerNet: Scalars['Float']['output'];
   providerRelease: Scalars['Float']['output'];
   status: Scalars['String']['output'];
@@ -581,6 +774,8 @@ export type ContractPaginationInput = {
   clientId?: InputMaybe<Scalars['String']['input']>;
   conversationId?: InputMaybe<Scalars['String']['input']>;
   from?: InputMaybe<Scalars['DateTime']['input']>;
+  /** Only Wesal Al-Khair (charity) contracts, or only non-charity */
+  isCharity?: InputMaybe<Scalars['Boolean']['input']>;
   /** Number of items per page */
   limit?: Scalars['Int']['input'];
   /** Page number (1-based) */
@@ -592,6 +787,8 @@ export type ContractPaginationInput = {
   /** Sort order: ASC or DESC */
   sortOrder?: InputMaybe<SortOrder>;
   status?: InputMaybe<ContractStatus>;
+  /** My Contracts tab (S4-1); combines with status if both set */
+  statusGroup?: InputMaybe<ContractStatusGroup>;
   to?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
@@ -602,15 +799,25 @@ export type ContractPaymentResponse = {
 
 export type ContractQuote = {
   agreedPrice: Scalars['Float']['output'];
+  /** Commission set aside for donation on a charity contract (0 otherwise) */
+  charityAmount: Scalars['Float']['output'];
   commissionAmount: Scalars['Float']['output'];
   commissionPercent: Scalars['Float']['output'];
   contractDocumentText: Scalars['String']['output'];
   depositPercent: Scalars['Float']['output'];
   downPayment: Scalars['Float']['output'];
-  maxCompletionDays?: Maybe<Scalars['Int']['output']>;
-  maxTerminationDays?: Maybe<Scalars['Int']['output']>;
+  /** Wesal Al-Khair: the commission is at or below the category minimum, so it is donated instead of kept by the platform */
+  isCharity: Scalars['Boolean']['output'];
+  maxExecutionHours?: Maybe<Scalars['Int']['output']>;
+  maxTerminationHours?: Maybe<Scalars['Int']['output']>;
   providerNetAmount: Scalars['Float']['output'];
+  refundPolicyAr: Scalars['String']['output'];
+  refundPolicyEn: Scalars['String']['output'];
   totalPayable: Scalars['Float']['output'];
+  /** Customer undertaking with commission and minimum filled in */
+  undertakingTextAr: Scalars['String']['output'];
+  /** Customer undertaking with commission and minimum filled in */
+  undertakingTextEn: Scalars['String']['output'];
   vatAmount: Scalars['Float']['output'];
   vatRate: Scalars['Float']['output'];
 };
@@ -696,6 +903,7 @@ export enum ContractSortField {
 /** Contract status */
 export enum ContractStatus {
   Accepted = 'ACCEPTED',
+  AdminResolved = 'ADMIN_RESOLVED',
   AwaitingCustomerConfirmation = 'AWAITING_CUSTOMER_CONFIRMATION',
   CancellationRequested = 'CANCELLATION_REQUESTED',
   Cancelled = 'CANCELLED',
@@ -706,6 +914,16 @@ export enum ContractStatus {
   InProgress = 'IN_PROGRESS',
   Pending = 'PENDING',
   Rejected = 'REJECTED'
+}
+
+/** My Contracts tab a contract status belongs to (BRD/Figma) */
+export enum ContractStatusGroup {
+  Cancelled = 'CANCELLED',
+  Completed = 'COMPLETED',
+  InDelivery = 'IN_DELIVERY',
+  InProgress = 'IN_PROGRESS',
+  PendingAcceptance = 'PENDING_ACCEPTANCE',
+  PendingPayment = 'PENDING_PAYMENT'
 }
 
 export type Conversation = {
@@ -876,10 +1094,12 @@ export type CreateCategoryInput = {
   descriptionAr: Scalars['String']['input'];
   descriptionEn: Scalars['String']['input'];
   image: Scalars['String']['input'];
-  maxCompletionDays?: InputMaybe<Scalars['Int']['input']>;
-  maxCompletionDaysEnabled?: InputMaybe<Scalars['Boolean']['input']>;
-  maxTerminationDays?: InputMaybe<Scalars['Int']['input']>;
-  maxTerminationDaysEnabled?: InputMaybe<Scalars['Boolean']['input']>;
+  /** In hours */
+  maxExecutionHours?: InputMaybe<Scalars['Int']['input']>;
+  maxExecutionHoursEnabled?: InputMaybe<Scalars['Boolean']['input']>;
+  /** In hours */
+  maxTerminationHours?: InputMaybe<Scalars['Int']['input']>;
+  maxTerminationHoursEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   minCommissionAmount?: InputMaybe<Scalars['Float']['input']>;
   minCommissionEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   nameAr: Scalars['String']['input'];
@@ -1023,11 +1243,55 @@ export type CreateProviderInput = {
   withAbsher?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-export type CreateRatingInput = {
-  comment?: InputMaybe<Scalars['String']['input']>;
-  listingId: Scalars['String']['input'];
-  rating: Scalars['Int']['input'];
-  userId: Scalars['String']['input'];
+/** Work waiting for an admin; a count is null when the admin lacks that permission */
+export type DashboardAttentionCounts = {
+  cancellationRequests?: Maybe<Scalars['Int']['output']>;
+  disputedContracts?: Maybe<Scalars['Int']['output']>;
+  openComplaints?: Maybe<Scalars['Int']['output']>;
+  pendingProviderRequests?: Maybe<Scalars['Int']['output']>;
+  /** Provider e-contract termination requests (S4-58) */
+  terminationRequests?: Maybe<Scalars['Int']['output']>;
+};
+
+/** Contracts created in the period, per status */
+export type DashboardContractStatusCount = {
+  count: Scalars['Int']['output'];
+  status: ContractStatus;
+};
+
+/** New sign-ups in one dashboard bucket */
+export type DashboardGrowthPoint = {
+  /** Bucket start date (YYYY-MM-DD, Asia/Riyadh) */
+  bucket: Scalars['String']['output'];
+  customers: Scalars['Int']['output'];
+  providers: Scalars['Int']['output'];
+};
+
+/** Admin dashboard chart period: 7 or 30 daily buckets, or 12 monthly buckets (Asia/Riyadh) */
+export enum DashboardRange {
+  Last_7Days = 'LAST_7_DAYS',
+  Last_12Months = 'LAST_12_MONTHS',
+  Last_30Days = 'LAST_30_DAYS'
+}
+
+/** Platform revenue in one dashboard bucket (SAR) */
+export type DashboardRevenuePoint = {
+  /** Bucket start date (YYYY-MM-DD, Asia/Riyadh) */
+  bucket: Scalars['String']['output'];
+  /** Customer and provider chat fees */
+  chatFees: Scalars['Float']['output'];
+  /** Commission from paid contracts (charity contracts excluded) */
+  contracts: Scalars['Float']['output'];
+  /** Premium ad fees */
+  premiumAds: Scalars['Float']['output'];
+};
+
+/** Category ranked by contracts created in the period */
+export type DashboardTopCategory = {
+  categoryId: Scalars['ID']['output'];
+  contracts: Scalars['Int']['output'];
+  nameAr: Scalars['String']['output'];
+  nameEn: Scalars['String']['output'];
 };
 
 export type DeactivateAdminInput = {
@@ -1125,6 +1389,7 @@ export type FeeReportInput = {
   categoryId?: InputMaybe<Scalars['String']['input']>;
   conversationId?: InputMaybe<Scalars['String']['input']>;
   customerId?: InputMaybe<Scalars['String']['input']>;
+  deliveryCompanyId?: InputMaybe<Scalars['String']['input']>;
   from?: InputMaybe<Scalars['DateTime']['input']>;
   /** Number of items per page */
   limit?: Scalars['Int']['input'];
@@ -1165,6 +1430,10 @@ export type Listing = {
   promotionStatus: PromotionStatus;
   provider?: Maybe<Provider>;
   providerId: Scalars['String']['output'];
+  /** Average of published ratings for this listing */
+  ratingAverage: Scalars['Float']['output'];
+  /** Number of published ratings for this listing */
+  ratingCount: Scalars['Int']['output'];
   status: ListingStatus;
   story?: Maybe<ListingMedia>;
   tags: Scalars['String']['output'];
@@ -1197,6 +1466,21 @@ export type ListingPaginationInput = {
   sortOrder?: InputMaybe<SortOrder>;
   status?: InputMaybe<ListingStatus>;
   type?: InputMaybe<ListingType>;
+};
+
+export type ListingReview = {
+  comment?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  rating: Scalars['Int']['output'];
+  reviewerAvatarFilename?: Maybe<Scalars['String']['output']>;
+  reviewerName?: Maybe<Scalars['String']['output']>;
+};
+
+export type ListingReviewsInput = {
+  limit?: Scalars['Int']['input'];
+  listingId: Scalars['String']['input'];
+  page?: Scalars['Int']['input'];
 };
 
 /** Available fields to sort listings by */
@@ -1258,6 +1542,7 @@ export type Message = {
 export enum MessageKind {
   ChatFeePaid = 'CHAT_FEE_PAID',
   ContractAccepted = 'CONTRACT_ACCEPTED',
+  ContractAdminResolved = 'CONTRACT_ADMIN_RESOLVED',
   ContractCancellationRequested = 'CONTRACT_CANCELLATION_REQUESTED',
   ContractCancelled = 'CONTRACT_CANCELLED',
   ContractCompleted = 'CONTRACT_COMPLETED',
@@ -1305,6 +1590,8 @@ export enum MessageType {
 export type Mutation = {
   /** Provider accepts a pending contract */
   acceptContract: Contract;
+  /** S4-12: the provider has seen the "contract paid" pop-up */
+  acknowledgeContractPaid: Scalars['Boolean']['output'];
   activateAdmin: Admin;
   activateBank: Bank;
   activateCategory: Category;
@@ -1319,6 +1606,8 @@ export type Mutation = {
   adminChangePassword: Scalars['Boolean']['output'];
   adminForgotPassword: Scalars['Boolean']['output'];
   adminLogin: AdminAuthResponse;
+  adminMarkAllNotificationsRead: Scalars['Boolean']['output'];
+  adminMarkNotificationRead: Notification;
   /** Admin reactivates a provider whose contract was terminated by admin */
   adminReactivateProvider: Provider;
   adminReplyToComplaint: ComplaintMessage;
@@ -1326,9 +1615,13 @@ export type Mutation = {
   /** Resolve a disputed or overdue contract as an authorized admin */
   adminResolveContract: Contract;
   adminSetComplaintStatus: Complaint;
+  /** Publish or hide a rating (hidden ratings leave the averages) */
+  adminSetRatingStatus: Rating;
   /** Admin terminates provider contract */
   adminTerminateProviderContract: Provider;
   adminVerifyPasswordResetOtp: VerifyAdminPasswordResetOtpResponse;
+  /** Admin approves a provider's e-contract termination request: the account is deleted (S4-58) */
+  approveProviderContractTermination: Provider;
   assignPermissionToAdmin: AdminPermission;
   bulkAssignPermissionsToAdmin: Array<AdminPermission>;
   bulkRevokePermissionsFromAdmin: Scalars['Boolean']['output'];
@@ -1359,7 +1652,6 @@ export type Mutation = {
   createPermission: Permission;
   /** Create a new provider */
   createProvider: Provider;
-  createRating: Rating;
   deactivateAdmin: Admin;
   deactivateBank: Bank;
   deactivateCategory: Category;
@@ -1403,12 +1695,14 @@ export type Mutation = {
   markNotificationAsRead: Notification;
   /** Mark a notification as unread */
   markNotificationAsUnread: Notification;
-  /** Settle an accepted contract using the Sprint 3 mock */
+  /** Instant mock settlement for the demo seed and tests; refused unless PAYMENT_GATEWAY=mock */
   payContract: ContractPaymentResponse;
-  /** Settle the authenticated participant conversation fee */
+  /** Instant mock chat-fee settlement for the demo seed and tests; refused unless PAYMENT_GATEWAY=mock */
   payConversationFee: ConversationFeePaymentResponse;
   /** Provider signs and submits completed work or delivery */
   providerCompleteContract: Contract;
+  /** Customer rates their own completed contract (once) */
+  rateContract: Rating;
   /** Customer refuses a delivered contract and opens a dispute */
   refuseContractDelivery: Contract;
   /** Register a new user and send verification OTPs */
@@ -1417,6 +1711,8 @@ export type Mutation = {
   registerProvider: Provider;
   /** Provider rejects a pending contract */
   rejectContract: Contract;
+  /** Admin rejects a provider's e-contract termination request; the contract is active again (S4-58) */
+  rejectProviderContractTermination: Provider;
   /** Reject a pending provider join request */
   rejectProviderJoinRequest: Provider;
   removeAdmin: Scalars['Boolean']['output'];
@@ -1440,7 +1736,6 @@ export type Mutation = {
   removeProvider: Provider;
   /** Remove own provider avatar */
   removeProviderAvatar: Scalars['Boolean']['output'];
-  removeRating: Rating;
   /** Delete user by ID */
   removeUser: User;
   /** Reply to contact message (admin only) */
@@ -1461,15 +1756,22 @@ export type Mutation = {
   restartConversation: Conversation;
   revokeAllPermissionsFromAdmin: Scalars['Boolean']['output'];
   revokePermissionFromAdmin: Scalars['Boolean']['output'];
+  /** Runs this month's badge assignment now instead of waiting for the 1st. It counts as the month's run. */
+  runBadgeAssignment: BadgeRun;
+  /** Send a notification to active customers and/or providers */
+  sendBroadcast: NotificationBroadcast;
   setProviderFavorite: Scalars['Boolean']['output'];
   /** Create or update application settings (admin only) */
   setSetting: Setting;
   /** Sign contract as provider */
   signProviderContract: Provider;
-  /** Terminate provider contract */
+  /** S4-10: start a gateway checkout; send the payer to redirectUrl */
+  startPaymentCheckout: PaymentCheckout;
+  /** Provider asks the administration to terminate their e-contract (S4-58); refused while customer contracts are unfinished */
   terminateProviderContract: Provider;
   trackAction: Tracking;
   updateAdmin: Admin;
+  updateBadgeSettings: Array<BadgeSetting>;
   updateBank: Bank;
   updateCategory: Category;
   updateCity: City;
@@ -1485,7 +1787,6 @@ export type Mutation = {
   updatePermission: Permission;
   /** Update provider */
   updateProvider: Provider;
-  updateRating: Rating;
   /** Update user */
   updateUser: User;
   /** Verify email change with OTP and change token */
@@ -1509,6 +1810,11 @@ export type Mutation = {
 
 export type MutationAcceptContractArgs = {
   input: AcceptContractInput;
+};
+
+
+export type MutationAcknowledgeContractPaidArgs = {
+  contractId: Scalars['String']['input'];
 };
 
 
@@ -1573,6 +1879,11 @@ export type MutationAdminLoginArgs = {
 };
 
 
+export type MutationAdminMarkNotificationReadArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
 export type MutationAdminReactivateProviderArgs = {
   providerId: Scalars['ID']['input'];
 };
@@ -1600,6 +1911,12 @@ export type MutationAdminSetComplaintStatusArgs = {
 };
 
 
+export type MutationAdminSetRatingStatusArgs = {
+  id: Scalars['String']['input'];
+  status: RatingStatus;
+};
+
+
 export type MutationAdminTerminateProviderContractArgs = {
   input: AdminTerminateContractInput;
 };
@@ -1607,6 +1924,11 @@ export type MutationAdminTerminateProviderContractArgs = {
 
 export type MutationAdminVerifyPasswordResetOtpArgs = {
   input: VerifyAdminPasswordResetOtpInput;
+};
+
+
+export type MutationApproveProviderContractTerminationArgs = {
+  providerId: Scalars['ID']['input'];
 };
 
 
@@ -1724,11 +2046,6 @@ export type MutationCreatePermissionArgs = {
 
 export type MutationCreateProviderArgs = {
   createProviderInput: CreateProviderInput;
-};
-
-
-export type MutationCreateRatingArgs = {
-  input: CreateRatingInput;
 };
 
 
@@ -1878,6 +2195,11 @@ export type MutationProviderCompleteContractArgs = {
 };
 
 
+export type MutationRateContractArgs = {
+  input: RateContractInput;
+};
+
+
 export type MutationRefuseContractDeliveryArgs = {
   input: RefuseDeliveryInput;
 };
@@ -1895,6 +2217,11 @@ export type MutationRegisterProviderArgs = {
 
 export type MutationRejectContractArgs = {
   input: RejectContractInput;
+};
+
+
+export type MutationRejectProviderContractTerminationArgs = {
+  input: RejectContractTerminationInput;
 };
 
 
@@ -1970,11 +2297,6 @@ export type MutationRemoveProviderArgs = {
 };
 
 
-export type MutationRemoveRatingArgs = {
-  id: Scalars['String']['input'];
-};
-
-
 export type MutationRemoveUserArgs = {
   id: Scalars['ID']['input'];
   input: DeleteUserInput;
@@ -2033,6 +2355,11 @@ export type MutationRevokePermissionFromAdminArgs = {
 };
 
 
+export type MutationSendBroadcastArgs = {
+  input: SendBroadcastInput;
+};
+
+
 export type MutationSetProviderFavoriteArgs = {
   favorite: Scalars['Boolean']['input'];
   providerId: Scalars['String']['input'];
@@ -2049,6 +2376,11 @@ export type MutationSignProviderContractArgs = {
 };
 
 
+export type MutationStartPaymentCheckoutArgs = {
+  input: StartPaymentCheckoutInput;
+};
+
+
 export type MutationTerminateProviderContractArgs = {
   terminationReason: Scalars['String']['input'];
 };
@@ -2062,6 +2394,11 @@ export type MutationTrackActionArgs = {
 export type MutationUpdateAdminArgs = {
   id: Scalars['ID']['input'];
   updateAdminInput: UpdateAdminInput;
+};
+
+
+export type MutationUpdateBadgeSettingsArgs = {
+  input: UpdateBadgeSettingsInput;
 };
 
 
@@ -2121,11 +2458,6 @@ export type MutationUpdateProviderArgs = {
 };
 
 
-export type MutationUpdateRatingArgs = {
-  input: UpdateRatingInput;
-};
-
-
 export type MutationUpdateUserArgs = {
   updateUserInput: UpdateUserInput;
 };
@@ -2182,9 +2514,25 @@ export type Notification = {
   relatedEntityId?: Maybe<Scalars['String']['output']>;
   relatedEntityType?: Maybe<Scalars['String']['output']>;
   title: Scalars['String']['output'];
+  /** Other-language copies, e.g. { en: { title, message } }; title/message hold Arabic */
+  translations?: Maybe<Scalars['JSON']['output']>;
   type: NotificationType;
   user?: Maybe<User>;
   userId?: Maybe<Scalars['ID']['output']>;
+};
+
+export type NotificationBroadcast = {
+  audience: BroadcastAudience;
+  createdAt: Scalars['DateTime']['output'];
+  createdByAdminId?: Maybe<Scalars['ID']['output']>;
+  id: Scalars['ID']['output'];
+  message: Scalars['String']['output'];
+  publicId?: Maybe<Scalars['Int']['output']>;
+  recipientCount: Scalars['Int']['output'];
+  recipientTypes: Array<BroadcastRecipientType>;
+  /** Hand-picked recipients (SELECTED audience only) */
+  recipients?: Maybe<Array<BroadcastRecipient>>;
+  title: Scalars['String']['output'];
 };
 
 export type NotificationPaginationInput = {
@@ -2202,6 +2550,7 @@ export type NotificationPaginationInput = {
 };
 
 export enum NotificationRecipientType {
+  Admin = 'ADMIN',
   Provider = 'PROVIDER',
   User = 'USER'
 }
@@ -2222,18 +2571,39 @@ export type NotificationStats = {
 
 /** Type of notification */
 export enum NotificationType {
+  AdminBadgeDeleted = 'ADMIN_BADGE_DELETED',
+  AdminBadgeUnderImprovement = 'ADMIN_BADGE_UNDER_IMPROVEMENT',
+  AdminComplaint = 'ADMIN_COMPLAINT',
+  AdminContactMessage = 'ADMIN_CONTACT_MESSAGE',
+  AdminContractCreated = 'ADMIN_CONTRACT_CREATED',
+  AdminContractStatus = 'ADMIN_CONTRACT_STATUS',
+  AdminEcontractTerminationRequested = 'ADMIN_ECONTRACT_TERMINATION_REQUESTED',
+  AdminNewCustomer = 'ADMIN_NEW_CUSTOMER',
+  AdminPayment = 'ADMIN_PAYMENT',
+  AdminProviderRequest = 'ADMIN_PROVIDER_REQUEST',
+  BadgeChanged = 'BADGE_CHANGED',
+  BadgeWarning = 'BADGE_WARNING',
+  ChatEnded = 'CHAT_ENDED',
+  ChatFeePaid = 'CHAT_FEE_PAID',
+  ChatStarted = 'CHAT_STARTED',
   ComplaintResolved = 'COMPLAINT_RESOLVED',
   ComplaintResponse = 'COMPLAINT_RESPONSE',
   ComplaintSubmitted = 'COMPLAINT_SUBMITTED',
   ContractCreated = 'CONTRACT_CREATED',
+  ContractOverdue = 'CONTRACT_OVERDUE',
   ContractSigned = 'CONTRACT_SIGNED',
   ContractUpdate = 'CONTRACT_UPDATE',
+  EcontractTerminationRejected = 'ECONTRACT_TERMINATION_REJECTED',
   ListingApproved = 'LISTING_APPROVED',
+  ListingFeatured = 'LISTING_FEATURED',
+  ListingFeaturedExpired = 'LISTING_FEATURED_EXPIRED',
   ListingRejected = 'LISTING_REJECTED',
   NewMessage = 'NEW_MESSAGE',
   NewRating = 'NEW_RATING',
   PaymentCompleted = 'PAYMENT_COMPLETED',
   PaymentReceived = 'PAYMENT_RECEIVED',
+  PayoutTransferred = 'PAYOUT_TRANSFERRED',
+  RefundIssued = 'REFUND_ISSUED',
   SystemAnnouncement = 'SYSTEM_ANNOUNCEMENT'
 }
 
@@ -2254,6 +2624,13 @@ export type PaginatedAdminResponse = {
 export type PaginatedBankResponse = {
   /** List of items */
   items: Array<Bank>;
+  /** Pagination metadata */
+  meta: PaginationMeta;
+};
+
+export type PaginatedBroadcastResponse = {
+  /** List of items */
+  items: Array<NotificationBroadcast>;
   /** Pagination metadata */
   meta: PaginationMeta;
 };
@@ -2324,6 +2701,13 @@ export type PaginatedFavoriteResponse = {
 export type PaginatedListingResponse = {
   /** List of items */
   items: Array<Listing>;
+  /** Pagination metadata */
+  meta: PaginationMeta;
+};
+
+export type PaginatedListingReviewResponse = {
+  /** List of items */
+  items: Array<ListingReview>;
   /** Pagination metadata */
   meta: PaginationMeta;
 };
@@ -2407,11 +2791,15 @@ export type Payment = {
   conversation?: Maybe<Conversation>;
   conversationId?: Maybe<Scalars['ID']['output']>;
   createdAt: Scalars['DateTime']['output'];
+  failedAt?: Maybe<Scalars['DateTime']['output']>;
+  failureReason?: Maybe<Scalars['String']['output']>;
+  gateway?: Maybe<Scalars['String']['output']>;
   gatewayResponse?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   listing?: Maybe<Listing>;
   listingId?: Maybe<Scalars['ID']['output']>;
   notes?: Maybe<Scalars['String']['output']>;
+  paidAt?: Maybe<Scalars['DateTime']['output']>;
   payer?: Maybe<PaymentPayer>;
   payerId: Scalars['String']['output'];
   payerType: PayerType;
@@ -2425,13 +2813,22 @@ export type Payment = {
   vatRate: Scalars['Float']['output'];
 };
 
+export type PaymentCheckout = {
+  paymentId: Scalars['ID']['output'];
+  /** Send the customer here to pay */
+  redirectUrl: Scalars['String']['output'];
+};
+
 /** Payment method */
 export enum PaymentMethod {
   BankTransfer = 'BANK_TRANSFER',
   Cash = 'CASH',
   CreditCard = 'CREDIT_CARD',
   DebitCard = 'DEBIT_CARD',
+  Electronic = 'ELECTRONIC',
   Mock = 'MOCK',
+  Tabby = 'TABBY',
+  Tamara = 'TAMARA',
   Wallet = 'WALLET'
 }
 
@@ -2501,6 +2898,16 @@ export enum PermissionPlatform {
   Global = 'GLOBAL'
 }
 
+/** Public home page statistics */
+export type PlatformStats = {
+  /** Completed (successful) contracts */
+  completedContracts: Scalars['Int']['output'];
+  /** Active, non-deleted customers */
+  customers: Scalars['Int']['output'];
+  /** Active, non-deleted service providers */
+  providers: Scalars['Int']['output'];
+};
+
 export type PremiumAdFeeReport = {
   items: Array<PremiumAdFeeReportRow>;
   meta: ReportPageMeta;
@@ -2531,6 +2938,9 @@ export enum PromotionStatus {
 export type Provider = {
   address?: Maybe<Scalars['String']['output']>;
   avatarFilename?: Maybe<Scalars['String']['output']>;
+  /** Badge from the latest monthly run (BRD 4.3.18) */
+  badge?: Maybe<BadgeTier>;
+  badgeAssignedAt?: Maybe<Scalars['DateTime']['output']>;
   bankName?: Maybe<Scalars['String']['output']>;
   categories?: Maybe<Array<Category>>;
   city?: Maybe<City>;
@@ -2550,6 +2960,8 @@ export type Provider = {
   ibanNumber?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   isActive: Scalars['Boolean']['output'];
+  /** Not evaluated by a monthly badge run yet: shows "Newly Added" (S4-54) */
+  isNewlyAdded: Scalars['Boolean']['output'];
   languageCode?: Maybe<Scalars['String']['output']>;
   latitude?: Maybe<Scalars['Float']['output']>;
   longitude?: Maybe<Scalars['Float']['output']>;
@@ -2557,6 +2969,10 @@ export type Provider = {
   phone: Scalars['String']['output'];
   phoneVerified: Scalars['Boolean']['output'];
   publicId?: Maybe<Scalars['Int']['output']>;
+  /** Mean of the provider's rated listings' averages (BRD 4.3.18) */
+  ratingAverage: Scalars['Float']['output'];
+  /** Number of published ratings across all of the provider listings */
+  ratingCount: Scalars['Int']['output'];
   rejectionReason?: Maybe<Scalars['String']['output']>;
   signedContract?: Maybe<SignedContract>;
   status: ProviderStatus;
@@ -2571,7 +2987,8 @@ export type ProviderAuthResponse = {
 
 export type ProviderCompleteContractInput = {
   contractId: Scalars['String']['input'];
-  deliveryEstimateDays?: InputMaybe<Scalars['Int']['input']>;
+  /** Delivery time in hours; required when a delivery company is set */
+  deliveryHours?: InputMaybe<Scalars['Int']['input']>;
   signatureData: Scalars['String']['input'];
 };
 
@@ -2598,18 +3015,48 @@ export type Query = {
   /** Active delivery companies available to authenticated users */
   activeDeliveryCompanies: Array<DeliveryCompany>;
   admin: Admin;
+  /** Items waiting for an admin, limited to readable modules */
+  adminAttentionCounts: DashboardAttentionCounts;
+  adminBroadcast: NotificationBroadcast;
+  adminBroadcasts: PaginatedBroadcastResponse;
+  /** Wesal Al-Khair list (BRD 4.3.11): charity contracts only */
+  adminCharityContracts: PaginatedContractResponse;
+  adminCharitySummary: CharitySummary;
   adminComplaint: Complaint;
   adminComplaints: PaginatedComplaintResponse;
   adminContract: Contract;
+  /** Contracts created in the period, per status (drafts excluded) */
+  adminContractStatusBreakdown: Array<DashboardContractStatusCount>;
   adminContracts: PaginatedContractResponse;
   adminConversation: Conversation;
   adminConversations: PaginatedConversationResponse;
+  /** Admin home statistics cards */
+  adminDashboardStats: AdminDashboardStats;
+  /** New customers and providers per bucket */
+  adminGrowthSeries: Array<DashboardGrowthPoint>;
+  adminNotifications: PaginatedNotificationResponse;
   adminPermissions: Array<AdminPermission>;
+  adminRating: Rating;
+  adminRatings: PaginatedRatingResponse;
+  /** Platform revenue per bucket (commission and fees) */
+  adminRevenueSeries: Array<DashboardRevenuePoint>;
+  /** Top 6 categories by contracts created in the period */
+  adminTopCategories: Array<DashboardTopCategory>;
+  /** Unread header notifications */
+  adminUnreadNotificationCount: Scalars['Int']['output'];
   admins: PaginatedAdminResponse;
+  /** Summary of the most recent monthly badge run */
+  badgeLastRun?: Maybe<BadgeRun>;
+  /** Badge thresholds, highest tier first (BRD 4.3.18) */
+  badgeSettings: Array<BadgeSetting>;
   bank: Bank;
   banks: PaginatedBankResponse;
+  /** Active accounts for the broadcast recipient picker (max 20) */
+  broadcastRecipientOptions: Array<BroadcastRecipientOption>;
   categories: PaginatedCategoryResponse;
   category: Category;
+  /** Values and texts the add-category form starts with */
+  categoryContractDefaults: CategoryContractDefaults;
   /** Get all cities with pagination */
   cities: PaginatedCityResponse;
   /** Get cities by country with pagination */
@@ -2641,6 +3088,8 @@ export type Query = {
   getSetting: Setting;
   isProviderFavorite: Scalars['Boolean']['output'];
   listing?: Maybe<Listing>;
+  /** Published reviews for a listing */
+  listingReviews: PaginatedListingReviewResponse;
   listings: PaginatedListingResponse;
   meAdmin: Admin;
   /** Get current authenticated provider */
@@ -2654,6 +3103,10 @@ export type Query = {
   myFavoriteProviders: PaginatedFavoriteResponse;
   myListing: Listing;
   myListings: PaginatedListingResponse;
+  /** S4-4: the signed-in customer or provider overdue contracts, oldest first */
+  myOverdueContracts: Array<Contract>;
+  /** S4-12: paid contracts the signed-in provider has not acknowledged yet */
+  myPaidContractNotices: Array<Contract>;
   myPopularCategories: Array<Scalars['String']['output']>;
   myPopularListings: Array<Scalars['String']['output']>;
   notification: Notification;
@@ -2665,6 +3118,8 @@ export type Query = {
   permission: Permission;
   permissionAdmins: Array<AdminPermission>;
   permissions: Array<Permission>;
+  /** Public home page statistics (visitors included) */
+  platformStats: PlatformStats;
   premiumAdFeeReport: PremiumAdFeeReport;
   /** Get provider by ID */
   provider: Provider;
@@ -2674,13 +3129,13 @@ export type Query = {
   providerByPhone: Provider;
   /** Get all providers with pagination */
   providers: PaginatedProviderResponse;
-  rating: Rating;
-  /** Get rating statistics for an listing */
+  /** Star distribution of published ratings for a listing */
   ratingStatistics: RatingStatistics;
-  ratings: PaginatedRatingResponse;
   signedContractById?: Maybe<SignedContract>;
   signedContractByProviderId?: Maybe<SignedContract>;
   signedContracts: PaginatedSignedContractResponse;
+  /** Home carousel: one active ad per Trust-badge provider, best sellers first */
+  trustedListings: Array<Listing>;
   /** Get user by ID */
   user: User;
   /** Get all users with pagination by role */
@@ -2690,6 +3145,27 @@ export type Query = {
 
 export type QueryAdminArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+export type QueryAdminBroadcastArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryAdminBroadcastsArgs = {
+  input?: InputMaybe<BroadcastPaginationInput>;
+};
+
+
+export type QueryAdminCharityContractsArgs = {
+  input?: InputMaybe<ContractPaginationInput>;
+};
+
+
+export type QueryAdminCharitySummaryArgs = {
+  from?: InputMaybe<Scalars['DateTime']['input']>;
+  to?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 
@@ -2708,6 +3184,11 @@ export type QueryAdminContractArgs = {
 };
 
 
+export type QueryAdminContractStatusBreakdownArgs = {
+  range: DashboardRange;
+};
+
+
 export type QueryAdminContractsArgs = {
   input?: InputMaybe<ContractPaginationInput>;
 };
@@ -2723,8 +3204,39 @@ export type QueryAdminConversationsArgs = {
 };
 
 
+export type QueryAdminGrowthSeriesArgs = {
+  range: DashboardRange;
+};
+
+
+export type QueryAdminNotificationsArgs = {
+  limit?: Scalars['Int']['input'];
+  page?: Scalars['Int']['input'];
+};
+
+
 export type QueryAdminPermissionsArgs = {
   adminId: Scalars['ID']['input'];
+};
+
+
+export type QueryAdminRatingArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryAdminRatingsArgs = {
+  input?: InputMaybe<RatingPaginationInput>;
+};
+
+
+export type QueryAdminRevenueSeriesArgs = {
+  range: DashboardRange;
+};
+
+
+export type QueryAdminTopCategoriesArgs = {
+  range: DashboardRange;
 };
 
 
@@ -2740,6 +3252,12 @@ export type QueryBankArgs = {
 
 export type QueryBanksArgs = {
   input?: InputMaybe<BankPaginationInput>;
+};
+
+
+export type QueryBroadcastRecipientOptionsArgs = {
+  search?: InputMaybe<Scalars['String']['input']>;
+  type: BroadcastRecipientType;
 };
 
 
@@ -2846,6 +3364,11 @@ export type QueryIsProviderFavoriteArgs = {
 
 export type QueryListingArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+export type QueryListingReviewsArgs = {
+  input: ListingReviewsInput;
 };
 
 
@@ -2959,18 +3482,8 @@ export type QueryProvidersArgs = {
 };
 
 
-export type QueryRatingArgs = {
-  id: Scalars['String']['input'];
-};
-
-
 export type QueryRatingStatisticsArgs = {
   listingId: Scalars['String']['input'];
-};
-
-
-export type QueryRatingsArgs = {
-  input?: InputMaybe<RatingPaginationInput>;
 };
 
 
@@ -2989,6 +3502,11 @@ export type QuerySignedContractsArgs = {
 };
 
 
+export type QueryTrustedListingsArgs = {
+  limit?: Scalars['Int']['input'];
+};
+
+
 export type QueryUserArgs = {
   id: Scalars['ID']['input'];
 };
@@ -2998,20 +3516,39 @@ export type QueryUsersArgs = {
   pagination: UserPaginationInput;
 };
 
+export type RateContractInput = {
+  /** Optional comment, max 1000 chars */
+  comment?: InputMaybe<Scalars['String']['input']>;
+  contractId: Scalars['String']['input'];
+  /** Stars from 1 to 5 */
+  rating: Scalars['Int']['input'];
+};
+
 export type Rating = {
   comment?: Maybe<Scalars['String']['output']>;
+  contract?: Maybe<Contract>;
+  contractId?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['ID']['output'];
+  /** True for ratings the platform records itself (e.g. 0★ on provider-overdue cancellation) */
+  isSystemGenerated: Scalars['Boolean']['output'];
   listing: Listing;
   listingId: Scalars['String']['output'];
+  moderatedAt?: Maybe<Scalars['DateTime']['output']>;
+  moderatedByAdminId?: Maybe<Scalars['String']['output']>;
+  provider: Provider;
+  providerId: Scalars['String']['output'];
   publicId?: Maybe<Scalars['Int']['output']>;
+  /** Stars 1–5; 0 only for system-generated penalty ratings */
   rating: Scalars['Int']['output'];
+  status: RatingStatus;
   updatedAt: Scalars['DateTime']['output'];
   user: User;
   userId: Scalars['String']['output'];
 };
 
 export type RatingPaginationInput = {
+  from?: InputMaybe<Scalars['DateTime']['input']>;
   /** Number of items per page */
   limit?: Scalars['Int']['input'];
   listingId?: InputMaybe<Scalars['String']['input']>;
@@ -3019,18 +3556,22 @@ export type RatingPaginationInput = {
   minRating?: InputMaybe<Scalars['Int']['input']>;
   /** Page number (1-based) */
   page?: Scalars['Int']['input'];
+  providerId?: InputMaybe<Scalars['String']['input']>;
+  /** Matches customer name/mobile, contract no., listing name or trade name */
+  search?: InputMaybe<Scalars['String']['input']>;
   /** Sort field name */
   sortBy?: InputMaybe<RatingSortField>;
   /** Sort order: ASC or DESC */
   sortOrder?: InputMaybe<SortOrder>;
-  userId?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<RatingStatus>;
+  to?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 /** Available fields to sort ratings by */
 export enum RatingSortField {
   CreatedAt = 'createdAt',
-  Id = 'id',
   Rating = 'rating',
+  Status = 'status',
   UpdatedAt = 'updatedAt'
 }
 
@@ -3043,6 +3584,12 @@ export type RatingStatistics = {
   totalRatings: Scalars['Int']['output'];
   twoStars: Scalars['Int']['output'];
 };
+
+/** Moderation status of a contract rating */
+export enum RatingStatus {
+  Hidden = 'HIDDEN',
+  Published = 'PUBLISHED'
+}
 
 export type RefuseDeliveryInput = {
   contractId: Scalars['String']['input'];
@@ -3090,6 +3637,11 @@ export type RejectContractInput = {
   reason: Scalars['String']['input'];
 };
 
+export type RejectContractTerminationInput = {
+  providerId: Scalars['String']['input'];
+  reason: Scalars['String']['input'];
+};
+
 export type RemoveListingResponse = {
   message: Scalars['String']['output'];
   success: Scalars['Boolean']['output'];
@@ -3121,6 +3673,15 @@ export type ResetPasswordWithTokenInput = {
   resetToken: Scalars['String']['input'];
 };
 
+export type SendBroadcastInput = {
+  audience: BroadcastAudience;
+  message: Scalars['String']['input'];
+  recipientTypes: Array<BroadcastRecipientType>;
+  /** Required when audience is SELECTED */
+  recipients?: InputMaybe<Array<BroadcastRecipientInput>>;
+  title: Scalars['String']['input'];
+};
+
 /** Type of contact message sender */
 export enum SenderType {
   Guest = 'GUEST',
@@ -3134,6 +3695,20 @@ export type Setting = {
   completionConfirmationGraceHours: Scalars['Int']['output'];
   contractAcceptanceWindowDays: Scalars['Int']['output'];
   contractAcceptanceWindowEnabled: Scalars['Boolean']['output'];
+  /** System commission (%) for new categories */
+  defaultCommissionPercent: Scalars['Int']['output'];
+  /** Customer chat fee (SAR) for new categories */
+  defaultCustomerConversationFee: Scalars['Int']['output'];
+  /** Deposit (%) for new categories */
+  defaultDepositPercent: Scalars['Int']['output'];
+  /** Max execution time (hours) for new categories */
+  defaultMaxExecutionHours: Scalars['Int']['output'];
+  /** Termination limit (hours) for new categories */
+  defaultMaxTerminationHours: Scalars['Int']['output'];
+  /** Minimum commission (SAR) for new categories */
+  defaultMinCommissionAmount: Scalars['Int']['output'];
+  /** Provider chat fee (SAR) for new categories */
+  defaultProviderConversationFee: Scalars['Int']['output'];
   email: Scalars['String']['output'];
   phones: Array<Scalars['String']['output']>;
   platformManagerName?: Maybe<Scalars['String']['output']>;
@@ -3146,7 +3721,21 @@ export type Setting = {
   publicId?: Maybe<Scalars['Int']['output']>;
   rulesAr: Scalars['String']['output'];
   rulesEn: Scalars['String']['output'];
+  /** Address on invoices */
+  sellerAddress?: Maybe<Scalars['String']['output']>;
+  /** Commercial registration number on invoices */
+  sellerCrNumber?: Maybe<Scalars['String']['output']>;
+  /** Legal name on invoices (Arabic) */
+  sellerLegalNameAr?: Maybe<Scalars['String']['output']>;
+  /** Legal name on invoices (English) */
+  sellerLegalNameEn?: Maybe<Scalars['String']['output']>;
+  /** VAT registration number on invoices */
+  sellerVatNumber?: Maybe<Scalars['String']['output']>;
   socialMediaLinks: Array<SocialMediaLink>;
+  tabbyMaxAmount?: Maybe<Scalars['Float']['output']>;
+  tabbyMinAmount?: Maybe<Scalars['Float']['output']>;
+  tamaraMaxAmount?: Maybe<Scalars['Float']['output']>;
+  tamaraMinAmount?: Maybe<Scalars['Float']['output']>;
   termsAr: Scalars['String']['output'];
   termsEn: Scalars['String']['output'];
   vatEnabled: Scalars['Boolean']['output'];
@@ -3160,6 +3749,13 @@ export type SettingInput = {
   completionConfirmationGraceHours?: InputMaybe<Scalars['Int']['input']>;
   contractAcceptanceWindowDays?: InputMaybe<Scalars['Int']['input']>;
   contractAcceptanceWindowEnabled?: InputMaybe<Scalars['Boolean']['input']>;
+  defaultCommissionPercent?: InputMaybe<Scalars['Int']['input']>;
+  defaultCustomerConversationFee?: InputMaybe<Scalars['Int']['input']>;
+  defaultDepositPercent?: InputMaybe<Scalars['Int']['input']>;
+  defaultMaxExecutionHours?: InputMaybe<Scalars['Int']['input']>;
+  defaultMaxTerminationHours?: InputMaybe<Scalars['Int']['input']>;
+  defaultMinCommissionAmount?: InputMaybe<Scalars['Int']['input']>;
+  defaultProviderConversationFee?: InputMaybe<Scalars['Int']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   phones?: InputMaybe<Array<Scalars['String']['input']>>;
   platformManagerName?: InputMaybe<Scalars['String']['input']>;
@@ -3171,7 +3767,16 @@ export type SettingInput = {
   privacyPolicyEn?: InputMaybe<Scalars['String']['input']>;
   rulesAr?: InputMaybe<Scalars['String']['input']>;
   rulesEn?: InputMaybe<Scalars['String']['input']>;
+  sellerAddress?: InputMaybe<Scalars['String']['input']>;
+  sellerCrNumber?: InputMaybe<Scalars['String']['input']>;
+  sellerLegalNameAr?: InputMaybe<Scalars['String']['input']>;
+  sellerLegalNameEn?: InputMaybe<Scalars['String']['input']>;
+  sellerVatNumber?: InputMaybe<Scalars['String']['input']>;
   socialMediaLinks?: InputMaybe<Array<SocialMediaLinkInput>>;
+  tabbyMaxAmount?: InputMaybe<Scalars['Float']['input']>;
+  tabbyMinAmount?: InputMaybe<Scalars['Float']['input']>;
+  tamaraMaxAmount?: InputMaybe<Scalars['Float']['input']>;
+  tamaraMinAmount?: InputMaybe<Scalars['Float']['input']>;
   termsAr?: InputMaybe<Scalars['String']['input']>;
   termsEn?: InputMaybe<Scalars['String']['input']>;
   vatEnabled?: InputMaybe<Scalars['Boolean']['input']>;
@@ -3202,6 +3807,10 @@ export type SignedContract = {
   serviceProviderSignature: Scalars['String']['output'];
   status: SignedContractStatus;
   terminationReason?: Maybe<Scalars['String']['output']>;
+  terminationRejectedAt?: Maybe<Scalars['DateTime']['output']>;
+  terminationRejectionReason?: Maybe<Scalars['String']['output']>;
+  terminationRequestReason?: Maybe<Scalars['String']['output']>;
+  terminationRequestedAt?: Maybe<Scalars['DateTime']['output']>;
   updatedAt: Scalars['DateTime']['output'];
 };
 
@@ -3216,6 +3825,7 @@ export type SignedContractPaginationInput = {
   sortBy?: InputMaybe<SignedContractSortField>;
   /** Sort order: ASC or DESC */
   sortOrder?: InputMaybe<SortOrder>;
+  status?: InputMaybe<SignedContractStatus>;
 };
 
 /** Available fields to sort signed contracts by */
@@ -3226,13 +3836,14 @@ export enum SignedContractSortField {
   UpdatedAt = 'updatedAt'
 }
 
-/** Provider account status */
+/** Provider e-contract status */
 export enum SignedContractStatus {
   Active = 'ACTIVE',
   Expired = 'EXPIRED',
   Pending = 'PENDING',
   TerminatedByAdmin = 'TERMINATED_BY_ADMIN',
-  TerminatedByProvider = 'TERMINATED_BY_PROVIDER'
+  TerminatedByProvider = 'TERMINATED_BY_PROVIDER',
+  TerminationRequested = 'TERMINATION_REQUESTED'
 }
 
 export type SocialMediaLink = {
@@ -3259,13 +3870,25 @@ export enum SortOrder {
   Desc = 'DESC'
 }
 
+export type StartPaymentCheckoutInput = {
+  method: PaymentMethod;
+  purpose: CheckoutPurpose;
+  /** Contract, conversation or listing id, by purpose */
+  targetId: Scalars['ID']['input'];
+};
+
 export type Subscription = {
+  /** Pushes the admin home statistics whenever one of them changes (admin connections only) */
+  adminDashboardStatsUpdated: AdminDashboardStats;
+  adminNotificationAdded: Notification;
   /** Subscribe to new messages in a conversation (participants only) */
   messageAdded: Message;
   /** Subscribe to notifications for the authenticated participant */
   notificationAdded: Notification;
   /** Subscribe to all new messages for the authenticated participant */
   participantMessageAdded: Message;
+  /** Pushes the public home page statistics whenever one of them changes */
+  platformStatsUpdated: PlatformStats;
   /** Subscribe to real-time updates for the authenticated provider */
   providerUpdated: Provider;
   /** Subscribe to real-time updates for the authenticated user */
@@ -3313,6 +3936,10 @@ export type UpdateAdminInput = {
   userType?: InputMaybe<AdminUserType>;
 };
 
+export type UpdateBadgeSettingsInput = {
+  settings: Array<BadgeSettingInput>;
+};
+
 export type UpdateBankInput = {
   id: Scalars['String']['input'];
   nameAr?: InputMaybe<Scalars['String']['input']>;
@@ -3333,10 +3960,12 @@ export type UpdateCategoryInput = {
   descriptionEn?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['String']['input'];
   image?: InputMaybe<Scalars['String']['input']>;
-  maxCompletionDays?: InputMaybe<Scalars['Int']['input']>;
-  maxCompletionDaysEnabled?: InputMaybe<Scalars['Boolean']['input']>;
-  maxTerminationDays?: InputMaybe<Scalars['Int']['input']>;
-  maxTerminationDaysEnabled?: InputMaybe<Scalars['Boolean']['input']>;
+  /** In hours */
+  maxExecutionHours?: InputMaybe<Scalars['Int']['input']>;
+  maxExecutionHoursEnabled?: InputMaybe<Scalars['Boolean']['input']>;
+  /** In hours */
+  maxTerminationHours?: InputMaybe<Scalars['Int']['input']>;
+  maxTerminationHoursEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   minCommissionAmount?: InputMaybe<Scalars['Float']['input']>;
   minCommissionEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   nameAr?: InputMaybe<Scalars['String']['input']>;
@@ -3462,14 +4091,6 @@ export type UpdateProviderInput = {
   password?: InputMaybe<Scalars['String']['input']>;
   phone?: InputMaybe<Scalars['String']['input']>;
   withAbsher?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-export type UpdateRatingInput = {
-  comment?: InputMaybe<Scalars['String']['input']>;
-  id: Scalars['String']['input'];
-  listingId?: InputMaybe<Scalars['String']['input']>;
-  rating?: InputMaybe<Scalars['Int']['input']>;
-  userId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateUserInput = {

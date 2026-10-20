@@ -31,6 +31,8 @@ export const LISTING_QUERY: TypedDocumentNode<
       type
       updatedAt
       providerId
+      ratingAverage
+      ratingCount
       photos {
         filename
         id
@@ -40,6 +42,9 @@ export const LISTING_QUERY: TypedDocumentNode<
         size
       }
       provider {
+        ratingAverage
+        ratingCount
+        isNewlyAdded
         id
         name
         isActive

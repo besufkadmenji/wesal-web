@@ -1,7 +1,6 @@
 import type {
   Conversation,
   ConversationStats,
-  ConversationFeePaymentResponse,
   ConversationPaginationInput,
   Message,
   MessagePaginationInput,
@@ -18,7 +17,6 @@ import {
   PARTICIPANT_MESSAGE_ADDED_SUBSCRIPTION,
   CONVERSATION_STATS_QUERY,
   MESSAGES_QUERY,
-  PAY_CONVERSATION_FEE_MUTATION,
   RESTART_CONVERSATION_MUTATION,
 } from "@/graphql/conversation/operations";
 import { requireData, requireOperationField } from "@/utils/apollo.result";
@@ -110,19 +108,5 @@ export class ConversationService {
       conversationStats: ConversationStats;
     }>({ query: CONVERSATION_STATS_QUERY });
     return requireData(result, "Conversation stats").conversationStats;
-  }
-
-  static async payFee(conversationId: string) {
-    const result = await client().mutate<{
-      payConversationFee: ConversationFeePaymentResponse;
-    }>({
-      mutation: PAY_CONVERSATION_FEE_MUTATION,
-      variables: { conversationId },
-    });
-    return requireOperationField(
-      result,
-      "payConversationFee",
-      "Pay conversation fee",
-    );
   }
 }

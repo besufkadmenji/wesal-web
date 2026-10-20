@@ -46,6 +46,10 @@ export const TERMINATE_CONTRACT_MUTATION: TypedDocumentNode<
       withAbsher
       status
       signedContract {
+        terminationRequestedAt
+        terminationRequestReason
+        terminationRejectedAt
+        terminationRejectionReason
         contractExpiresAt
         contractSignedAt
         platformManagerSignature

@@ -169,7 +169,9 @@ export const ConversationThread = ({
                 </p>
                 <Button
                   className="justify-self-center rounded-xl"
-                  disabled={payFee.isPending || restart.isPending}
+                  disabled={
+                    payFee.isPending || payFee.isSuccess || restart.isPending
+                  }
                   onClick={() => payFee.mutate()}
                 >
                   {dict.common.payNow}

@@ -1,12 +1,13 @@
-import { monoton } from "@/assets/fonts/monoton";
 import TrustedDot from "@/assets/icons/trusted.dot.svg";
-import CountUp from "@/components/CountUp";
+import { StatItem } from "@/components/app/home/StatItem";
 import { useDict } from "@/hooks/useDict";
+import { usePlatformStats } from "@/hooks/usePlatformStats";
 import Image from "next/image";
-import { twMerge } from "tailwind-merge";
 
 export const Trusted = () => {
   const dict = useDict();
+  const { stats } = usePlatformStats();
+  const labels = dict.home.trusted.stats;
   return (
     <div className="relative grid w-full px-4 sm:px-8 xl:h-118.5 xl:px-[15vw]">
       <Image
@@ -30,34 +31,14 @@ export const Trusted = () => {
           {dict.home.trusted.description}
         </p>
         <div className="mt-8 flex items-center gap-4 md:gap-8 lg:gap-12 xl:gap-20">
-          {dict.home.trusted.stats.map((stat) => (
-            <StatItem key={stat.label} label={stat.label} value={stat.number} />
-          ))}
+          <StatItem
+            label={labels.completedContracts}
+            value={stats?.completedContracts ?? 0}
+          />
+          <StatItem label={labels.providers} value={stats?.providers ?? 0} />
+          <StatItem label={labels.customers} value={stats?.customers ?? 0} />
         </div>
       </div>
-    </div>
-  );
-};
-
-const StatItem = ({ label, value }: { label: string; value: string }) => {
-  return (
-    <div className="grid grid-cols-1 justify-items-center gap-3">
-      <CountUp
-        from={0}
-        to={Number(value.replace(/,/g, ""))}
-        separator=","
-        direction="up"
-        duration={1}
-        delay={0.2}
-        className={twMerge(
-          monoton.className,
-          "text-app-green text-2xl md:text-4xl ltr:before:content-['+'] rtl:after:content-['+']",
-          "count-up-text",
-        )}
-      />
-      <p className="text-gray text-sm text-center font-medium md:text-base md:leading-8">
-        {label}
-      </p>
     </div>
   );
 };

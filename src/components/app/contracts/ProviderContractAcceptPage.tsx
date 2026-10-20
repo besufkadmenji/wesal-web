@@ -6,6 +6,7 @@ import DocumentIcon from "@/assets/icons/contracts/document.svg";
 import MapPointIcon from "@/assets/icons/contracts/map-point.svg";
 import UserIcon from "@/assets/icons/contracts/user.svg";
 import { ContractAcceptanceDialog } from "@/components/app/contracts/ContractAcceptanceDialog";
+import { ContractAwaitingPaymentDialog } from "@/components/app/contracts/ContractAwaitingPaymentDialog";
 import { ContractFormSection } from "@/components/app/contracts/ContractFormSection";
 import { ContractHero } from "@/components/app/contracts/ContractHero";
 import { ContractLocationMap } from "@/components/app/contracts/ContractLocationMap";
@@ -17,17 +18,15 @@ import { TermsCard } from "@/components/app/contracts/TermsCard";
 import { FormInput } from "@/components/app/profile/SignedContract/FormInput";
 import { SignatureInput } from "@/components/app/profile/SignedContract/SignatureInput";
 import { Button } from "@/components/ui/button";
-import {
-  ContractSignatureType,
-  type Contract,
-} from "@/gql/graphql";
+import { ContractSignatureType, type Contract } from "@/gql/graphql";
 import { queryKeys } from "@/hooks/queryKeys";
 import { useAppRouter } from "@/hooks/use.app.router";
 import { useDict } from "@/hooks/useDict";
 import { useLang } from "@/hooks/useLang";
+import { pickLocalizedText } from "./contractTerms";
 import { useMe } from "@/hooks/useMe";
 import { ContractService } from "@/services/contract.service";
-import { showErrorMessage, showSuccessMessage } from "@/utils/show.messages";
+import { showErrorMessage } from "@/utils/show.messages";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
@@ -47,6 +46,7 @@ export const ProviderContractAcceptPage = ({
   const [acceptedCommitment, setAcceptedCommitment] = useState(false);
   const [acceptedRefund, setAcceptedRefund] = useState(false);
   const [acceptOpen, setAcceptOpen] = useState(false);
+  const [awaitingPaymentOpen, setAwaitingPaymentOpen] = useState(false);
   const [rejectOpen, setRejectOpen] = useState(false);
   const [reason, setReason] = useState("");
 
@@ -79,21 +79,22 @@ export const ProviderContractAcceptPage = ({
     ]);
 
   const accept = useMutation({
-    mutationFn: (deliveryTimeDays: number) => {
+    mutationFn: (executionHours: number) => {
       if (!providerSignature) {
         throw new Error(dict.contracts.providerAcceptanceSignature);
       }
       return ContractService.accept({
         contractId: contract.id,
         signatureData: providerSignature,
-        deliveryTimeDays,
+        executionHours,
       });
     },
-    onSuccess: async () => {
-      await refresh();
+    onSuccess: () => {
       setAcceptOpen(false);
-      showSuccessMessage(dict.contracts.accepted);
-      router.push("/contracts");
+      // BRD 4.2.18: the provider is told to wait for the payment. Data is
+      // refreshed when it closes: an accepted contract no longer renders
+      // this page, which would take the pop-up with it.
+      setAwaitingPaymentOpen(true);
     },
     onError: (error) => showErrorMessage(error.message),
   });
@@ -151,13 +152,22 @@ export const ProviderContractAcceptPage = ({
         <ContractFormSection title={dict.contracts.clientInfo} icon={UserIcon}>
           <div className="grid gap-5">
             <div className="grid gap-3 md:grid-cols-2">
+              {/* BRD: the customer's name and phone show only after payment. */}
               <FormInput
                 label={dict.contracts.clientName}
-                value={client?.name || "—"}
+                value={
+                  contract.paidAt
+                    ? client?.name || "—"
+                    : dict.contracts.shownAfterPayment
+                }
               />
               <FormInput
                 label={dict.contracts.clientPhone}
-                value={formatPhone(client?.dialCode, client?.phone)}
+                value={
+                  contract.paidAt
+                    ? formatPhone(client?.dialCode, client?.phone)
+                    : dict.contracts.shownAfterPayment
+                }
               />
             </div>
             <div className="grid items-center gap-3 md:grid-cols-[1fr_auto]">
@@ -309,10 +319,15 @@ export const ProviderContractAcceptPage = ({
               onChange={setAcceptedCommitment}
             >
               <p className="text-gray text-base leading-[1.7]">
-                {dict.contracts.clientCommitmentBody.replace(
-                  "{percent}",
-                  String(contract.commissionPercent),
-                )}
+                {pickLocalizedText(
+                  lang,
+                  contract.undertakingTextAr,
+                  contract.undertakingTextEn,
+                ) ||
+                  dict.contracts.clientCommitmentBody.replace(
+                    "{percent}",
+                    String(contract.commissionPercent),
+                  )}
               </p>
             </TermsCard>
             <TermsCard
@@ -321,7 +336,11 @@ export const ProviderContractAcceptPage = ({
               onChange={setAcceptedRefund}
             >
               <p className="text-gray text-base leading-[1.7]">
-                {dict.contracts.refundBody}
+                {pickLocalizedText(
+                  lang,
+                  contract.refundPolicyAr,
+                  contract.refundPolicyEn,
+                ) || dict.contracts.refundBody}
               </p>
             </TermsCard>
           </div>
@@ -351,9 +370,9 @@ export const ProviderContractAcceptPage = ({
       <ContractAcceptanceDialog
         open={acceptOpen}
         onOpenChange={setAcceptOpen}
-        maxCompletionDays={contract.maxCompletionDays}
+        maxExecutionHours={contract.maxExecutionHours}
         isPending={accept.isPending}
-        onConfirm={(deliveryTimeDays) => accept.mutate(deliveryTimeDays)}
+        onConfirm={(executionHours) => accept.mutate(executionHours)}
       />
       <ContractRejectionDialog
         open={rejectOpen}
@@ -365,6 +384,14 @@ export const ProviderContractAcceptPage = ({
         }}
         onReasonChange={setReason}
         onSubmit={() => reject.mutate()}
+      />
+      <ContractAwaitingPaymentDialog
+        open={awaitingPaymentOpen}
+        onDone={async () => {
+          setAwaitingPaymentOpen(false);
+          router.push("/contracts");
+          await refresh();
+        }}
       />
     </>
   );

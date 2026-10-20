@@ -30,10 +30,10 @@ export const CATEGORIES_QUERY: TypedDocumentNode<
         customerConversationFeeEnabled
         depositEnabled
         depositPercent
-        maxCompletionDays
-        maxCompletionDaysEnabled
-        maxTerminationDays
-        maxTerminationDaysEnabled
+        maxExecutionHours
+        maxExecutionHoursEnabled
+        maxTerminationHours
+        maxTerminationHoursEnabled
         minCommissionAmount
         minCommissionEnabled
         providerConversationFee

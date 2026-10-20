@@ -23,8 +23,45 @@ export const formatContractDate = (value: unknown) => {
   return date ? CONTRACT_DATE_FORMATTER.format(date) : "—";
 };
 
-export const formatDays = (value: number | null | undefined, unit: string) =>
+export const formatHours = (value: number | null | undefined, unit: string) =>
   value ? `${value} ${unit}` : "—";
+
+/**
+ * Contract timeline in hours (PO 2026-10-18): execution time from the
+ * provider's acceptance, delivery time from their completion (delivery
+ * contracts only), and the expected total.
+ */
+export const contractTimeline = (
+  contract: Pick<
+    Contract,
+    "executionHours" | "deliveryHours" | "deliveryCompanyId"
+  >,
+  copy: { hourUnit: string; awaitingProviderInput: string },
+  isPending: boolean,
+) => {
+  if (isPending) {
+    return {
+      execution: copy.awaitingProviderInput,
+      delivery: copy.awaitingProviderInput,
+      total: copy.awaitingProviderInput,
+    };
+  }
+  const usesDelivery = Boolean(contract.deliveryCompanyId);
+  const deliveryKnown = !usesDelivery || contract.deliveryHours != null;
+  const total =
+    contract.executionHours && deliveryKnown
+      ? contract.executionHours + (contract.deliveryHours ?? 0)
+      : null;
+  return {
+    execution: formatHours(contract.executionHours, copy.hourUnit),
+    delivery: usesDelivery
+      ? contract.deliveryHours
+        ? formatHours(contract.deliveryHours, copy.hourUnit)
+        : copy.awaitingProviderInput
+      : "—",
+    total: total ? formatHours(total, copy.hourUnit) : "—",
+  };
+};
 
 export const formatContractReference = (
   contract: Pick<Contract, "id" | "publicId">,
