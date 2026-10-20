@@ -2,8 +2,8 @@
 
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { XIcon } from "lucide-react";
 import CloseIcon from "@/assets/icons/close.svg";
+import { useDict } from "@/hooks/useDict";
 import { cn } from "@/lib/utils";
 
 function Dialog({
@@ -54,6 +54,7 @@ function DialogContent({
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
   showCloseButton?: boolean;
 }) {
+  const dict = useDict();
   return (
     <DialogPortal data-slot="dialog-portal">
       <DialogOverlay />
@@ -69,10 +70,10 @@ function DialogContent({
         {showCloseButton && (
           <DialogPrimitive.Close
             data-slot="dialog-close"
-            className="absolute top-6 right-6 rtl:left-6 grid size-8 items-center justify-items-center rounded-full border border-[#F2F2F2] cursor-pointer focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+            className="absolute end-6 top-6 grid size-8 items-center justify-items-center rounded-full border border-[#F2F2F2] cursor-pointer focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
           >
             <CloseIcon className="size-4 rounded-full" />
-            <span className="sr-only">Close</span>
+            <span className="sr-only">{dict.common.close}</span>
           </DialogPrimitive.Close>
         )}
       </DialogPrimitive.Content>

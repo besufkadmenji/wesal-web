@@ -419,7 +419,10 @@
     "sar": "SAR",
     "days": "days",
     "empty": "Nothing here yet",
-    "menu": "Menu"
+    "menu": "Menu",
+    "close": "Close",
+    "previousSlide": "Previous slide",
+    "nextSlide": "Next slide"
   },
   "support": {
     "addListing": {
@@ -482,7 +485,8 @@
           "minLength": "Message content must be at least 10 characters",
           "maxLength": "Message content must not exceed 1000 characters"
         }
-      }
+      },
+      "mapMarker": "Address"
     },
     "about": {
       "title": "About Platform",
