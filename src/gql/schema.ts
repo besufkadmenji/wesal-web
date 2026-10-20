@@ -422,6 +422,13 @@ export type CharitySummary = {
   totalAmount: Scalars['Float']['output'];
 };
 
+/** What a payment checkout pays for */
+export enum CheckoutPurpose {
+  ChatFee = 'CHAT_FEE',
+  Contract = 'CONTRACT',
+  PremiumAd = 'PREMIUM_AD'
+}
+
 export type City = {
   country?: Maybe<Country>;
   countryId: Scalars['String']['output'];
@@ -640,6 +647,10 @@ export type Contract = {
   maxExecutionHours?: Maybe<Scalars['Int']['output']>;
   maxTerminationHours?: Maybe<Scalars['Int']['output']>;
   paidAt?: Maybe<Scalars['DateTime']['output']>;
+  /** How the contract was paid (null until paid) */
+  paymentMethod?: Maybe<PaymentMethod>;
+  /** Methods the customer may pay with now (BNPL bounds applied); customer only */
+  paymentMethods?: Maybe<Array<PaymentMethod>>;
   pricingVersion: Scalars['Int']['output'];
   provider: Provider;
   providerAddress?: Maybe<Scalars['String']['output']>;
@@ -1528,6 +1539,8 @@ export enum MessageType {
 export type Mutation = {
   /** Provider accepts a pending contract */
   acceptContract: Contract;
+  /** S4-12: the provider has seen the "contract paid" pop-up */
+  acknowledgeContractPaid: Scalars['Boolean']['output'];
   activateAdmin: Admin;
   activateBank: Bank;
   activateCategory: Category;
@@ -1629,9 +1642,9 @@ export type Mutation = {
   markNotificationAsRead: Notification;
   /** Mark a notification as unread */
   markNotificationAsUnread: Notification;
-  /** Settle an accepted contract using the Sprint 3 mock */
+  /** Instant mock settlement for the demo seed and tests; refused unless PAYMENT_GATEWAY=mock */
   payContract: ContractPaymentResponse;
-  /** Settle the authenticated participant conversation fee */
+  /** Instant mock chat-fee settlement for the demo seed and tests; refused unless PAYMENT_GATEWAY=mock */
   payConversationFee: ConversationFeePaymentResponse;
   /** Provider signs and submits completed work or delivery */
   providerCompleteContract: Contract;
@@ -1697,6 +1710,8 @@ export type Mutation = {
   setSetting: Setting;
   /** Sign contract as provider */
   signProviderContract: Provider;
+  /** S4-10: start a gateway checkout; send the payer to redirectUrl */
+  startPaymentCheckout: PaymentCheckout;
   /** Terminate provider contract */
   terminateProviderContract: Provider;
   trackAction: Tracking;
@@ -1740,6 +1755,11 @@ export type Mutation = {
 
 export type MutationAcceptContractArgs = {
   input: AcceptContractInput;
+};
+
+
+export type MutationAcknowledgeContractPaidArgs = {
+  contractId: Scalars['String']['input'];
 };
 
 
@@ -2291,6 +2311,11 @@ export type MutationSignProviderContractArgs = {
 };
 
 
+export type MutationStartPaymentCheckoutArgs = {
+  input: StartPaymentCheckoutInput;
+};
+
+
 export type MutationTerminateProviderContractArgs = {
   terminationReason: Scalars['String']['input'];
 };
@@ -2699,11 +2724,15 @@ export type Payment = {
   conversation?: Maybe<Conversation>;
   conversationId?: Maybe<Scalars['ID']['output']>;
   createdAt: Scalars['DateTime']['output'];
+  failedAt?: Maybe<Scalars['DateTime']['output']>;
+  failureReason?: Maybe<Scalars['String']['output']>;
+  gateway?: Maybe<Scalars['String']['output']>;
   gatewayResponse?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   listing?: Maybe<Listing>;
   listingId?: Maybe<Scalars['ID']['output']>;
   notes?: Maybe<Scalars['String']['output']>;
+  paidAt?: Maybe<Scalars['DateTime']['output']>;
   payer?: Maybe<PaymentPayer>;
   payerId: Scalars['String']['output'];
   payerType: PayerType;
@@ -2717,13 +2746,22 @@ export type Payment = {
   vatRate: Scalars['Float']['output'];
 };
 
+export type PaymentCheckout = {
+  paymentId: Scalars['ID']['output'];
+  /** Send the customer here to pay */
+  redirectUrl: Scalars['String']['output'];
+};
+
 /** Payment method */
 export enum PaymentMethod {
   BankTransfer = 'BANK_TRANSFER',
   Cash = 'CASH',
   CreditCard = 'CREDIT_CARD',
   DebitCard = 'DEBIT_CARD',
+  Electronic = 'ELECTRONIC',
   Mock = 'MOCK',
+  Tabby = 'TABBY',
+  Tamara = 'TAMARA',
   Wallet = 'WALLET'
 }
 
@@ -2990,6 +3028,8 @@ export type Query = {
   myListings: PaginatedListingResponse;
   /** S4-4: the signed-in customer or provider overdue contracts, oldest first */
   myOverdueContracts: Array<Contract>;
+  /** S4-12: paid contracts the signed-in provider has not acknowledged yet */
+  myPaidContractNotices: Array<Contract>;
   myPopularCategories: Array<Scalars['String']['output']>;
   myPopularListings: Array<Scalars['String']['output']>;
   notification: Notification;
@@ -3590,6 +3630,10 @@ export type Setting = {
   /** VAT registration number on invoices */
   sellerVatNumber?: Maybe<Scalars['String']['output']>;
   socialMediaLinks: Array<SocialMediaLink>;
+  tabbyMaxAmount?: Maybe<Scalars['Float']['output']>;
+  tabbyMinAmount?: Maybe<Scalars['Float']['output']>;
+  tamaraMaxAmount?: Maybe<Scalars['Float']['output']>;
+  tamaraMinAmount?: Maybe<Scalars['Float']['output']>;
   termsAr: Scalars['String']['output'];
   termsEn: Scalars['String']['output'];
   vatEnabled: Scalars['Boolean']['output'];
@@ -3627,6 +3671,10 @@ export type SettingInput = {
   sellerLegalNameEn?: InputMaybe<Scalars['String']['input']>;
   sellerVatNumber?: InputMaybe<Scalars['String']['input']>;
   socialMediaLinks?: InputMaybe<Array<SocialMediaLinkInput>>;
+  tabbyMaxAmount?: InputMaybe<Scalars['Float']['input']>;
+  tabbyMinAmount?: InputMaybe<Scalars['Float']['input']>;
+  tamaraMaxAmount?: InputMaybe<Scalars['Float']['input']>;
+  tamaraMinAmount?: InputMaybe<Scalars['Float']['input']>;
   termsAr?: InputMaybe<Scalars['String']['input']>;
   termsEn?: InputMaybe<Scalars['String']['input']>;
   vatEnabled?: InputMaybe<Scalars['Boolean']['input']>;
@@ -3713,6 +3761,13 @@ export enum SortOrder {
   Asc = 'ASC',
   Desc = 'DESC'
 }
+
+export type StartPaymentCheckoutInput = {
+  method: PaymentMethod;
+  purpose: CheckoutPurpose;
+  /** Contract, conversation or listing id, by purpose */
+  targetId: Scalars['ID']['input'];
+};
 
 export type Subscription = {
   /** Pushes the admin home statistics whenever one of them changes (admin connections only) */

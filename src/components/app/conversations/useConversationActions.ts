@@ -1,7 +1,9 @@
 "use client";
 
 import { queryKeys } from "@/hooks/queryKeys";
+import { CheckoutPurpose, PaymentMethod } from "@/gql/graphql";
 import { ConversationService } from "@/services/conversation.service";
+import { PaymentService } from "@/services/payment.service";
 import { showErrorMessage } from "@/utils/show.messages";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -15,9 +17,15 @@ export const useConversationActions = (conversationId: string) => {
     queryClient.invalidateQueries({ queryKey: queryKeys.conversations });
   };
 
+  // S4-10: the chat fee is paid by card through the gateway checkout.
   const payFee = useMutation({
-    mutationFn: () => ConversationService.payFee(conversationId),
-    onSuccess: invalidateConversation,
+    mutationFn: () =>
+      PaymentService.startCheckout({
+        purpose: CheckoutPurpose.ChatFee,
+        targetId: conversationId,
+        method: PaymentMethod.Electronic,
+      }),
+    onSuccess: ({ redirectUrl }) => PaymentService.redirect(redirectUrl),
     onError: (error) => showErrorMessage(error.message),
   });
 

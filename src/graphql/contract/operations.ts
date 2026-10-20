@@ -1,7 +1,6 @@
 import {
   LISTING_FRAGMENT,
   PAGINATION_FRAGMENT,
-  PAYMENT_FRAGMENT,
   PROVIDER_FRAGMENT,
   USER_FRAGMENT,
 } from "@/graphql/common/fragments";
@@ -67,6 +66,8 @@ const CONTRACT_FRAGMENT = gql`
     cancellationReason
     disputeReason
     paidAt
+    paymentMethod
+    paymentMethods
     acceptedAt
     rejectedAt
     providerCompletedAt
@@ -171,6 +172,21 @@ export const MY_OVERDUE_CONTRACTS_QUERY = gql`
   ${CONTRACT_FRAGMENT}
 `;
 
+export const MY_PAID_CONTRACT_NOTICES_QUERY = gql`
+  query MyPaidContractNotices {
+    myPaidContractNotices {
+      id
+      publicId
+    }
+  }
+`;
+
+export const ACKNOWLEDGE_CONTRACT_PAID_MUTATION = gql`
+  mutation AcknowledgeContractPaid($contractId: String!) {
+    acknowledgeContractPaid(contractId: $contractId)
+  }
+`;
+
 export const CONTRACT_QUERY = gql`
   query ContractById($id: String!) {
     contract(id: $id) {
@@ -254,20 +270,6 @@ export const RESEND_CONTRACT_MUTATION = gql`
   ${CONTRACT_FRAGMENT}
 `;
 
-export const PAY_CONTRACT_MUTATION = gql`
-  mutation PayContract($contractId: String!) {
-    payContract(contractId: $contractId) {
-      payment {
-        ...PaymentSummary
-      }
-      contract {
-        ...ContractFields
-      }
-    }
-  }
-  ${PAYMENT_FRAGMENT}
-  ${CONTRACT_FRAGMENT}
-`;
 
 export const COMPLETE_CONTRACT_MUTATION = gql`
   mutation CompleteContract($input: CompleteContractInput!) {

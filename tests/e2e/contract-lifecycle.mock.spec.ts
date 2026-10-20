@@ -19,25 +19,36 @@ const contractDialog = (page: Page) =>
   page.getByRole("dialog").filter({ hasText: reference });
 const pill = (page: Page, label: string) =>
   page.locator("article").filter({ hasText: reference }).getByText(label);
-
-test("customer pays, confirms completion, rates and exports", async ({
-  page,
-}) => {
-  const api = await mockContractApi(page, { status: "ACCEPTED" });
-
-  // Pay with the mock gateway.
-  await openContract(page);
+const payWith = async (page: Page, method: string) => {
   await contractDialog(page)
     .getByRole("button", { name: en.contracts.pay })
     .click();
   const payment = page
     .getByRole("dialog")
     .filter({ hasText: en.contracts.paymentTitle });
-  await payment.getByText(en.contracts.tabbyInstallments).click();
+  await payment.getByText(method).click();
   await payment
     .getByRole("button", { name: en.contracts.continuePayment })
     .click();
-  await expect.poll(() => api.calls.PayContract?.length).toBe(1);
+};
+
+test("customer pays, confirms completion, rates and exports", async ({
+  page,
+}) => {
+  const api = await mockContractApi(page, { status: "ACCEPTED" });
+
+  // Pay with Tabby through the (mock) gateway checkout, then come back.
+  await openContract(page);
+  await payWith(page, en.contracts.tabbyInstallments);
+  await expect.poll(() => api.calls.StartPaymentCheckout?.length).toBe(1);
+  expect(api.calls.StartPaymentCheckout[0]).toEqual({
+    purpose: "CONTRACT",
+    targetId: CONTRACT_ID,
+    method: "TABBY",
+  });
+  await expect(page).toHaveURL(/\/en\/payments\/return\?paymentId=/);
+  await expect(page.getByText(en.payments.successTitle)).toBeVisible();
+  await page.getByRole("link", { name: en.payments.contractDetails }).click();
   await expect(pill(page, en.contracts.inProgress)).toBeVisible();
 
   // The provider completes meanwhile; the customer confirms.
@@ -76,6 +87,57 @@ test("customer pays, confirms completion, rates and exports", async ({
     await page.getByRole("button", { name: label }).click();
     expect((await download).suggestedFilename()).toBe(filename);
   }
+});
+
+test("a failed payment shows the BRD failure pop-up and can be retried", async ({
+  page,
+}) => {
+  const api = await mockContractApi(page, { status: "ACCEPTED" });
+  api.setGatewayOutcome("FAILED");
+
+  await openContract(page);
+  await payWith(page, en.contracts.tamaraInstallments);
+  await expect(page.getByText(en.payments.failureTitle)).toBeVisible();
+  await page.getByRole("link", { name: en.payments.tryAgain }).click();
+  await expect(pill(page, en.contracts.pendingPayment)).toBeVisible();
+
+  api.setGatewayOutcome("SUCCEEDED");
+  await payWith(page, en.contracts.electronicPayment);
+  await expect(page.getByText(en.payments.successTitle)).toBeVisible();
+  expect(
+    api.calls.StartPaymentCheckout.map((call) => call.method),
+  ).toEqual(["TAMARA", "ELECTRONIC"]);
+});
+
+test("the provider is told once that the contract was paid (Arabic)", async ({
+  page,
+}) => {
+  const api = await mockContractApi(page, {
+    role: "provider",
+    status: "IN_PROGRESS",
+    lang: "ar",
+  });
+  api.setPaidNotice(true);
+
+  await page.goto("/ar");
+  const notice = page
+    .getByRole("dialog")
+    .filter({ hasText: ar.payments.paidNoticeTitle });
+  await expect(notice).toContainText(String(CONTRACT_NUMBER));
+  await notice.getByRole("button", { name: ar.payments.contractDetails }).click();
+  await expect.poll(() => api.calls.AcknowledgeContractPaid?.length).toBe(1);
+  expect(api.calls.AcknowledgeContractPaid[0]).toEqual({
+    contractId: CONTRACT_ID,
+  });
+  await expect(notice).toBeHidden();
+  // Read-only payment details for the provider (D-1).
+  await expect(
+    contractDialog(page).getByText(ar.payments.methods.TABBY),
+  ).toBeVisible();
+  await page.reload();
+  await expect(
+    page.getByRole("dialog").filter({ hasText: ar.payments.paidNoticeTitle }),
+  ).toHaveCount(0);
 });
 
 test("provider completes with the stored signature", async ({ page }) => {

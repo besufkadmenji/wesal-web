@@ -5,7 +5,8 @@ export const canAccessParticipantPath = (role: ParticipantRole, path: string) =>
   if (path.startsWith("/profile/favorites")) return role === "user";
   if (
     path.startsWith("/conversations") ||
-    path.startsWith("/contracts")
+    path.startsWith("/contracts") ||
+    path.startsWith("/payments")
   ) {
     return role === "user" || role === "provider";
   }

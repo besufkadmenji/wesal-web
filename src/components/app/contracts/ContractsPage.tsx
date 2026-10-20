@@ -3,6 +3,7 @@
 import { ContractRemovedNotice } from "@/components/app/contracts/ContractRemovedNotice";
 import { CompletedContractDetailPage } from "@/components/app/contracts/CompletedContractDetailPage";
 import { ContractHero } from "@/components/app/contracts/ContractHero";
+import { ContractPaymentDialog } from "@/components/app/contracts/ContractPaymentDialog";
 import { CustomerContractDialog } from "@/components/app/contracts/CustomerContractDialog";
 import { ProviderContractAcceptPage } from "@/components/app/contracts/ProviderContractAcceptPage";
 import { ProviderContractDialog } from "@/components/app/contracts/ProviderContractDialog";
@@ -35,9 +36,7 @@ import { useAppRouter } from "@/hooks/use.app.router";
 import { useDict } from "@/hooks/useDict";
 import { useMe } from "@/hooks/useMe";
 import { cn } from "@/lib/utils";
-import { ContractService } from "@/services/contract.service";
-import { showErrorMessage, showSuccessMessage } from "@/utils/show.messages";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -225,14 +224,7 @@ export const ContractDetailPage = ({ id }: { id: string }) => {
       });
     }
   };
-  const pay = useMutation({
-    mutationFn: () => ContractService.pay(id),
-    onSuccess: () => {
-      showSuccessMessage(dict.contracts.paid);
-      refresh();
-    },
-    onError: (error) => showErrorMessage(error.message),
-  });
+  const [paymentOpen, setPaymentOpen] = useState(false);
 
   if (contract.isLoading)
     return (
@@ -392,11 +384,17 @@ export const ContractDetailPage = ({ id }: { id: string }) => {
           {isCustomer && item.status === ContractStatus.Accepted && (
             <Button
               className="h-13 justify-self-end rounded-[16px] px-8"
-              disabled={pay.isPending}
-              onClick={() => pay.mutate()}
+              onClick={() => setPaymentOpen(true)}
             >
               {dict.contracts.pay} · {format.money(item.totalPayable)}
             </Button>
+          )}
+          {isCustomer && item.status === ContractStatus.Accepted && (
+            <ContractPaymentDialog
+              contract={item}
+              open={paymentOpen}
+              onOpenChange={setPaymentOpen}
+            />
           )}
           {isCustomer && item.status === ContractStatus.Rejected && (
             <Button

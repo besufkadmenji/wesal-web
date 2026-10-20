@@ -1,7 +1,14 @@
-import { ListingMedia, MediaType } from "@/gql/graphql";
+import {
+  CheckoutPurpose,
+  ListingMedia,
+  MediaType,
+  PaymentMethod,
+  PromotionStatus,
+} from "@/gql/graphql";
 import { useDict } from "@/hooks/useDict";
 import { useMe } from "@/hooks/useMe";
 import ListingService from "@/services/listing.service";
+import { PaymentService } from "@/services/payment.service";
 import { uploadFile } from "@/utils/file.upload";
 import { showErrorMessage, showSuccessMessage } from "@/utils/show.messages";
 import { useRouter } from "next/navigation";
@@ -17,6 +24,21 @@ export const useManageListing = () => {
   const { form, storyVideoFile, photoFiles, reset } = useForm();
   const router = useRouter();
   const { me } = useMe();
+  const payToFeature = async (listingId: string) => {
+    try {
+      const { redirectUrl } = await PaymentService.startCheckout({
+        purpose: CheckoutPurpose.PremiumAd,
+        targetId: listingId,
+        method: PaymentMethod.Electronic,
+      });
+      PaymentService.redirect(redirectUrl);
+    } catch (error) {
+      showErrorMessage(
+        error instanceof Error ? error.message : dict.payments.failureTitle,
+      );
+      router.push("/my-listings");
+    }
+  };
   const createListing = async () => {
     setCreating(true);
     try {
@@ -60,6 +82,11 @@ export const useManageListing = () => {
       if (result) {
         showSuccessMessage(dict.addListing.listingCreatedSuccessfully);
         reset();
+        // S4-10: a featured ad is published as normal until its fee is paid.
+        if (result.promotionStatus === PromotionStatus.PendingPayment) {
+          await payToFeature(result.id);
+          return;
+        }
         router.push("/my-listings");
       }
     } catch (error) {

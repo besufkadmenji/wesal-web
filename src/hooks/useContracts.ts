@@ -21,6 +21,16 @@ export const useOverdueContracts = (enabled: boolean) =>
     refetchOnWindowFocus: true,
   });
 
+/** S4-12: paid contracts the provider still has to be told about. */
+export const usePaidContractNotices = (enabled: boolean) =>
+  useQuery({
+    queryKey: [...queryKeys.contracts, "paid-notices"],
+    queryFn: () => ContractService.paidNotices(),
+    enabled,
+    refetchInterval: 60_000,
+    refetchOnWindowFocus: true,
+  });
+
 export const useContract = (id?: string) =>
   useQuery({
     queryKey: queryKeys.contract(id || ""),

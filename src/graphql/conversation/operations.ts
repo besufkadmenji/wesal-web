@@ -1,7 +1,6 @@
 import {
   LISTING_FRAGMENT,
   PAGINATION_FRAGMENT,
-  PAYMENT_FRAGMENT,
   PROVIDER_FRAGMENT,
   USER_FRAGMENT,
 } from "@/graphql/common/fragments";
@@ -154,14 +153,3 @@ export const CONVERSATION_STATS_QUERY = gql`
   }
 `;
 
-export const PAY_CONVERSATION_FEE_MUTATION = gql`
-  mutation PayConversationFee($conversationId: String!) {
-    payConversationFee(conversationId: $conversationId) {
-      payment { ...PaymentSummary }
-      access { feeRequired feeAmount paidAt canSend expiresAt feeCycle }
-      conversation { ...ConversationFields }
-    }
-  }
-  ${PAYMENT_FRAGMENT}
-  ${CONVERSATION_FRAGMENT}
-`;

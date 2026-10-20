@@ -997,10 +997,11 @@
     "free": "Free listing",
     "fee": "Promotion fee",
     "duration": "Promotion duration",
-    "createFeeDescription": "Featured listings are published immediately. The admin fee is recorded as a mock payment for this listing.",
+    "createFeeDescription": "Your listing is published right away. After publishing you pay the fee and it becomes featured.",
     "active": "Featured and active",
     "expired": "Promotion expired",
-    "disabled": "Featured advertisements are currently unavailable"
+    "disabled": "Featured advertisements are currently unavailable",
+    "payToFeature": "Pay to feature"
   },
   "status": {
     "DRAFT": "Draft",
@@ -1028,5 +1029,34 @@
   },
   "provider": {
     "newlyAdded": "Newly Added"
+  },
+  "payments": {
+    "successTitle": "Payment completed successfully",
+    "failureTitle": "Payment was not completed, please try again",
+    "pendingTitle": "Confirming your payment",
+    "pendingDescription": "This usually takes a few seconds.",
+    "timeoutTitle": "Your payment is still being processed",
+    "timeoutDescription": "We will notify you as soon as it is confirmed.",
+    "notFound": "We couldn't find this payment.",
+    "contractDetails": "Contract details",
+    "backToChat": "Back to chat",
+    "myAds": "My ads",
+    "home": "Home",
+    "tryAgain": "Try again",
+    "paidNoticeTitle": "Contract paid",
+    "paidNoticeDescription": "Contract no. {number} has been paid. The platform holds your right until the customer confirms completion. Please start execution.",
+    "ok": "OK",
+    "method": "Payment method",
+    "status": "Payment status",
+    "statusPaid": "Paid",
+    "statusPending": "Awaiting payment",
+    "methods": {
+      "ELECTRONIC": "Card payment",
+      "TABBY": "Tabby",
+      "TAMARA": "Tamara",
+      "MOCK": "Test payment"
+    },
+    "paidAt": "Payment date",
+    "section": "Payment details"
   }
 }

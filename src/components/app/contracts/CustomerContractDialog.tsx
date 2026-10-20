@@ -10,6 +10,7 @@ import { ContractHeldFunds } from "@/components/app/contracts/ContractHeldFunds"
 import { ContractCancellationDetails } from "@/components/app/contracts/ContractCancellationDetails";
 import { ContractFinancialSection } from "@/components/app/contracts/ContractFinancialSection";
 import { ContractInvoiceButton } from "@/components/app/contracts/ContractInvoiceButton";
+import { ContractPaymentInfo } from "@/components/app/contracts/ContractPaymentInfo";
 import { ContractPaymentDialog } from "@/components/app/contracts/ContractPaymentDialog";
 import { ContractSectionTitle } from "@/components/app/contracts/ContractSectionTitle";
 import { ContractSignaturesSection } from "@/components/app/contracts/ContractSignaturesSection";
@@ -170,6 +171,9 @@ export const CustomerContractDialog = ({
                 <ContractAdminResolution contract={contract} />
               )}
 
+              {Boolean(contract.paidAt) && (
+                <ContractPaymentInfo contract={contract} />
+              )}
               <ContractFinancialSection contract={contract} />
               <ContractInvoiceButton contract={contract} className="w-full" />
 
@@ -195,7 +199,6 @@ export const CustomerContractDialog = ({
         contract={contract}
         open={paymentOpen}
         onOpenChange={setPaymentOpen}
-        onPaid={() => onOpenChange(false)}
       />
       <ContractCompletionDialog
         contract={contract}

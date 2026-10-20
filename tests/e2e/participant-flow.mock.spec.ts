@@ -299,18 +299,28 @@ async function mockParticipantApi(
       };
     } else if (operation.includes("MarkConversationRead")) {
       data = { markConversationRead: { id: conversation.id, unreadCount: 0 } };
-    } else if (operation.includes("PayConversationFee")) {
+    } else if (operation.includes("StartPaymentCheckout")) {
+      // The gateway approves at once and returns to the web (S4-10).
       providerFeePaid = true;
       data = {
-        payConversationFee: {
-          payment: {
-            id: "chat-payment-e2e",
-            purpose: "CHAT_PROVIDER",
-            status: "COMPLETED",
-            amount: 10,
-          },
-          access: currentConversation().access,
-          conversation: currentConversation(),
+        startPaymentCheckout: {
+          paymentId: "chat-payment-e2e",
+          redirectUrl: "/en/payments/return?paymentId=chat-payment-e2e",
+        },
+      };
+    } else if (operation.includes("PaymentResult")) {
+      data = {
+        payment: {
+          id: "chat-payment-e2e",
+          purpose: "CHAT_PROVIDER",
+          status: "COMPLETED",
+          amount: 10,
+          paymentMethod: "ELECTRONIC",
+          contractId: null,
+          conversationId: conversation.id,
+          listingId: null,
+          paidAt: new Date().toISOString(),
+          failedAt: null,
         },
       };
     } else if (operation.includes("getSetting")) {
@@ -444,6 +454,8 @@ test("provider pays the chat fee and opens the pending contract", async ({
 
   await expect(page.getByText("Conversation access fee")).toBeVisible();
   await page.getByRole("button", { name: "Pay now" }).click();
+  await expect(page.getByText("Payment completed successfully")).toBeVisible();
+  await page.getByRole("link", { name: "Back to chat" }).click();
   await expect(page.getByPlaceholder("Write your message")).toBeVisible();
 
   const contractLink = page.getByRole("link", { name: "Accept contract" });

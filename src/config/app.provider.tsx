@@ -10,6 +10,7 @@ import { UserStatusWatcher } from "@/components/app/UserStatusWatcher";
 import { useRealtimeRefresh } from "@/hooks/useConversations";
 import { RealtimeEventsWatcher } from "@/components/app/RealtimeEventsWatcher";
 import { OverdueContractsGate } from "@/components/app/contracts/OverdueContractsGate";
+import { ContractPaidNoticeGate } from "@/components/app/contracts/ContractPaidNoticeGate";
 import { Suspense } from "react";
 
 const RealtimeQueryBridge = () => {
@@ -29,6 +30,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
           <Suspense fallback={null}>
             <OverdueContractsGate />
           </Suspense>
+          <ContractPaidNoticeGate />
           {children}
         </HeroUIProvider>
         <ReactQueryDevtools initialIsOpen={false} />
