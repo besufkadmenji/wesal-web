@@ -681,7 +681,8 @@
       "maxImages": "(Max 5 images - 10MB each)",
       "characterLimit50": "0/50",
       "characterLimit1000": "0/1000",
-      "submit": "Post the advertisement"
+      "submit": "Post the advertisement",
+      "unavailableCategory": "(unavailable)"
     },
     "validation": {
       "nameRequired": "Listing name is required",
@@ -727,7 +728,9 @@
       "anonymous": "Wesal customer"
     },
     "serviceProviderData": "Service Provider Data",
-    "contactProvider": "Conversation and data display"
+    "contactProvider": "Conversation and data display",
+    "unavailableTitle": "This ad is currently unavailable",
+    "unavailableDescription": "It may have been removed, or its section is closed for now."
   },
   "editListing": {
     "saveChanges": "Save Changes"

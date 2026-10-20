@@ -681,7 +681,8 @@
       "maxVideo": " (حد أقصى 100 ميجا)",
       "characterLimit50": "0/50",
       "characterLimit1000": "0/1000",
-      "submit": "نشر الإعلان"
+      "submit": "نشر الإعلان",
+      "unavailableCategory": "(غير متاح)"
     },
     "validation": {
       "nameRequired": "اسم الإعلان مطلوب",
@@ -727,7 +728,9 @@
       "anonymous": "عميل وصال"
     },
     "serviceProviderData": "بيانات مقدم الخدمة",
-    "contactProvider": "المحادثة و إظهار البيانات"
+    "contactProvider": "المحادثة و إظهار البيانات",
+    "unavailableTitle": "هذا الإعلان غير متاح حالياً",
+    "unavailableDescription": "ربما تم حذفه أو أن قسمه مغلق حالياً."
   },
   "editListing": {
     "saveChanges": "حفظ التغييرات"
