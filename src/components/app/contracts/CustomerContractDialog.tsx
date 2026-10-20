@@ -41,19 +41,33 @@ import {
 import { useDict } from "@/hooks/useDict";
 import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const CustomerContractDialog = ({
   contract,
   open,
   onOpenChange,
+  startWithPayment,
 }: {
   contract: Contract | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  /** Open the payment dialog right away while payment is due. */
+  startWithPayment?: boolean;
 }) => {
   const dict = useDict();
   const [paymentOpen, setPaymentOpen] = useState(false);
+  // BRD "Go to contract (payment)": arrive with the payment dialog open.
+  // Opened after the contract dialog has mounted and taken focus, otherwise
+  // that focus move dismisses the nested dialog straight away.
+  const payNow =
+    Boolean(startWithPayment) &&
+    contract?.status === ContractStatus.Accepted;
+  useEffect(() => {
+    if (!payNow) return;
+    const timer = setTimeout(() => setPaymentOpen(true));
+    return () => clearTimeout(timer);
+  }, [payNow, contract?.id]);
   const [completionOpen, setCompletionOpen] = useState(false);
   if (!contract) return null;
 

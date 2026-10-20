@@ -89,6 +89,37 @@ test("customer pays, confirms completion, rates and exports", async ({
   }
 });
 
+test("home reminds the customer to pay and goes straight to payment (BRD 4.1.16)", async ({
+  page,
+}) => {
+  await mockContractApi(page, { status: "ACCEPTED" });
+
+  await page.goto("/en");
+  const reminder = page
+    .getByRole("dialog")
+    .filter({ hasText: en.payments.payPromptTitle });
+  await expect(reminder).toContainText(String(CONTRACT_NUMBER));
+  await reminder.getByRole("link", { name: en.payments.goToContract }).click();
+  await expect(page).toHaveURL(/contractId=.*&pay=1/);
+  await expect(
+    page.getByRole("dialog").filter({ hasText: en.contracts.paymentTitle }),
+  ).toBeVisible();
+});
+
+test("the pay reminder uses the BRD wording in Arabic and can be closed", async ({
+  page,
+}) => {
+  await mockContractApi(page, { status: "ACCEPTED", lang: "ar" });
+
+  await page.goto("/ar");
+  const reminder = page
+    .getByRole("dialog")
+    .filter({ hasText: ar.payments.payPromptTitle });
+  await expect(reminder).toBeVisible();
+  await reminder.getByRole("button", { name: ar.common.cancel }).click();
+  await expect(reminder).toBeHidden();
+});
+
 test("a failed payment shows the BRD failure pop-up and can be retried", async ({
   page,
 }) => {

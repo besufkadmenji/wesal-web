@@ -5,10 +5,14 @@ import { queryKeys } from "@/hooks/queryKeys";
 import { ContractService } from "@/services/contract.service";
 import { useQuery } from "@tanstack/react-query";
 
-export const useContracts = (input: ContractPaginationInput = {}) =>
+export const useContracts = (
+  input: ContractPaginationInput = {},
+  enabled = true,
+) =>
   useQuery({
     queryKey: [...queryKeys.contracts, input],
     queryFn: () => ContractService.findAll({ page: 1, limit: 30, ...input }),
+    enabled,
   });
 
 /** S4-19: refreshed every minute and by contract notifications. */

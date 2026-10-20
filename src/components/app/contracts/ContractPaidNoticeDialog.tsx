@@ -44,11 +44,11 @@ export const ContractPaidNoticeDialog = ({
             <DialogTitle className="text-xl leading-8 font-semibold text-[#1a1a1a]">
               {dict.payments.paidNoticeTitle}
             </DialogTitle>
+            <p className="text-sm font-medium text-[#4d4d4d]">
+              {dict.contracts.contractNumber}: {contractNumber}
+            </p>
             <DialogDescription className="text-gray text-base leading-[1.7]">
-              {dict.payments.paidNoticeDescription.replace(
-                "{number}",
-                contractNumber,
-              )}
+              {dict.payments.paidNoticeDescription}
             </DialogDescription>
           </div>
         </div>

@@ -6,6 +6,7 @@ import DocumentIcon from "@/assets/icons/contracts/document.svg";
 import MapPointIcon from "@/assets/icons/contracts/map-point.svg";
 import UserIcon from "@/assets/icons/contracts/user.svg";
 import { ContractAcceptanceDialog } from "@/components/app/contracts/ContractAcceptanceDialog";
+import { ContractAwaitingPaymentDialog } from "@/components/app/contracts/ContractAwaitingPaymentDialog";
 import { ContractFormSection } from "@/components/app/contracts/ContractFormSection";
 import { ContractHero } from "@/components/app/contracts/ContractHero";
 import { ContractLocationMap } from "@/components/app/contracts/ContractLocationMap";
@@ -25,7 +26,7 @@ import { useLang } from "@/hooks/useLang";
 import { pickLocalizedText } from "./contractTerms";
 import { useMe } from "@/hooks/useMe";
 import { ContractService } from "@/services/contract.service";
-import { showErrorMessage, showSuccessMessage } from "@/utils/show.messages";
+import { showErrorMessage } from "@/utils/show.messages";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
@@ -45,6 +46,7 @@ export const ProviderContractAcceptPage = ({
   const [acceptedCommitment, setAcceptedCommitment] = useState(false);
   const [acceptedRefund, setAcceptedRefund] = useState(false);
   const [acceptOpen, setAcceptOpen] = useState(false);
+  const [awaitingPaymentOpen, setAwaitingPaymentOpen] = useState(false);
   const [rejectOpen, setRejectOpen] = useState(false);
   const [reason, setReason] = useState("");
 
@@ -87,11 +89,12 @@ export const ProviderContractAcceptPage = ({
         executionHours,
       });
     },
-    onSuccess: async () => {
-      await refresh();
+    onSuccess: () => {
       setAcceptOpen(false);
-      showSuccessMessage(dict.contracts.accepted);
-      router.push("/contracts");
+      // BRD 4.2.18: the provider is told to wait for the payment. Data is
+      // refreshed when it closes: an accepted contract no longer renders
+      // this page, which would take the pop-up with it.
+      setAwaitingPaymentOpen(true);
     },
     onError: (error) => showErrorMessage(error.message),
   });
@@ -381,6 +384,14 @@ export const ProviderContractAcceptPage = ({
         }}
         onReasonChange={setReason}
         onSubmit={() => reject.mutate()}
+      />
+      <ContractAwaitingPaymentDialog
+        open={awaitingPaymentOpen}
+        onDone={async () => {
+          setAwaitingPaymentOpen(false);
+          router.push("/contracts");
+          await refresh();
+        }}
       />
     </>
   );

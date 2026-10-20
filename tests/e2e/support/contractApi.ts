@@ -297,10 +297,13 @@ export async function mockContractApi(
         }
         data = { contract: view() };
         break;
-      case "Contracts":
+      case "Contracts": {
+        const group = input.statusGroup as string | undefined;
+        const listed =
+          !removed() && (!group || group === contract.statusGroup);
         data = {
           contracts: {
-            items: removed() ? [] : [view()],
+            items: listed ? [view()] : [],
             meta: {
               total: 1,
               page: 1,
@@ -312,6 +315,7 @@ export async function mockContractApi(
           },
         };
         break;
+      }
       case "MyOverdueContracts":
         data = { myOverdueContracts: overdue ? [contract] : [] };
         break;

@@ -1044,7 +1044,7 @@
     "home": "Home",
     "tryAgain": "Try again",
     "paidNoticeTitle": "Contract paid",
-    "paidNoticeDescription": "Contract no. {number} has been paid. The platform holds your right until the customer confirms completion. Please start execution.",
+    "paidNoticeDescription": "The contract amount has been paid and the platform holds your right until the customer completes the deal. Please carry out the contract on your side.",
     "ok": "OK",
     "method": "Payment method",
     "status": "Payment status",
@@ -1057,6 +1057,10 @@
       "MOCK": "Test payment"
     },
     "paidAt": "Payment date",
-    "section": "Payment details"
+    "section": "Payment details",
+    "payPromptTitle": "Please pay the contract amount to start it",
+    "goToContract": "Go to contract",
+    "awaitingPaymentTitle": "Contract accepted",
+    "awaitingPaymentDescription": "Please wait for the payment to the platform to be completed."
   }
 }

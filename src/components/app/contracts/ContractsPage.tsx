@@ -81,6 +81,7 @@ export const ContractsPage = ({
   const router = useAppRouter();
   const searchParams = useSearchParams();
   const requestedContractId = searchParams.get("contractId") || undefined;
+  const startWithPayment = searchParams.get("pay") === "1";
   const requestedContract = useContract(requestedContractId);
   const [statusGroup, setStatusGroup] = useState<ContractStatusGroup | "">("");
   const [page, setPage] = useState(1);
@@ -190,6 +191,9 @@ export const ContractsPage = ({
         <CustomerContractDialog
           contract={activeContract}
           open={Boolean(activeContract)}
+          startWithPayment={
+            startWithPayment && activeContract?.id === requestedContractId
+          }
           onOpenChange={(open) => {
             if (!open) closeContract();
           }}
