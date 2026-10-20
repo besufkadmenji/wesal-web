@@ -7,8 +7,8 @@ import { twMerge } from "tailwind-merge";
 
 type Party = { name?: string | null; avatarFilename?: string | null };
 
-/** One row of the Figma chats popup (6242:8758 unread / 6242:8813 read). */
-export const ChatPopoverItem = ({
+/** One row of the Figma chats drawer (6242:8849 unread / 6242:8848 read). */
+export const ChatDrawerItem = ({
   conversation,
   party,
   lang,

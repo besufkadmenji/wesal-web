@@ -9,7 +9,9 @@
   "header": {
     "notifications": "Notifications",
     "messages": "Messages",
-    "addAd": "Add Your Ad"
+    "addAd": "Add Your Ad",
+    "unreadNotifications": "Unread notifications",
+    "unreadMessages": "Unread messages"
   },
   "footer": {
     "aboutUs": "A digital platform that acts as an intermediary between sellers and buyers, aiming to facilitate the process of supply and demand through a smooth and secure user experience.",

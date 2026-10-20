@@ -412,9 +412,43 @@ test("incoming chat message updates the badge outside chat", async ({ page }) =>
   await mockParticipantApi(page);
   await page.goto("/en/contracts");
 
+  // D-21: the header shows a dot (with a screen-reader label), not a count.
   const messagesButton = page.getByRole("button", { name: /Messages/i });
   await expect(messagesButton).toBeVisible();
-  await expect(messagesButton.getByText("1", { exact: true })).toBeVisible();
+  await expect(messagesButton.getByText("Unread messages")).toBeAttached();
+});
+
+test("chats open as a full-height side drawer on the header's side", async ({
+  page,
+}) => {
+  await mockParticipantApi(page);
+  for (const [lang, title, edge] of [
+    ["en", "Messages", "right"],
+    ["ar", "المحادثات", "left"],
+  ] as const) {
+    await page.context().addCookies([
+      { name: "lang", value: lang, domain: "127.0.0.1", path: "/" },
+    ]);
+    await page.goto(`/${lang}/contracts`);
+    await page.getByRole("button", { name: new RegExp(title) }).click();
+    const drawer = page.getByRole("dialog", { name: title });
+    await expect(drawer).toBeVisible();
+    await expect(drawer.getByText("E2E Provider").first()).toBeVisible();
+    // Measured once the slide-in animation has settled.
+    const viewport = page.viewportSize()!;
+    const edgeOffset = async () => {
+      const box = (await drawer.boundingBox())!;
+      return edge === "right"
+        ? Math.round(viewport.width - (box.x + box.width))
+        : Math.round(box.x);
+    };
+    await expect.poll(edgeOffset).toBe(0);
+    expect(Math.round((await drawer.boundingBox())!.height)).toBe(
+      viewport.height,
+    );
+    await page.keyboard.press("Escape");
+    await expect(drawer).toBeHidden();
+  }
 });
 
 test("contract query parameter opens its popup from the contracts list", async ({
