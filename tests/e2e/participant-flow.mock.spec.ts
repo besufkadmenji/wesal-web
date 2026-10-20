@@ -377,10 +377,21 @@ async function mockParticipantApi(
               type: "next",
               payload: {
                 data: {
+                  // H-26: subscription results go through Apollo's cache,
+                  // which drops a payload missing __typename or fields of
+                  // the sender union, as the real API always sends them.
                   participantMessageAdded: {
                     ...conversation.lastMessage,
+                    __typename: "Message",
                     id: "message-realtime",
                     content: "Realtime update",
+                    sender: {
+                      __typename: "Provider",
+                      id: "provider-e2e",
+                      name: "E2E Provider",
+                      commercialName: null,
+                      avatarFilename: null,
+                    },
                   },
                 },
               },
