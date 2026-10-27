@@ -2,7 +2,6 @@
 import { Wrapper } from "@/components/app/auth/Wrapper";
 import { OTP_LENGTH, OtpInput } from "@/components/app/shared/inputs/OtpInput";
 import { Button } from "@/components/ui/button";
-import { OtpType } from "@/gql/graphql";
 import { useCountdownTimer } from "@/hooks/useCountdownTimer";
 import { useDict } from "@/hooks/useDict";
 import { useQueryState } from "nuqs";
@@ -14,7 +13,7 @@ export const VerifyForgotPassword = () => {
   const [targetType] = useQueryState("targetType");
   const [target] = useQueryState("target");
   const { remainingSeconds, start, reset, formatTime } = useCountdownTimer(60);
-  const { verifyOtp, resendOtp, busy } = useForgotPassword();
+  const { verifyOtp, resendResetCode, busy } = useForgotPassword();
   const [otp, setOtp] = useState("");
   useEffect(() => {
     start();
@@ -71,11 +70,7 @@ export const VerifyForgotPassword = () => {
             className="text-primary h-12.5 rounded-[20px] bg-[#EFF1F6] text-base font-semibold"
             disabled={remainingSeconds > 0 || busy}
             onClick={async () => {
-              await resendOtp({
-                target: target!,
-                type: OtpType.PhoneVerification,
-              });
-              reset();
+              if (await resendResetCode(target!)) reset();
             }}
           >
             {dict.auth.resetPassword.verify.resendButton}

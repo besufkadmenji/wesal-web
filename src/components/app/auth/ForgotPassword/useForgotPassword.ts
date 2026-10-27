@@ -1,6 +1,5 @@
 import {
   ForgotPasswordInput,
-  ResendOtpInput,
   ResetPasswordWithTokenInput,
   VerifyPasswordResetOtpInput,
 } from "@/gql/graphql";
@@ -87,17 +86,26 @@ export const useForgotPassword = () => {
     }
   };
 
-  const resendOtp = async (input: ResendOtpInput) => {
+  /**
+   * Sends a new password-reset code to the same email or phone. It used to
+   * call the sign-up resend with a phone type, so an email target answered
+   * "user not found" and nothing was sent; a resent code would also not
+   * have been a password-reset code. Returns whether it was sent.
+   */
+  const resendResetCode = async (emailOrPhone: string) => {
     setBusy(true);
     try {
-      await (type === "provider"
-        ? AuthProviderService.resendOtp(input)
-        : AuthService.resendOtp(input));
+      return Boolean(
+        await (type === "provider"
+          ? AuthProviderService.forgotPassword({ emailOrPhone })
+          : AuthService.forgotPassword({ emailOrPhone })),
+      );
     } catch (error) {
       console.error("Login error:", error);
       showErrorMessage(
         error instanceof Error ? error.message : dict.auth.forgotPasswordFailed,
       );
+      return false;
     } finally {
       setBusy(false);
     }
@@ -106,7 +114,7 @@ export const useForgotPassword = () => {
   return {
     forgotPassword,
     verifyOtp,
-    resendOtp,
+    resendResetCode,
     resetPassword,
     busy,
   };
