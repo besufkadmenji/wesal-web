@@ -3,7 +3,7 @@ import { useForgotPassword } from "@/components/app/auth/ForgotPassword/useForgo
 import { Wrapper } from "@/components/app/auth/Wrapper";
 import { Button } from "@/components/ui/button";
 import { useDict } from "@/hooks/useDict";
-import { showErrorMessage } from "@/utils/show.messages";
+import { useNewPasswordValidation } from "@/hooks/useNewPasswordValidation";
 import { useQueryState } from "nuqs";
 import { useState } from "react";
 import { PasswordInput } from "../../shared/inputs/PasswordInput";
@@ -12,6 +12,7 @@ export const ResetPassword = () => {
   const [token] = useQueryState("token");
   const { resetPassword, busy } = useForgotPassword();
   const [form, setForm] = useState({ password: "", confirmPassword: "" });
+  const { errors, validate, revalidate } = useNewPasswordValidation();
   return (
     <Wrapper
       classNames={{
@@ -31,26 +32,26 @@ export const ResetPassword = () => {
           <PasswordInput
             placeholder={dict.auth.resetPassword.setNewPassword.newPassword}
             value={form.password}
+            error={errors.password}
             onChange={(value) => {
               setForm((prev) => ({ ...prev, password: value }));
+              revalidate(value, form.confirmPassword);
             }}
           />
           <PasswordInput
             placeholder={dict.auth.resetPassword.setNewPassword.confirmPassword}
             value={form.confirmPassword}
+            error={errors.confirmPassword}
             onChange={(value) => {
               setForm((prev) => ({ ...prev, confirmPassword: value }));
+              revalidate(form.password, value);
             }}
           />
           <Button
             className="mt-40 h-12.5 rounded-[20px] text-base font-semibold"
             onClick={() => {
-              if (form.password !== form.confirmPassword) {
-                showErrorMessage(
-                  dict.auth.resetPassword.setNewPassword.passwordMismatch,
-                );
-                return;
-              }
+              // Same rules as registration, incl. the match (ClickUp 869fmmfge).
+              if (!validate(form.password, form.confirmPassword)) return;
               resetPassword({
                 resetToken: token!,
                 newPassword: form.password,
