@@ -23,7 +23,7 @@ export const useChangePhone = () => {
   const initiateChange = async (newPhone: string, countryCode: string) => {
     if (newPhone.length !== 9) {
       showErrorMessage(dict.profile.changePhoneNumber.invalidPhoneNumber);
-      return;
+      return false;
     }
     setBusy(true);
     try {
@@ -36,10 +36,12 @@ export const useChangePhone = () => {
         setOpen("verify");
         setChangeToken(result.changeToken);
       }
+      return Boolean(result);
     } catch (error) {
       showErrorMessage(
         error instanceof Error ? error.message : dict.common.somethingWentWrong,
       );
+      return false;
     } finally {
       setBusy(false);
     }

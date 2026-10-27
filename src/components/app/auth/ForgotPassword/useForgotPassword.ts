@@ -6,7 +6,7 @@ import {
 import { useAppRouter } from "@/hooks/use.app.router";
 import { useDict } from "@/hooks/useDict";
 import AuthService from "@/services/auth.service";
-import { showErrorMessage } from "@/utils/show.messages";
+import { showErrorMessage, showSuccessMessage } from "@/utils/show.messages";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { useQueryState } from "nuqs";
@@ -95,11 +95,14 @@ export const useForgotPassword = () => {
   const resendResetCode = async (emailOrPhone: string) => {
     setBusy(true);
     try {
-      return Boolean(
+      const sent = Boolean(
         await (type === "provider"
           ? AuthProviderService.forgotPassword({ emailOrPhone })
           : AuthService.forgotPassword({ emailOrPhone })),
       );
+      // Same confirmation as the sign-up resend.
+      if (sent) showSuccessMessage(dict.auth.otpResent);
+      return sent;
     } catch (error) {
       console.error("Login error:", error);
       showErrorMessage(

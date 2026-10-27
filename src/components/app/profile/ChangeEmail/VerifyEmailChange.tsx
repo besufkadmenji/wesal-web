@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useCountdownTimer } from "@/hooks/useCountdownTimer";
 import { useDict } from "@/hooks/useDict";
 import { useMe } from "@/hooks/useMe";
+import { showSuccessMessage } from "@/utils/show.messages";
 import { useQueryState } from "nuqs";
 import { useEffect, useState } from "react";
 export const VerifyEmailChange = () => {
@@ -16,7 +17,7 @@ export const VerifyEmailChange = () => {
   });
 
   const [otp, setOtp] = useState("");
-  const { verifyChange, busy } = useChangeEmail();
+  const { verifyChange, initiateChange, busy } = useChangeEmail();
   useEffect(() => {
     start();
   }, [start]);
@@ -65,10 +66,12 @@ export const VerifyEmailChange = () => {
           className="text-primary h-12.5 rounded-[20px] bg-[#EFF1F6] text-base font-semibold"
           disabled={remainingSeconds > 0 || busy}
           onClick={async () => {
-            // await initiateChange(
-
-            // );
-            reset();
+            // The button used to only restart the timer; it now sends a
+            // new code (and change token) to the same address.
+            if (await initiateChange(selectedEmail)) {
+              showSuccessMessage(dict.auth.otpResent);
+              reset();
+            }
           }}
         >
           {dict.auth.register.verify.resendButton}

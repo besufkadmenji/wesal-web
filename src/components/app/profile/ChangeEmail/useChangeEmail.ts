@@ -31,10 +31,12 @@ export const useChangeEmail = () => {
         setOpen("verify");
         setChangeToken(result.changeToken);
       }
+      return Boolean(result);
     } catch (error) {
       showErrorMessage(
         error instanceof Error ? error.message : dict.common.somethingWentWrong,
       );
+      return false;
     } finally {
       setBusy(false);
     }
