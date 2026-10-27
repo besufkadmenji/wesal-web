@@ -29,7 +29,7 @@ import { PickLocation } from "@/components/app/auth/Register/PickLocation";
 import { TermsModal } from "@/components/app/auth/Register/TermsModal";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { usePathname } from "next/navigation";
+import { useTermsUrl } from "./useTermsUrl";
 import { useEffect } from "react";
 import { useRegisterProvider } from "./useRegisterProvider";
 
@@ -294,7 +294,7 @@ const ProviderForm = ({
   errors: Record<string, { message?: string }>;
 }) => {
   const dict = useDict();
-  const pathname = usePathname();
+  const termsUrl = useTermsUrl();
   const form = useRegisterProviderStore((state) => state.formData);
 
   console.log("ProviderForm rendered");
@@ -361,7 +361,7 @@ const ProviderForm = ({
           <AppCheckbox
             label={dict.auth.signup.termsAndConditions}
             link={{
-              url: `${pathname}?show-terms=true`,
+              url: termsUrl,
               text: dict.auth.signup.termsAndConditionsLink,
               target: "_self",
             }}
