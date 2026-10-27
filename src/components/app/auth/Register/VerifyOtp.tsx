@@ -1,6 +1,6 @@
 "use client";
 import { Wrapper } from "@/components/app/auth/Wrapper";
-import { OtpInput } from "@/components/app/shared/inputs/OtpInput";
+import { OTP_LENGTH, OtpInput } from "@/components/app/shared/inputs/OtpInput";
 import { Button } from "@/components/ui/button";
 import { OtpType } from "@/gql/graphql";
 import { useCountdownTimer } from "@/hooks/useCountdownTimer";
@@ -77,6 +77,11 @@ export const VerifyOtp = () => {
           <div className="mt-32 grid grid-cols-1 gap-6">
             <Button
               className="h-12.5 rounded-[20px] text-base font-semibold"
+              disabled={
+                (type === "provider" ? otpProvider : otp).length < OTP_LENGTH ||
+                busy ||
+                busyProvider
+              }
               onClick={() => {
                 if (type === "provider") {
                   verifyOtpProvider({

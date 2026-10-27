@@ -1,6 +1,6 @@
 import OtpIcon from "@/assets/icons/otp.svg";
 import { useChangeEmail } from "@/components/app/profile/ChangeEmail/useChangeEmail";
-import { OtpInput } from "@/components/app/shared/inputs/OtpInput";
+import { OTP_LENGTH, OtpInput } from "@/components/app/shared/inputs/OtpInput";
 import { Button } from "@/components/ui/button";
 import { useCountdownTimer } from "@/hooks/useCountdownTimer";
 import { useDict } from "@/hooks/useDict";
@@ -53,6 +53,7 @@ export const VerifyEmailChange = () => {
       <div className="mt-32 grid grid-cols-1 gap-6">
         <Button
           className="h-12.5 rounded-[20px] text-base font-semibold"
+          disabled={otp.length < OTP_LENGTH || busy}
           onClick={() => {
             verifyChange(otp);
           }}

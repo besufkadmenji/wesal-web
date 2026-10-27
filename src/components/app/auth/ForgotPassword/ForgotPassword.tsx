@@ -1,16 +1,14 @@
 "use client";
-import EmailIcon from "@/assets/icons/auth/email.svg";
 import { Wrapper } from "@/components/app/auth/Wrapper";
-import { PhoneInput } from "@/components/app/shared/inputs/PhoneInput";
-import { TextInput } from "@/components/app/shared/inputs/TextInput";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useDict } from "@/hooks/useDict";
+import { useLang } from "@/hooks/useLang";
 import { useQueryState } from "nuqs";
-import { useState } from "react";
-import { useForgotPassword } from "./useForgotPassword";
+import { ResetWithEmail } from "./ResetWithEmail";
+import { ResetWithPhone } from "./ResetWithPhone";
 export const ForgotPassword = () => {
   const dict = useDict();
+  const lang = useLang();
   const [type, setType] = useQueryState("type");
   const [method, setMethod] = useQueryState("method", {
     defaultValue: "phone",
@@ -30,7 +28,9 @@ export const ForgotPassword = () => {
             {dict.auth.resetPassword.method.subtitle}
           </p>
         </div>
+        {/* Radix Tabs default to left-to-right; follow the page language. */}
         <Tabs
+          dir={lang === "ar" ? "rtl" : "ltr"}
           defaultValue={method}
           onValueChange={setMethod}
           className="grid grid-cols-1 gap-10"
@@ -58,64 +58,5 @@ export const ForgotPassword = () => {
         </Tabs>
       </div>
     </Wrapper>
-  );
-};
-
-const ResetWithEmail = () => {
-  const dict = useDict();
-  const [email, setEmail] = useState("");
-  const { forgotPassword, busy } = useForgotPassword();
-  return (
-    <div className="grid grid-cols-1 gap-60">
-      <TextInput
-        icon={<EmailIcon />}
-        placeholder={dict.auth.login.email}
-        type="email"
-        value={email}
-        onChange={(value) => setEmail(value)}
-      />
-      <Button
-        className="h-12.5 rounded-[20px] text-base font-semibold"
-        onClick={() => {
-          forgotPassword(
-            {
-              emailOrPhone: email,
-            },
-            "email",
-          );
-        }}
-        disabled={busy}
-      >
-        {dict.auth.resetPassword.method.submit}
-      </Button>
-    </div>
-  );
-};
-
-const ResetWithPhone = () => {
-  const dict = useDict();
-  const { forgotPassword, busy } = useForgotPassword();
-  const [phone, setPhone] = useState("");
-  const [country] = useQueryState("country", {
-    defaultValue: "+966",
-  });
-  return (
-    <div className="grid grid-cols-1 gap-60">
-      <PhoneInput value={phone} onChange={(value) => setPhone(value)} />
-      <Button
-        className="h-12.5 rounded-[20px] text-base font-semibold"
-        onClick={() => {
-          forgotPassword(
-            {
-              emailOrPhone: `${country}${phone}`,
-            },
-            "phone",
-          );
-        }}
-        disabled={busy}
-      >
-        {dict.auth.resetPassword.method.submit}
-      </Button>
-    </div>
   );
 };

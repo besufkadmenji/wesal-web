@@ -15,11 +15,11 @@ import { useDict } from "@/hooks/useDict";
 import { useRegisterForm } from "@/hooks/useRegisterForm";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useTermsUrl } from "./useTermsUrl";
 import RemoveIcon from "@/assets/icons/remove.svg";
 export const RegisterUser = () => {
   const dict = useDict();
-  const pathname = usePathname();
+  const termsUrl = useTermsUrl();
   const form = useRegisterStore((state) => state.formData);
   const updateField = useRegisterStore((state) => state.updateField);
   const { register, busy } = useRegister();
@@ -155,7 +155,7 @@ export const RegisterUser = () => {
           <AppCheckbox
             label={dict.auth.signup.termsAndConditions}
             link={{
-              url: `${pathname}?show-terms=true`,
+              url: termsUrl,
               text: dict.auth.signup.termsAndConditionsLink,
               target: "_self",
             }}

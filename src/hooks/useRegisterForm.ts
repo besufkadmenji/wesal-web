@@ -1,5 +1,6 @@
 import { useDict } from "@/hooks/useDict";
 import { validateField } from "@/utils/register-validation";
+import { translateKey } from "@/utils/dict-key";
 import { useCallback } from "react";
 import { FieldErrors, FieldValues, useForm } from "react-hook-form";
 
@@ -18,16 +19,7 @@ export const useRegisterForm = <T extends FieldValues>({
 
   // Translation function helper
   const t = useCallback(
-    (key: string): string => {
-      const keys = key.split(".");
-      let value: Record<string, unknown> | string | unknown = dict;
-      for (const k of keys) {
-        if (typeof value === "object" && value !== null) {
-          value = (value as Record<string, unknown>)[k];
-        }
-      }
-      return typeof value === "string" ? value : key;
-    },
+    (key: string): string => translateKey(dict, key),
     [dict],
   );
 

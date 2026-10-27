@@ -7,9 +7,10 @@ import {
 import { changeLang } from "@/config/i18n/changeLang";
 import { useLang } from "@/hooks/useLang";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import DownIcon from "@/assets/icons/down.icon.svg";
 import { twMerge } from "tailwind-merge";
+import { localeSwitchPath } from "./localeSwitchPath";
 const langMap: {
   [key: string]: { label: string; flag: string };
 } = {
@@ -24,6 +25,7 @@ const langMap: {
 };
 export const SelectLanguage = () => {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const lang = useLang();
   const { label, flag } = langMap[lang] || langMap["en"];
   return (
@@ -50,7 +52,7 @@ export const SelectLanguage = () => {
             onClick={() => {
               changeLang(
                 key.toString(),
-                pathname.replace("/ar", "").replace("/en", ""),
+                localeSwitchPath(pathname, searchParams.toString()),
                 false,
               );
             }}
