@@ -1,4 +1,5 @@
 import Cookies from "js-cookie";
+import { requestLanguage } from "./request-language";
 
 type GraphQlEnvelope<T> = {
   data?: T;
@@ -38,7 +39,7 @@ export async function graphqlMultipartRequest<T>(options: {
       ...(Cookies.get("token")
         ? { Authorization: `Bearer ${Cookies.get("token")}` }
         : {}),
-      "accept-language": Cookies.get("lang") || "ar",
+      "accept-language": requestLanguage(),
     },
   });
   const payload = (await response.json()) as GraphQlEnvelope<T>;

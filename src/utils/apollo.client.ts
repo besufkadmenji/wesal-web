@@ -10,6 +10,7 @@ import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { createClient } from "graphql-ws";
 import Cookies from "js-cookie";
+import { requestLanguage } from "./request-language";
 
 const defaultOptions: ApolloClient.DefaultOptions.Input = {
   watchQuery: { fetchPolicy: "no-cache", errorPolicy: "all" },
@@ -46,8 +47,7 @@ const createApolloClient = (token?: string, url?: string) => {
   const authLink = new SetContextLink(({ headers }) => {
     const browserToken =
       typeof window !== "undefined" ? Cookies.get("token") : undefined;
-    const language =
-      typeof window !== "undefined" ? Cookies.get("lang") || "ar" : "ar";
+    const language = requestLanguage();
     const effectiveToken = token ?? browserToken;
     return {
       headers: {
@@ -91,7 +91,7 @@ const createApolloClient = (token?: string, url?: string) => {
               },
               connectionParams: () => {
                 const currentToken = Cookies.get("token");
-                const language = Cookies.get("lang") || "ar";
+                const language = requestLanguage();
                 return {
                   ...(currentToken
                     ? { Authorization: `Bearer ${currentToken}` }
