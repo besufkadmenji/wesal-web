@@ -1,5 +1,5 @@
 import ArrowDownIcon from "@/assets/icons/arrow.down.svg";
-import { CategorySelect } from "@/components/app/categories/Categories";
+import { CategorySelect } from "@/components/app/categories/CategorySelect";
 import { SmartAnimateText } from "@/components/app/shared/SmartAnimateText";
 import { Button } from "@/components/ui/button";
 import { useDict } from "@/hooks/useDict";
@@ -44,15 +44,21 @@ export const Hero = () => {
       </div>
       <div className="grid w-full grid-cols-[1fr_auto] items-center gap-2 px-8 md:w-[48vw]">
         <CategorySelect
-          onSearch={() => {
-            router.push(`${pathname}/categories?query=${query}`);
+          onSearch={(value) => {
+            router.push(
+              `${pathname}/categories?query=${encodeURIComponent(value)}`,
+            );
           }}
           onChange={(v) => setQuery(v)}
         />
+        {/* ClickUp 869fmmby7: an empty search sent `?query=null`. */}
         <Button
           className="h-12.5 rounded-[20px] md:px-16"
+          disabled={!query?.trim()}
           onClick={() => {
-            router.push(`${pathname}/categories?query=${query}`);
+            router.push(
+              `${pathname}/categories?query=${encodeURIComponent(query!.trim())}`,
+            );
           }}
         >
           {dict.home.hero.search}
