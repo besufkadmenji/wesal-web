@@ -4,6 +4,9 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 
+/** Verification codes are 4 digits; screens enable "verify" only when full. */
+export const OTP_LENGTH = 4;
+
 export const OtpInput = ({
   value,
   onChange,
@@ -13,7 +16,14 @@ export const OtpInput = ({
 }) => {
   return (
     <div dir="ltr">
-      <InputOTP maxLength={4} value={value} onChange={onChange}>
+      {/* The real input sits under the slots with transparent text; its text
+          selection still painted a blue block on a slot (ClickUp 869fmm77y). */}
+      <InputOTP
+        maxLength={OTP_LENGTH}
+        value={value}
+        onChange={onChange}
+        className="selection:bg-transparent"
+      >
         <InputOTPGroup>
           <SlotItem index={0} />
         </InputOTPGroup>

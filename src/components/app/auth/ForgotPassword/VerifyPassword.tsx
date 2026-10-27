@@ -1,6 +1,6 @@
 "use client";
 import { Wrapper } from "@/components/app/auth/Wrapper";
-import { OtpInput } from "@/components/app/shared/inputs/OtpInput";
+import { OTP_LENGTH, OtpInput } from "@/components/app/shared/inputs/OtpInput";
 import { Button } from "@/components/ui/button";
 import { OtpType } from "@/gql/graphql";
 import { useCountdownTimer } from "@/hooks/useCountdownTimer";
@@ -62,7 +62,7 @@ export const VerifyForgotPassword = () => {
                 target: target!,
               });
             }}
-            disabled={busy}
+            disabled={otp.length < OTP_LENGTH || busy}
           >
             {dict.auth.resetPassword.verify.verifyButton}
           </Button>
