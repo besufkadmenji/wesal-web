@@ -20,13 +20,12 @@ import { twMerge } from "tailwind-merge";
 export const ListingFilter = () => {
   const dict = useDict();
 
-  const [, setCategoryId] = useQueryState("category");
-
   const [minPrice, setMinPrice] = useQueryState("minPrice", parseAsInteger);
   const [maxPrice, setMaxPrice] = useQueryState("maxPrice", parseAsInteger);
   const [, setCityId] = useQueryState("city");
   const [query, setQuery] = useQueryState("query");
   const [, setSelectedRating] = useQueryState("rating", parseAsInteger);
+  const [, setPage] = useQueryState("page", parseAsInteger);
 
   const { width } = useWindowSize();
   const [showFilter, setShowFilter] = useState(false);
@@ -52,12 +51,14 @@ export const ListingFilter = () => {
         <button
           className="text-primary cursor-pointer font-semibold"
           onClick={() => {
-            setCategoryId(null);
+            // The category is this page's scope, not a filter: Reset keeps
+            // it (ClickUp 869fmuh2u) and starts the results from page 1.
             setMinPrice(null);
             setMaxPrice(null);
             setCityId(null);
             setQuery(null);
             setSelectedRating(null);
+            setPage(null);
           }}
         >
           {dict.listingFilter.reset}
