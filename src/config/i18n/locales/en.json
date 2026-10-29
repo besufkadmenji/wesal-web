@@ -1054,6 +1054,12 @@
   "provider": {
     "newlyAdded": "Newly Added"
   },
+  "signContractPrompt": {
+    "title": "Sign your e-contract to get started",
+    "message": "You need to sign the platform's e-contract before you can offer your services and publish ads.",
+    "sign": "Sign the contract",
+    "stay": "Stay on this page"
+  },
   "payments": {
     "successTitle": "Payment completed successfully",
     "failureTitle": "Payment was not completed, please try again",

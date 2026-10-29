@@ -4,6 +4,7 @@ import { ChatDrawer } from "@/components/app/shared/ChatDrawer";
 import { MobileMenu } from "@/components/app/shared/MobileMenu";
 import { NavItem } from "@/components/app/shared/NavItem";
 import { NotificationDrawer } from "@/components/app/shared/NotificationDrawer";
+import { SignContractGate } from "@/components/app/shared/SignContractGate";
 import { Button } from "@/components/ui/button";
 import { useDict } from "@/hooks/useDict";
 import { useMe } from "@/hooks/useMe";
@@ -56,6 +57,7 @@ export const Header = () => {
       </div>
       <MobileMenu />
       <BeProvider />
+      <SignContractGate />
     </header>
   );
 };
