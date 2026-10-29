@@ -4,9 +4,11 @@ import { useDict } from "@/hooks/useDict";
 import CircleIcon from "@/assets/icons/check.circle.green.svg";
 import JoinLine from "@/assets/icons/join.line.svg";
 import OpenIcon from "@/assets/icons/open.svg";
+import { useAddAdAction } from "@/components/app/shared/useAddAdAction";
 import { Button } from "@/components/ui/button";
 export const Join = () => {
   const dict = useDict();
+  const addAd = useAddAdAction();
   return (
     <div className="grid grid-cols-1 grid-rows-1 gap-6 bg-[#EFF1F6] xl:grid-cols-2">
       <div className="grid auto-rows-max grid-cols-1 items-start gap-6 px-4 py-10 sm:px-8 xl:ltr:pl-[7vw] xl:rtl:pr-[7vw]">
@@ -30,7 +32,10 @@ export const Join = () => {
             <JoinItem key={index} text={item} />
           ))}
         </div>
-        <Button className="mt-0.75 h-12 items-center justify-self-start rounded-[20px] ltr:pr-1! ltr:pl-3! rtl:pr-3! rtl:pl-1!">
+        <Button
+          className="mt-0.75 h-12 items-center justify-self-start rounded-[20px] ltr:pr-1! ltr:pl-3! rtl:pr-3! rtl:pl-1!"
+          onClick={addAd}
+        >
           {dict.home.join.cta}
           <span className="text-primary grid size-10 items-center justify-items-center rounded-[16px] bg-[#EFF1F6]">
             <OpenIcon className="size-6 ltr:rotate-90" />

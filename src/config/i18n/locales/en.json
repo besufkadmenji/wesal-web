@@ -422,7 +422,9 @@
     "menu": "Menu",
     "close": "Close",
     "previousSlide": "Previous slide",
-    "nextSlide": "Next slide"
+    "nextSlide": "Next slide",
+    "requestFailed": "We couldn't send your request. Please try again.",
+    "uploadTooLarge": "The attached files are too large. Please choose smaller images."
   },
   "support": {
     "addListing": {
@@ -1051,6 +1053,12 @@
   },
   "provider": {
     "newlyAdded": "Newly Added"
+  },
+  "signContractPrompt": {
+    "title": "Sign your e-contract to get started",
+    "message": "You need to sign the platform's e-contract before you can offer your services and publish ads.",
+    "sign": "Sign the contract",
+    "stay": "Stay on this page"
   },
   "payments": {
     "successTitle": "Payment completed successfully",

@@ -115,17 +115,10 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL(`/${currentLocale}`, request.url));
   }
 
-  /* ----------------------- Provider contract enforcement ------------------- */
-  if (
-    result?.provider &&
-    (!result.provider.signedContract ||
-      result.provider.signedContract.status === SignedContractStatus.Pending) &&
-    !pathname.startsWith(`/${currentLocale}/profile/signed-contract`)
-  ) {
-    return NextResponse.redirect(
-      new URL(`/${currentLocale}/profile/signed-contract`, request.url),
-    );
-  }
+  // A provider without an active e-contract may open every page; the
+  // SignContractGate modal explains what to do on each one instead of
+  // bouncing every link to the contract page (ClickUp 869fmna2q, 869fmn4gn).
+  // The API still refuses to publish ads without an active contract.
 
   return NextResponse.next();
 }

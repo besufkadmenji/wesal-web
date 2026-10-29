@@ -4,19 +4,18 @@ import { ChatDrawer } from "@/components/app/shared/ChatDrawer";
 import { MobileMenu } from "@/components/app/shared/MobileMenu";
 import { NavItem } from "@/components/app/shared/NavItem";
 import { NotificationDrawer } from "@/components/app/shared/NotificationDrawer";
+import { SignContractGate } from "@/components/app/shared/SignContractGate";
 import { Button } from "@/components/ui/button";
 import { useDict } from "@/hooks/useDict";
 import { useMe } from "@/hooks/useMe";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useQueryState } from "nuqs";
+import { useAddAdAction } from "./useAddAdAction";
 
 export const Header = () => {
   const dict = useDict();
   const { me } = useMe();
-  const router = useRouter();
-  const [, setBeProvider] = useQueryState("be-provider");
+  const addAd = useAddAdAction();
   const isLoggedIn = !!me?.user || !!me?.provider;
   return (
     <header className="flex h-25.5 items-center justify-between gap-4 border-b border-b-[#F2F2F2] bg-white px-4 md:px-8 xl:px-[7vw]">
@@ -50,13 +49,7 @@ export const Header = () => {
         <Button
           variant={"secondary"}
           className="h-9.5 w-9.5 rounded-[12px]! text-base font-semibold xl:h-12.5 xl:w-auto xl:rounded-[20px]! xl:px-6!"
-          onClick={() => {
-            if (me?.user) {
-              setBeProvider("true");
-            } else {
-              router.push("/my-listings/add");
-            }
-          }}
+          onClick={addAd}
         >
           <AddIcon className="size-5" />
           <span className="hidden xl:block"> {dict.header.addAd}</span>
@@ -64,6 +57,7 @@ export const Header = () => {
       </div>
       <MobileMenu />
       <BeProvider />
+      <SignContractGate />
     </header>
   );
 };

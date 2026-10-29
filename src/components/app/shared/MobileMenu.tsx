@@ -10,15 +10,13 @@ import {
   DrawerContent,
   useDisclosure,
 } from "@heroui/react";
-import { useRouter } from "next/navigation";
-import { useQueryState } from "nuqs";
+import { useAddAdAction } from "./useAddAdAction";
 
 export const MobileMenu = () => {
   const { isOpen, onClose, onOpen, onOpenChange } = useDisclosure();
   const dict = useDict();
   const { me } = useMe();
-  const router = useRouter();
-  const [, setBeProvider] = useQueryState("be-provider");
+  const addAd = useAddAdAction();
   const isLoggedIn = Boolean(me?.user || me?.provider);
 
   return (
@@ -78,11 +76,7 @@ export const MobileMenu = () => {
               variant={"secondary"}
               className="h-12.5 rounded-[20px]! px-6! text-base font-semibold"
               onClick={() => {
-                if (me?.user) {
-                  setBeProvider("true");
-                } else {
-                  router.push("/my-listings/add");
-                }
+                addAd();
                 onClose();
               }}
             >
