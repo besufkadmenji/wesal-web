@@ -14,6 +14,7 @@ export const useListings = (): {
   const [minPrice, setMinPrice] = useQueryState("minPrice", parseAsInteger);
   const [maxPrice, setMaxPrice] = useQueryState("maxPrice", parseAsInteger);
   const [cityId, setCityId] = useQueryState("city");
+  const [minRating] = useQueryState("rating", parseAsInteger);
 
   const [query, setQuery] = useQueryState("query");
 
@@ -31,6 +32,7 @@ export const useListings = (): {
       minPrice,
       maxPrice,
       cityId,
+      minRating,
     ],
     queryFn: () =>
       ListingService.listings({
@@ -41,6 +43,7 @@ export const useListings = (): {
         minPrice,
         maxPrice,
         cityId,
+        minRating,
       }),
   });
 

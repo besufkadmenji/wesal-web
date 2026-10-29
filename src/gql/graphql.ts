@@ -383,6 +383,7 @@ export type ListingPaginationInput = {
   limit?: number;
   maxPrice?: number | null | undefined;
   minPrice?: number | null | undefined;
+  minRating?: number | null | undefined;
   /** Page number (1-based) */
   page?: number;
   search?: string | null | undefined;

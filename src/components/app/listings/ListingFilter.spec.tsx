@@ -1,6 +1,6 @@
 import { ListingFilter } from "@/components/app/listings/ListingFilter";
 import en from "@/config/i18n/locales/en.json";
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { NuqsTestingAdapter, type UrlUpdateEvent } from "nuqs/adapters/testing";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -54,5 +54,52 @@ describe("ListingFilter reset", () => {
     ]) {
       expect(params.has(name)).toBe(false);
     }
+  });
+
+  const renderFilter = (searchParams: string) => {
+    const updates: UrlUpdateEvent[] = [];
+    render(
+      <NuqsTestingAdapter
+        hasMemory
+        searchParams={searchParams}
+        onUrlUpdate={(event) => updates.push(event)}
+      >
+        <ListingFilter />
+      </NuqsTestingAdapter>,
+    );
+    return updates;
+  };
+
+  it("searches on Enter, not on every keystroke (ClickUp 869fmut30)", async () => {
+    const user = userEvent.setup();
+    const updates = renderFilter("?category=c1&page=3");
+    const input = screen.getByPlaceholderText(
+      en.listingFilter.searchPlaceholder,
+    );
+
+    await user.type(input, "pipe");
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    expect(updates).toHaveLength(0);
+
+    await user.keyboard("{Enter}");
+    await waitFor(() =>
+      expect(updates.at(-1)?.searchParams.get("query")).toBe("pipe"),
+    );
+    expect(updates.at(-1)?.searchParams.has("page")).toBe(false);
+  });
+
+  it("toggles the rating chip (ClickUp 869fmut30)", async () => {
+    const user = userEvent.setup();
+    const updates = renderFilter("?category=c1");
+    const four = screen.getByText("4");
+
+    await user.click(four);
+    await waitFor(() =>
+      expect(updates.at(-1)?.searchParams.get("rating")).toBe("4"),
+    );
+    await user.click(four);
+    await waitFor(() =>
+      expect(updates.at(-1)?.searchParams.has("rating")).toBe(false),
+    );
   });
 });

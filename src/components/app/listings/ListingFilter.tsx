@@ -15,7 +15,7 @@ import { useLang } from "@/hooks/useLang";
 import { useWindowSize } from "@/hooks/useWindowSize";
 import { SearchIcon } from "lucide-react";
 import { parseAsInteger, useQueryState } from "nuqs";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 export const ListingFilter = () => {
   const dict = useDict();
@@ -153,24 +153,20 @@ export const CitySelect = () => {
   );
 };
 
+/**
+ * Searches when the user presses Enter or the search icon (ClickUp
+ * 869fmut30: it re-queried on every keystroke). Clearing the field shows
+ * all ads again straight away.
+ */
 export const ListingSearchInput = () => {
   const dict = useDict();
   const [query, setQuery] = useQueryState("query");
-  const [, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
-  const timer = useRef<NodeJS.Timeout | null>(null);
+  const [, setPage] = useQueryState("page", parseAsInteger);
   const [localQuery, setLocalQuery] = useState(query ?? "");
-
-  useEffect(() => {
-    return () => {
-      if (timer.current) {
-        clearTimeout(timer.current);
-      }
-    };
-  }, []);
 
   const updateSearch = (value: string) => {
     const nextQuery = value.trim();
-    setPage(1);
+    setPage(null);
     setQuery(nextQuery || null);
   };
 
@@ -180,7 +176,14 @@ export const ListingSearchInput = () => {
         "relative flex h-14 w-full items-center justify-start gap-2 rounded-[20px] border border-[#F2F2F2] bg-white px-4",
       )}
     >
-      <SearchIcon className="absolute size-4.5 text-[#999999] ltr:left-4 rtl:right-4" />
+      <button
+        type="button"
+        aria-label={dict.listingFilter.searchPlaceholder}
+        className="absolute grid cursor-pointer place-items-center text-[#999999] ltr:left-4 rtl:right-4"
+        onClick={() => updateSearch(localQuery)}
+      >
+        <SearchIcon className="size-4.5" />
+      </button>
       <input
         placeholder={dict.listingFilter.searchPlaceholder}
         className="h-full w-full ps-6.5 outline-none"
@@ -188,20 +191,10 @@ export const ListingSearchInput = () => {
         onChange={(e) => {
           const value = e.target.value;
           setLocalQuery(value);
-          if (timer.current) {
-            clearTimeout(timer.current);
-          }
-          timer.current = setTimeout(() => {
-            updateSearch(value);
-          }, 250);
+          if (!value.trim() && query) updateSearch("");
         }}
         onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            if (timer.current) {
-              clearTimeout(timer.current);
-            }
-            updateSearch(localQuery);
-          }
+          if (e.key === "Enter") updateSearch(localQuery);
         }}
       />
     </div>
@@ -215,6 +208,7 @@ const RatingFilter = () => {
     "rating",
     parseAsInteger,
   );
+  const [, setPage] = useQueryState("page", parseAsInteger);
 
   return (
     <div className="grid grid-cols-1 gap-4">
@@ -225,7 +219,11 @@ const RatingFilter = () => {
             key={rating}
             rating={rating}
             isActive={selectedRating === rating}
-            onClick={() => setSelectedRating(rating)}
+            onClick={() => {
+              // N stars and up; clicking the active chip clears it.
+              setSelectedRating(selectedRating === rating ? null : rating);
+              setPage(null);
+            }}
           />
         ))}
       </div>
