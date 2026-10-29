@@ -29,14 +29,19 @@ export default async function RootLayout({
       <body className={`${norsal.className}`}>
         <NextTopLoader showSpinner={false} color="#eff1f6" shadow="" />
         <AppProvider>{children}</AppProvider>
+        {/* A modal dialog disables clicks outside it; toasts stay
+            clickable so their close button works (ClickUp 869fmvtdy). */}
         <ToastContainer
           position={lang === "en" ? "top-right" : "top-left"}
           closeButton={CloseButton}
+          className="pointer-events-auto"
         />
         <Toaster
           richColors
+          closeButton
           position={lang === "en" ? "top-right" : "top-left"}
           dir={dir(lang)}
+          className="pointer-events-auto"
         />
       </body>
     </html>

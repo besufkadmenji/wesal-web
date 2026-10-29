@@ -1,3 +1,4 @@
+import { getDictionary } from "@/config/i18n/dictionaries";
 import Cookies from "js-cookie";
 import { requestLanguage } from "./request-language";
 
@@ -42,6 +43,23 @@ export async function graphqlMultipartRequest<T>(options: {
       "accept-language": requestLanguage(),
     },
   });
+  // ClickUp 869fmvtdy: a proxy or server error page (HTML) used to surface
+  // as "Unexpected token '<' … is not valid JSON". Only parse JSON; anything
+  // else becomes a short message in the page's language.
+  const isJson = (response.headers.get("content-type") ?? "").includes(
+    "application/json",
+  );
+  if (!isJson) {
+    const copy = getDictionary(requestLanguage()).common;
+    console.error(
+      "Upload request failed",
+      response.status,
+      response.headers.get("content-type"),
+    );
+    throw new Error(
+      response.status === 413 ? copy.uploadTooLarge : copy.requestFailed,
+    );
+  }
   const payload = (await response.json()) as GraphQlEnvelope<T>;
   if (!response.ok || payload.errors?.length || !payload.data) {
     throw new Error(

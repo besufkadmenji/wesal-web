@@ -422,7 +422,9 @@
     "menu": "Menu",
     "close": "Close",
     "previousSlide": "Previous slide",
-    "nextSlide": "Next slide"
+    "nextSlide": "Next slide",
+    "requestFailed": "We couldn't send your request. Please try again.",
+    "uploadTooLarge": "The attached files are too large. Please choose smaller images."
   },
   "support": {
     "addListing": {
