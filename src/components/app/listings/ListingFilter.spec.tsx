@@ -12,11 +12,16 @@ vi.mock("@/hooks/useWindowSize", () => ({
 }));
 vi.mock("@/hooks/useCities", () => ({
   useCities: () => ({
-    cities: { items: [] },
+    cities: { items: [{ id: "x", nameEn: "Abha", nameAr: "أبها" }] },
     isLoading: false,
     isError: false,
   }),
 }));
+// Radix Select calls pointer-capture and scroll APIs jsdom lacks.
+Element.prototype.hasPointerCapture ??= () => false;
+Element.prototype.releasePointerCapture ??= () => {};
+Element.prototype.scrollIntoView ??= () => {};
+
 vi.mock("@/assets/fonts/sar", () => ({ sar: { className: "" } }));
 vi.mock("@/assets/icons/chevron.down.svg", () => ({ default: () => <svg /> }));
 vi.mock("@/assets/icons/city.filter.svg", () => ({ default: () => <svg /> }));
@@ -86,6 +91,30 @@ describe("ListingFilter reset", () => {
       expect(updates.at(-1)?.searchParams.get("query")).toBe("pipe"),
     );
     expect(updates.at(-1)?.searchParams.has("page")).toBe(false);
+  });
+
+  it("shows the city placeholder again after Reset (ClickUp 869d14b7n)", async () => {
+    const user = userEvent.setup();
+    render(
+      <NuqsTestingAdapter hasMemory searchParams="?category=c1">
+        <ListingFilter />
+      </NuqsTestingAdapter>,
+    );
+    const combobox = screen.getByRole("combobox");
+
+    // Pick a city from a blank filter, as a visitor does.
+    await user.click(combobox);
+    await user.click(await screen.findByRole("option", { name: "Abha" }));
+    await waitFor(() => expect(combobox.textContent).toContain("Abha"));
+
+    await user.click(
+      screen.getByRole("button", { name: en.listingFilter.reset }),
+    );
+
+    await waitFor(() =>
+      expect(combobox.textContent).toContain(en.auth.signup.provider.city),
+    );
+    expect(combobox.textContent).not.toContain("Abha");
   });
 
   it("toggles the rating chip (ClickUp 869fmut30)", async () => {
