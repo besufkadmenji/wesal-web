@@ -132,10 +132,9 @@ export const CitySelect = () => {
   const { cities } = useCities();
   const lng = useLang();
   return (
-    <Select
-      value={cityId || undefined}
-      onValueChange={(value) => setCityId(value)}
-    >
+    // "" (not undefined) keeps the Select controlled, so Reset clearing the
+    // city shows the placeholder again (ClickUp 869d14b7n).
+    <Select value={cityId ?? ""} onValueChange={(value) => setCityId(value)}>
       <SelectTrigger className="relative flex h-14! w-full rounded-[20px]! border-[#F2F2F2]! p-0! shadow-none! ring-0! ltr:pr-4! rtl:pl-4!">
         <CityIcon className="absolute right-auto left-4 size-4.5 text-[#999999] rtl:right-4 rtl:left-auto" />
         <span className="flex grow justify-start ltr:pl-10.5 rtl:pr-10.5">

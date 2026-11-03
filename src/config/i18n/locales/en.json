@@ -487,8 +487,7 @@
           "minLength": "Message content must be at least 10 characters",
           "maxLength": "Message content must not exceed 1000 characters"
         }
-      },
-      "mapMarker": "Address"
+      }
     },
     "about": {
       "title": "About Platform",
@@ -622,7 +621,11 @@
     "sendSuccessMessage": "Your message has been sent successfully. We will get back to you as soon as possible."
   },
   "categories": {
-    "title": "Search Results"
+    "title": "Search Results",
+    "empty": {
+      "title": "No results found",
+      "description": "Sorry, we couldn't find any sections matching your search. Please try different keywords."
+    }
   },
   "contract": {
     "serviceProviderName": "Service Provider Name",
