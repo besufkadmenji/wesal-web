@@ -487,8 +487,7 @@
           "minLength": "Message content must be at least 10 characters",
           "maxLength": "Message content must not exceed 1000 characters"
         }
-      },
-      "mapMarker": "Address"
+      }
     },
     "about": {
       "title": "About Platform",

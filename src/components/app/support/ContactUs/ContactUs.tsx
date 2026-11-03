@@ -2,7 +2,6 @@
 import { SupportPageType, Wrapper } from "../Wrapper";
 import { Summary } from "@/components/app/support/ContactUs/Summary";
 import { ContactForm } from "@/components/app/support/ContactUs/ContactForm";
-import { ContactMap } from "@/components/app/support/ContactUs/ContactMap";
 
 export const ContactUs = () => {
   return (
@@ -11,7 +10,6 @@ export const ContactUs = () => {
         <Summary />
         <ContactForm />
       </div>
-      <ContactMap />
     </Wrapper>
   );
 };
