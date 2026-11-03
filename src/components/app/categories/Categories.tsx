@@ -14,6 +14,7 @@ import { parseAsInteger, useQueryState } from "nuqs";
 import { useState } from "react";
 import { AppPagination } from "../shared/AppPagination";
 import { CategorySelect } from "./CategorySelect";
+import { NoCategories } from "./NoCategories";
 
 export const Categories = () => {
   const dict = useDict();
@@ -25,6 +26,8 @@ export const Categories = () => {
 
   // Mirrors the select's text so the button searches what was typed.
   const [localeQuery, setLocaleQuery] = useState(search ?? query ?? "");
+  // ClickUp 869fmned3: a search with no matches left a blank area.
+  const isEmpty = !isLoading && !categories?.items.length;
   return (
     <AppWrapper>
       <div className="relative grid h-50 grid-cols-1">
@@ -63,23 +66,27 @@ export const Categories = () => {
         </div>
       </div>
       <div className="grid grid-cols-1 gap-x-8 gap-y-20 px-[7vw] py-20">
-        <div className="grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {isLoading ? (
-            <>
-              {Array.from({ length: 8 }).map((_, index) => (
-                <CategoryCardSkeleton key={index} />
-              ))}
-            </>
-          ) : (
-            categories?.items.map((category, index) => (
-              <CategoryCard
-                key={`${category.id}${index}`}
-                category={category}
-              />
-            ))
-          )}
-        </div>
-        {categories && (
+        {isEmpty ? (
+          <NoCategories />
+        ) : (
+          <div className="grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {isLoading ? (
+              <>
+                {Array.from({ length: 8 }).map((_, index) => (
+                  <CategoryCardSkeleton key={index} />
+                ))}
+              </>
+            ) : (
+              categories?.items.map((category, index) => (
+                <CategoryCard
+                  key={`${category.id}${index}`}
+                  category={category}
+                />
+              ))
+            )}
+          </div>
+        )}
+        {categories && !isEmpty && (
           <AppPagination
             page={categories.meta.page}
             totalPages={categories.meta.totalPages}
