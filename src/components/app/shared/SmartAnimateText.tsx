@@ -2,6 +2,11 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
+/**
+ * Cycles through `items` in place, fading one out before the next fades in.
+ * Inline, so the phrase reads as the continuation of the sentence around it
+ * and wraps like normal text on small screens.
+ */
 export const SmartAnimateText = ({
   delay = 1500,
   duration = 0.45,
@@ -15,7 +20,6 @@ export const SmartAnimateText = ({
   items: string[];
   dir?: "ltr" | "rtl";
   className?: string;
-  height?: number;
   classNames?: {
     container?: string;
   };
@@ -31,28 +35,16 @@ export const SmartAnimateText = ({
   }, [delay, items.length]);
 
   return (
-    <span
-      style={{
-        position: "relative",
-        display: "inline-block",
-        minWidth: "20px",
-        verticalAlign: "baseline",
-      }}
-      className={classNames?.container}
-    >
-      <AnimatePresence mode="sync">
+    <span className={twMerge("inline", classNames?.container)}>
+      <AnimatePresence mode="wait" initial={false}>
         <motion.span
           key={items[index]}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration, ease: [0.4, 0, 0.2, 1] }}
+          transition={{ duration: duration / 2, ease: [0.4, 0, 0.2, 1] }}
           dir={dir}
-          className={twMerge(
-            "absolute inset-0 bottom-0 whitespace-nowrap",
-            dir === "rtl" ? "text-right" : "text-left",
-            className,
-          )}
+          className={twMerge("inline", className)}
         >
           {items[index]}
         </motion.span>

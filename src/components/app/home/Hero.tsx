@@ -8,6 +8,10 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useQueryState } from "nuqs";
 import { twMerge } from "tailwind-merge";
+
+const HEADING =
+  "block text-lg leading-7 font-medium text-black sm:text-2xl sm:leading-9 md:leading-11 lg:text-4xl xl:text-5xl xl:leading-13";
+
 export const Hero = () => {
   const dict = useDict();
   const lng = useLang();
@@ -18,25 +22,30 @@ export const Hero = () => {
     <div className="mt-10 mb-20 grid grid-cols-1 justify-items-center gap-11">
       <div className="grid grid-cols-1 gap-3">
         <div className="flex flex-wrap items-center justify-center gap-3 px-3 sm:px-[12vw] md:px-8 lg:justify-start lg:px-[14vw] xl:px-[12vw] 2xl:px-[16vw]">
-          <h1
-            className={twMerge(
-              "md:3xl relative grid align-baseline text-lg leading-5.5 font-medium text-black sm:text-2xl sm:leading-8 md:inline-block md:leading-11 lg:text-4xl xl:text-5xl xl:leading-13",
-            )}
-          >
-            {dict.home.hero.title}
-            <br className="hidden md:block lg:hidden 2xl:block" />
-            <SmartAnimateText
-              items={dict.home.hero.tags}
-              className={twMerge(
-                "text-lg leading-none font-medium text-black sm:text-2xl lg:text-4xl xl:text-5xl",
-              )}
-              dir={lng === "ar" ? "rtl" : "ltr"}
-              classNames={{
-                container:
-                  "xl:leading-13 lg:leading-11 md:3xl  lg:h-8 xl:h-11 lg:mx-3 2xl:mx-0 items-center md:leading-9 md:h-4.5 h-3 leading-9",
-              }}
-            />
-          </h1>
+          {/* Every phrase is laid out invisibly in the same cell, so the
+              heading keeps the height of the longest one and the page
+              below doesn't jump as the phrases change. */}
+          <div className="grid">
+            {dict.home.hero.tags.map((tag) => (
+              <p
+                key={tag}
+                aria-hidden
+                className={twMerge(HEADING, "invisible [grid-area:1/1]")}
+              >
+                {dict.home.hero.title}
+                <br className="hidden md:block lg:hidden 2xl:block" /> {tag}
+              </p>
+            ))}
+            <h1 className={twMerge(HEADING, "[grid-area:1/1]")}>
+              {dict.home.hero.title}
+              <br className="hidden md:block lg:hidden 2xl:block" />{" "}
+              {/* Inline so the phrase continues the sentence and wraps with it. */}
+              <SmartAnimateText
+                items={dict.home.hero.tags}
+                dir={lng === "ar" ? "rtl" : "ltr"}
+              />
+            </h1>
+          </div>
         </div>
         <p className="text-gray mt-3 px-4 text-start text-sm leading-5 font-normal sm:px-[12vw] md:mt-0 md:text-center md:text-lg md:leading-8 lg:px-[14vw] xl:px-[21vw]">
           {dict.home.hero.subtitle}
