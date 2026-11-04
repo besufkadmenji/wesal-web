@@ -24,7 +24,7 @@ export const CancelContract = ({ children }: { children: ReactNode }) => {
       }}
     >
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="min-w-[42vw] p-0">
+      <DialogContent className="sm:min-w-[42vw] p-0">
         <div className="grid grid-cols-[auto_1fr] gap-6 px-6 py-10">
           <div className="grid size-15 items-center justify-items-center rounded-[16px] bg-[#EFF1F6]">
             <LogoutIcon className="text-primary size-7.5" />

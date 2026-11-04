@@ -68,7 +68,7 @@ export const ContractCard = ({
   );
 
   return (
-    <article className="group flex h-[254px] flex-col gap-4 overflow-hidden rounded-[20px] border border-[#f2f2f2] bg-white pb-3 transition hover:-translate-y-0.5 hover:shadow-sm">
+    <article className="group flex min-h-[254px] flex-col gap-4 overflow-hidden rounded-[20px] border border-[#f2f2f2] bg-white pb-3 transition hover:-translate-y-0.5 hover:shadow-sm">
       {opensContractDialog ? (
         <button
           type="button"

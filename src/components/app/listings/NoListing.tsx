@@ -9,7 +9,7 @@ export const NoListing = () => {
         <h1 className="text-2xl font-semibold text-[#1A1A1A]">
           {dict.listings.empty.title}
         </h1>
-        <p className="text-gray text-lg leading-9 text-center px-20">
+        <p className="text-gray text-lg leading-9 text-center px-4 md:px-20">
           {dict.listings.empty.description}
         </p>
       </div>

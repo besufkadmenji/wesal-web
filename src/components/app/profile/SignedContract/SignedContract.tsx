@@ -212,7 +212,7 @@ export const SignedContract = () => {
         {me.provider.signedContract ? (
           me.provider.signedContract.status === SignedContractStatus.Pending ? (
             <Button
-              className="h-12.5 justify-self-center rounded-[20px] px-24 font-semibold text-[#EFF9F0]"
+              className="h-12.5 justify-self-center rounded-[20px] px-10 md:px-24 font-semibold text-[#EFF9F0]"
               onClick={() => {
                 saveSignature();
               }}
@@ -227,12 +227,12 @@ export const SignedContract = () => {
                 className={
                   me.provider.signedContract.status ===
                   SignedContractStatus.Active
-                    ? "grid grid-cols-2 gap-3 justify-self-center px-27"
-                    : "grid grid-cols-1 justify-self-center px-27"
+                    ? "grid w-full grid-cols-1 gap-3 justify-self-center sm:w-auto sm:grid-cols-2 md:px-27"
+                    : "grid grid-cols-1 justify-self-center md:px-27"
                 }
               >
                 <Button
-                  className="h-12.5 rounded-[20px] px-24 font-semibold text-[#EFF9F0]"
+                  className="h-12.5 rounded-[20px] px-10 md:px-24 font-semibold text-[#EFF9F0]"
                   onClick={() => {
                     downloadPDF(contractRef);
                   }}
@@ -245,7 +245,7 @@ export const SignedContract = () => {
                   SignedContractStatus.Active && (
                   <CancelContract>
                     <Button
-                      className="h-12.5 rounded-[20px] bg-[#FBEAE9]! px-24 font-semibold text-[#B3251E]!"
+                      className="h-12.5 rounded-[20px] bg-[#FBEAE9]! px-10 md:px-24 font-semibold text-[#B3251E]!"
                       onClick={() => {}}
                       variant={"ghost"}
                     >
@@ -258,7 +258,7 @@ export const SignedContract = () => {
           )
         ) : (
           <Button
-            className="h-12.5 justify-self-center rounded-[20px] px-24 font-semibold text-[#EFF9F0]"
+            className="h-12.5 justify-self-center rounded-[20px] px-10 md:px-24 font-semibold text-[#EFF9F0]"
             onClick={() => {
               saveSignature();
             }}

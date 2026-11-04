@@ -129,7 +129,7 @@ export const ComplaintDialog = ({
       </DialogTrigger>
       <DialogContent
         showCloseButton={false}
-        className="gap-7 rounded-[20px] border-0 bg-white px-6 py-10 shadow-xl sm:max-w-[42vw]"
+        className="gap-7 rounded-[20px] border-0 bg-white px-6 py-10 shadow-xl sm:max-w-lg xl:max-w-[42vw]"
       >
         {showLoading && <ComplaintDialogSkeleton />}
         {showExisting && current && <ComplaintExistingView complaint={current} />}

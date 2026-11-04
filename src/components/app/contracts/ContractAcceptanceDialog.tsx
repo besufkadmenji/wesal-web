@@ -46,7 +46,7 @@ export const ContractAcceptanceDialog = ({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="gap-7 rounded-[20px] border-0 bg-white px-6 py-10 shadow-xl sm:max-w-[42vw]"
+        className="gap-7 rounded-[20px] border-0 bg-white px-6 py-10 shadow-xl sm:max-w-lg xl:max-w-[42vw]"
       >
         <div className="flex items-start gap-6">
           <span className="text-primary grid size-14 shrink-0 place-content-center rounded-2xl bg-[#eff1f6]">

@@ -16,7 +16,7 @@ export const Wrapper = ({
 }) => {
   const dict = useDict();
   return (
-    <div className="relative h-screen w-screen">
+    <div className="relative h-dvh w-full">
       <Image src={"/images/auth.bg.jpg"} alt="background" fill />
       <div className="auth-background absolute top-0 left-0 h-full w-full"></div>
       <div

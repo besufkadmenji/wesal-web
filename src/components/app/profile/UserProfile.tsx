@@ -111,7 +111,7 @@ export const UserProfile = () => {
             longitude={form.input.longitude || undefined}
           />
           <Button
-            className="mt-5 h-12.5 justify-self-center rounded-[20px] px-20"
+            className="mt-5 h-12.5 justify-self-center rounded-[20px] px-10 md:px-20"
             disabled={updating}
             onClick={() => {
               updateProfile();

@@ -19,7 +19,7 @@ export const ConfirmLogout = ({ children }: { children: ReactNode }) => {
       }}
     >
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="min-w-[42vw]">
+      <DialogContent className="sm:min-w-[42vw]">
         <div className="grid grid-cols-1 gap-8">
           <div className="grid grid-cols-[auto_1fr] gap-6">
             <div className="grid size-15 items-center justify-items-center rounded-[16px] bg-[#FBEAE9]">
