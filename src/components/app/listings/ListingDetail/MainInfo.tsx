@@ -1,5 +1,6 @@
 import { sar } from "@/assets/fonts/sar";
-import { Listing } from "@/gql/graphql";
+import { FeaturedBadge } from "@/components/app/shared/FeaturedBadge";
+import { Listing, ListingType } from "@/gql/graphql";
 import { moneyFormatter } from "@/utils/formmater";
 import { twMerge } from "tailwind-merge";
 import RatingIcon from "@/assets/icons/rating.svg";
@@ -14,6 +15,7 @@ export const MainInfo = ({ listing }: { listing: Listing }) => {
           <span className={twMerge("text-app-green", sar.className)}>A</span>
         </h2>
         <div className="grid grid-cols-1 gap-3">
+          {listing.type === ListingType.Featured && <FeaturedBadge />}
           <h1 className="text-2xl font-semibold text-[#1A1A1A]">
             {listing.name}
           </h1>

@@ -26,12 +26,12 @@ export const useManageListing = () => {
   const { me } = useMe();
   const payToFeature = async (listingId: string) => {
     try {
-      const { redirectUrl } = await PaymentService.startCheckout({
+      const checkout = await PaymentService.startCheckout({
         purpose: CheckoutPurpose.PremiumAd,
         targetId: listingId,
         method: PaymentMethod.Electronic,
       });
-      PaymentService.redirect(redirectUrl);
+      PaymentService.redirect(checkout);
     } catch (error) {
       showErrorMessage(
         error instanceof Error ? error.message : dict.payments.failureTitle,

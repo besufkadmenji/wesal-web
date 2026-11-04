@@ -1065,6 +1065,7 @@
   },
   "payments": {
     "successTitle": "Payment completed successfully",
+    "paidAmount": "Amount paid",
     "failureTitle": "Payment was not completed, please try again",
     "pendingTitle": "Confirming your payment",
     "pendingDescription": "This usually takes a few seconds.",

@@ -53,7 +53,7 @@ export const ContractPaymentDialog = ({
         targetId: contract.id,
         method,
       }),
-    onSuccess: ({ redirectUrl }) => PaymentService.redirect(redirectUrl),
+    onSuccess: (checkout) => PaymentService.redirect(checkout),
     onError: (error) => showErrorMessage(error.message),
   });
   // Stays busy after success while the browser leaves for the gateway.

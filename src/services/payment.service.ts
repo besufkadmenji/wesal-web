@@ -36,8 +36,22 @@ export class PaymentService {
     return requireData(result, "Payment").payment;
   }
 
-  /** Leaves the app for the gateway's hosted checkout page. */
-  static redirect(url: string) {
-    window.location.assign(url);
+  /**
+   * Leaves the app for the gateway's hosted checkout page. A checkout the
+   * mock already settled goes straight to our own return page, on this
+   * origin whatever host the API built the URL with.
+   */
+  static redirect({
+    redirectUrl,
+    completed,
+  }: Pick<PaymentCheckout, "redirectUrl" | "completed">) {
+    if (completed) {
+      const target = new URL(redirectUrl, window.location.origin);
+      // A full load, as after a real gateway, so no stale cache shows.
+      // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+      window.location.assign(`${target.pathname}${target.search}`);
+      return;
+    }
+    window.location.assign(redirectUrl);
   }
 }

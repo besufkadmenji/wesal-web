@@ -60,6 +60,7 @@ describe("ContractPaymentDialog (S4-11)", () => {
     vi.mocked(PaymentService.startCheckout).mockResolvedValue({
       paymentId: "payment-1",
       redirectUrl: "https://gateway.test/checkout/ref",
+      completed: false,
     });
     renderDialog([PaymentMethod.Electronic, PaymentMethod.Tamara]);
     await userEvent.click(
@@ -69,9 +70,11 @@ describe("ContractPaymentDialog (S4-11)", () => {
       screen.getByRole("button", { name: en.contracts.continuePayment }),
     );
     await waitFor(() =>
-      expect(PaymentService.redirect).toHaveBeenCalledWith(
-        "https://gateway.test/checkout/ref",
-      ),
+      expect(PaymentService.redirect).toHaveBeenCalledWith({
+        paymentId: "payment-1",
+        redirectUrl: "https://gateway.test/checkout/ref",
+        completed: false,
+      }),
     );
     expect(PaymentService.startCheckout).toHaveBeenCalledWith({
       purpose: CheckoutPurpose.Contract,
