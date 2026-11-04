@@ -33,7 +33,7 @@ export const ContractConfirmDialog = ({
         showCloseButton={false}
         className="gap-7 rounded-[20px] border-0 bg-white px-6 py-10 shadow-xl sm:max-w-[657px]"
       >
-        <div className="flex items-start gap-6">
+        <div className="flex flex-col items-start gap-4 sm:flex-row sm:gap-6">
           <span className="grid size-15 shrink-0 place-content-center rounded-2xl bg-[#fbeae9]">
             <CancelContractIcon className="size-7.5" />
           </span>
@@ -47,7 +47,7 @@ export const ContractConfirmDialog = ({
             <ContractOutcomeNotice text={outcome} />
           </div>
         </div>
-        <div dir="ltr" className="grid grid-cols-2 gap-4">
+        <div dir="ltr" className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
           <DialogClose asChild>
             <Button
               type="button"

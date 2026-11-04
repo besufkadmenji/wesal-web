@@ -25,7 +25,7 @@ export const CancelContract = ({ children }: { children: ReactNode }) => {
     >
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:min-w-[42vw] p-0">
-        <div className="grid grid-cols-[auto_1fr] gap-6 px-6 py-10">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-[auto_1fr] sm:gap-6 px-6 py-10">
           <div className="grid size-15 items-center justify-items-center rounded-[16px] bg-[#EFF1F6]">
             <LogoutIcon className="text-primary size-7.5" />
           </div>
@@ -37,7 +37,7 @@ export const CancelContract = ({ children }: { children: ReactNode }) => {
                 </h3>
                 <p className="text-gray leading-7">{confirmCopy.message}</p>
               </div>
-              <div className="mt-3 grid grid-cols-2 gap-6">
+              <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-6">
                 <Button
                   className="h-12.5 rounded-full font-semibold text-white outline-none!"
                   onClick={() => setStep("reason")}
@@ -72,7 +72,7 @@ export const CancelContract = ({ children }: { children: ReactNode }) => {
                   className="focus:border-primary placeholder:text-gray h-30 resize-none rounded-[20px] border border-[#F2F2F2] p-4 text-black outline-none placeholder:text-sm"
                   placeholder={dict.contract.cancelReason.placeholder}
                 ></textarea>
-                <div className="mt-3 grid grid-cols-2 gap-6">
+                <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-6">
                   <Button
                     className="h-12.5 rounded-full font-semibold text-white outline-none!"
                     onClick={() => {

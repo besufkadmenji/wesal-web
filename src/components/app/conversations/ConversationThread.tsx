@@ -58,7 +58,7 @@ export const ConversationThread = ({
 
   return (
     <div className="grid h-full min-w-0 grid-cols-1 grid-rows-[auto_auto_1fr_auto] overflow-hidden rounded-[20px] bg-white">
-      <header className="border-border flex items-center gap-3 border-b p-4 md:p-6">
+      <header className="border-border flex items-center gap-2 border-b p-3 sm:gap-3 sm:p-4 md:p-6">
         <Button
           type="button"
           variant="ghost"
@@ -69,9 +69,11 @@ export const ConversationThread = ({
         >
           <ChevronLeft className="size-5 rtl:rotate-180" />
         </Button>
+        {/* Below 360px the name needs the room more than the avatar. */}
         <ParticipantAvatar
           filename={counterparty.avatarFilename}
           name={counterparty.name}
+          className="hidden min-[360px]:block"
         />
         <div className="min-w-0 grow">
           <p className="truncate text-lg font-medium">{counterparty.name}</p>

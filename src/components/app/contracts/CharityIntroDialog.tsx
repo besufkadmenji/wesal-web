@@ -16,7 +16,7 @@ export const CharityIntroDialog = () => {
       classNames={{ base: "max-w-[657px] rounded-[20px]" }}
     >
       <ModalContent>
-        <div className="grid grid-cols-[auto_1fr] items-start gap-6 px-6 py-10">
+        <div className="grid grid-cols-1 items-start gap-4 sm:grid-cols-[auto_1fr] sm:gap-6 px-6 py-10">
           <Image
             src="/images/ihsan.png"
             alt={dict.charity.ihsanLogoAlt}

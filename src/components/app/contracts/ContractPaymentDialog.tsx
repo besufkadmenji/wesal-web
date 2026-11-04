@@ -104,7 +104,7 @@ export const ContractPaymentDialog = ({
       >
         <div className="flex items-start gap-6">
           <div className="min-w-0 flex-1">
-            <div className="grid gap-2 text-start">
+            <div className="grid gap-2 pe-10 text-start sm:pe-0">
               <div className="flex flex-wrap items-center gap-1">
                 <DialogTitle className="text-xl leading-8 font-semibold text-[#1a1a1a]">
                   {dict.contracts.paymentTitle}
@@ -134,7 +134,7 @@ export const ContractPaymentDialog = ({
                     role="radio"
                     aria-checked={selected}
                     className={cn(
-                      "flex h-14 w-full items-center gap-2 rounded-[20px] border px-4 text-sm transition",
+                      "flex min-h-14 w-full items-center gap-2 rounded-[20px] border px-4 py-2 text-sm transition",
                       selected
                         ? "border-primary text-primary bg-[#eff1f6]"
                         : "border-[#f2f2f2] bg-white text-[#1a1a1a] hover:bg-[#fbfbfb]",
@@ -177,12 +177,12 @@ export const ContractPaymentDialog = ({
             </div>
           </div>
 
-          <span className="text-primary grid size-[60px] shrink-0 place-content-center rounded-2xl bg-[#eff1f6]">
+          <span className="text-primary hidden size-[60px] shrink-0 place-content-center rounded-2xl bg-[#eff1f6] sm:grid">
             <WalletCards className="size-[30px]" />
           </span>
         </div>
 
-        <div dir="ltr" className="grid grid-cols-2 gap-4">
+        <div dir="ltr" className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
           <DialogClose asChild>
             <Button
               type="button"
@@ -196,7 +196,7 @@ export const ContractPaymentDialog = ({
             type="button"
             disabled={busy}
             onClick={() => payment.mutate()}
-            className="bg-primary h-[50px] rounded-[20px] text-base font-semibold text-white"
+            className="bg-primary order-first h-[50px] rounded-[20px] text-base font-semibold text-white sm:order-none"
           >
             {busy
               ? dict.contracts.paymentProcessing

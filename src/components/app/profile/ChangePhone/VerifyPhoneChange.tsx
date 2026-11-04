@@ -25,7 +25,7 @@ export const VerifyPhoneChange = () => {
   }, [start]);
   return (
     <div className="grid grid-cols-1 gap-7">
-      <div className="grid grid-cols-[auto_1fr] gap-6">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-[auto_1fr] sm:gap-6">
         <div className="grid size-15 items-center justify-items-center rounded-[16px] bg-[#EFF1F6]">
           <OtpIcon className="size-7.5" />
         </div>
