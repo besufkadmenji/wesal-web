@@ -44,7 +44,8 @@ import { useState } from "react";
 
 const CONTRACTS_PER_PAGE = 9;
 
-// S4-1: the 7 Figma/BRD tabs; each maps to an API status group.
+// S4-1: the 7 Figma/BRD tabs plus Rejected (ClickUp 869fnv1ud); each maps
+// to an API status group.
 const CONTRACT_FILTERS: Array<{
   value: ContractStatusGroup | "";
   label:
@@ -54,7 +55,8 @@ const CONTRACT_FILTERS: Array<{
     | "inProgress"
     | "outForDelivery"
     | "completed"
-    | "cancelled";
+    | "cancelled"
+    | "rejected";
 }> = [
   { value: "", label: "all" },
   { value: ContractStatusGroup.PendingAcceptance, label: "pendingAcceptance" },
@@ -63,6 +65,7 @@ const CONTRACT_FILTERS: Array<{
   { value: ContractStatusGroup.InDelivery, label: "outForDelivery" },
   { value: ContractStatusGroup.Completed, label: "completed" },
   { value: ContractStatusGroup.Cancelled, label: "cancelled" },
+  { value: ContractStatusGroup.Rejected, label: "rejected" },
 ];
 
 /**
