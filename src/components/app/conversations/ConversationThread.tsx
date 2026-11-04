@@ -57,7 +57,7 @@ export const ConversationThread = ({
     return <EmptyState title={dict.conversations.empty} />;
 
   return (
-    <div className="grid h-full grid-rows-[auto_auto_1fr_auto] overflow-hidden rounded-[20px] bg-white">
+    <div className="grid h-full min-w-0 grid-cols-1 grid-rows-[auto_auto_1fr_auto] overflow-hidden rounded-[20px] bg-white">
       <header className="border-border flex items-center gap-3 border-b p-4 md:p-6">
         <Button
           type="button"
@@ -190,7 +190,7 @@ export const ConversationThread = ({
           </div>
         ) : (
           <div className="flex gap-4">
-            <div className="grid grow grid-cols-1 items-end rounded-[16px] bg-[#f6f7fa]">
+            <div className="grid min-w-0 grow grid-cols-1 items-end rounded-[16px] bg-[#f6f7fa]">
               <TextareaAutosize
                 value={content}
                 onChange={(event) => setContent(event.target.value)}

@@ -83,7 +83,7 @@ export const EditListing = () => {
                 },
               ]}
             />
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
               <FormInput
                 label={dict.addListing.form.listingName}
                 value={form.name ?? ""}

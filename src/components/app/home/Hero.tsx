@@ -51,7 +51,7 @@ export const Hero = () => {
           {dict.home.hero.subtitle}
         </p>
       </div>
-      <div className="grid w-full grid-cols-[1fr_auto] items-center gap-2 px-8 md:w-[48vw]">
+      <div className="grid w-full grid-cols-[1fr_auto] items-center gap-2 px-4 sm:px-8 md:w-[48vw]">
         <CategorySelect
           onSearch={(value) => {
             router.push(

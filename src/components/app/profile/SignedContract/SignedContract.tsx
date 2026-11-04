@@ -56,7 +56,7 @@ export const SignedContract = () => {
     me?.provider && (
       <div className="grid grid-cols-1 gap-10">
         <div className="grid grid-cols-1 gap-6" ref={contractRef}>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <FormInput
               label={dict.contract.serviceProviderName}
               value={me.provider.name || ""}
@@ -93,14 +93,14 @@ export const SignedContract = () => {
               />
             </div>
           </div>
-          <div className="grid grid-cols-[1fr_auto] gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_auto]">
             <FormInput
               label={dict.contract.address}
               value={me.provider.address || ""}
             />
             <Button
               data-html2canvas-ignore
-              className="h-full rounded-[20px] bg-[#EFF1F6] px-6!"
+              className="h-12.5 rounded-[20px] bg-[#EFF1F6] px-6! sm:h-full"
               variant={"ghost"}
               onClick={() => {
                 setShowMap(showMap === true ? null : true);
@@ -151,7 +151,7 @@ export const SignedContract = () => {
               ""
             }
           />
-          <div className="grid grid-cols-2 gap-x-4 gap-y-2 rounded-[16px] border border-[#F2F2F2] bg-[#FBFBFB] p-4">
+          <div className="grid grid-cols-1 gap-x-4 gap-y-2 rounded-[16px] border sm:grid-cols-2 border-[#F2F2F2] bg-[#FBFBFB] p-4">
             <SignatureInput
               initUrl={
                 me.provider.signedContract?.serviceProviderSignature || null

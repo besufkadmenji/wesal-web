@@ -19,7 +19,7 @@ export const FormRadio = ({
         {label}
         {isRequired && <span className="text-[#B3251E]"> *</span>}
       </label>
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3 min-[400px]:grid-cols-2">
         {options.map((option) => (
           <RadioItem
             key={option.value}
@@ -48,7 +48,7 @@ const RadioItem = ({
   return (
     <div
       className={twMerge(
-        "flex cursor-pointer items-center justify-between rounded-[20px] border border-[#F2F2F2] p-4",
+        "flex min-w-0 cursor-pointer items-center justify-between gap-2 rounded-[20px] border border-[#F2F2F2] p-4",
         isSelected && "border-primary bg-[#EFF1F6]",
         isDisabled && "cursor-not-allowed opacity-50",
       )}
@@ -57,7 +57,7 @@ const RadioItem = ({
       <p>{label}</p>
       <div
         className={twMerge(
-          "grid size-5 items-center justify-items-center rounded-full border-2 border-[#999999] transition-all duration-200 ease-in",
+          "grid size-5 shrink-0 items-center justify-items-center rounded-full border-2 border-[#999999] transition-all duration-200 ease-in",
           isSelected && "border-primary",
         )}
       >

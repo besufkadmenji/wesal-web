@@ -29,8 +29,8 @@ export const ContractCard = ({
   );
   const cardDetails = (
     <>
-      <header className="flex h-20 items-center justify-between gap-3 bg-[#fbfbfb] p-3">
-        <div className="flex min-w-0 items-center gap-3">
+      <header className="flex min-h-20 flex-wrap items-center justify-between gap-3 bg-[#fbfbfb] p-3">
+        <div className="flex min-w-40 flex-1 items-center gap-3">
           <span className="text-primary grid size-10 shrink-0 place-content-center rounded-xl bg-[#eff1f6]">
             <DocumentIcon className="size-6" />
           </span>

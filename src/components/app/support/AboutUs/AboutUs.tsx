@@ -24,7 +24,7 @@ export const AboutUs = () => {
               {dict.support.about.aboutTitle}
             </h2>
           </div>
-          <div className="relative h-full w-full overflow-hidden rounded-[20px]">
+          <div className="relative aspect-video w-full overflow-hidden rounded-[20px] xl:aspect-auto xl:h-full">
             <Image
               src={"/images/about.banner.jpg"}
               fill

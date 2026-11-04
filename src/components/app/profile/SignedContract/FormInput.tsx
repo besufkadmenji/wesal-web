@@ -12,7 +12,7 @@ export const FormInput = ({
   return (
     <div
       className={twMerge(
-        "grid h-23 grid-cols-1 gap-2 rounded-[16px]! border border-[#F2F2F2] bg-[#FBFBFB] p-4",
+        "grid min-h-23 grid-cols-1 content-start gap-2 break-words rounded-[16px]! border border-[#F2F2F2] bg-[#FBFBFB] p-4",
         className,
       )}
     >
