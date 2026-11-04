@@ -257,7 +257,8 @@ export enum ContractStatusGroup {
   InDelivery = 'IN_DELIVERY',
   InProgress = 'IN_PROGRESS',
   PendingAcceptance = 'PENDING_ACCEPTANCE',
-  PendingPayment = 'PENDING_PAYMENT'
+  PendingPayment = 'PENDING_PAYMENT',
+  Rejected = 'REJECTED'
 }
 
 export type ConversationPaginationInput = {

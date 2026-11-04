@@ -17,6 +17,7 @@ export const ContractCardDates = ({ contract }: { contract: Contract }) => {
   const showsAcceptance =
     Boolean(contract.acceptedAt) &&
     contract.statusGroup !== ContractStatusGroup.PendingAcceptance &&
+    contract.statusGroup !== ContractStatusGroup.Rejected &&
     contract.statusGroup !== ContractStatusGroup.Cancelled;
   const isCompleted = contract.status === ContractStatus.Completed;
 

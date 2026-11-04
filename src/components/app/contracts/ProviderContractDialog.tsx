@@ -60,6 +60,7 @@ export const ProviderContractDialog = ({
   const showsAcceptanceDate =
     Boolean(contract.acceptedAt) &&
     contract.statusGroup !== ContractStatusGroup.PendingAcceptance &&
+    contract.statusGroup !== ContractStatusGroup.Rejected &&
     contract.statusGroup !== ContractStatusGroup.Cancelled;
 
   const customerSignature = contract.signatures.find(
