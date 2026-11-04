@@ -51,7 +51,7 @@ export const Hero = () => {
           {dict.home.hero.subtitle}
         </p>
       </div>
-      <div className="grid w-full grid-cols-[1fr_auto] items-center gap-2 px-4 sm:px-8 md:w-[48vw]">
+      <div className="grid w-full grid-cols-[1fr_auto] items-center gap-2 px-4 sm:px-8 md:w-[70vw] lg:w-[48vw]">
         <CategorySelect
           onSearch={(value) => {
             router.push(
@@ -62,7 +62,7 @@ export const Hero = () => {
         />
         {/* ClickUp 869fmmby7: an empty search sent `?query=null`. */}
         <Button
-          className="h-12.5 rounded-[20px] md:px-16"
+          className="h-12.5 rounded-[20px] md:px-10 lg:px-16"
           disabled={!query?.trim()}
           onClick={() => {
             router.push(

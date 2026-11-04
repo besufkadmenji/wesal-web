@@ -23,7 +23,7 @@ export const MobileMenu = () => {
     <>
       <HeroButton
         onPress={onOpen}
-        className="bg-white xl:hidden"
+        className="bg-white lg:hidden"
         aria-label={dict.common.menu}
         isIconOnly
       >
