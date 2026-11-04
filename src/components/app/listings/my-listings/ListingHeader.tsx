@@ -35,7 +35,7 @@ export const ListingHeader = () => {
           </p>
         </div>
       </div>
-      <div className="categorySearch absolute right-0 -bottom-12 left-0 z-10 mx-auto grid min-w-[48vw] grid-cols-[1fr_auto] items-center justify-center-safe gap-2 justify-self-center rounded-[20px] bg-white p-5">
+      <div className="categorySearch absolute right-0 -bottom-12 left-0 z-10 mx-auto grid w-[calc(100%-2rem)] grid-cols-[1fr_auto] md:w-auto md:min-w-[48vw] items-center justify-center-safe gap-2 justify-self-center rounded-[20px] bg-white p-3 md:p-5">
         <Input
           startContent={
             <SearchIcon className="size-4.5 shrink-0 text-[#999999]" />
@@ -57,7 +57,7 @@ export const ListingHeader = () => {
             }
           }}
         />
-        <Button className="h-12.5 rounded-[20px] px-16" onClick={applySearch}>
+        <Button className="h-12.5 rounded-[20px] px-4 md:px-16" onClick={applySearch}>
           {dict.home.hero.search}
         </Button>
       </div>

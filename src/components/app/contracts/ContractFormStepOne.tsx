@@ -194,7 +194,7 @@ export const ContractFormStepOne = ({ form }: { form: ContractFormState }) => {
 
       <Button
         type="button"
-        className="mx-auto h-[50px] w-[285px] rounded-[20px] px-6 font-semibold text-[#eff9f0]"
+        className="mx-auto h-[50px] w-full max-w-[285px] rounded-[20px] px-6 font-semibold text-[#eff9f0]"
         disabled={!termsReady}
         onClick={() => setStep(2)}
       >

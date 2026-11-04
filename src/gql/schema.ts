@@ -2816,6 +2816,8 @@ export type Payment = {
 };
 
 export type PaymentCheckout = {
+  /** Already paid (temporary mock auto-success); redirectUrl is the web return page */
+  completed: Scalars['Boolean']['output'];
   paymentId: Scalars['ID']['output'];
   /** Send the customer here to pay */
   redirectUrl: Scalars['String']['output'];

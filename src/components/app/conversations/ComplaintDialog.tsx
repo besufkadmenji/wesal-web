@@ -129,13 +129,13 @@ export const ComplaintDialog = ({
       </DialogTrigger>
       <DialogContent
         showCloseButton={false}
-        className="gap-7 rounded-[20px] border-0 bg-white px-6 py-10 shadow-xl sm:max-w-[42vw]"
+        className="gap-7 rounded-[20px] border-0 bg-white px-6 py-10 shadow-xl sm:max-w-lg xl:max-w-[42vw]"
       >
         {showLoading && <ComplaintDialogSkeleton />}
         {showExisting && current && <ComplaintExistingView complaint={current} />}
         {showCreate && (
           <>
-            <div className="flex items-start gap-6">
+            <div className="flex flex-col items-start gap-4 sm:flex-row sm:gap-6">
               <span className="text-primary grid size-15 shrink-0 place-content-center rounded-2xl bg-[#eff1f6]">
                 <MessageComplaintIcon className="size-6" />
               </span>
@@ -177,7 +177,7 @@ export const ComplaintDialog = ({
                     />
                   </div>
                 </div>
-                <div className="mt-7 grid grid-cols-2 gap-4">
+                <div className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
                   <DialogClose asChild>
                     <Button
                       type="button"

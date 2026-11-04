@@ -23,6 +23,7 @@ const payment = (status: PaymentStatus, purpose = PaymentPurpose.Contract) => ({
   id: "payment-1",
   status,
   purpose,
+  amount: 75,
   contractId: "contract-1",
   conversationId: "conversation-1",
   listingId: null,
@@ -51,6 +52,9 @@ describe("PaymentReturnPage (BRD 4.1.17 result pop-ups)", () => {
     );
     renderPage();
     expect(await screen.findByText(en.payments.successTitle)).toBeVisible();
+    expect(
+      screen.getByText(`${en.payments.paidAmount}: 75 ${en.common.sar}`),
+    ).toBeVisible();
     expect(
       screen.getByRole("link", { name: en.payments.contractDetails }),
     ).toHaveAttribute("href", "/contracts?contractId=contract-1");

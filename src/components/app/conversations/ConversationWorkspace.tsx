@@ -19,7 +19,7 @@ export const ConversationWorkspace = ({
   const conversations = useConversations();
   return (
     <AppWrapper noFooter className="h-dvh grid-rows-[auto_auto_1fr]">
-      <div className="grid h-full grid-rows-1 gap-10 overflow-hidden py-10 ps-5 pe-11 lg:grid-cols-[449fr_815fr]">
+      <div className="grid h-full grid-cols-1 grid-rows-1 gap-6 overflow-hidden px-4 py-6 lg:grid-cols-[449fr_815fr] lg:gap-10 lg:py-10 lg:ps-5 lg:pe-11">
         <aside
           className={cn(
             "grid h-full w-full shrink-0 grid-cols-1",

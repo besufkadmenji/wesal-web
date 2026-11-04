@@ -9,8 +9,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
-import { PromotionStatus } from "@/gql/graphql";
+import { ListingType, PromotionStatus } from "@/gql/graphql";
 import { StatusBadge } from "@/components/app/shared/ParticipantUI";
+import { FeaturedBadge } from "@/components/app/shared/FeaturedBadge";
 import { NewlyAddedChip } from "@/components/app/shared/NewlyAddedChip";
 
 export const ListingCard = ({
@@ -45,11 +46,19 @@ export const ListingCard = ({
               aria-label={listing.name}
             />
           )}
-          {listing.promotionStatus !== PromotionStatus.None && (
-            <StatusBadge
-              status={listing.promotionStatus}
-              className="absolute start-3 top-3"
-            />
+          {/* Everyone sees a paid ad as Featured; only its owner sees
+              "Pending payment" or "Expired" (own listings hide the
+              provider labels). */}
+          {listing.type === ListingType.Featured ? (
+            <FeaturedBadge className="absolute start-3 top-3" />
+          ) : (
+            !showProviderLabels &&
+            listing.promotionStatus !== PromotionStatus.None && (
+              <StatusBadge
+                status={listing.promotionStatus}
+                className="absolute start-3 top-3"
+              />
+            )
           )}
           {showProviderLabels && listing.provider?.isNewlyAdded && (
             <NewlyAddedChip className="absolute end-3 top-3" />

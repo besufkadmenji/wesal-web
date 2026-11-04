@@ -33,7 +33,7 @@ export const ProviderProfile = () => {
             }}
             icon={<NameIcon className="size-4.5" />}
           />
-          <div className="grid grid-cols-[1fr_auto] items-center gap-3">
+          <div className="grid grid-cols-1 items-center gap-3 sm:grid-cols-[1fr_auto]">
             <FormPhoneInput
               label={dict.profile.phone}
               value={form.input.phone ?? ""}
@@ -52,7 +52,7 @@ export const ProviderProfile = () => {
               </Button>
             </PhoneChange>
           </div>
-          <div className="grid grid-cols-[1fr_auto] items-center gap-3">
+          <div className="grid grid-cols-1 items-center gap-3 sm:grid-cols-[1fr_auto]">
             <FormInput
               label={dict.profile.email}
               placeholder={dict.profile.email}
@@ -92,7 +92,7 @@ export const ProviderProfile = () => {
           />
 
           <Button
-            className="mt-5 h-12.5 justify-self-center rounded-[20px] px-20"
+            className="mt-5 h-12.5 justify-self-center rounded-[20px] px-10 md:px-20"
             disabled={updating}
             onClick={() => {
               updateProfile();

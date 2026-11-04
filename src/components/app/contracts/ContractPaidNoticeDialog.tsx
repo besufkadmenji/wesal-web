@@ -36,7 +36,7 @@ export const ContractPaidNoticeDialog = ({
         onInteractOutside={block}
         className="gap-7 rounded-[20px] border-0 bg-white px-6 py-10 shadow-xl sm:max-w-[657px]"
       >
-        <div className="flex items-start gap-6">
+        <div className="flex flex-col items-start gap-4 sm:flex-row sm:gap-6">
           <span className="grid size-15 shrink-0 place-content-center rounded-2xl bg-[#e9f7ef]">
             <FinanceIcon className="size-7.5" />
           </span>
@@ -52,7 +52,7 @@ export const ContractPaidNoticeDialog = ({
             </DialogDescription>
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
           <Button
             type="button"
             disabled={busy}

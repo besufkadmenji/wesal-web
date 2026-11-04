@@ -57,8 +57,8 @@ export const ConversationThread = ({
     return <EmptyState title={dict.conversations.empty} />;
 
   return (
-    <div className="grid h-full grid-rows-[auto_auto_1fr_auto] overflow-hidden rounded-[20px] bg-white">
-      <header className="border-border flex items-center gap-3 border-b p-4 md:p-6">
+    <div className="grid h-full min-w-0 grid-cols-1 grid-rows-[auto_auto_1fr_auto] overflow-hidden rounded-[20px] bg-white">
+      <header className="border-border flex items-center gap-2 border-b p-3 sm:gap-3 sm:p-4 md:p-6">
         <Button
           type="button"
           variant="ghost"
@@ -69,9 +69,11 @@ export const ConversationThread = ({
         >
           <ChevronLeft className="size-5 rtl:rotate-180" />
         </Button>
+        {/* Below 360px the name needs the room more than the avatar. */}
         <ParticipantAvatar
           filename={counterparty.avatarFilename}
           name={counterparty.name}
+          className="hidden min-[360px]:block"
         />
         <div className="min-w-0 grow">
           <p className="truncate text-lg font-medium">{counterparty.name}</p>
@@ -190,7 +192,7 @@ export const ConversationThread = ({
           </div>
         ) : (
           <div className="flex gap-4">
-            <div className="grid grow grid-cols-1 items-end rounded-[16px] bg-[#f6f7fa]">
+            <div className="grid min-w-0 grow grid-cols-1 items-end rounded-[16px] bg-[#f6f7fa]">
               <TextareaAutosize
                 value={content}
                 onChange={(event) => setContent(event.target.value)}

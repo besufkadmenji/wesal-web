@@ -61,7 +61,7 @@ export const ContractRejectionDialog = ({
           className="min-h-[120px] resize-none rounded-[20px] border-[#f2f2f2] p-4 text-sm"
         />
 
-        <DialogFooter className="grid grid-cols-2 gap-4">
+        <DialogFooter className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
           <Button
             type="button"
             variant="ghost"

@@ -36,7 +36,7 @@ export const ChangePassword = () => {
         }}
       />
       <Button
-        className="mt-5 h-12.5 min-w-[16vw] justify-self-center rounded-[20px] px-20"
+        className="mt-5 h-12.5 justify-self-center md:min-w-[16vw] rounded-[20px] px-10 md:px-20"
         onClick={() => {
           if (!validate(form.newPassword, form.confirmPassword)) return;
           changePassword(form.newPassword, form.confirmPassword).then(() => {

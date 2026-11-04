@@ -8,6 +8,9 @@ import { PaymentPurpose, PaymentStatus, type Payment } from "@/gql/graphql";
 import { useDict } from "@/hooks/useDict";
 import { useSearchParams } from "next/navigation";
 
+const formatAmount = (amount: number) =>
+  Number(amount).toLocaleString("en", { maximumFractionDigits: 2 });
+
 /**
  * S4-11: where every gateway checkout returns. Shows the BRD success or
  * failure pop-up once the gateway has confirmed the payment.
@@ -58,6 +61,7 @@ export const PaymentReturnPage = () => {
       <PaymentResultDialog
         tone="success"
         title={dict.payments.successTitle}
+        description={`${dict.payments.paidAmount}: ${formatAmount(payment.amount)} ${dict.common.sar}`}
         action={{ label: backLabel(payment), href: paymentTargetHref(payment) }}
       />
     );

@@ -59,7 +59,7 @@ export const AddListing = () => {
   return (
     <AppWrapper>
       <Wrapper variant={SupportPageType.ADD_LISTING}>
-        <div className="grid grid-cols-1 gap-20 rounded-[20px] px-[7vw] py-20">
+        <div className="grid grid-cols-1 gap-10 rounded-[20px] px-[7vw] py-10 md:gap-20 md:py-20">
           <div className="grid grid-cols-1 gap-5 bg-white p-6">
             <FormRadio
               label={dict.addListing.form.listingType}
@@ -101,7 +101,7 @@ export const AddListing = () => {
                 </div>
               </div>
             )}
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
               <FormInput
                 label={dict.addListing.form.listingName}
                 value={form.name ?? ""}
@@ -211,7 +211,7 @@ export const AddListing = () => {
             />
           </div>
           <Button
-            className="h-12.5 justify-self-center rounded-[20px] px-20"
+            className="h-12.5 justify-self-center rounded-[20px] px-10 md:px-20"
             onClick={handleSubmit}
             disabled={creating}
           >

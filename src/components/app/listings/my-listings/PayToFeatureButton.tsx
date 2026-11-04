@@ -17,7 +17,7 @@ export const PayToFeatureButton = ({ listingId }: { listingId: string }) => {
         targetId: listingId,
         method: PaymentMethod.Electronic,
       }),
-    onSuccess: ({ redirectUrl }) => PaymentService.redirect(redirectUrl),
+    onSuccess: (checkout) => PaymentService.redirect(checkout),
     onError: (error) => showErrorMessage(error.message),
   });
   return (

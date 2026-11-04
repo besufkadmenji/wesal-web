@@ -25,7 +25,7 @@ export const useConversationActions = (conversationId: string) => {
         targetId: conversationId,
         method: PaymentMethod.Electronic,
       }),
-    onSuccess: ({ redirectUrl }) => PaymentService.redirect(redirectUrl),
+    onSuccess: (checkout) => PaymentService.redirect(checkout),
     onError: (error) => showErrorMessage(error.message),
   });
 

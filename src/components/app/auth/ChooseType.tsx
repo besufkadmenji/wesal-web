@@ -14,7 +14,7 @@ export const ChooseType = () => {
   });
   const router = useAppRouter();
   return (
-    <Wrapper>
+    <Wrapper classNames={{ message: "hidden lg:grid" }}>
       <div className="grid grid-cols-1 gap-10 px-6 py-10 lg:gap-40 lg:px-10 xl:gap-60 xl:px-15">
         <div className="grid grid-cols-1 gap-6 lg:gap-20">
           <div className="grid grid-cols-1 gap-3">

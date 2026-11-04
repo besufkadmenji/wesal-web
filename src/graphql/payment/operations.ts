@@ -5,6 +5,7 @@ export const START_PAYMENT_CHECKOUT_MUTATION = gql`
     startPaymentCheckout(input: $input) {
       paymentId
       redirectUrl
+      completed
     }
   }
 `;

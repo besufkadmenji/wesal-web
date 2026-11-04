@@ -19,9 +19,9 @@ export const ConfirmLogout = ({ children }: { children: ReactNode }) => {
       }}
     >
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="min-w-[42vw]">
+      <DialogContent className="sm:min-w-[42vw]">
         <div className="grid grid-cols-1 gap-8">
-          <div className="grid grid-cols-[auto_1fr] gap-6">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-[auto_1fr] sm:gap-6">
             <div className="grid size-15 items-center justify-items-center rounded-[16px] bg-[#FBEAE9]">
               <LogoutIcon className="size-7.5 text-[#B3251E]" />
             </div>
@@ -34,7 +34,7 @@ export const ConfirmLogout = ({ children }: { children: ReactNode }) => {
               </p>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-6">
             <Button
               className="h-12.5 rounded-full bg-[#B3251E] font-semibold text-white outline-none! hover:bg-[#ac170f]"
               onClick={() => {

@@ -19,7 +19,7 @@ export const BeProvider = () => {
       size="2xl"
     >
       <ModalContent className="overflow-visible">
-        <div className="grid grid-cols-[auto_1fr] gap-6 overflow-visible px-6 py-10">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-[auto_1fr] sm:gap-6 overflow-visible px-6 py-10">
           <div className="grid size-14 items-center justify-items-center rounded-[16px] bg-[#EFF1F6]">
             <BeProviderIcon className="size-7" />
           </div>
@@ -32,7 +32,7 @@ export const BeProvider = () => {
                 {dict.auth.choose.providerDescription}
               </p>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
               <Button
                 className="h-12.5 rounded-[20px] text-[#EFF9F0]"
                 onClick={() => {
