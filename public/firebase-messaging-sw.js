@@ -1,7 +1,8 @@
 /* eslint-disable */
 // ClickUp 869fp1jmt: shows Wesal notifications that arrive through FCM
 // while no Wesal tab is visible. The API sends data-only messages:
-// { notificationId, title, body, link, lang }.
+// { notificationId, title, body, link, lang, renotify? }. Chat messages
+// use notificationId "chat-<conversationId>" so a newer one replaces it.
 
 self.addEventListener("install", () => self.skipWaiting());
 self.addEventListener("activate", (event) =>
@@ -32,6 +33,8 @@ self.addEventListener("push", (event) => {
           dir: data.lang === "ar" ? "rtl" : "ltr",
           lang: data.lang || "ar",
           tag: data.notificationId || undefined,
+          // Chat pushes reuse one tag per chat; alert again for each message.
+          renotify: Boolean(data.renotify && data.notificationId),
           data: { link: data.link || "", lang: data.lang || "ar" },
         });
       }),
