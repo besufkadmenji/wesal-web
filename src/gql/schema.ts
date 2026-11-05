@@ -1198,7 +1198,8 @@ export type CreateListingMediaInput = {
 };
 
 export type CreateMessageInput = {
-  content: Scalars['String']['input'];
+  attachment?: InputMaybe<MessageAttachmentInput>;
+  content?: InputMaybe<Scalars['String']['input']>;
   conversationId: Scalars['String']['input'];
 };
 
@@ -1539,6 +1540,12 @@ export type Message = {
   senderId?: Maybe<Scalars['ID']['output']>;
   senderType: ConversationSenderType;
   updatedAt: Scalars['DateTime']['output'];
+};
+
+export type MessageAttachmentInput = {
+  filename: Scalars['String']['input'];
+  originalFilename: Scalars['String']['input'];
+  size: Scalars['Int']['input'];
 };
 
 /** User text or a typed system event in a conversation */

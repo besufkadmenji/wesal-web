@@ -793,6 +793,12 @@
     "close": "Close"
   },
   "conversations": {
+    "attachPhoto": "Attach a photo",
+    "removePhoto": "Remove photo",
+    "openPhoto": "Open photo",
+    "photo": "Photo",
+    "photoType": "Only JPG, PNG or WebP photos can be sent",
+    "photoTooLarge": "Photos must be 10 MB or smaller",
     "title": "All conversations",
     "empty": "No conversations yet",
     "select": "No message has been selected to display. Please choose a message from the list",

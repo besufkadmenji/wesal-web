@@ -348,7 +348,8 @@ export type CreateListingMediaInput = {
 };
 
 export type CreateMessageInput = {
-  content: string;
+  attachment?: MessageAttachmentInput | null | undefined;
+  content?: string | null | undefined;
   conversationId: string;
 };
 
@@ -441,6 +442,12 @@ export enum MediaType {
   Image = 'IMAGE',
   Video = 'VIDEO'
 }
+
+export type MessageAttachmentInput = {
+  filename: string;
+  originalFilename: string;
+  size: number;
+};
 
 /** User text or a typed system event in a conversation */
 export enum MessageKind {
