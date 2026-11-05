@@ -1,8 +1,10 @@
 /* eslint-disable */
 // ClickUp 869fp1jmt: shows Wesal notifications that arrive through FCM
 // while no Wesal tab is visible. The API sends data-only messages:
-// { notificationId, title, body, link, lang, renotify? }. Chat messages
-// use notificationId "chat-<conversationId>" so a newer one replaces it.
+// { notificationId, title, body, link, lang, group? }. Each chat message has
+// its own notificationId and a group "chat-<conversationId>"; older ones in
+// the group are closed once the new one shows. (Reusing one tag per chat
+// made Chrome on macOS add its "updated in the background" notice.)
 
 self.addEventListener("install", () => self.skipWaiting());
 self.addEventListener("activate", (event) =>
@@ -20,26 +22,34 @@ const readPayload = (event) => {
 
 self.addEventListener("push", (event) => {
   const data = readPayload(event);
-  if (!data.title) return;
+  const group = data.group || "";
   event.waitUntil(
-    self.clients
-      .matchAll({ type: "window", includeUncontrolled: true })
-      .then((windows) => {
-        // A focused tab shows the in-app pop-up instead. Only "focused"
-        // counts: Chrome accepts a push that shows nothing only then, and
-        // otherwise puts up its own "updated in the background" notice.
-        if (windows.some((w) => w.focused)) return;
-        return self.registration.showNotification(data.title, {
-          body: data.body || "",
-          icon: "/images/logo.pdf.png",
-          dir: data.lang === "ar" ? "rtl" : "ltr",
-          lang: data.lang || "ar",
-          tag: data.notificationId || undefined,
-          // Chat pushes reuse one tag per chat; alert again for each message.
-          renotify: Boolean(data.renotify && data.notificationId),
-          data: { link: data.link || "", lang: data.lang || "ar" },
-        });
-      }),
+    (async () => {
+      const windows = await self.clients.matchAll({
+        type: "window",
+        includeUncontrolled: true,
+      });
+      // A focused tab shows the in-app pop-up instead. Only "focused"
+      // counts: Chrome accepts a push that shows nothing only then, and
+      // otherwise puts up its own "updated in the background" notice.
+      if (windows.some((w) => w.focused)) return;
+      const tag = data.notificationId || undefined;
+      // Never show nothing here, even for an unexpected payload.
+      await self.registration.showNotification(data.title || "Wesal", {
+        body: data.body || "",
+        icon: "/images/logo.pdf.png",
+        dir: data.lang === "ar" ? "rtl" : "ltr",
+        lang: data.lang || "ar",
+        tag,
+        data: { link: data.link || "", lang: data.lang || "ar", group },
+      });
+      if (!group) return;
+      // Keep one notification per chat: close the older ones.
+      const shown = await self.registration.getNotifications();
+      shown
+        .filter((n) => n.data?.group === group && n.tag !== tag)
+        .forEach((n) => n.close());
+    })(),
   );
 });
 
