@@ -46,16 +46,22 @@ self.addEventListener("notificationclick", (event) => {
   const { link = "", lang = "ar" } = event.notification.data || {};
   const target = new URL(`/${lang}${link}`, self.location.origin).href;
   event.waitUntil(
-    self.clients
-      .matchAll({ type: "window", includeUncontrolled: true })
-      .then((windows) => {
-        const open = windows.find((w) =>
-          w.url.startsWith(self.location.origin),
-        );
-        if (open) {
-          return open.focus().then((w) => (w || open).navigate(target));
+    (async () => {
+      // Only a tab this worker controls can be navigated; a tab opened
+      // before the worker was installed refuses, so fall back to a new tab.
+      const controlled = await self.clients.matchAll({ type: "window" });
+      const existing = controlled.find((w) =>
+        w.url.startsWith(self.location.origin),
+      );
+      if (existing) {
+        try {
+          const focused = (await existing.focus()) || existing;
+          if (await focused.navigate(target)) return;
+        } catch {
+          // Fall through to a new tab.
         }
-        return self.clients.openWindow(target);
-      }),
+      }
+      await self.clients.openWindow(target);
+    })(),
   );
 });
