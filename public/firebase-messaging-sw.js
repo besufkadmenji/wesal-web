@@ -25,8 +25,10 @@ self.addEventListener("push", (event) => {
     self.clients
       .matchAll({ type: "window", includeUncontrolled: true })
       .then((windows) => {
-        // An open, visible tab already shows the in-app pop-up.
-        if (windows.some((w) => w.visibilityState === "visible")) return;
+        // A focused tab shows the in-app pop-up instead. Only "focused"
+        // counts: Chrome accepts a push that shows nothing only then, and
+        // otherwise puts up its own "updated in the background" notice.
+        if (windows.some((w) => w.focused)) return;
         return self.registration.showNotification(data.title, {
           body: data.body || "",
           icon: "/images/logo.pdf.png",
