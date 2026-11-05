@@ -10,6 +10,7 @@ import type {
   PaginatedNotificationResponse,
 } from "@/gql/graphql";
 import { MessageKind } from "@/gql/graphql";
+import { showMessageToast } from "@/components/app/shared/messageToast";
 import { showNotificationToast } from "@/components/app/shared/notificationToast";
 import { queryKeys } from "@/hooks/queryKeys";
 import { useDict } from "@/hooks/useDict";
@@ -17,7 +18,7 @@ import { useLang } from "@/hooks/useLang";
 import { useMe } from "@/hooks/useMe";
 import { ConversationService } from "@/services/conversation.service";
 import { NotificationService } from "@/services/notification.service";
-import { mergeUniqueById } from "@/utils/participant.policy";
+import { mergeIncomingMessage } from "@/utils/participant.policy";
 import { useQueryClient } from "@tanstack/react-query";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
@@ -39,12 +40,12 @@ const appendMessage = (
   message: Message,
 ) => {
   if (!current) return current;
-  const items = mergeUniqueById(current.items, message);
+  const { items, added } = mergeIncomingMessage(current.items, message);
   if (items === current.items) return current;
   return {
     ...current,
     items,
-    meta: { ...current.meta, total: current.meta.total + 1 },
+    meta: { ...current.meta, total: current.meta.total + (added ? 1 : 0) },
   };
 };
 
@@ -81,6 +82,16 @@ export const RealtimeEventsWatcher = () => {
         );
         const isIncoming = message.senderId !== principalId;
         const shouldIncrement = isIncoming && !isOpen;
+        // Pop up a new chat message unless that chat is already on screen.
+        if (shouldIncrement && message.kind === MessageKind.Text) {
+          const { dict, lang, router } = toastContextRef.current;
+          showMessageToast(message, {
+            fallbackTitle: dict.conversations.newMessage,
+            photoLabel: dict.conversations.photo,
+            viewLabel: dict.notifications.view,
+            onView: (href) => router.push(`/${lang}${href}`),
+          });
+        }
 
         queryClient.setQueryData<PaginatedMessageResponse>(
           queryKeys.messages(message.conversationId),

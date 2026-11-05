@@ -10,7 +10,10 @@ import type {
 } from "@/gql/graphql";
 import { ConversationSenderType, MessageKind, SortOrder } from "@/gql/graphql";
 import { ConversationService } from "@/services/conversation.service";
-import { mergeUniqueById } from "@/utils/participant.policy";
+import {
+  mergeUniqueById,
+  settleSentMessage,
+} from "@/utils/participant.policy";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 
@@ -129,19 +132,19 @@ export const useSendMessage = (conversationId: string) => {
         queryKeys.messages(conversationId),
         (current) => {
           if (!current) return current;
-          const withoutOptimistic = context?.optimisticId
-            ? {
-                ...current,
-                items: current.items.filter(
-                  (item) => item.id !== context.optimisticId,
-                ),
-                meta: {
-                  ...current.meta,
-                  total: Math.max(0, current.meta.total - 1),
-                },
-              }
-            : current;
-          return appendMessage(withoutOptimistic, message);
+          const { items, delta } = settleSentMessage(
+            current.items,
+            context?.optimisticId,
+            message,
+          );
+          return {
+            ...current,
+            items,
+            meta: {
+              ...current.meta,
+              total: Math.max(0, current.meta.total + delta),
+            },
+          };
         },
       );
       queryClient.invalidateQueries({ queryKey: queryKeys.conversations });

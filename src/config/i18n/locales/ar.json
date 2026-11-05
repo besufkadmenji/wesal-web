@@ -804,6 +804,7 @@
     "denied": "الإشعارات محظورة في إعدادات المتصفح"
   },
   "conversations": {
+    "newMessage": "رسالة جديدة",
     "attachPhoto": "إرفاق صورة",
     "removePhoto": "إزالة الصورة",
     "openPhoto": "فتح الصورة",
