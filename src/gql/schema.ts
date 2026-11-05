@@ -1199,7 +1199,7 @@ export type CreateListingMediaInput = {
 
 export type CreateMessageInput = {
   attachment?: InputMaybe<MessageAttachmentInput>;
-  content?: InputMaybe<Scalars['String']['input']>;
+  content?: Scalars['String']['input'];
   conversationId: Scalars['String']['input'];
 };
 
@@ -1719,6 +1719,8 @@ export type Mutation = {
   register: User;
   /** Register a new provider and send verification OTPs */
   registerProvider: Provider;
+  /** Registers this browser for FCM push notifications */
+  registerPushDevice: Scalars['Boolean']['output'];
   /** Provider rejects a pending contract */
   rejectContract: Contract;
   /** Admin rejects a provider's e-contract termination request; the contract is active again (S4-58) */
@@ -1780,6 +1782,8 @@ export type Mutation = {
   /** Provider asks the administration to terminate their e-contract (S4-58); refused while customer contracts are unfinished */
   terminateProviderContract: Provider;
   trackAction: Tracking;
+  /** Stops FCM push notifications to this browser */
+  unregisterPushDevice: Scalars['Boolean']['output'];
   updateAdmin: Admin;
   updateBadgeSettings: Array<BadgeSetting>;
   updateBank: Bank;
@@ -2225,6 +2229,11 @@ export type MutationRegisterProviderArgs = {
 };
 
 
+export type MutationRegisterPushDeviceArgs = {
+  input: RegisterPushDeviceInput;
+};
+
+
 export type MutationRejectContractArgs = {
   input: RejectContractInput;
 };
@@ -2398,6 +2407,11 @@ export type MutationTerminateProviderContractArgs = {
 
 export type MutationTrackActionArgs = {
   input: TrackActionInput;
+};
+
+
+export type MutationUnregisterPushDeviceArgs = {
+  token: Scalars['String']['input'];
 };
 
 
@@ -3646,6 +3660,11 @@ export type RegisterProviderInput = {
   password: Scalars['String']['input'];
   phone: Scalars['String']['input'];
   withAbsher?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type RegisterPushDeviceInput = {
+  language: Scalars['String']['input'];
+  token: Scalars['String']['input'];
 };
 
 export type RejectContractInput = {

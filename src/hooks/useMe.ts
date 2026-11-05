@@ -3,6 +3,7 @@ import ProviderService from "@/services/provider.service";
 import UserService from "@/services/user.service";
 import { useQuery } from "@tanstack/react-query";
 import Cookie from "js-cookie";
+import { disablePush } from "@/utils/push";
 export const useMe = (): {
   me: { user: User | null; provider: Provider | null } | null | undefined;
   isLoading: boolean;
@@ -29,6 +30,8 @@ export const useMe = (): {
   });
 
   const logout = async (noReload?: boolean): Promise<void> => {
+    // ClickUp 869fp1jmt: stop push to this browser while still signed in.
+    await disablePush();
     Cookie.remove("token");
     if (!noReload) {
       window.location.reload();

@@ -10,13 +10,16 @@ import type {
   PaginatedNotificationResponse,
 } from "@/gql/graphql";
 import { MessageKind } from "@/gql/graphql";
+import { showNotificationToast } from "@/components/app/shared/notificationToast";
 import { queryKeys } from "@/hooks/queryKeys";
+import { useDict } from "@/hooks/useDict";
+import { useLang } from "@/hooks/useLang";
 import { useMe } from "@/hooks/useMe";
 import { ConversationService } from "@/services/conversation.service";
 import { NotificationService } from "@/services/notification.service";
 import { mergeUniqueById } from "@/utils/participant.policy";
 import { useQueryClient } from "@tanstack/react-query";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 
 const MAX_SEEN_EVENTS = 500;
@@ -55,9 +58,15 @@ export const RealtimeEventsWatcher = () => {
   // H-26: the path is read through a ref so navigating doesn't tear down and
   // reopen the subscriptions; events arriving in that gap were lost.
   const pathnameRef = useRef(pathname);
+  // The pop-up reads these through a ref for the same reason.
+  const dict = useDict();
+  const lang = useLang();
+  const router = useRouter();
+  const toastContextRef = useRef({ dict, lang, router });
   useEffect(() => {
     pathnameRef.current = pathname;
-  }, [pathname]);
+    toastContextRef.current = { dict, lang, router };
+  }, [pathname, dict, lang, router]);
 
   useEffect(() => {
     if (!isLoggedIn || !principalId) return;
@@ -198,6 +207,25 @@ export const RealtimeEventsWatcher = () => {
         void queryClient.invalidateQueries({
           queryKey: queryKeys.notificationStats,
         });
+        if (!notification.isRead) {
+          const { dict, lang, router } = toastContextRef.current;
+          showNotificationToast(notification, {
+            viewLabel: dict.notifications.view,
+            onView: (href) => {
+              void NotificationService.markAsRead(notification.id).finally(
+                () => {
+                  void queryClient.invalidateQueries({
+                    queryKey: queryKeys.notifications,
+                  });
+                  void queryClient.invalidateQueries({
+                    queryKey: queryKeys.notificationStats,
+                  });
+                },
+              );
+              router.push(`/${lang}${href}`);
+            },
+          });
+        }
         // Contract notices (overdue, expiry, status) refresh contract views.
         if (notification.relatedEntityType === "contract") {
           void queryClient.invalidateQueries({ queryKey: queryKeys.contracts });
