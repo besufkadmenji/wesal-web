@@ -11,6 +11,7 @@ import {
 import { useConversationActions } from "@/components/app/conversations/useConversationActions";
 import { useConversationComposer } from "@/components/app/conversations/useConversationComposer";
 import { useConversationThread } from "@/components/app/conversations/useConversationThread";
+import { useStickToBottom } from "@/components/app/conversations/useStickToBottom";
 import { FavoriteButton } from "@/components/app/favorites/FavoriteButton";
 import {
   EmptyState,
@@ -59,6 +60,13 @@ export const ConversationThread = ({
     submitMessage,
     canSubmit,
   } = useConversationComposer(conversationId, canSend);
+  const items = messages.data?.items;
+  const lastMessage = items?.[items.length - 1];
+  const myId = me?.provider?.id || me?.user?.id;
+  const { containerRef, contentRef } = useStickToBottom(
+    lastMessage?.id,
+    Boolean(myId && lastMessage?.senderId === myId),
+  );
   if (isLoading) return <ConversationThreadSkeleton />;
   if (!item || !counterparty)
     return <EmptyState title={dict.conversations.empty} />;
@@ -152,10 +160,15 @@ export const ConversationThread = ({
         ) : !messages.data?.items.length ? (
           <EmptyState title={dict.common.empty} />
         ) : (
-          <div className="grid h-full auto-rows-max items-start gap-4 overflow-y-auto p-4 md:p-6">
-            {messages.data.items.map((message) => (
-              <MessageBubble key={message.id} message={message} />
-            ))}
+          <div ref={containerRef} className="h-full overflow-y-auto">
+            <div
+              ref={contentRef}
+              className="grid auto-rows-max items-start gap-4 p-4 md:p-6"
+            >
+              {messages.data.items.map((message) => (
+                <MessageBubble key={message.id} message={message} />
+              ))}
+            </div>
           </div>
         )}
       </div>
