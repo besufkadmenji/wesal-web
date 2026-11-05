@@ -1,10 +1,10 @@
 /* eslint-disable */
 // ClickUp 869fp1jmt: shows Wesal notifications that arrive through FCM
 // while no Wesal tab is visible. The API sends data-only messages:
-// { notificationId, title, body, link, lang, group? }. Each chat message has
-// its own notificationId and a group "chat-<conversationId>"; older ones in
-// the group are closed once the new one shows. (Reusing one tag per chat
-// made Chrome on macOS add its "updated in the background" notice.)
+// { notificationId, title, body, link, lang }. Each push gets its own
+// notification, and the worker never closes or replaces one: on macOS that
+// left notifications Chrome considered closed (clicks did nothing) and made
+// Chrome add its "updated in the background" notice.
 
 self.addEventListener("install", () => self.skipWaiting());
 self.addEventListener("activate", (event) =>
@@ -22,7 +22,6 @@ const readPayload = (event) => {
 
 self.addEventListener("push", (event) => {
   const data = readPayload(event);
-  const group = data.group || "";
   event.waitUntil(
     (async () => {
       const windows = await self.clients.matchAll({
@@ -41,14 +40,8 @@ self.addEventListener("push", (event) => {
         dir: data.lang === "ar" ? "rtl" : "ltr",
         lang: data.lang || "ar",
         tag,
-        data: { link: data.link || "", lang: data.lang || "ar", group },
+        data: { link: data.link || "", lang: data.lang || "ar" },
       });
-      if (!group) return;
-      // Keep one notification per chat: close the older ones.
-      const shown = await self.registration.getNotifications();
-      shown
-        .filter((n) => n.data?.group === group && n.tag !== tag)
-        .forEach((n) => n.close());
     })(),
   );
 });
