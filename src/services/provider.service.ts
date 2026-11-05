@@ -1,9 +1,11 @@
 import {
   Provider,
+  PublicProviderQuery,
   SignContractInput,
   UpdateProviderInput,
 } from "@/gql/graphql";
 import { ME_PROVIDER_QUERY } from "@/graphql/providers/meProvider";
+import { PUBLIC_PROVIDER_QUERY } from "@/graphql/providers/publicProvider";
 import { REMOVE_PROVIDER_AVATAR_MUTATION } from "@/graphql/providers/removeProviderAvatar";
 import { SIGN_CONTRACT_MUTATION } from "@/graphql/providers/signContract";
 import { TERMINATE_CONTRACT_MUTATION } from "@/graphql/providers/terminateContract";
@@ -23,6 +25,18 @@ class ProviderService {
       console.error("providerResult", e);
     }
     return null;
+  };
+
+  /** Anyone can open a provider's public page; null when it is gone. */
+  static publicProfile = async (
+    id: string,
+  ): Promise<PublicProviderQuery["provider"] | null> => {
+    const result = await client().query<PublicProviderQuery>({
+      query: PUBLIC_PROVIDER_QUERY,
+      variables: { id },
+      fetchPolicy: "network-only",
+    });
+    return result.data?.provider ?? null;
   };
 
   static updateProvider = async (input: UpdateProviderInput) => {

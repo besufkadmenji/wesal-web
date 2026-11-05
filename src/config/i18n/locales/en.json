@@ -826,6 +826,16 @@
     "reason": "Reason",
     "contractAdminResolved": "The administration closed the contract and released the payment to the provider"
   },
+  "providerPage": {
+    "title": "Service provider",
+    "address": "Address",
+    "adsCount": "Number of ads",
+    "adsUnit": "ads",
+    "contractsCount": "Number of contracts",
+    "contractsUnit": "contracts",
+    "noAds": "This provider has no ads yet",
+    "notFound": "We couldn't find this service provider."
+  },
   "favorites": {
     "title": "Favorite providers",
     "empty": "You have not added any favorite providers yet",

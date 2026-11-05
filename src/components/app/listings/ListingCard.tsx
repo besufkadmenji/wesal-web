@@ -18,8 +18,11 @@ export const ListingCard = ({
   listing,
   action,
   showProviderLabels = true,
+  href,
 }: {
   listing: Listing;
+  /** Where the card leads; defaults to the ad under the current page. */
+  href?: string;
   action?: ReactNode;
   /** Off on the provider's own listings (S4-54 label is for customers). */
   showProviderLabels?: boolean;
@@ -30,7 +33,10 @@ export const ListingCard = ({
 
   return (
     <article className="grid w-full grid-cols-1 overflow-hidden rounded-[20px] bg-white">
-      <Link href={`${pathname}/${listing.id}`} className="grid cursor-pointer">
+      <Link
+        href={href ?? `${pathname}/${listing.id}`}
+        className="grid cursor-pointer"
+      >
         <div className="relative h-44 overflow-hidden rounded-[20px]">
           {firstPhoto ? (
             <Image
