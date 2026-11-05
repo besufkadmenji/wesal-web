@@ -408,6 +408,8 @@
     "unexpectedError": "An unexpected error occurred. Please try again later.",
     "address": "Address",
     "chooseLocation": "Choose your location on the map",
+    "fullScreenMap": "Show the map full screen",
+    "exitFullScreenMap": "Exit full screen",
     "searchPlaces": "Search for the address or building.",
     "loading": "Loading…",
     "retry": "Try again",
