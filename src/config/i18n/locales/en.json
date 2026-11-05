@@ -792,7 +792,16 @@
     "empty": "No notifications at the moment",
     "loading": "Loading notifications...",
     "markAllRead": "Mark all as read",
-    "close": "Close"
+    "close": "Close",
+    "view": "View"
+  },
+  "push": {
+    "prompt": "Get notified even when Wesal is closed",
+    "enable": "Enable",
+    "notNow": "Not now",
+    "enableBrowser": "Enable browser notifications",
+    "enabled": "Browser notifications are on",
+    "denied": "Notifications are blocked in your browser settings"
   },
   "conversations": {
     "attachPhoto": "Attach a photo",

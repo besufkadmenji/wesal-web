@@ -1,9 +1,11 @@
 packages:
   - .
 allowBuilds:
+  '@firebase/util': false
   '@heroui/shared-utils': true
   core-js: true
   msw: true
+  protobufjs: false
   sharp: false
   unrs-resolver: false
 ignoredBuiltDependencies:

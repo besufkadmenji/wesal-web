@@ -38,6 +38,7 @@
     "clsx": "^2.1.1",
     "embla-carousel-react": "^8.6.0",
     "embla-carousel-wheel-gestures": "^8.1.0",
+    "firebase": "^13.2.0",
     "framer-motion": "^12.43.0",
     "google-map-react": "^2.2.5",
     "graphql": "^17.0.2",

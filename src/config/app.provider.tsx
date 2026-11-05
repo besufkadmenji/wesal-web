@@ -9,6 +9,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { UserStatusWatcher } from "@/components/app/UserStatusWatcher";
 import { useRealtimeRefresh } from "@/hooks/useConversations";
 import { RealtimeEventsWatcher } from "@/components/app/RealtimeEventsWatcher";
+import { PushNotificationsGate } from "@/components/app/PushNotificationsGate";
 import { OverdueContractsGate } from "@/components/app/contracts/OverdueContractsGate";
 import { ContractPaidNoticeGate } from "@/components/app/contracts/ContractPaidNoticeGate";
 import { Suspense } from "react";
@@ -26,6 +27,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
           <UserStatusWatcher />
           <RealtimeQueryBridge />
           <RealtimeEventsWatcher />
+          <PushNotificationsGate />
           {/* Reads search params, so it needs its own boundary. */}
           <Suspense fallback={null}>
             <OverdueContractsGate />

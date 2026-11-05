@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import NotificationIcon from "@/assets/icons/notifications.svg";
 import { NotificationItem } from "@/components/app/shared/NotificationItem";
+import { PushEnableButton } from "@/components/app/shared/PushEnableButton";
 import { SideDrawer } from "@/components/app/shared/SideDrawer";
 import { UnreadDot } from "@/components/app/shared/UnreadDot";
 import { useDict } from "@/hooks/useDict";
@@ -61,6 +62,7 @@ export const NotificationDrawer = () => {
         </Button>
       }
     >
+      <PushEnableButton />
       {notifications.isLoading && (
         <p className="text-gray p-6 text-center text-sm">
           {dict.notifications.loading}
