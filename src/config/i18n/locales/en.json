@@ -804,6 +804,7 @@
     "denied": "Notifications are blocked in your browser settings"
   },
   "conversations": {
+    "newMessage": "New message",
     "attachPhoto": "Attach a photo",
     "removePhoto": "Remove photo",
     "openPhoto": "Open photo",
