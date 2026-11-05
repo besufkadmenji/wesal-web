@@ -3,6 +3,7 @@ import type {
   ConversationStats,
   ConversationPaginationInput,
   Message,
+  MessageAttachmentInput,
   MessagePaginationInput,
   PaginatedConversationResponse,
   PaginatedMessageResponse,
@@ -82,10 +83,14 @@ export class ConversationService {
     return requireData(result, "Messages").messages;
   }
 
-  static async sendMessage(conversationId: string, content: string) {
+  static async sendMessage(
+    conversationId: string,
+    content: string,
+    attachment?: MessageAttachmentInput,
+  ) {
     const result = await client().mutate<{ createMessage: Message }>({
       mutation: CREATE_MESSAGE_MUTATION,
-      variables: { input: { conversationId, content } },
+      variables: { input: { conversationId, content, attachment } },
     });
     return requireOperationField(result, "createMessage", "Create message");
   }

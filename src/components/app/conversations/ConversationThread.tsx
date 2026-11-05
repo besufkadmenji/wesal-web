@@ -3,6 +3,7 @@
 import MessageTimeIcon from "@/assets/icons/message.time.svg";
 import { ComplaintDialog } from "@/components/app/conversations/ComplaintDialog";
 import { MessageBubble } from "@/components/app/conversations/MessageBubble";
+import { MessageComposer } from "@/components/app/conversations/MessageComposer";
 import {
   ConversationMessagesSkeleton,
   ConversationThreadSkeleton,
@@ -19,9 +20,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { useAppRouter } from "@/hooks/use.app.router";
 import { useDict } from "@/hooks/useDict";
-import { ChevronLeft, Send } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
-import TextareaAutosize from "react-textarea-autosize";
 
 export const ConversationThread = ({
   conversationId,
@@ -50,8 +50,15 @@ export const ConversationThread = ({
     isLoading,
   } = useConversationThread(conversationId);
   const { payFee, restart } = useConversationActions(conversationId);
-  const { content, setContent, submitMessage, canSubmit } =
-    useConversationComposer(conversationId, canSend);
+  const {
+    content,
+    setContent,
+    photoPreview,
+    pickPhoto,
+    removePhoto,
+    submitMessage,
+    canSubmit,
+  } = useConversationComposer(conversationId, canSend);
   if (isLoading) return <ConversationThreadSkeleton />;
   if (!item || !counterparty)
     return <EmptyState title={dict.conversations.empty} />;
@@ -191,26 +198,15 @@ export const ConversationThread = ({
             )}
           </div>
         ) : (
-          <div className="flex gap-4">
-            <div className="grid min-w-0 grow grid-cols-1 items-end rounded-[16px] bg-[#f6f7fa]">
-              <TextareaAutosize
-                value={content}
-                onChange={(event) => setContent(event.target.value)}
-                placeholder={dict.conversations.messagePlaceholder}
-                className="min-h-14 w-full resize-none border-0 bg-transparent p-4 shadow-none outline-none"
-                maxLength={2_000}
-              />
-            </div>
-            <Button
-              size="icon"
-              className="my-0.75 size-12.5 rounded-[20px]"
-              disabled={!canSubmit}
-              onClick={submitMessage}
-              aria-label={dict.common.send}
-            >
-              <Send className="size-5 rtl:rotate-180" />
-            </Button>
-          </div>
+          <MessageComposer
+            content={content}
+            setContent={setContent}
+            photoPreview={photoPreview}
+            pickPhoto={pickPhoto}
+            removePhoto={removePhoto}
+            submitMessage={submitMessage}
+            canSubmit={canSubmit}
+          />
         )}
       </footer>
     </div>

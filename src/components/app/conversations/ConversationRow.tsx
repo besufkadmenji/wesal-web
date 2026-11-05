@@ -1,5 +1,7 @@
 "use client";
 
+import { messageAttachment } from "@/components/app/conversations/messageAttachment";
+
 import {
   ParticipantAvatar,
   useLocalizedFormat,
@@ -53,7 +55,10 @@ export const ConversationRow = ({
         <div className="flex w-full items-center gap-2.5">
           <p className="text-gray line-clamp-1 min-w-0 flex-1 text-start text-sm leading-[1.7]">
             {conversation.lastMessage?.kind === MessageKind.Text
-              ? conversation.lastMessage.content
+              ? conversation.lastMessage.content ||
+                (messageAttachment(conversation.lastMessage.metadata)
+                  ? dict.conversations.photo
+                  : "")
               : conversation.lastMessage
                 ? systemMessageLabel(
                     conversation.lastMessage.kind,

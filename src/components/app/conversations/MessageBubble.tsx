@@ -14,6 +14,11 @@ import { useDict } from "@/hooks/useDict";
 import { useMe } from "@/hooks/useMe";
 import { cn } from "@/lib/utils";
 import { FileWarning } from "lucide-react";
+import Image from "next/image";
+import {
+  chatPhotoUrl,
+  messageAttachment,
+} from "@/components/app/conversations/messageAttachment";
 
 export const MessageBubble = ({ message }: { message: Message }) => {
   const { me } = useMe();
@@ -46,6 +51,7 @@ export const MessageBubble = ({ message }: { message: Message }) => {
     );
   }
   const mine = message.senderId === (me?.user?.id || me?.provider?.id);
+  const photo = messageAttachment(message.metadata);
   return (
     <div className={cn("flex", mine ? "justify-end" : "justify-start")}>
       <div
@@ -54,9 +60,28 @@ export const MessageBubble = ({ message }: { message: Message }) => {
           mine && "bg-[#eff1f6]",
         )}
       >
-        <p className="text-sm leading-6 break-words whitespace-pre-wrap">
-          {message.content}
-        </p>
+        {photo && (
+          <a
+            href={chatPhotoUrl(photo.filename)}
+            target="_blank"
+            rel="noreferrer"
+            className="mb-2 block overflow-hidden rounded-xl"
+            aria-label={dict.conversations.openPhoto}
+          >
+            <Image
+              src={chatPhotoUrl(photo.filename)}
+              alt={photo.originalFilename}
+              width={240}
+              height={240}
+              className="h-auto max-h-72 w-60 max-w-full object-cover"
+            />
+          </a>
+        )}
+        {message.content && (
+          <p className="text-sm leading-6 break-words whitespace-pre-wrap">
+            {message.content}
+          </p>
+        )}
         <time className="text-gray mt-1 block text-[10px]">
           {format.date(message.createdAt)}
         </time>

@@ -9,6 +9,7 @@ import {
 import SearchIcon from "@/assets/icons/search.svg";
 import { useDict } from "@/hooks/useDict";
 import GoogleMapReact from "google-map-react";
+import { ArrowLeft } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -211,39 +212,46 @@ export const PickLocation = ({
 
   const mapContainerRef = useRef<HTMLDivElement>(null);
 
+  // ClickUp 869fnx2yw: full screen is a page overlay (the Fullscreen API
+  // left the search box outside and does not exist on iPhone Safari), with
+  // its own Back button; Escape also closes it.
   useEffect(() => {
-    const handler = () => {
-      setIsFullScreen(!!document.fullscreenElement);
+    if (!isFullScreen) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsFullScreen(false);
     };
-    document.addEventListener("fullscreenchange", handler);
-    return () => document.removeEventListener("fullscreenchange", handler);
-  }, []);
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = overflow;
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [isFullScreen]);
 
-  const handleFullScreen = () => {
-    const el = mapContainerRef.current;
-    if (!el) return;
-    if (!document.fullscreenElement) {
-      el.requestFullscreen();
-    } else {
-      document.exitFullscreen();
-    }
-  };
+  const handleFullScreen = () => setIsFullScreen((value) => !value);
 
+  // Where the search box shows: above the map, floating on it, or in the
+  // full-screen top bar beside Back.
+  const variant: "above" | "overlay" | "toolbar" = isFullScreen
+    ? "toolbar"
+    : searchPlacement;
   const searchField = (
     <div
       className={twMerge(
         "relative z-30",
-        searchPlacement === "overlay" &&
+        variant === "overlay" &&
           "absolute top-2.5 left-1/2 w-[calc(100%-20px)] -translate-x-1/2",
+        variant === "toolbar" && "min-w-0 flex-1",
       )}
     >
       <div
         className={twMerge(
           "border-border flex items-center gap-2 rounded-[20px] border bg-white px-4",
-          searchPlacement === "above" ? "h-14" : "h-12",
+          variant === "above" ? "h-14" : "h-12",
         )}
       >
-        {searchPlacement === "overlay" && (
+        {variant !== "above" && (
           <SearchIcon className="size-4 shrink-0 text-[#666]" />
         )}
         <input
@@ -287,17 +295,20 @@ export const PickLocation = ({
         searchPlacement === "above" && "gap-5",
       )}
     >
-      {searchPlacement === "above" && searchField}
+      {variant === "above" && searchField}
       <div
         ref={mapContainerRef}
         className={twMerge(
           "border-border relative overflow-hidden rounded-[32px] border",
-          isFullScreen && "overflow-visible rounded-none",
+          isFullScreen &&
+            "fixed inset-0 z-[100] overflow-visible rounded-none border-0 bg-white",
         )}
+        role={isFullScreen ? "dialog" : undefined}
+        aria-modal={isFullScreen || undefined}
       >
         {/* Map */}
         <div
-          className={twMerge("h-84", mapClassName, isFullScreen && "h-screen")}
+          className={twMerge("h-84", mapClassName, isFullScreen && "h-dvh")}
         >
           <GoogleMapReact
             bootstrapURLKeys={{
@@ -341,7 +352,21 @@ export const PickLocation = ({
           </GoogleMapReact>
         </div>
 
-        {searchPlacement === "overlay" && searchField}
+        {isFullScreen ? (
+          <div className="absolute inset-x-2.5 top-2.5 z-30 flex items-start gap-2">
+            <button
+              type="button"
+              onClick={() => setIsFullScreen(false)}
+              className="flex h-12 shrink-0 cursor-pointer items-center gap-1.5 rounded-[20px] bg-white px-4 text-sm font-medium text-[#1a1a1a] shadow-sm"
+            >
+              <ArrowLeft className="size-4 rtl:rotate-180" />
+              {dict.common.back}
+            </button>
+            {searchField}
+          </div>
+        ) : (
+          variant === "overlay" && searchField
+        )}
 
         {/* Zoom Controls */}
         <div
@@ -376,6 +401,9 @@ export const PickLocation = ({
           <button
             type="button"
             onClick={handleFullScreen}
+            aria-label={
+              isFullScreen ? dict.common.exitFullScreenMap : dict.common.fullScreenMap
+            }
             className="flex size-7.75 items-center justify-center rounded-lg bg-white shadow-sm"
           >
             {isFullScreen ? (

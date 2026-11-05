@@ -1198,7 +1198,8 @@ export type CreateListingMediaInput = {
 };
 
 export type CreateMessageInput = {
-  content: Scalars['String']['input'];
+  attachment?: InputMaybe<MessageAttachmentInput>;
+  content?: InputMaybe<Scalars['String']['input']>;
   conversationId: Scalars['String']['input'];
 };
 
@@ -1461,6 +1462,7 @@ export type ListingPaginationInput = {
   minRating?: InputMaybe<Scalars['Int']['input']>;
   /** Page number (1-based) */
   page?: Scalars['Int']['input'];
+  providerId?: InputMaybe<Scalars['String']['input']>;
   search?: InputMaybe<Scalars['String']['input']>;
   /** Sort field name */
   sortBy?: InputMaybe<ListingSortField>;
@@ -1538,6 +1540,12 @@ export type Message = {
   senderId?: Maybe<Scalars['ID']['output']>;
   senderType: ConversationSenderType;
   updatedAt: Scalars['DateTime']['output'];
+};
+
+export type MessageAttachmentInput = {
+  filename: Scalars['String']['input'];
+  originalFilename: Scalars['String']['input'];
+  size: Scalars['Int']['input'];
 };
 
 /** User text or a typed system event in a conversation */
@@ -2952,6 +2960,8 @@ export type Provider = {
   commercialName?: Maybe<Scalars['String']['output']>;
   commercialRegistrationFilename?: Maybe<Scalars['String']['output']>;
   commercialRegistrationNumber?: Maybe<Scalars['String']['output']>;
+  /** Completed contracts, for the public provider page */
+  contractsCount?: Maybe<Scalars['Int']['output']>;
   country?: Maybe<Country>;
   countryId?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
@@ -2968,6 +2978,8 @@ export type Provider = {
   isNewlyAdded: Scalars['Boolean']['output'];
   languageCode?: Maybe<Scalars['String']['output']>;
   latitude?: Maybe<Scalars['Float']['output']>;
+  /** Published ads, for the public provider page */
+  listingsCount?: Maybe<Scalars['Int']['output']>;
   longitude?: Maybe<Scalars['Float']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   phone: Scalars['String']['output'];

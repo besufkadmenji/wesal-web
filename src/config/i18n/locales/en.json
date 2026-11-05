@@ -408,6 +408,8 @@
     "unexpectedError": "An unexpected error occurred. Please try again later.",
     "address": "Address",
     "chooseLocation": "Choose your location on the map",
+    "fullScreenMap": "Show the map full screen",
+    "exitFullScreenMap": "Exit full screen",
     "searchPlaces": "Search for the address or building.",
     "loading": "Loading…",
     "retry": "Try again",
@@ -793,6 +795,12 @@
     "close": "Close"
   },
   "conversations": {
+    "attachPhoto": "Attach a photo",
+    "removePhoto": "Remove photo",
+    "openPhoto": "Open photo",
+    "photo": "Photo",
+    "photoType": "Only JPG, PNG or WebP photos can be sent",
+    "photoTooLarge": "Photos must be 10 MB or smaller",
     "title": "All conversations",
     "empty": "No conversations yet",
     "select": "No message has been selected to display. Please choose a message from the list",
@@ -825,6 +833,16 @@
     "contractDisputed": "Receipt was refused; the contract is under review",
     "reason": "Reason",
     "contractAdminResolved": "The administration closed the contract and released the payment to the provider"
+  },
+  "providerPage": {
+    "title": "Service provider",
+    "address": "Address",
+    "adsCount": "Number of ads",
+    "adsUnit": "ads",
+    "contractsCount": "Number of contracts",
+    "contractsUnit": "contracts",
+    "noAds": "This provider has no ads yet",
+    "notFound": "We couldn't find this service provider."
   },
   "favorites": {
     "title": "Favorite providers",

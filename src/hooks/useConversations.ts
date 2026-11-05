@@ -5,6 +5,7 @@ import { queryKeys } from "@/hooks/queryKeys";
 import type {
   ConversationPaginationInput,
   Message,
+  MessageAttachmentInput,
   PaginatedMessageResponse,
 } from "@/gql/graphql";
 import { ConversationSenderType, MessageKind, SortOrder } from "@/gql/graphql";
@@ -79,13 +80,19 @@ export const useConversationMessages = (conversationId?: string) => {
   });
 };
 
+/** What the composer sends: text, a photo (ClickUp 869fnwhm3), or both. */
+export type OutgoingMessage = {
+  content: string;
+  attachment?: MessageAttachmentInput;
+};
+
 export const useSendMessage = (conversationId: string) => {
   const queryClient = useQueryClient();
   const { me } = useMe();
   return useMutation({
-    mutationFn: (content: string) =>
-      ConversationService.sendMessage(conversationId, content),
-    onMutate: async (content) => {
+    mutationFn: ({ content, attachment }: OutgoingMessage) =>
+      ConversationService.sendMessage(conversationId, content, attachment),
+    onMutate: async ({ content, attachment }) => {
       const key = queryKeys.messages(conversationId);
       await queryClient.cancelQueries({ queryKey: key });
       const previous = queryClient.getQueryData<PaginatedMessageResponse>(key);
@@ -100,7 +107,7 @@ export const useSendMessage = (conversationId: string) => {
           : ConversationSenderType.User,
         kind: MessageKind.Text,
         content,
-        metadata: null,
+        metadata: attachment ? { attachment } : null,
         createdAt: timestamp,
         updatedAt: timestamp,
       } as Message;
