@@ -32,7 +32,7 @@ export const useRegister = () => {
       const { confirmPassword, terms, document, avatar, ...rest } = form;
       let avatarFilename;
       if (avatar) {
-        const uploadResult = await uploadFile(avatar);
+        const uploadResult = await uploadFile(avatar, { registration: true });
         if (uploadResult.url) {
           avatarFilename = uploadResult.filename;
         }
