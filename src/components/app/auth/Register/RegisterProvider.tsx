@@ -18,6 +18,7 @@ import { parseAsInteger, useQueryState } from "nuqs";
 import { twMerge } from "tailwind-merge";
 
 import AddressIcon from "@/assets/icons/address.svg";
+import ArrowIcon from "@/assets/icons/arrow.left.svg";
 import BankIcon from "@/assets/icons/auth/bank.svg";
 import IbanIcon from "@/assets/icons/auth/iban.svg";
 import { AppCheckbox } from "@/components/app/auth/AppCheckbox";
@@ -49,6 +50,16 @@ export const RegisterProvider = () => {
     form,
     updateField,
   });
+
+  // Going forward still has to pass step 1's checks; going back never does.
+  const goToStep = async (target: number) => {
+    if (target === step) return;
+    if (target === 1) {
+      setStep(1);
+    } else if (await validateStep1()) {
+      setStep(2, { history: "push" });
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,7 +100,7 @@ export const RegisterProvider = () => {
             {dict.auth.signup.provider.subtitle}
           </p>
         </div>
-        <Stepper currentStep={step} />
+        <Stepper currentStep={step} onSelect={goToStep} />
       </div>
 
       {step === 1 ? (
@@ -127,11 +138,29 @@ export const RegisterProvider = () => {
           {dict.auth.signup.signIn}
         </Link>
       </div>
+
+      {/* Step 2 errors (e.g. an email already registered) are fixed on step 1. */}
+      {step === 2 && (
+        <button
+          type="button"
+          onClick={() => setStep(1)}
+          className="text-gray flex items-center justify-center gap-1.5 justify-self-center text-sm font-medium hover:text-black"
+        >
+          <ArrowIcon className="size-4 rtl:rotate-180" />
+          {dict.auth.signup.provider.previousStep}
+        </button>
+      )}
     </form>
   );
 };
 
-const Stepper = ({ currentStep }: { currentStep: number }) => {
+const Stepper = ({
+  currentStep,
+  onSelect,
+}: {
+  currentStep: number;
+  onSelect: (step: number) => void;
+}) => {
   const dict = useDict();
   return (
     <div className="grid grid-cols-[auto_auto_auto] justify-center gap-4">
@@ -140,6 +169,7 @@ const Stepper = ({ currentStep }: { currentStep: number }) => {
         completed={currentStep > 1}
         label={dict.auth.signup.provider.step1}
         number={1}
+        onClick={() => onSelect(1)}
       />
       <div className="mt-4.5 h-1 w-20 rounded-full bg-[#E5E7EB]" />
       <StepperItem
@@ -147,6 +177,7 @@ const Stepper = ({ currentStep }: { currentStep: number }) => {
         completed={currentStep > 2}
         label={dict.auth.signup.provider.step2}
         number={2}
+        onClick={() => onSelect(2)}
       />
     </div>
   );
@@ -157,14 +188,22 @@ const StepperItem = ({
   completed,
   label,
   number,
+  onClick,
 }: {
   active: boolean;
   completed: boolean;
   label: string;
   number: number;
+  onClick: () => void;
 }) => {
   return (
-    <div className="grid grid-cols-1 justify-items-center gap-2">
+    <button
+      type="button"
+      onClick={onClick}
+      aria-current={active ? "step" : undefined}
+      className="grid cursor-pointer grid-cols-1 justify-items-center gap-2 disabled:cursor-default"
+      disabled={active}
+    >
       <div
         className={twMerge(
           "grid size-10 items-center justify-items-center rounded-full bg-[#F2F2F2]",
@@ -175,7 +214,7 @@ const StepperItem = ({
         {completed ? <CheckIcon className="size-6" /> : <p>{number}</p>}
       </div>
       <p className="text-center text-xs leading-5 font-normal">{label}</p>
-    </div>
+    </button>
   );
 };
 

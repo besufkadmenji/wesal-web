@@ -1,3 +1,4 @@
+import CloseIcon from "@/assets/icons/notifications/close.svg";
 import { useAppRouter } from "@/hooks/use.app.router";
 import { useDict } from "@/hooks/useDict";
 import { Modal, ModalContent } from "@heroui/react";
@@ -20,7 +21,15 @@ export const TermsModal = () => {
       isDismissable={true}
       size="2xl"
     >
-      <ModalContent className="overflow-hidden rounded-[20px]">
+      <ModalContent className="relative overflow-hidden rounded-[20px]">
+        <button
+          type="button"
+          onClick={() => setShowTerms(null)}
+          aria-label={dict.common.close}
+          className="absolute end-4 top-4 z-10 grid size-8 place-content-center rounded-2xl border border-[#F2F2F2] bg-white"
+        >
+          <CloseIcon className="size-4" />
+        </button>
         <div className="grid max-h-[84vh] grid-cols-1 justify-items-center gap-6 overflow-y-auto bg-white px-6 py-10">
           <Link href="/" className="relative aspect-12/10 w-18">
             <Image
