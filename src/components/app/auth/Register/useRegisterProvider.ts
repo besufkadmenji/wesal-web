@@ -41,7 +41,9 @@ export const useRegisterProvider = () => {
       } = form;
       let filename;
       if (commercialRegistrationFilename) {
-        const uploadResult = await uploadFile(commercialRegistrationFilename);
+        const uploadResult = await uploadFile(commercialRegistrationFilename, {
+          registration: true,
+        });
         if (uploadResult.url) {
           filename = uploadResult.filename;
         }
