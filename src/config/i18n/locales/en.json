@@ -338,7 +338,7 @@
     "otpResent": "Verification code resent successfully",
     "forgotPasswordFailed": "Failed to process forgot password. Please try again",
     "personalProfile": "Personal Profile",
-    "profile": "الملف الشخصى",
+    "profile": "Profile",
     "favorites": "Favorites",
     "logout": "Logout",
     "validation": {
@@ -688,6 +688,20 @@
     "searchPlaceholder": "You can search by ad name",
     "card": {
       "price": "Price"
+    },
+    "expiry": {
+      "expiredAd": "Ad expired",
+      "expiresOn": "Shown until {date}",
+      "republish": "Re-publish",
+      "republishAndPay": "Re-publish and pay",
+      "republishTitle": "Re-publish this ad",
+      "republishDescription": "Your ad expired and is no longer shown. Publish it again as a free ad, or as a featured ad.",
+      "republishFree": "Free ad",
+      "republishFreeDescription": "Shown for {days} days.",
+      "republishFeatured": "Featured ad",
+      "republishFeaturedDescription": "{fee} for {days} days at the top of the results, then free.",
+      "republished": "Your ad is published again",
+      "featureAd": "Feature this ad"
     }
   },
   "addListing": {
@@ -843,7 +857,9 @@
     "contractCancelled": "The contract was cancelled",
     "contractDisputed": "Receipt was refused; the contract is under review",
     "reason": "Reason",
-    "contractAdminResolved": "The administration closed the contract and released the payment to the provider"
+    "contractAdminResolved": "The administration closed the contract and released the payment to the provider",
+    "closesOn": "This chat closes on {date}",
+    "closedAfterCompletion": "This conversation was closed after the contract was completed."
   },
   "providerPage": {
     "title": "Service provider",

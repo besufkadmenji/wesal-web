@@ -7,6 +7,7 @@ export const GET_SETTING_QUERY: TypedDocumentNode<GetSettingQuery> = gql`
       contractAcceptanceWindowDays
       contractAcceptanceWindowEnabled
       premiumAdDurationDays
+      freeAdValidityDays
       premiumAdEnabled
       premiumAdFee
       vatEnabled

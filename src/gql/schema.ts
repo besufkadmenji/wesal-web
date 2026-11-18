@@ -931,6 +931,8 @@ export type Conversation = {
   access?: Maybe<ConversationAccess>;
   closeReason?: Maybe<Scalars['String']['output']>;
   closedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** S4-67: when the chat closes after its contract was completed (settings.chatCloseAfterCompletionHours). */
+  closesAt?: Maybe<Scalars['DateTime']['output']>;
   createdAt: Scalars['DateTime']['output'];
   customerFeePaidAt?: Maybe<Scalars['DateTime']['output']>;
   customerLastReadAt?: Maybe<Scalars['DateTime']['output']>;
@@ -956,6 +958,8 @@ export type Conversation = {
 
 export type ConversationAccess = {
   canSend: Scalars['Boolean']['output'];
+  /** S4-67: when the chat closes after the completed contract */
+  closesAt?: Maybe<Scalars['DateTime']['output']>;
   expiresAt?: Maybe<Scalars['DateTime']['output']>;
   feeAmount: Scalars['Float']['output'];
   feeCycle: Scalars['Float']['output'];
@@ -1422,6 +1426,8 @@ export type Listing = {
   createdAt: Scalars['DateTime']['output'];
   deactivationReason?: Maybe<Scalars['String']['output']>;
   description: Scalars['String']['output'];
+  /** When a free ad expires (S4-59). Null: featured, a Trust provider, or not active. */
+  expiresAt?: Maybe<Scalars['DateTime']['output']>;
   featuredEndsAt?: Maybe<Scalars['DateTime']['output']>;
   featuredStartsAt?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['String']['output'];
@@ -1500,6 +1506,7 @@ export enum ListingSortField {
 /** Listing publication status */
 export enum ListingStatus {
   Active = 'ACTIVE',
+  Expired = 'EXPIRED',
   Inactive = 'INACTIVE',
   PendingPayment = 'PENDING_PAYMENT'
 }
@@ -1675,6 +1682,8 @@ export type Mutation = {
   /** Delete all notifications for a user */
   deleteAllNotificationsForUser: Scalars['Boolean']['output'];
   deleteSignedContract: SignedContract;
+  /** S4-PAY-REFEATURE: ask to feature an active free ad; then pay through the PREMIUM_AD checkout */
+  featureListing: Listing;
   /** Request password reset OTP */
   forgotPassword: Scalars['Boolean']['output'];
   /** Request password reset OTP for provider */
@@ -1717,6 +1726,8 @@ export type Mutation = {
   refuseContractDelivery: Contract;
   /** Register a new user and send verification OTPs */
   register: User;
+  /** Registers this admin browser for FCM push notifications */
+  registerAdminPushDevice: Scalars['Boolean']['output'];
   /** Register a new provider and send verification OTPs */
   registerProvider: Provider;
   /** Registers this browser for FCM push notifications */
@@ -1752,6 +1763,8 @@ export type Mutation = {
   removeUser: User;
   /** Reply to contact message (admin only) */
   replyToContactMessage: ContactMessage;
+  /** S4-62: re-publish an expired ad for a new free period; featured=true then needs the PREMIUM_AD checkout */
+  republishListing: Listing;
   /** Customer requests cancellation before final completion */
   requestContractCancellation: Contract;
   /** Customer resends a rejected contract as a new version */
@@ -1782,6 +1795,8 @@ export type Mutation = {
   /** Provider asks the administration to terminate their e-contract (S4-58); refused while customer contracts are unfinished */
   terminateProviderContract: Provider;
   trackAction: Tracking;
+  /** Stops FCM push notifications to this admin browser */
+  unregisterAdminPushDevice: Scalars['Boolean']['output'];
   /** Stops FCM push notifications to this browser */
   unregisterPushDevice: Scalars['Boolean']['output'];
   updateAdmin: Admin;
@@ -2119,6 +2134,11 @@ export type MutationDeleteSignedContractArgs = {
 };
 
 
+export type MutationFeatureListingArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
 export type MutationForgotPasswordArgs = {
   input: ForgotPasswordInput;
 };
@@ -2221,6 +2241,11 @@ export type MutationRefuseContractDeliveryArgs = {
 
 export type MutationRegisterArgs = {
   input: RegisterInput;
+};
+
+
+export type MutationRegisterAdminPushDeviceArgs = {
+  input: RegisterPushDeviceInput;
 };
 
 
@@ -2328,6 +2353,12 @@ export type MutationReplyToContactMessageArgs = {
 };
 
 
+export type MutationRepublishListingArgs = {
+  featured?: Scalars['Boolean']['input'];
+  id: Scalars['ID']['input'];
+};
+
+
 export type MutationRequestContractCancellationArgs = {
   input: CancelContractInput;
 };
@@ -2407,6 +2438,11 @@ export type MutationTerminateProviderContractArgs = {
 
 export type MutationTrackActionArgs = {
   input: TrackActionInput;
+};
+
+
+export type MutationUnregisterAdminPushDeviceArgs = {
+  token: Scalars['String']['input'];
 };
 
 
@@ -2619,6 +2655,7 @@ export enum NotificationType {
   ContractUpdate = 'CONTRACT_UPDATE',
   EcontractTerminationRejected = 'ECONTRACT_TERMINATION_REJECTED',
   ListingApproved = 'LISTING_APPROVED',
+  ListingExpired = 'LISTING_EXPIRED',
   ListingFeatured = 'LISTING_FEATURED',
   ListingFeaturedExpired = 'LISTING_FEATURED_EXPIRED',
   ListingRejected = 'LISTING_REJECTED',
@@ -3727,6 +3764,8 @@ export enum SenderType {
 export type Setting = {
   aboutAr: Scalars['String']['output'];
   aboutEn: Scalars['String']['output'];
+  /** S4-67: hours after a contract is completed before its chat closes */
+  chatCloseAfterCompletionHours: Scalars['Int']['output'];
   completionConfirmationGraceHours: Scalars['Int']['output'];
   contractAcceptanceWindowDays: Scalars['Int']['output'];
   contractAcceptanceWindowEnabled: Scalars['Boolean']['output'];
@@ -3745,6 +3784,8 @@ export type Setting = {
   /** Provider chat fee (SAR) for new categories */
   defaultProviderConversationFee: Scalars['Int']['output'];
   email: Scalars['String']['output'];
+  /** Days a free ad stays published before it expires (S4-60). Applies to new and re-published ads. */
+  freeAdValidityDays: Scalars['Int']['output'];
   phones: Array<Scalars['String']['output']>;
   platformManagerName?: Maybe<Scalars['String']['output']>;
   platformManagerSignature?: Maybe<Scalars['String']['output']>;
@@ -3781,6 +3822,7 @@ export type Setting = {
 export type SettingInput = {
   aboutAr?: InputMaybe<Scalars['String']['input']>;
   aboutEn?: InputMaybe<Scalars['String']['input']>;
+  chatCloseAfterCompletionHours?: InputMaybe<Scalars['Int']['input']>;
   completionConfirmationGraceHours?: InputMaybe<Scalars['Int']['input']>;
   contractAcceptanceWindowDays?: InputMaybe<Scalars['Int']['input']>;
   contractAcceptanceWindowEnabled?: InputMaybe<Scalars['Boolean']['input']>;
@@ -3792,6 +3834,7 @@ export type SettingInput = {
   defaultMinCommissionAmount?: InputMaybe<Scalars['Int']['input']>;
   defaultProviderConversationFee?: InputMaybe<Scalars['Int']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
+  freeAdValidityDays?: InputMaybe<Scalars['Int']['input']>;
   phones?: InputMaybe<Array<Scalars['String']['input']>>;
   platformManagerName?: InputMaybe<Scalars['String']['input']>;
   platformManagerSignature?: InputMaybe<Scalars['String']['input']>;

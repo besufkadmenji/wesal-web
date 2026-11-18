@@ -53,6 +53,7 @@ export const LISTING_FRAGMENT = gql`
     promotionCycle
     featuredStartsAt
     featuredEndsAt
+    expiresAt
     categoryId
     providerId
     ratingAverage

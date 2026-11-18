@@ -34,7 +34,7 @@ export const EditListing = () => {
   const dict = useDict();
   const lng = useLang();
   const { me } = useMe();
-  const { listing, isLoading } = useListing();
+  const { listing, isLoading } = useListing({ ownerMode: true });
   const { updateListing, updating } = useManageListing();
   const categories = me?.provider?.categories || [];
   const {

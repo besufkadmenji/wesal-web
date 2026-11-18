@@ -1,5 +1,7 @@
 "use client";
 
+import { ConversationStatus } from "@/gql/graphql";
+import { ChatClosesNotice } from "@/components/app/conversations/ChatClosesNotice";
 import MessageTimeIcon from "@/assets/icons/message.time.svg";
 import { ComplaintDialog } from "@/components/app/conversations/ComplaintDialog";
 import { MessageBubble } from "@/components/app/conversations/MessageBubble";
@@ -38,6 +40,9 @@ export const ConversationThread = ({
     counterparty,
     canSend,
     isExpired,
+    isClosedAfterCompletion,
+    closesAt,
+    showClosesAt,
     isFeeBlocked,
     canPayFee,
     countdownDate,
@@ -132,6 +137,7 @@ export const ConversationThread = ({
             </span>
           </div>
         ) : null}
+        {showClosesAt && <ChatClosesNotice closesAt={closesAt} />}
         <div className="flex items-center gap-2">
           <span className="text-gray text-xs">
             {dict.conversations.cycle}: {item.access?.feeCycle ?? item.feeCycle}
@@ -179,9 +185,11 @@ export const ConversationThread = ({
             <p className="font-medium">
               {isExpired
                 ? dict.conversations.expired
-                : isFeeBlocked
-                  ? dict.conversations.feeTitle
-                  : dict.conversations.closed}
+                : isClosedAfterCompletion
+                  ? dict.conversations.closedAfterCompletion
+                  : item.status === ConversationStatus.Active && isFeeBlocked
+                    ? dict.conversations.feeTitle
+                    : dict.conversations.closed}
             </p>
             {canPayFee && (
               <>

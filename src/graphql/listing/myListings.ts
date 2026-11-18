@@ -28,6 +28,7 @@ export const MY_LISTINGS_QUERY: TypedDocumentNode<
         promotionCycle
         featuredStartsAt
         featuredEndsAt
+        expiresAt
         story {
           filename
           id

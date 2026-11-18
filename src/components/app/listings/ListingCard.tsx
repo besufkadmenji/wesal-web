@@ -9,7 +9,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
-import { ListingType, PromotionStatus } from "@/gql/graphql";
+import { ListingStatus, ListingType, PromotionStatus } from "@/gql/graphql";
 import { StatusBadge } from "@/components/app/shared/ParticipantUI";
 import { FeaturedBadge } from "@/components/app/shared/FeaturedBadge";
 import { NewlyAddedChip } from "@/components/app/shared/NewlyAddedChip";
@@ -57,11 +57,24 @@ export const ListingCard = ({
               provider labels). */}
           {listing.type === ListingType.Featured ? (
             <FeaturedBadge className="absolute start-3 top-3" />
+          ) : !showProviderLabels &&
+            listing.status === ListingStatus.Expired ? (
+            // S4-59: the ad itself expired (not just its featured period).
+            <StatusBadge
+              status={ListingStatus.Expired}
+              label={dict.myListings.expiry.expiredAd}
+              className="absolute start-3 top-3"
+            />
           ) : (
             !showProviderLabels &&
             listing.promotionStatus !== PromotionStatus.None && (
               <StatusBadge
                 status={listing.promotionStatus}
+                label={
+                  listing.promotionStatus === PromotionStatus.Expired
+                    ? dict.promotion.expired
+                    : undefined
+                }
                 className="absolute start-3 top-3"
               />
             )

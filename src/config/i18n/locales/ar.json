@@ -688,6 +688,20 @@
     "searchPlaceholder": "يمكنك البحث باسم الإعلان",
     "card": {
       "price": "السعر"
+    },
+    "expiry": {
+      "expiredAd": "انتهى الإعلان",
+      "expiresOn": "يظهر حتى {date}",
+      "republish": "إعادة النشر",
+      "republishAndPay": "إعادة النشر والدفع",
+      "republishTitle": "إعادة نشر الإعلان",
+      "republishDescription": "انتهت مدة إعلانك ولم يعد ظاهراً. أعد نشره كإعلان مجاني أو كإعلان مميز.",
+      "republishFree": "إعلان مجاني",
+      "republishFreeDescription": "يظهر لمدة {days} يوماً.",
+      "republishFeatured": "إعلان مميز",
+      "republishFeaturedDescription": "{fee} لمدة {days} يوماً في أعلى النتائج، ثم يصبح مجانياً.",
+      "republished": "تمت إعادة نشر إعلانك",
+      "featureAd": "ميّز هذا الإعلان"
     }
   },
   "addListing": {
@@ -843,7 +857,9 @@
     "contractCancelled": "تم إلغاء التعاقد",
     "contractDisputed": "تم رفض الاستلام، والتعاقد قيد المراجعة",
     "reason": "السبب",
-    "contractAdminResolved": "أغلقت الإدارة التعاقد وحوّلت المبلغ إلى مقدم الخدمة"
+    "contractAdminResolved": "أغلقت الإدارة التعاقد وحوّلت المبلغ إلى مقدم الخدمة",
+    "closesOn": "تُغلق هذه المحادثة في {date}",
+    "closedAfterCompletion": "أُغلقت هذه المحادثة بعد اكتمال التعاقد."
   },
   "providerPage": {
     "title": "مقدم الخدمة",
