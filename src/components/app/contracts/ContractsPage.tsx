@@ -8,6 +8,7 @@ import { CustomerContractDialog } from "@/components/app/contracts/CustomerContr
 import { ProviderContractAcceptPage } from "@/components/app/contracts/ProviderContractAcceptPage";
 import { ProviderContractDialog } from "@/components/app/contracts/ProviderContractDialog";
 import { SignaturePreview } from "@/components/app/contracts/SignaturePreview";
+import { ContractStatusPill } from "@/components/app/contracts/ContractStatusPill";
 import { formatHours } from "@/components/app/contracts/formatContract";
 import {
   ContractCardSkeleton,
@@ -17,7 +18,6 @@ import { AppPagination } from "@/components/app/shared/AppPagination";
 import { AppWrapper } from "@/components/app/shared/AppWrapper";
 import {
   EmptyState,
-  StatusBadge,
   useLocalizedFormat,
 } from "@/components/app/shared/ParticipantUI";
 import { Button } from "@/components/ui/button";
@@ -316,7 +316,7 @@ export const ContractDetailPage = ({ id }: { id: string }) => {
                 {dict.contracts.version} {item.version}
               </p>
             </div>
-            <StatusBadge status={item.status} />
+            <ContractStatusPill status={item.status} />
           </header>
 
           <section className="grid gap-6 rounded-[20px] bg-white p-5 md:p-7">
