@@ -1,3 +1,5 @@
+import { isNetworkErrorMessage, networkErrorText } from "@/utils/network-error";
+
 interface GraphQLError {
   message?: string;
   extensions?: {
@@ -57,9 +59,11 @@ export const parseGraphQLError = (
   if (!err) return defaultMessage;
   console.error("GraphQL Error:", err.errors, err.graphQLErrors, err.networkError);
 
-  // Handle network errors
-  if (err.networkError) {
-    return err.networkError.message || defaultMessage;
+  // Network errors: the browser's own English text ("Failed to fetch") is
+  // replaced with a localized "couldn't reach the server". Apollo 4 may
+  // throw the TypeError itself rather than wrap it in networkError.
+  if (err.networkError || isNetworkErrorMessage(err.message)) {
+    return networkErrorText();
   }
 
   // Merge both graphQLErrors and errors — Apollo Client may populate either
@@ -181,14 +185,16 @@ export const parseAllGraphQLErrors = (error: unknown): string[] => {
     });
   }
 
-  // Handle network errors
-  if (err.networkError?.message) {
-    messages.push(err.networkError.message);
+  // Handle network errors (localized, see parseGraphQLError)
+  if (err.networkError) {
+    messages.push(networkErrorText());
   }
 
   // Handle direct message
   if (err.message && messages.length === 0) {
-    messages.push(err.message);
+    messages.push(
+      isNetworkErrorMessage(err.message) ? networkErrorText() : err.message,
+    );
   }
 
   return messages;
