@@ -4,6 +4,7 @@ import SuccessIcon from "@/assets/icons/success.check.svg";
 import InfoIcon from "@/assets/icons/info.message.svg";
 import { toast } from "react-toastify";
 import { toast as sonnerToast } from "sonner";
+import { localizeNetworkError } from "@/utils/network-error";
 
 export const showSuccessMessage = (message: string) => {
   toast.success(message, {
@@ -25,7 +26,9 @@ export const showInfoMessage = (message: string) => {
 };
 
 export const showErrorMessage = (message: string) => {
-  sonnerToast.error(message);
+  // Callers often pass `error.message` from a plain fetch; never show the
+  // browser's English "Failed to fetch" on an Arabic page.
+  sonnerToast.error(localizeNetworkError(message));
 };
 
 export const CloseButton = ({ closeToast }: { closeToast: () => void }) => {

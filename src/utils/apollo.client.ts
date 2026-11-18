@@ -8,7 +8,7 @@ import { SetContextLink } from "@apollo/client/link/context";
 import { RemoveTypenameFromVariablesLink } from "@apollo/client/link/remove-typename";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { getMainDefinition } from "@apollo/client/utilities";
-import { createClient } from "graphql-ws";
+import { createClient, type Client as WsClient } from "graphql-ws";
 import Cookies from "js-cookie";
 import { requestLanguage } from "./request-language";
 
@@ -19,6 +19,26 @@ const defaultOptions: ApolloClient.DefaultOptions.Input = {
 };
 
 let browserClient: ApolloClient | null = null;
+// The browser's live connection and the language it connected with, so a
+// language switch can restart it.
+let browserWsClient: WsClient | null = null;
+let socketLanguage: string | null = null;
+
+/**
+ * Q-30: the socket sends the page language only when it connects, and the
+ * language menu switches pages without a reload. When the page language no
+ * longer matches, terminate it: graphql-ws reconnects (not fatal), sends
+ * the current language and resubscribes, so live pop-ups follow the switch.
+ * Returns whether it restarted.
+ */
+export const syncRealtimeLanguage = (language: string): boolean => {
+  if (!browserWsClient || !socketLanguage || socketLanguage === language) {
+    return false;
+  }
+  socketLanguage = null;
+  browserWsClient.terminate();
+  return true;
+};
 
 const socketUrl = () => {
   if (process.env.NEXT_PUBLIC_SOCKET) return process.env.NEXT_PUBLIC_SOCKET;
@@ -77,7 +97,7 @@ const createApolloClient = (token?: string, url?: string) => {
             );
           },
           new GraphQLWsLink(
-            createClient({
+            (browserWsClient = createClient({
               url: socketUrl,
               lazy: true,
               keepAlive: 15_000,
@@ -92,6 +112,7 @@ const createApolloClient = (token?: string, url?: string) => {
               connectionParams: () => {
                 const currentToken = Cookies.get("token");
                 const language = requestLanguage();
+                socketLanguage = language;
                 return {
                   ...(currentToken
                     ? { Authorization: `Bearer ${currentToken}` }
@@ -106,7 +127,7 @@ const createApolloClient = (token?: string, url?: string) => {
                   );
                 },
               },
-            }),
+            })),
           ),
           httpChain,
         );

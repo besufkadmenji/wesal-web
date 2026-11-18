@@ -1,5 +1,6 @@
 "use client";
 
+import { LanguageSync } from "@/components/app/LanguageSync";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import { queryClient } from "@/utils/query.client";
@@ -28,6 +29,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
           <RealtimeQueryBridge />
           <RealtimeEventsWatcher />
           <PushNotificationsGate />
+          <LanguageSync />
           {/* Reads search params, so it needs its own boundary. */}
           <Suspense fallback={null}>
             <OverdueContractsGate />

@@ -427,7 +427,8 @@
     "previousSlide": "Previous slide",
     "nextSlide": "Next slide",
     "requestFailed": "We couldn't send your request. Please try again.",
-    "uploadTooLarge": "The attached files are too large. Please choose smaller images."
+    "uploadTooLarge": "The attached files are too large. Please choose smaller images.",
+    "networkError": "Couldn't reach the server. Check your connection and try again."
   },
   "support": {
     "addListing": {
