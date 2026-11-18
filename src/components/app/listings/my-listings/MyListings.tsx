@@ -5,8 +5,7 @@ import {
 } from "@/components/app/listings/ListingCard";
 import { ListingHeader } from "@/components/app/listings/my-listings/ListingHeader";
 import { NoListing } from "@/components/app/listings/my-listings/NoListing";
-import { PayToFeatureButton } from "@/components/app/listings/my-listings/PayToFeatureButton";
-import { PromotionStatus } from "@/gql/graphql";
+import { MyListingActions } from "@/components/app/listings/my-listings/MyListingActions";
 import { useListings } from "@/components/app/listings/my-listings/useListings";
 import { AppPagination } from "@/components/app/shared/AppPagination";
 import { AppWrapper } from "@/components/app/shared/AppWrapper";
@@ -45,12 +44,7 @@ export const MyListings = () => {
                       key={listing.id}
                       listing={listing}
                       showProviderLabels={false}
-                      action={
-                        listing.promotionStatus ===
-                          PromotionStatus.PendingPayment && (
-                          <PayToFeatureButton listingId={listing.id} />
-                        )
-                      }
+                      action={<MyListingActions listing={listing} />}
                     />
                   ))}
                 </div>

@@ -688,6 +688,20 @@
     "searchPlaceholder": "You can search by ad name",
     "card": {
       "price": "Price"
+    },
+    "expiry": {
+      "expiredAd": "Ad expired",
+      "expiresOn": "Shown until {date}",
+      "republish": "Re-publish",
+      "republishAndPay": "Re-publish and pay",
+      "republishTitle": "Re-publish this ad",
+      "republishDescription": "Your ad expired and is no longer shown. Publish it again as a free ad, or as a featured ad.",
+      "republishFree": "Free ad",
+      "republishFreeDescription": "Shown for {days} days.",
+      "republishFeatured": "Featured ad",
+      "republishFeaturedDescription": "{fee} for {days} days at the top of the results, then free.",
+      "republished": "Your ad is published again",
+      "featureAd": "Feature this ad"
     }
   },
   "addListing": {

@@ -14,6 +14,8 @@ import { MY_LISTING_QUERY } from "@/graphql/listing/myListing";
 import { MY_LISTINGS_QUERY } from "@/graphql/listing/myListings";
 import { REMOVE_LISTING_MUTATION } from "@/graphql/listing/removeListing";
 import { UPDATE_LISTING_MUTATION } from "@/graphql/listing/updateListing";
+import { REPUBLISH_LISTING_MUTATION } from "@/graphql/listing/republishListing";
+import { FEATURE_LISTING_MUTATION } from "@/graphql/listing/featureListing";
 import client from "@/utils/apollo.client";
 import { parseGraphQLError } from "@/utils/parse-graphql-error";
 import { requireOperationField } from "@/utils/apollo.result";
@@ -85,17 +87,41 @@ class ListingService {
 
   static ownerListing = async (id: string): Promise<Listing | null> => {
     try {
-      const listingResult = await client().query<{
-        myListing: Listing | null;
-      }>({
+      const listingResult = await client().query({
         query: MY_LISTING_QUERY,
         variables: { id },
         fetchPolicy: "network-only",
       });
-      return listingResult.data?.myListing ?? null;
+      return (listingResult.data?.myListing as Listing | undefined) ?? null;
     } catch (error) {
       const errorMessage = parseGraphQLError(error);
       throw new Error(errorMessage);
+    }
+  };
+
+  /** S4-62: re-publish an expired ad (featured: then pay to feature). */
+  static republishListing = async (id: string, featured: boolean) => {
+    try {
+      const result = await client().mutate({
+        mutation: REPUBLISH_LISTING_MUTATION,
+        variables: { id, featured },
+      });
+      return requireOperationField(result, "republishListing", "Re-publish");
+    } catch (error) {
+      throw new Error(parseGraphQLError(error));
+    }
+  };
+
+  /** S4-PAY-REFEATURE: mark an active free ad as waiting for the fee. */
+  static featureListing = async (id: string) => {
+    try {
+      const result = await client().mutate({
+        mutation: FEATURE_LISTING_MUTATION,
+        variables: { id },
+      });
+      return requireOperationField(result, "featureListing", "Feature");
+    } catch (error) {
+      throw new Error(parseGraphQLError(error));
     }
   };
 

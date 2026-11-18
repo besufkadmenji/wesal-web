@@ -14,7 +14,7 @@ import { ProviderData } from "@/components/app/listings/ListingDetail/ProviderDa
 import { EmptyState } from "@/components/app/shared/ParticipantUI";
 
 export const ListingDetail = ({ ownerMode }: { ownerMode?: boolean }) => {
-  const { listing, isLoading } = useListing();
+  const { listing, isLoading } = useListing({ ownerMode });
   const router = useRouter();
   const pathname = usePathname();
   const dict = useDict();

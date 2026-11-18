@@ -39,9 +39,12 @@ export const ParticipantAvatar = ({
 
 export const StatusBadge = ({
   status,
+  label,
   className,
 }: {
   status: string;
+  /** Overrides the status text, keeping the status colour. */
+  label?: string;
   className?: string;
 }) => {
   const dict = useDict();
@@ -59,7 +62,7 @@ export const StatusBadge = ({
         className,
       )}
     >
-      {labels[status] || status.replaceAll("_", " ")}
+      {label || labels[status] || status.replaceAll("_", " ")}
     </span>
   );
 };
