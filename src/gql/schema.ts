@@ -931,6 +931,8 @@ export type Conversation = {
   access?: Maybe<ConversationAccess>;
   closeReason?: Maybe<Scalars['String']['output']>;
   closedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** S4-67: when the chat closes after its contract was completed (settings.chatCloseAfterCompletionHours). */
+  closesAt?: Maybe<Scalars['DateTime']['output']>;
   createdAt: Scalars['DateTime']['output'];
   customerFeePaidAt?: Maybe<Scalars['DateTime']['output']>;
   customerLastReadAt?: Maybe<Scalars['DateTime']['output']>;
@@ -956,6 +958,8 @@ export type Conversation = {
 
 export type ConversationAccess = {
   canSend: Scalars['Boolean']['output'];
+  /** S4-67: when the chat closes after the completed contract */
+  closesAt?: Maybe<Scalars['DateTime']['output']>;
   expiresAt?: Maybe<Scalars['DateTime']['output']>;
   feeAmount: Scalars['Float']['output'];
   feeCycle: Scalars['Float']['output'];
@@ -3760,6 +3764,8 @@ export enum SenderType {
 export type Setting = {
   aboutAr: Scalars['String']['output'];
   aboutEn: Scalars['String']['output'];
+  /** S4-67: hours after a contract is completed before its chat closes */
+  chatCloseAfterCompletionHours: Scalars['Int']['output'];
   completionConfirmationGraceHours: Scalars['Int']['output'];
   contractAcceptanceWindowDays: Scalars['Int']['output'];
   contractAcceptanceWindowEnabled: Scalars['Boolean']['output'];
@@ -3816,6 +3822,7 @@ export type Setting = {
 export type SettingInput = {
   aboutAr?: InputMaybe<Scalars['String']['input']>;
   aboutEn?: InputMaybe<Scalars['String']['input']>;
+  chatCloseAfterCompletionHours?: InputMaybe<Scalars['Int']['input']>;
   completionConfirmationGraceHours?: InputMaybe<Scalars['Int']['input']>;
   contractAcceptanceWindowDays?: InputMaybe<Scalars['Int']['input']>;
   contractAcceptanceWindowEnabled?: InputMaybe<Scalars['Boolean']['input']>;

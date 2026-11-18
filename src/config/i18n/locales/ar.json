@@ -857,7 +857,9 @@
     "contractCancelled": "تم إلغاء التعاقد",
     "contractDisputed": "تم رفض الاستلام، والتعاقد قيد المراجعة",
     "reason": "السبب",
-    "contractAdminResolved": "أغلقت الإدارة التعاقد وحوّلت المبلغ إلى مقدم الخدمة"
+    "contractAdminResolved": "أغلقت الإدارة التعاقد وحوّلت المبلغ إلى مقدم الخدمة",
+    "closesOn": "تُغلق هذه المحادثة في {date}",
+    "closedAfterCompletion": "أُغلقت هذه المحادثة بعد اكتمال التعاقد."
   },
   "providerPage": {
     "title": "مقدم الخدمة",

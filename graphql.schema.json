@@ -8301,6 +8301,18 @@
             "deprecationReason": null
           },
           {
+            "name": "closesAt",
+            "description": "S4-67: when the chat closes after its contract was completed (settings.chatCloseAfterCompletionHours).",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "DateTime",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "createdAt",
             "description": null,
             "args": [],
@@ -8636,6 +8648,18 @@
                 "kind": "SCALAR",
                 "ofType": null
               }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "closesAt",
+            "description": "S4-67: when the chat closes after the completed contract",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "DateTime",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -28429,6 +28453,22 @@
             "deprecationReason": null
           },
           {
+            "name": "chatCloseAfterCompletionHours",
+            "description": "S4-67: hours after a contract is completed before its chat closes",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "name": "Int",
+                "kind": "SCALAR",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "completionConfirmationGraceHours",
             "description": null,
             "args": [],
@@ -29035,6 +29075,18 @@
             "type": {
               "kind": "SCALAR",
               "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "chatCloseAfterCompletionHours",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
               "ofType": null
             },
             "defaultValue": null,

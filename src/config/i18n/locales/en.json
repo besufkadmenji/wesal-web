@@ -857,7 +857,9 @@
     "contractCancelled": "The contract was cancelled",
     "contractDisputed": "Receipt was refused; the contract is under review",
     "reason": "Reason",
-    "contractAdminResolved": "The administration closed the contract and released the payment to the provider"
+    "contractAdminResolved": "The administration closed the contract and released the payment to the provider",
+    "closesOn": "This chat closes on {date}",
+    "closedAfterCompletion": "This conversation was closed after the contract was completed."
   },
   "providerPage": {
     "title": "Service provider",

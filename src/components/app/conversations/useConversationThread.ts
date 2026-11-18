@@ -43,6 +43,13 @@ export const useConversationThread = (conversationId: string) => {
     (item?.status === ConversationStatus.Closed &&
       item.closeReason === "EXPIRED") ||
     hasElapsed;
+  // S4-67: the chat closes for good some hours after the contract completed.
+  const closesAt = item?.access?.closesAt || item?.closesAt;
+  const isClosedAfterCompletion =
+    item?.status === ConversationStatus.Closed &&
+    item.closeReason === "CONTRACT_COMPLETED";
+  const showClosesAt =
+    item?.status === ConversationStatus.Active && Boolean(closesAt);
   const canSend = Boolean(item?.access?.canSend && !hasElapsed);
   const isFeeBlocked = Boolean(
     item?.access?.feeRequired && !item.access.paidAt,
@@ -83,6 +90,9 @@ export const useConversationThread = (conversationId: string) => {
     latestContract,
     canSend,
     isExpired,
+    isClosedAfterCompletion,
+    closesAt,
+    showClosesAt,
     isFeeBlocked,
     canPayFee,
     countdownDate,

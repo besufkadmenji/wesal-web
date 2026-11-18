@@ -42,6 +42,7 @@ const CONVERSATION_FRAGMENT = gql`
     expiresAt
     closedAt
     closeReason
+    closesAt
     feeCycle
     customerFeePaidAt
     providerFeePaidAt
@@ -54,6 +55,7 @@ const CONVERSATION_FRAGMENT = gql`
       paidAt
       canSend
       expiresAt
+      closesAt
       feeCycle
     }
     lastMessage {
