@@ -20,8 +20,7 @@ import { twMerge } from "tailwind-merge";
 import { SelectLanguage } from "./SelectLanguage";
 export const TopBar = () => {
   const dict = useDict();
-  const { me, isLoggedIn, isLoading } = useMe();
-  console.log("me in topbar", me);
+  const { isLoggedIn, isLoading } = useMe();
   return (
     <div className="top-bar-gradient grt grid h-20 grid-cols-2 items-center justify-between px-4 md:grid-cols-[1fr_auto_1fr] md:px-8 xl:px-[7vw]">
       <SelectLanguage />
