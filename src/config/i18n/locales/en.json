@@ -223,6 +223,7 @@
       "next": "Next",
       "providerTitle": "Sign in as Service Provider",
       "providerDescription": "Through your service provider account, you can manage ads, contracts, and communicate with customers at any time",
+      "providerSignOutNote": "You'll be signed out of your customer account to continue as a service provider.",
       "providerSignUp": "Sign in as Service Provider",
       "cancel": "Cancel"
     },
