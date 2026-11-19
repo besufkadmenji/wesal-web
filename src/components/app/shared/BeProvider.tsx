@@ -9,7 +9,7 @@ export const BeProvider = () => {
   const [beProvider, setBeProvider] = useQueryState("be-provider");
   const dict = useDict();
   const router = useAppRouter();
-  const { logout } = useMe();
+  const { me, logout } = useMe();
   return (
     <Modal
       isOpen={beProvider === "true"}
@@ -31,6 +31,13 @@ export const BeProvider = () => {
               <p className="text-gray text-base font-normal">
                 {dict.auth.choose.providerDescription}
               </p>
+              {/* ClickUp 869fmv02x: a provider is a separate account, so
+                  continuing signs the customer out. */}
+              {me?.user && (
+                <p className="text-sm font-medium text-[#B45309]">
+                  {dict.auth.choose.providerSignOutNote}
+                </p>
+              )}
             </div>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
               <Button
